@@ -23,7 +23,6 @@ const Login = ({ navigation }) => {
   const loginSuccess = useSelector((state) => state.login.isSuccess);
   const loginLoading = useSelector((state) => state.login.isLoading);
   const loginError = useSelector((state) => state.login.error);
-  console.log("-=-error-=-=", loginError);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
