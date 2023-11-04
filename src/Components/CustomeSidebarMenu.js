@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -16,10 +16,30 @@ import {
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import images from "../Constants/images";
 import commonStyle from "../Constants/commonStyle";
-import { Divider } from "react-native-paper";
+import { Divider, Menu } from "react-native-paper";
 import { TouchableOpacity } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { accessToken } from "../Constants/defaults";
+import { useDispatch } from "react-redux";
+import { logOut } from "../store/authSlices/LoginSlice";
+import { StackActions, useNavigation } from "@react-navigation/native";
+import screenName from "../Constants/screenName";
 
 const CustomSidebarMenu = (props) => {
+  const navigation=useNavigation()
+  const dispatch=useDispatch()
+  const [visible, setVisible] = useState(false);
+  const openMenu = () => setVisible(true);
+  const closeMenu = () => setVisible(false);
+  const logout=async()=>{
+    try {
+      dispatch(logOut())
+      await AsyncStorage.removeItem(accessToken)
+      navigation.dispatch(StackActions.replace(screenName.login))
+    } catch (error) {
+      
+    }
+  }
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <DrawerContentScrollView {...props}>
@@ -74,17 +94,27 @@ const CustomSidebarMenu = (props) => {
         </View>
       </DrawerContentScrollView>
       <Divider />
-      <DrawerItem
-        label="Log out"
-        onPress={() => {}}
-        labelStyle={styles.labelStyle}
-        icon={({ color, size, focused }) => (
-          <Image
-            source={images.logoutIcon}
-            style={{ width: scale(15), height: scale(15) }}
-          />
-        )}
-      />
+      <Menu
+            visible={visible}
+            onDismiss={closeMenu}
+            contentStyle={{ backgroundColor: "white" }}
+            anchor={
+              <DrawerItem
+              label="Log out"
+              onPress={() => {openMenu()}}
+              labelStyle={styles.labelStyle}
+              icon={({ color, size, focused }) => (
+                <Image
+                  source={images.logoutIcon}
+                  style={{ width: scale(15), height: scale(15) }}
+                />
+              )}
+            />
+            }
+          >
+            <Menu.Item onPress={() => {logout()}} title="Log out" />
+          </Menu>
+     
     </SafeAreaView>
   );
 };

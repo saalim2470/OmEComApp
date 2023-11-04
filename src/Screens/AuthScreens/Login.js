@@ -16,13 +16,13 @@ import CustomeSnackbar from "../../Components/CustomeSnackbar";
 import { useDispatch, useSelector } from "react-redux";
 import { getLoginUser } from "../../store/authSlices/LoginSlice";
 import { useEffect } from "react";
-import CustomeAlert from "../../Components/CustomeAlert";
 
 const Login = ({ navigation }) => {
   const dispatch = useDispatch();
   const loginSuccess = useSelector((state) => state.login.isSuccess);
   const loginLoading = useSelector((state) => state.login.isLoading);
   const loginError = useSelector((state) => state.login.error);
+  const logindata = useSelector((state) => state.login);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

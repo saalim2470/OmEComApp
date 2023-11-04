@@ -11,17 +11,31 @@ import {
   moderateScale,
   moderateVerticalScale,
 } from "react-native-size-matters";
-import { useNavigation } from "@react-navigation/native";
+import {  CommonActions, StackActions, useNavigation } from "@react-navigation/native";
 import screenName from "../../Constants/screenName";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { accessToken } from "../../Constants/defaults";
 
 const Splash = () => {
   const navigation = useNavigation();
   useEffect(() => {
     setTimeout(() => {
-      navigation.replace(screenName.introduction);
+      getToken()
     }, 1500);
   });
+const getToken= async()=>{
+  try {
+    const token=await AsyncStorage.getItem(accessToken)
+    if(token!=''&&token!=null){
+      navigation.dispatch(StackActions.replace(screenName.drawerNavigation))
+    }else{
+      navigation.dispatch(StackActions.replace(screenName.introduction))
 
+    }
+  } catch (error) {
+    
+  }
+}
   return (
     <View
       style={[

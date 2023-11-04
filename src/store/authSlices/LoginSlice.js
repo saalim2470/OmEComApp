@@ -12,6 +12,12 @@ const LoginSlice = createSlice({
     isSuccess: false,
   },
   reducers: {
+    logOut:(state,action)=>{
+      state.accessToken=null
+      state.isLoading=false
+      state.error=null
+      state.isSuccess=false
+    },
     setToken: (state, action) => {
       return {
         ...state,
@@ -28,7 +34,7 @@ const LoginSlice = createSlice({
   },
 });
 export default LoginSlice.reducer;
-export const { setToken, setLoading, setError } = LoginSlice.actions;
+export const { setToken, setLoading, setError ,logOut} = LoginSlice.actions;
 
 export const getLoginUser = (data) => async (dispatch) => {
   try {
