@@ -13,6 +13,7 @@ const GetAdContentSlice = createSlice({
       // state.contentData = action.payload;
       return { ...state, contentData: action.payload };
     },
+    addLikeContent: (state) => {},
     setLoading: (state, action) => {
       state.isLoading = action.payload;
     },
@@ -22,7 +23,8 @@ const GetAdContentSlice = createSlice({
   },
 });
 export default GetAdContentSlice.reducer;
-export const { setAdContent, setLoading, setError } = GetAdContentSlice.actions;
+export const { setAdContent, addLikeContent, setLoading, setError } =
+  GetAdContentSlice.actions;
 
 export const getAdContentByCategory = (categoryId) => async (dispatch) => {
   try {
@@ -34,4 +36,10 @@ export const getAdContentByCategory = (categoryId) => async (dispatch) => {
     dispatch(setLoading(false));
     dispatch(setError(error.response.data));
   }
+};
+
+export const addLikeOnContent = (data) => async (dispatch) => {
+  try {
+    const responce = await AdContentServices.addContentLike(data);
+  } catch (error) {}
 };

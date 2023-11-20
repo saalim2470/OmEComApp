@@ -1,6 +1,5 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
-import { SafeAreaView } from "react-native";
 import commonStyle from "../../Constants/commonStyle";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import Header from "../../Components/Header";
@@ -8,6 +7,7 @@ import ProfileScreenTopView from "../../Components/ProfileScreenComponent/Profil
 import FeedCard from "../../Components/ProductComponent/FeedCard";
 import images from "../../Constants/images";
 import { Divider } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Profile = () => {
   const [feedData, setFeedData] = useState([
@@ -100,9 +100,9 @@ const Profile = () => {
   ]);
   return (
     <SafeAreaView style={commonStyle.container}>
-      <Header />
+      {/* <Header /> */}
       <ProfileScreenTopView />
-      <FlatList
+      {/* <FlatList
         data={feedData}
         keyExtractor={(item) => {
           item.id.toString();
@@ -127,7 +127,7 @@ const Profile = () => {
             />
           );
         }}
-      />
+      /> */}
     </SafeAreaView>
   );
 };

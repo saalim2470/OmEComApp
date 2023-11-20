@@ -6,6 +6,9 @@ class AdContentServices {
       `/AdContent/GetAdContentsByCategory?categtoryId=${categoryId}`
     );
   }
+  addContentLike(data) {
+    return http.post("/UserLikeContent");
+  }
 }
 
 export default new AdContentServices();

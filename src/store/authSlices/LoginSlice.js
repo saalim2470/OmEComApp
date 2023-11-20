@@ -12,11 +12,11 @@ const LoginSlice = createSlice({
     isSuccess: false,
   },
   reducers: {
-    logOut:(state,action)=>{
-      state.accessToken=null
-      state.isLoading=false
-      state.error=null
-      state.isSuccess=false
+    logOut: (state, action) => {
+      state.accessToken = null;
+      state.isLoading = false;
+      state.error = null;
+      state.isSuccess = false;
     },
     setToken: (state, action) => {
       return {
@@ -34,7 +34,7 @@ const LoginSlice = createSlice({
   },
 });
 export default LoginSlice.reducer;
-export const { setToken, setLoading, setError ,logOut} = LoginSlice.actions;
+export const { setToken, setLoading, setError, logOut } = LoginSlice.actions;
 
 export const getLoginUser = (data) => async (dispatch) => {
   try {
@@ -49,5 +49,6 @@ export const getLoginUser = (data) => async (dispatch) => {
   } catch (error) {
     dispatch(setLoading(false));
     dispatch(setError(error.response.data));
+    console.log("-=-=-login error-=-=-", error.response.data);
   }
 };

@@ -2,7 +2,7 @@ import { FlatList, StyleSheet, Text, View } from "react-native";
 import React from "react";
 
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
-import SvgUri from "react-native-svg-uri";
+import { SvgUri } from "react-native-svg";
 import { defaultCategoryImg } from "../Constants/defaults";
 import { TouchableOpacity } from "react-native";
 import { getAdContentByCategory } from "../store/AdContentSlices/GetAdContentSlice";
@@ -33,12 +33,11 @@ const CategorieCircle = ({ data, disabled }) => {
               <SvgUri
                 width={scale(52)}
                 height={scale(52)}
-                source={{
-                  uri:
-                    item?.svgImagesPath != null
-                      ? item?.svgImagesPath
-                      : defaultCategoryImg,
-                }}
+                uri={
+                  item?.svgImagesPath != null
+                    ? item?.svgImagesPath
+                    : defaultCategoryImg
+                }
               />
             </View>
             <Text style={styles.categoryTxt}>{item?.categoryName}</Text>

@@ -26,20 +26,18 @@ import { StackActions, useNavigation } from "@react-navigation/native";
 import screenName from "../Constants/screenName";
 
 const CustomSidebarMenu = (props) => {
-  const navigation=useNavigation()
-  const dispatch=useDispatch()
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
-  const logout=async()=>{
+  const logout = async () => {
     try {
-      dispatch(logOut())
-      await AsyncStorage.removeItem(accessToken)
-      navigation.dispatch(StackActions.replace(screenName.login))
-    } catch (error) {
-      
-    }
-  }
+      dispatch(logOut());
+      await AsyncStorage.removeItem(accessToken);
+      navigation.dispatch(StackActions.replace(screenName.login));
+    } catch (error) {}
+  };
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <DrawerContentScrollView {...props}>
@@ -91,30 +89,47 @@ const CustomSidebarMenu = (props) => {
               />
             )}
           />
+          {/* <DrawerItem
+            label="Profile"
+            onPress={() => {navigation.navigate()}}
+            labelStyle={styles.labelStyle}
+            icon={({ color, size, focused }) => (
+              <Image
+                source={images.userIcon}
+                style={{ width: scale(15), height: scale(15) }}
+              />
+            )}
+          /> */}
         </View>
       </DrawerContentScrollView>
       <Divider />
       <Menu
-            visible={visible}
-            onDismiss={closeMenu}
-            contentStyle={{ backgroundColor: "white" }}
-            anchor={
-              <DrawerItem
-              label="Log out"
-              onPress={() => {openMenu()}}
-              labelStyle={styles.labelStyle}
-              icon={({ color, size, focused }) => (
-                <Image
-                  source={images.logoutIcon}
-                  style={{ width: scale(15), height: scale(15) }}
-                />
-              )}
-            />
-            }
-          >
-            <Menu.Item onPress={() => {logout()}} title="Log out" />
-          </Menu>
-     
+        visible={visible}
+        onDismiss={closeMenu}
+        contentStyle={{ backgroundColor: "white" }}
+        anchor={
+          <DrawerItem
+            label="Log out"
+            onPress={() => {
+              openMenu();
+            }}
+            labelStyle={styles.labelStyle}
+            icon={({ color, size, focused }) => (
+              <Image
+                source={images.logoutIcon}
+                style={{ width: scale(15), height: scale(15) }}
+              />
+            )}
+          />
+        }
+      >
+        <Menu.Item
+          onPress={() => {
+            logout();
+          }}
+          title="Log out"
+        />
+      </Menu>
     </SafeAreaView>
   );
 };

@@ -14,6 +14,7 @@ import {
 import CustomSidebarMenu from "../Components/CustomeSidebarMenu";
 import Profile from "../Screens/ProfileTabScreens/Profile";
 import BookmarkScreen from "../Screens/HomeTabScreens/BookmarkScreen";
+import Subscription from "../Screens/DrawerScreen/Subscription";
 
 const Drawer = createDrawerNavigator();
 
@@ -66,6 +67,20 @@ const DrawerNavigation = () => {
         component={BookmarkScreen}
         options={{
           drawerLabel: "Saved Item",
+          swipeEnabled: false,
+          drawerIcon: ({ color, size, focused }) => (
+            <Image
+              source={images.bookmarkIcon}
+              style={{ width: scale(15), height: scale(15) }}
+            />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name={screenName.subscription}
+        component={Subscription}
+        options={{
+          drawerLabel: "Subscription",
           swipeEnabled: false,
           drawerIcon: ({ color, size, focused }) => (
             <Image

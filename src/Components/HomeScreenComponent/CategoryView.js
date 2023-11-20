@@ -5,7 +5,7 @@ import screenName from "../../Constants/screenName";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import colors from "../../Constants/colors";
 import { useNavigation } from "@react-navigation/native";
-import SvgUri from "react-native-svg-uri";
+import { SvgUri } from "react-native-svg";
 import { defaultCategoryImg } from "../../Constants/defaults";
 import { useDispatch } from "react-redux";
 import { getAdContentByCategory } from "../../store/AdContentSlices/GetAdContentSlice";
@@ -31,12 +31,11 @@ const CategoryView = ({ data }) => {
         <SvgUri
           width={scale(70)}
           height={verticalScale(75)}
-          source={{
-            uri:
-              data?.svgImagesPath != null
-                ? data?.svgImagesPath
-                : defaultCategoryImg,
-          }}
+          uri={
+            data?.svgImagesPath != null
+              ? data?.svgImagesPath
+              : defaultCategoryImg
+          }
         />
       </View>
     </TouchableOpacity>
@@ -55,6 +54,7 @@ const styles = StyleSheet.create({
   },
   categoryCard: {
     width: scale(160),
+    // flex: 1,
     height: verticalScale(90),
     backgroundColor: colors.greyColor,
     paddingHorizontal: moderateScale(8),

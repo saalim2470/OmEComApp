@@ -1,7 +1,6 @@
 import { FlatList, StyleSheet, View } from "react-native";
 import React from "react";
 import MainHeader from "../../Components/MainHeader";
-import { SafeAreaView } from "react-native";
 import commonStyle from "../../Constants/commonStyle";
 import images from "../../Constants/images";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
@@ -15,6 +14,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import Loading from "../../Components/Loading";
 import { Text } from "react-native";
+import { Feather } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const MainHome = ({ navigation, route }) => {
   const categoryData = useSelector((state) => state.category.categoryData);
@@ -57,9 +59,15 @@ const MainHome = ({ navigation, route }) => {
   return (
     <SafeAreaView style={commonStyle.container}>
       <MainHeader
-        leftIcon={images.menuIcon}
+        leftIcon={<Feather name="menu" size={scale(30)} color="black" />}
         middleIcon={images.omLogo}
-        rightIcon={images.notificationIcon}
+        rightIcon={
+          <Ionicons
+            name="notifications-outline"
+            size={scale(30)}
+            color="black"
+          />
+        }
         onClickRightIcon={() => {
           navigation.navigate(screenName.notification);
         }}

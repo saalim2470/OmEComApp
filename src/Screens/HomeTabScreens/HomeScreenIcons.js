@@ -1,11 +1,11 @@
 import {
   Image,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
+  Flatlist,
 } from "react-native";
 import React, { useEffect } from "react";
 import commonStyle from "../../Constants/commonStyle";
@@ -18,6 +18,9 @@ import { getCategoryData } from "../../store/categorySlices/CategorySlice";
 import Loading from "../../Components/Loading";
 import CategoryView from "../../Components/HomeScreenComponent/CategoryView";
 import { useState } from "react";
+import { Feather } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const HomeScreenIcons = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -36,9 +39,15 @@ const HomeScreenIcons = ({ navigation }) => {
   return (
     <SafeAreaView style={commonStyle.container}>
       <MainHeader
-        leftIcon={images.menuIcon}
+        leftIcon={<Feather name="menu" size={scale(30)} color="black" />}
         middleIcon={images.omLogo}
-        rightIcon={images.notificationIcon}
+        rightIcon={
+          <Ionicons
+            name="notifications-outline"
+            size={scale(30)}
+            color="black"
+          />
+        }
         onClickRightIcon={() => {
           navigation.navigate(screenName.notification);
         }}
@@ -73,6 +82,7 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "space-between",
     rowGap: scale(10),
+    // gap: scale(15),
   },
   iconView: {
     width: scale(95),

@@ -38,11 +38,7 @@ const MainHeader = ({
             onClickLeftIcon();
           }}
         >
-          <Image
-            source={leftIcon}
-            style={styles.iconStyle}
-            resizeMode="contain"
-          />
+          {leftIcon}
         </TouchableOpacity>
       )}
       {middleTxt && <Text>{middleTxt}</Text>}
@@ -58,14 +54,6 @@ const MainHeader = ({
       )}
       {rightTxt && <Text>{rightTxt}</Text>}
       {rightIcon && (
-        // <TouchableOpacity
-        //   activeOpacity={0.7}
-        //   onPress={() => {
-        //     onClickRightIcon();
-        //   }}
-        // >
-        //   <Image source={rightIcon} style={styles.iconStyle} />
-        // </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={0.5}
           style={[styles.storyCircle]}
@@ -73,7 +61,7 @@ const MainHeader = ({
             onClickRightIcon();
           }}
         >
-          <Image source={rightIcon} style={styles.img} resizeMode="contain" />
+          {rightIcon}
         </TouchableOpacity>
       )}
     </View>
@@ -84,12 +72,12 @@ export default MainHeader;
 
 const styles = StyleSheet.create({
   headerStyle: {
-    height: verticalScale(44),
-    marginTop: verticalScale(30),
+    // height: verticalScale(44),
     paddingHorizontal: moderateScale(20),
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    paddingVertical: verticalScale(2),
   },
   iconStyle: {
     width: scale(30),

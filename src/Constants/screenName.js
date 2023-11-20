@@ -39,6 +39,7 @@ const screenName = {
   feed: "Feed",
   // drawerScreen
   bottomNavigation: "bottonNavigation",
+  subscription: "Subscription",
 };
 
 export default screenName;

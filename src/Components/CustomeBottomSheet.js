@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Image } from "react-native";
 import React, { useCallback, useMemo, useRef } from "react";
-import BottomSheet from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { TouchableOpacity } from "react-native";
 import { SvgXml } from "react-native-svg";

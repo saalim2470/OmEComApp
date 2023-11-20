@@ -9,6 +9,7 @@ import DrawerNavigation from "./src/Navigation/DrawerNavigation";
 import { Provider } from "react-redux";
 import store from "./src/store";
 import { PaperProvider } from "react-native-paper";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 
 export default function App() {
   const [fontsLoaded] = useFonts(fonts);
@@ -20,10 +21,12 @@ export default function App() {
       <StatusBar />
       <Provider store={store}>
         <PaperProvider>
-          <NavigationContainer>
-            <Routes />
-            {/* <DrawerNavigation /> */}
-          </NavigationContainer>
+          <BottomSheetModalProvider>
+            <NavigationContainer>
+              <Routes />
+              {/* <DrawerNavigation /> */}
+            </NavigationContainer>
+          </BottomSheetModalProvider>
         </PaperProvider>
       </Provider>
     </SafeAreaProvider>
