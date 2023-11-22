@@ -10,12 +10,21 @@ import { ScrollView } from "react-native";
 import CustomeButton from "../../Components/CustomeButton";
 import screenName from "../../Constants/screenName";
 import * as ImagePicker from "expo-image-picker";
+import { useDispatch, useSelector } from "react-redux";
+import { setFiles } from "../../store/addAdContentSlices/AddPostData";
+import { useEffect } from "react";
+import { Entypo } from "@expo/vector-icons";
 
 const AddProductImage = ({ navigation }) => {
-  const [image, setImage] = useState([
-    "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSbSJTQ-bLP_wkxHjbtNYHIQqv29xVJ9DEi9XZTfQiFvVIge8F5",
-    "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQfnV3IXv0mCGxbLJ4DijOYj0tXsbZo1JQ1h6ZWFFTgr6fhHG5h",
-  ]);
+  const dispatch = useDispatch();
+  const postData = useSelector((state) => state.addPost);
+  const [image, setImage] = useState([]);
+  // set data when go back to edit
+  useEffect(() => {
+    if (postData?.files) {
+      setImage(postData?.files);
+    }
+  }, [postData?.files]);
   const openImagePicker = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -27,6 +36,15 @@ const AddProductImage = ({ navigation }) => {
     if (!result.canceled) {
       setImage([...image, result.assets[0].uri]);
     }
+  };
+  const onClickNext = () => {
+    dispatch(setFiles(image));
+    navigation.navigate(screenName.postCategory);
+  };
+  const onClickRemove = (index1) => {
+    const tempData = [...image];
+    const data = tempData.filter((element, index) => index != index1);
+    setImage(data);
   };
   return (
     <SafeAreaView style={commonStyle.container}>
@@ -46,6 +64,23 @@ const AddProductImage = ({ navigation }) => {
                       uri: item,
                     }}
                   />
+                  <TouchableOpacity
+                    onPress={() => {
+                      onClickRemove(index);
+                    }}
+                    activeOpacity={0.6}
+                    style={{
+                      position: "absolute",
+                      alignSelf: "flex-end",
+                      marginRight: moderateScale(2),
+                    }}
+                  >
+                    <Entypo
+                      name="circle-with-cross"
+                      size={scale(15)}
+                      color="white"
+                    />
+                  </TouchableOpacity>
                 </View>
               );
             })}
@@ -73,7 +108,7 @@ const AddProductImage = ({ navigation }) => {
         <CustomeButton
           title={"Next"}
           onClick={() => {
-            navigation.navigate(screenName.postCategory);
+            onClickNext();
           }}
           style={{ paddingVertical: moderateScale(13) }}
         />
@@ -93,7 +128,7 @@ const styles = StyleSheet.create({
   imgBox: {
     width: scale(100),
     height: verticalScale(100),
-    flexDirection: "column",
+    // flexDirection: "column",
     margin: scale(3),
   },
   plusBtn: {

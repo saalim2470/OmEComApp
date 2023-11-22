@@ -16,28 +16,18 @@ import colors from "../../Constants/colors";
 import PropTypes from "prop-types";
 import Overview from "./Overview";
 import Specification from "./Specification";
+import { Ionicons } from "@expo/vector-icons";
+import Slider from "./Slider";
 
 const FeedCardWithDescription = ({
   itemData,
-  isShowContactBtn,
   onClickMsgBtn = () => {},
   onClickBookmarkBtn = () => {},
-  onClickComment = () => {},
 }) => {
-  const getIcon = (icon, onPress = () => {}) => {
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          onPress();
-        }}
-      >
-        <Image source={icon} style={{ width: scale(18), height: scale(18) }} />
-      </TouchableOpacity>
-    );
-  };
   const [activeTab, setActiveTab] = useState(0);
   return (
     <View style={{ marginBottom: verticalScale(8) }}>
+      {/* card header view */}
       <View style={styles.cardHeaderView}>
         <View style={styles.onlyRowStyle}>
           <Avatar.Image
@@ -55,75 +45,85 @@ const FeedCardWithDescription = ({
             </Text>
           </View>
         </View>
-        <TouchableOpacity activeOpacity={0.5}>
+        {/* <TouchableOpacity activeOpacity={0.5}>
           <Image
             source={images.optionIcon}
             style={{ width: scale(20), height: scale(20), tintColor: "grey" }}
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
-      <View style={styles.cardImgView}>
-        <SliderBox
-          images={itemData?.files}
-          sliderBoxHeight={"100%"}
-          dotColor={colors.themeColor}
-          inactiveDotColor="#FFFFFF"
-          disableOnPress={true}
-          imageLoadingColor={colors.themeColor}
-          dotStyle={styles.dotStyle}
-        />
-      </View>
+      {/* image slider view */}
+      <Slider data={itemData?.files} />
       <View style={styles.bottomView}>
         <View style={[commonStyle.row]}>
           <View
-            style={[
-              {
-                width: "45%",
-              },
-              commonStyle.row,
-            ]}
+            style={{
+              flexDirection: "row",
+              gap: scale(15),
+            }}
           >
-            {getIcon(images.unLikeIcon, () => {
-              console.log("Like");
-            })}
-            {getIcon(images.messageIcon, () => {
-              onClickComment();
-            })}
-            {getIcon(images.emailIcon, () => {
-              onClickMsgBtn();
-            })}
-            {getIcon(
-              itemData?.isSaved ? images.bookmarkFillIcon : images.bookmarkIcon,
-              () => {
+            <TouchableOpacity
+              onPress={() => {
+                onClickLikeBtn();
+              }}
+            >
+              <Ionicons name="heart-outline" size={scale(24)} color="black" />
+            </TouchableOpacity>
+            {/* <TouchableOpacity
+              onPress={() => {
+                onClickComment();
+              }}
+            >
+              <MaterialCommunityIcons
+                name="message-outline"
+                size={scale(24)}
+                color="black"
+              />
+            </TouchableOpacity> */}
+            <TouchableOpacity
+              onPress={() => {
+                onClickMsgBtn();
+              }}
+            >
+              <Ionicons name="mail-outline" size={scale(24)} color="black" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
                 onClickBookmarkBtn();
-              }
-            )}
+              }}
+            >
+              <Ionicons
+                name="ios-bookmark-outline"
+                size={scale(24)}
+                color="black"
+              />
+              {/* fill icon */}
+              {/* <Ionicons name="ios-bookmark" size={scale(24)} color="black" /> */}
+            </TouchableOpacity>
           </View>
-          {isShowContactBtn ? (
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <TouchableOpacity
-                activeOpacity={0.4}
-                onPress={() => {
-                  Linking.openURL(
-                    `whatsapp://send?phone=${itemData?.mobileNo}&text=Hello`
-                  );
-                }}
-              >
-                <Image
-                  source={images.whatsAppLogo}
-                  style={[styles.iconStyle, { marginRight: moderateScale(15) }]}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  Linking.openURL(`tel:${itemData?.mobileNo}`);
-                }}
-                activeOpacity={0.4}
-              >
-                <Image source={images.phoneIcon} style={styles.iconStyle} />
-              </TouchableOpacity>
-            </View>
-          ) : null}
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <TouchableOpacity
+              activeOpacity={0.4}
+              onPress={() => {
+                Linking.openURL(
+                  `whatsapp://send?phone=${itemData?.mobileNo}&text=Hello`
+                );
+              }}
+            >
+              <Image
+                source={images.whatsAppLogo}
+                style={[styles.iconStyle, { marginRight: moderateScale(15) }]}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                Linking.openURL(`tel:${itemData?.mobileNo}`);
+              }}
+              activeOpacity={0.4}
+            >
+              <Image source={images.phoneIcon} style={styles.iconStyle} />
+            </TouchableOpacity>
+          </View>
         </View>
         <View style={styles.tabView}>
           <TouchableOpacity
@@ -167,7 +167,11 @@ const FeedCardWithDescription = ({
             </Text>
           </TouchableOpacity>
         </View>
-        {activeTab == 0 ? <Overview itemData={itemData} /> : <Specification />}
+        {activeTab == 0 ? (
+          <Overview itemData={itemData} />
+        ) : (
+          <Specification data1={itemData?.specifications} />
+        )}
       </View>
     </View>
   );

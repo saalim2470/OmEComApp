@@ -24,8 +24,8 @@ const Splash = () => {
   const navigation = useNavigation();
   useEffect(() => {
     setTimeout(() => {
-      // getToken();
-      navigation.dispatch(StackActions.replace(screenName.introduction));
+      getToken();
+      // navigation.dispatch(StackActions.replace(screenName.introduction));
     }, 1500);
   });
   const getToken = async () => {

@@ -21,21 +21,23 @@ import { useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import CustomeAlertModal from "../../Components/CustomeAlertModal";
+import { useIsFocused } from "@react-navigation/native";
 
 const HomeScreenIcons = ({ navigation }) => {
   const dispatch = useDispatch();
   const categoryLoading = useSelector((state) => state.category.isLoading);
   const categoryData = useSelector((state) => state.category.categoryData);
   const [category, setCategory] = useState([]);
+  const focused = useIsFocused();
   useEffect(() => {
     dispatch(getCategoryData(1, 10));
-  }, []);
+  }, [focused]);
   useEffect(() => {
     if (categoryData?.Success) {
       setCategory(categoryData?.Data);
     }
   }, [categoryData]);
-
   return (
     <SafeAreaView style={commonStyle.container}>
       <MainHeader

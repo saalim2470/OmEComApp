@@ -6,6 +6,7 @@ const GetAdContentSlice = createSlice({
   initialState: {
     isLoading: false,
     contentData: [],
+    likeData: null,
     error: null,
   },
   reducers: {
@@ -13,7 +14,9 @@ const GetAdContentSlice = createSlice({
       // state.contentData = action.payload;
       return { ...state, contentData: action.payload };
     },
-    addLikeContent: (state) => {},
+    addLikeContent: (state, action) => {
+      return { ...state, likeData: action.payload };
+    },
     setLoading: (state, action) => {
       state.isLoading = action.payload;
     },
@@ -26,20 +29,29 @@ export default GetAdContentSlice.reducer;
 export const { setAdContent, addLikeContent, setLoading, setError } =
   GetAdContentSlice.actions;
 
-export const getAdContentByCategory = (categoryId) => async (dispatch) => {
-  try {
-    dispatch(setLoading(true));
-    const responce = await AdContentServices.getContentByCategory(categoryId);
-    await dispatch(setAdContent(responce.data));
-    dispatch(setLoading(false));
-  } catch (error) {
-    dispatch(setLoading(false));
-    dispatch(setError(error.response.data));
-  }
-};
+export const getAdContentByCategory =
+  (categoryId, pageNumber, pageSize) => async (dispatch) => {
+    try {
+      dispatch(setLoading(true));
+      const responce = await AdContentServices.getContentByCategory(
+        categoryId,
+        pageNumber,
+        pageSize
+      );
+      await dispatch(setAdContent(responce.data));
+      dispatch(setLoading(false));
+    } catch (error) {
+      dispatch(setLoading(false));
+      dispatch(setError(error.response.data));
+    }
+  };
 
-export const addLikeOnContent = (data) => async (dispatch) => {
+export const addLikeOnContentApi = (data) => async (dispatch) => {
   try {
     const responce = await AdContentServices.addContentLike(data);
-  } catch (error) {}
+    await dispatch(addLikeContent(responce.data));
+  } catch (error) {
+    dispatch(setError(error.response.data));
+    console.log("-=-=-=like error-=-=-=", error.response.data);
+  }
 };

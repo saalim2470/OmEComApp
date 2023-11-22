@@ -16,8 +16,8 @@ const BottomNavigationHomeRoute = () => {
         component={HomeScreenIcons}
       />
       <Stack.Screen name={screenName.mainHome} component={MainHome} />
-      <Stack.Screen name={screenName.messagesHome} component={MessagesHome} />
-      <Stack.Screen name={screenName.notification} component={Notification} />
+      {/* <Stack.Screen name={screenName.messagesHome} component={MessagesHome} /> */}
+      {/* <Stack.Screen name={screenName.notification} component={Notification} /> */}
     </Stack.Navigator>
   );
 };

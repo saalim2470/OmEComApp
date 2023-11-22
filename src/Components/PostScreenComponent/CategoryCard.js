@@ -4,24 +4,28 @@ import { Image } from "react-native";
 import { RadioButton } from "react-native-paper";
 import colors from "../../Constants/colors";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
+import { useSelector } from "react-redux";
+import { SvgUri } from "react-native-svg";
+import { defaultCategoryImg } from "../../Constants/defaults";
 
 const CategoryCard = ({ item, onClick = () => {}, status }) => {
   return (
     <View style={styles.categoryCard}>
       <View style={styles.categoryCardLeftView}>
-        <Image
-          source={item.icon}
-          style={{
-            width: scale(20),
-            height: scale(20),
-            marginRight: moderateScale(10),
-          }}
+        <SvgUri
+          width={scale(40)}
+          height={verticalScale(40)}
+          uri={
+            item?.svgImagesPath != null
+              ? item?.svgImagesPath
+              : defaultCategoryImg
+          }
         />
-        <Text style={styles.categoryTxt}>{item.name}</Text>
+        <Text style={styles.categoryTxt}>{item.categoryName}</Text>
       </View>
       <RadioButton
-        value={item.name}
-        status={status === item.name ? "checked" : "unchecked"}
+        value={item.id}
+        status={status === item.id ? "checked" : "unchecked"}
         color={colors.selectedColor}
         onPress={() => {
           onClick();
@@ -52,5 +56,6 @@ const styles = StyleSheet.create({
   categoryTxt: {
     fontSize: scale(13),
     fontFamily: "Montserrat-Regular",
+    marginLeft: moderateScale(5),
   },
 });

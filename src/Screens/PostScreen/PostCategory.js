@@ -10,51 +10,34 @@ import CustomeButton from "../../Components/CustomeButton";
 import { useState } from "react";
 import images from "../../Constants/images";
 import screenName from "../../Constants/screenName";
+import { useDispatch, useSelector } from "react-redux";
+import CustomeAlert from "../../Components/CustomeAlert";
+import { useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { setCategory } from "../../store/addAdContentSlices/AddPostData";
 
-const PostCategory = ({ navigation }) => {
-  const data = [
-    {
-      id: 1,
-      name: "Vehicals",
-      icon: images.cat_vehicalIcon,
-    },
-    {
-      id: 2,
-      name: "Electricals",
-      icon: images.cat_electricIcon,
-    },
-    {
-      id: 3,
-      name: "Electronics",
-      icon: images.cat_electronicsIcon,
-    },
-    {
-      id: 4,
-      name: "Animals & Pets",
-      icon: images.cat_animalIcon,
-    },
-    {
-      id: 5,
-      name: "Home Decor",
-      icon: images.cat_homeDecorIcon,
-    },
-    {
-      id: 6,
-      name: "Farming",
-      icon: images.cat_farmingIcon,
-    },
-    {
-      id: 7,
-      name: "Fruit & Vegitables",
-      icon: images.cat_fruitIcon,
-    },
-    {
-      id: 8,
-      name: "Others",
-      icon: images.cat_othersIcon,
-    },
-  ];
-  const [checked, setChecked] = useState();
+const PostCategory = ({ navigation, route }) => {
+  const dispatch = useDispatch();
+  const postData = useSelector((state) => state.addPost);
+  const categoryData = useSelector((state) => state.category.categoryData);
+  const [checked, setChecked] = useState(null);
+  const [showAlert, setShowAlert] = useState(false);
+  // set data when go back to edit
+  useEffect(() => {
+    if (postData?.category) {
+      setChecked(postData?.category);
+    }
+  }, [postData?.category]);
+
+  const onClickNext = () => {
+    if (!checked && checked == null) {
+      setShowAlert(true);
+    } else {
+      dispatch(setCategory(checked));
+      navigation.navigate(screenName.itemDetail);
+    }
+  };
+
   return (
     <SafeAreaView style={commonStyle.container}>
       <Header />
@@ -62,7 +45,7 @@ const PostCategory = ({ navigation }) => {
         <Text style={commonStyle.headingTxt}>Category</Text>
         <Text style={styles.SmallHading}>Select relavant category</Text>
         <FlatList
-          data={data}
+          data={categoryData?.Data}
           showsVerticalScrollIndicator={false}
           style={{ marginTop: verticalScale(10) }}
           keyExtractor={(item) => {
@@ -73,7 +56,7 @@ const PostCategory = ({ navigation }) => {
               <CategoryCard
                 item={item}
                 onClick={() => {
-                  setChecked(item.name);
+                  setChecked(item.id);
                 }}
                 status={checked}
               />
@@ -84,10 +67,18 @@ const PostCategory = ({ navigation }) => {
           title={"Next"}
           style={{ paddingVertical: moderateScale(13) }}
           onClick={() => {
-            navigation.navigate(screenName.itemDetail);
+            onClickNext();
           }}
         />
       </View>
+      <CustomeAlert
+        show={showAlert}
+        title={"Alert"}
+        msg={"Please Select category"}
+        onDismiss={() => {
+          setShowAlert(false);
+        }}
+      />
     </SafeAreaView>
   );
 };

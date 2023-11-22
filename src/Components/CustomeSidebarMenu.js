@@ -89,9 +89,13 @@ const CustomSidebarMenu = (props) => {
               />
             )}
           />
-          {/* <DrawerItem
+          <DrawerItem
             label="Profile"
-            onPress={() => {navigation.navigate()}}
+            onPress={() => {
+              navigation.navigate(screenName.bottomNavigation, {
+                screen: screenName.profile,
+              });
+            }}
             labelStyle={styles.labelStyle}
             icon={({ color, size, focused }) => (
               <Image
@@ -99,7 +103,7 @@ const CustomSidebarMenu = (props) => {
                 style={{ width: scale(15), height: scale(15) }}
               />
             )}
-          /> */}
+          />
         </View>
       </DrawerContentScrollView>
       <Divider />

@@ -20,7 +20,7 @@ const CategorieCircle = ({ data, disabled }) => {
         return (
           <TouchableOpacity
             onPress={() => {
-              dispatch(getAdContentByCategory(item.id));
+              dispatch(getAdContentByCategory(item.id, 1, 10));
             }}
             disabled={disabled}
             style={{
@@ -31,8 +31,8 @@ const CategorieCircle = ({ data, disabled }) => {
           >
             <View style={[styles.storyCircle]}>
               <SvgUri
-                width={scale(52)}
-                height={scale(52)}
+                width={scale(43)}
+                height={scale(43)}
                 uri={
                   item?.svgImagesPath != null
                     ? item?.svgImagesPath
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
   storyCircle: {
     width: scale(52),
     height: scale(52),
-    borderRadius: 40,
+    borderRadius: 100,
     alignItems: "center",
     borderWidth: 0.5,
     overflow: "hidden",

@@ -35,6 +35,20 @@ const DrawerNavigation = () => {
       drawerContent={(props) => <CustomSidebarMenu {...props} />}
     >
       <Drawer.Screen
+        name={screenName.homeScreenIcons}
+        component={HomeScreenIcons}
+        options={{
+          drawerLabel: "Categories",
+
+          drawerIcon: ({ color, size, focused }) => (
+            <Image
+              source={images.homeIcon}
+              style={{ width: scale(15), height: scale(15) }}
+            />
+          ),
+        }}
+      />
+      <Drawer.Screen
         name={screenName.bottomNavigation}
         component={BottomNavigation}
         options={{
@@ -48,20 +62,7 @@ const DrawerNavigation = () => {
           ),
         }}
       />
-      <Drawer.Screen
-        name={screenName.profile}
-        component={Profile}
-        options={{
-          drawerLabel: "Profile",
-          swipeEnabled: false,
-          drawerIcon: ({ color, size, focused }) => (
-            <Image
-              source={images.userIcon}
-              style={{ width: scale(15), height: scale(15) }}
-            />
-          ),
-        }}
-      />
+
       <Drawer.Screen
         name={screenName.bookmarkScreen}
         component={BookmarkScreen}

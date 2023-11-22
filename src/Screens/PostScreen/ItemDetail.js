@@ -1,4 +1,12 @@
-import { Keyboard, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Keyboard,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native";
 import commonStyle from "../../Constants/commonStyle";
@@ -9,9 +17,29 @@ import { KeyboardAvoidingView } from "react-native";
 import { Divider } from "react-native-paper";
 import CustomeButton from "../../Components/CustomeButton";
 import screenName from "../../Constants/screenName";
+import CustomeAlert from "../../Components/CustomeAlert";
+import { useDispatch, useSelector } from "react-redux";
+import { setItemDetail } from "../../store/addAdContentSlices/AddPostData";
+import images from "../../Constants/images";
+import colors from "../../Constants/colors";
 
 const ItemDetail = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const postData = useSelector((state) => state.addPost);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [classifiedTitle, setClassifiedTitle] = useState("");
+  const [condition, setCondition] = useState("");
+  const [price, setPrice] = useState(null);
+  const [brand, setBrand] = useState("");
+  const [shortDesc, setShortDesc] = useState("");
+  const [desc, setDesc] = useState("");
+  const [specifications, setSpecifications] = useState([
+    {
+      label: null,
+      value: null,
+    },
+  ]);
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
@@ -31,7 +59,61 @@ const ItemDetail = ({ navigation }) => {
       keyboardDidHideListener.remove();
     };
   }, []);
+  // set data when go back to edit
+  useEffect(() => {
+    if (postData?.itemDetail) {
+      setClassifiedTitle(postData?.itemDetail?.title);
+      setCondition(postData?.itemDetail?.condition);
+      setPrice(postData?.itemDetail?.price);
+      setBrand(postData?.itemDetail?.brand);
+      setShortDesc(postData?.itemDetail?.shorDescription);
+      setDesc(postData?.itemDetail?.description);
+    }
+  }, [postData?.itemDetail]);
 
+  const onClickNext = () => {
+    if (
+      classifiedTitle != "" &&
+      condition != "" &&
+      price != null &&
+      brand != "" &&
+      shortDesc != "" &&
+      desc != ""
+    ) {
+      const data = {
+        title: classifiedTitle,
+        shorDescription: shortDesc,
+        description: desc,
+        userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+        promoterId: 0,
+        condition: condition,
+        price: price,
+        brand: brand,
+        specifications: JSON.stringify(specifications),
+      };
+      dispatch(setItemDetail(data));
+      navigation.navigate(screenName.productPreview);
+    } else {
+      setShowAlert(true);
+    }
+  };
+  const addSpecificationTxtBox = () => {
+    setSpecifications([...specifications, { label: null, value: null }]);
+  };
+  const removeSpecificationTxtBox = (index) => {
+    const tempData = [...specifications];
+    const data = tempData.filter((element, index1) => index != index1);
+    setSpecifications(data);
+  };
+  const addSpecificationData = (index, field, txt) => {
+    const tempData = [...specifications];
+    const a = {
+      ...tempData[index],
+      [field]: txt,
+    };
+    tempData[index] = a;
+    setSpecifications(tempData);
+  };
   return (
     <SafeAreaView style={commonStyle.container}>
       <Header />
@@ -44,32 +126,48 @@ const ItemDetail = ({ navigation }) => {
             behavior="padding"
           >
             <TextBoxWithLabel
+              value={classifiedTitle}
               labelTxt={"Classified Title"}
               placeholder={"Enter title"}
-              onChange={(txt) => {}}
+              onChange={(txt) => {
+                setClassifiedTitle(txt);
+              }}
             />
             <TextBoxWithLabel
+              value={condition}
               labelTxt={"Condition"}
               placeholder={"Enter Condition"}
-              onChange={(txt) => {}}
+              onChange={(txt) => {
+                setCondition(txt);
+              }}
             />
             <TextBoxWithLabel
+              value={price}
               labelTxt={"Price"}
               placeholder={"Enter Price"}
-              onChange={(txt) => {}}
+              onChange={(txt) => {
+                setPrice(txt);
+              }}
             />
             <TextBoxWithLabel
+              value={brand}
               labelTxt={"Brand"}
               placeholder={"Enter Brand"}
-              onChange={(txt) => {}}
+              onChange={(txt) => {
+                setBrand(txt);
+              }}
             />
 
             <TextBoxWithLabel
+              value={shortDesc}
               labelTxt={"Short Description"}
               placeholder={"Enter descripition in one line"}
-              onChange={(txt) => {}}
+              onChange={(txt) => {
+                setShortDesc(txt);
+              }}
             />
             <TextBoxWithLabel
+              value={desc}
               labelTxt={"Description"}
               txtInputStyle={{
                 height: "100%",
@@ -81,8 +179,65 @@ const ItemDetail = ({ navigation }) => {
                 paddingVertical: verticalScale(3),
               }}
               multiline={true}
-              onChange={(txt) => {}}
+              onChange={(txt) => {
+                setDesc(txt);
+              }}
             />
+            <Text style={styles.labelStyle}>Specifications</Text>
+            {specifications?.map((item, index) => {
+              return (
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: scale(8),
+                  }}
+                >
+                  <TextBoxWithLabel
+                    value={item.label}
+                    placeholder={"Enter Label"}
+                    onChange={(txt) => {
+                      addSpecificationData(index, "label", txt);
+                    }}
+                  />
+                  <TextBoxWithLabel
+                    value={item.value}
+                    placeholder={"Enter value"}
+                    onChange={(txt) => {
+                      addSpecificationData(index, "value", txt);
+                    }}
+                  />
+                  {specifications.length - 1 == index ? (
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                      onPress={() => {
+                        addSpecificationTxtBox();
+                      }}
+                      style={styles.addBtnCircle}
+                    >
+                      <Image
+                        source={images.plusIcon}
+                        style={styles.addBtnImg}
+                      />
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      activeOpacity={0.6}
+                      onPress={() => {
+                        removeSpecificationTxtBox(index);
+                      }}
+                      style={[
+                        styles.addBtnCircle,
+                        { backgroundColor: colors.themeColor },
+                      ]}
+                    >
+                      <View style={styles.btnMinus}></View>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              );
+            })}
             <Divider />
           </KeyboardAvoidingView>
         </ScrollView>
@@ -90,7 +245,7 @@ const ItemDetail = ({ navigation }) => {
           <CustomeButton
             title={"Next"}
             onClick={() => {
-              navigation.navigate(screenName.productPreview);
+              onClickNext();
             }}
             style={{
               paddingVertical: moderateScale(13),
@@ -100,6 +255,14 @@ const ItemDetail = ({ navigation }) => {
           />
         )}
       </View>
+      <CustomeAlert
+        show={showAlert}
+        title={"Alert"}
+        msg={"Fill values"}
+        onDismiss={() => {
+          setShowAlert(false);
+        }}
+      />
     </SafeAreaView>
   );
 };
@@ -111,5 +274,30 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat-Light",
     fontSize: scale(10),
     marginBottom: verticalScale(10),
+  },
+  addBtnCircle: {
+    borderRadius: 100,
+    width: scale(20),
+    height: scale(20),
+    marginBottom: verticalScale(15),
+    marginTop: verticalScale(10),
+
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  addBtnImg: {
+    width: "100%",
+    height: "100%",
+    tintColor: colors.themeColor,
+  },
+  btnMinus: {
+    borderWidth: 1,
+    width: scale(9),
+    backgroundColor: "white",
+    borderColor: "white",
+  },
+  labelStyle: {
+    fontFamily: "Montserrat-Bold",
+    fontSize: scale(11),
   },
 });

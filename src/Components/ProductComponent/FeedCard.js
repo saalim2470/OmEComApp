@@ -1,6 +1,7 @@
 import {
   Image,
   Linking,
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -14,6 +15,11 @@ import images from "../../Constants/images";
 import commonStyle from "../../Constants/commonStyle";
 import colors from "../../Constants/colors";
 import PropTypes from "prop-types";
+import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useDispatch, useSelector } from "react-redux";
+import { addLikeOnContentApi } from "../../store/AdContentSlices/GetAdContentSlice";
+import Slider from "./Slider";
 
 const FeedCard = ({
   itemData,
@@ -22,26 +28,31 @@ const FeedCard = ({
   isOfferBtn,
   isShowOptionBtn,
   onClickMsgBtn = () => {},
-  onClickBookmarkBtn = () => {},
-  onClickComment = () => {},
 }) => {
-  const getIcon = (icon, onPress = () => {}) => {
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          onPress();
-        }}
-      >
-        <Image source={icon} style={{ width: scale(18), height: scale(18) }} />
-      </TouchableOpacity>
-    );
-  };
+  const dispatch = useDispatch();
+  const contentDataRes = useSelector(
+    (state) => state.getAddContentByCategory.likeData
+  );
   const [visible, setVisible] = useState(false);
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
-
+  const onClickLikeBtn = () => {
+    dispatch(
+      addLikeOnContentApi({
+        userId: itemData?.userId,
+        contentId: itemData?.id,
+        isLiked: true,
+      })
+    );
+  };
+  const onClickBookmarkBtn = () => {};
   return (
-    <View style={{ marginBottom: verticalScale(8) }}>
+    <Pressable
+      onPress={() => {
+        onClickMoreBtn();
+      }}
+      style={{ marginBottom: verticalScale(8) }}
+    >
       <View style={styles.cardHeaderView}>
         <View style={styles.onlyRowStyle}>
           <Avatar.Image
@@ -87,48 +98,78 @@ const FeedCard = ({
           </Menu>
         ) : null}
       </View>
-      <View style={styles.cardImgView}>
-        <SliderBox
-          images={itemData?.files}
-          sliderBoxHeight={"100%"}
-          dotColor={colors.themeColor}
-          inactiveDotColor="#FFFFFF"
-          disableOnPress={true}
-          imageLoadingColor={colors.themeColor}
-          dotStyle={styles.dotStyle}
-        />
-      </View>
+      {/* slider image view */}
+      <Slider data={itemData?.files} />
       <View style={styles.bottomView}>
         <View style={[commonStyle.row, { marginBottom: verticalScale(10) }]}>
           <View
-            style={[
-              {
-                width: "45%",
-              },
-              commonStyle.row,
-            ]}
+            style={{
+              flexDirection: "row",
+              gap: scale(15),
+            }}
           >
-            {getIcon(images.unLikeIcon, () => {
-              console.log("-=-=-=like by-=-", itemData?.title);
-            })}
-            {getIcon(images.messageIcon, () => {
-              onClickComment();
-            })}
-            {getIcon(images.emailIcon, () => {
-              onClickMsgBtn();
-            })}
-            {getIcon(
-              itemData?.isSaved ? images.bookmarkFillIcon : images.bookmarkIcon,
-              () => {
-                onClickBookmarkBtn();
-              }
-            )}
-          </View>
-          {/* <View style={{ width: "40%" }}>
-            <TouchableOpacity style={styles.btnStyle}>
-              <Text style={styles.btnTxt}>Buy Now</Text>
+            <TouchableOpacity
+              onPress={() => {
+                onClickLikeBtn();
+              }}
+            >
+              <Ionicons name="heart-outline" size={scale(24)} color="black" />
             </TouchableOpacity>
-          </View> */}
+            {/* <TouchableOpacity
+              onPress={() => {
+                onClickComment();
+              }}
+            >
+              <MaterialCommunityIcons
+                name="message-outline"
+                size={scale(24)}
+                color="black"
+              />
+            </TouchableOpacity> */}
+            <TouchableOpacity
+              onPress={() => {
+                onClickMsgBtn();
+              }}
+            >
+              <Ionicons name="mail-outline" size={scale(24)} color="black" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                onClickBookmarkBtn();
+              }}
+            >
+              <Ionicons
+                name="ios-bookmark-outline"
+                size={scale(24)}
+                color="black"
+              />
+              {/* fill icon */}
+              {/* <Ionicons name="ios-bookmark" size={scale(24)} color="black" /> */}
+            </TouchableOpacity>
+          </View>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <TouchableOpacity
+              activeOpacity={0.4}
+              onPress={() => {
+                Linking.openURL(
+                  `whatsapp://send?phone=${itemData?.mobileNo}&text=Hello`
+                );
+              }}
+            >
+              <Image
+                source={images.whatsAppLogo}
+                style={[styles.iconStyle, { marginRight: moderateScale(15) }]}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                Linking.openURL(`tel:${itemData?.mobileNo}`);
+              }}
+              activeOpacity={0.4}
+            >
+              <Image source={images.phoneIcon} style={styles.iconStyle} />
+            </TouchableOpacity>
+          </View>
         </View>
         <Text style={styles.bottomTxt("Montserrat-Bold")}>
           {itemData?.title}
@@ -159,25 +200,6 @@ const FeedCard = ({
             </Text>
           </Text>
         </View>
-        {/* <View style={styles.onlyRowStyle}>
-          <Text style={styles.bottomTxt("Montserrat-Medium")}>
-            Size:{" "}
-            <Text style={styles.bottomTxt("Montserrat-Bold")}>
-              x
-            </Text>
-          </Text>
-          <Text
-            style={[
-              styles.bottomTxt("Montserrat-Medium"),
-              { marginLeft: moderateScale(10) },
-            ]}
-          >
-            Color:{" "}
-            <Text style={styles.bottomTxt("Montserrat-Bold")}>
-              {itemData?.color}
-            </Text>
-          </Text>
-        </View> */}
         <Text
           style={[
             styles.bottomTxt("Montserrat-Light"),
@@ -254,7 +276,7 @@ const FeedCard = ({
           </View>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 

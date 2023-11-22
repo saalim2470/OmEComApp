@@ -35,6 +35,7 @@ import MessagesHome from "../Screens/MessageTabScreens/MessagesHome";
 import Profile from "../Screens/ProfileTabScreens/Profile";
 import { StyleSheet } from "react-native";
 import { scale } from "react-native-size-matters";
+import Notification from "../Screens/HomeTabScreens/Notification";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -48,38 +49,11 @@ const Routes = () => {
       {/* Auth screens */}
       <Stack.Screen name={screenName.splash} component={Splash} />
       <Stack.Screen name={screenName.introduction} component={Introduction} />
-      <Stack.Screen name={screenName.login} component={Login} />
-      <Stack.Screen
-        name={screenName.forgotPassword}
-        component={ForgotPassword}
-      />
-      <Stack.Screen name={screenName.resetPassword} component={ResetPassword} />
-      <Stack.Screen name={screenName.createAccount} component={CreateAccount} />
-      <Stack.Screen name={screenName.verification} component={Verification} />
-      <Stack.Screen name={screenName.checkEmail} component={CheckEmail} />
-      {/* Main App Screens */}
-      <Stack.Screen name={screenName.suggestFriend} component={SuggestFriend} />
-      <Stack.Screen
-        name={screenName.tellUsAboutLooksLike}
-        component={TellUsAboutLooksLike}
-      />
-      <Stack.Screen
-        name={screenName.tellUsAboutTags}
-        component={TellUsAboutTags}
-      />
-      <Stack.Screen
-        name={screenName.tellUsAboutSize}
-        component={TellUsAboutSize}
-      />
-      <Stack.Screen name={screenName.suggestStore} component={SuggestStore} />
+      <Stack.Screen name={"Auth"} component={AuthRoute} />
       <Stack.Screen
         name={screenName.drawerNavigation}
         component={DrawerNavigation}
       />
-      {/* <Stack.Screen
-        name={screenName.searchResultScreen}
-        component={SearchResultScreen}
-      /> */}
       <Stack.Screen name={screenName.productDetail} component={ProductDetail} />
       <Stack.Screen name={screenName.mPin} component={Mpin} />
       <Stack.Screen
@@ -96,15 +70,15 @@ const Routes = () => {
         name={screenName.productPreview}
         component={ProductPreview}
       />
+      <Stack.Screen name={screenName.notification} component={Notification} />
     </Stack.Navigator>
   );
 };
 
 export default Routes;
 
-const authRoute = () => {
+const AuthRoute = () => {
   <Stack.Navigator>
-    <Stack.Screen name={screenName.introduction} component={Introduction} />
     <Stack.Screen name={screenName.login} component={Login} />
     <Stack.Screen name={screenName.forgotPassword} component={ForgotPassword} />
     <Stack.Screen name={screenName.resetPassword} component={ResetPassword} />
@@ -113,107 +87,3 @@ const authRoute = () => {
     <Stack.Screen name={screenName.checkEmail} component={CheckEmail} />
   </Stack.Navigator>;
 };
-const bottomNavigation = () => {
-  <Tab.Navigator
-    screenOptions={{
-      tabBarShowLabel: false,
-      tabBarStyle: { height: verticalScale(50) },
-      tabBarActiveTintColor: colors.themeColor,
-      headerShown: false,
-      tabBarHideOnKeyboard: true,
-    }}
-  >
-    <Tab.Screen
-      name={screenName.bottomNavigationHomeRoute}
-      component={BottomNavigationHomeRoute}
-      options={{
-        tabBarLabel: "Home",
-        tabBarIcon: ({ color, size, focused }) =>
-          focused ? (
-            <Image
-              source={images.homeFillIcon}
-              style={[styles.iconStyle, { tintColor: color }]}
-            />
-          ) : (
-            <Image source={images.homeIcon} style={styles.iconStyle} />
-          ),
-      }}
-    />
-    <Tab.Screen
-      name={screenName.search}
-      component={Search}
-      options={{
-        tabBarLabel: "Home",
-        tabBarIcon: ({ color, size, focused }) => (
-          <Image
-            source={images.searchIcon}
-            style={[styles.iconStyle, { tintColor: focused ? color : null }]}
-          />
-        ),
-      }}
-    />
-    <Tab.Screen
-      name={screenName.postItem}
-      component={PostItem}
-      options={{
-        tabBarLabel: "Home",
-        tabBarIcon: ({ color, size }) => (
-          <View
-            style={{
-              backgroundColor: "#FFFFFF",
-              borderRadius: 100,
-              elevation: 10,
-              top: verticalScale(-15),
-            }}
-          >
-            <Image
-              source={images.plusIcon}
-              style={{
-                width: scale(50),
-                height: scale(50),
-                tintColor: colors.themeColor,
-              }}
-            />
-          </View>
-        ),
-      }}
-    />
-    <Tab.Screen
-      name={screenName.message}
-      component={MessagesHome}
-      options={{
-        tabBarLabel: "Home",
-        tabBarIcon: ({ color, size, focused }) => (
-          <Image
-            source={images.emailIcon}
-            style={[styles.iconStyle, { tintColor: focused ? color : null }]}
-          />
-        ),
-      }}
-    />
-    <Tab.Screen
-      name={screenName.profile}
-      component={Profile}
-      options={{
-        tabBarLabel: "Home",
-        tabBarIcon: ({ color, size, focused }) =>
-          focused ? (
-            <Image
-              source={images.userFillIcon}
-              style={[styles.iconStyle, { tintColor: color }]}
-            />
-          ) : (
-            <Image source={images.userIcon} style={styles.iconStyle} />
-          ),
-      }}
-    />
-  </Tab.Navigator>;
-};
-
-const drawerNavigation = () => {};
-const styles = StyleSheet.create({
-  iconStyle: {
-    width: scale(20),
-    height: scale(20),
-  },
-});

@@ -16,10 +16,13 @@ const CategoryView = ({ data }) => {
   return (
     <TouchableOpacity
       onPress={() => {
-        dispatch(getAdContentByCategory(data?.id));
-        navigation.navigate(screenName.mainHome, {
-          categoryId: data?.id,
-          categoryName: data?.categoryName,
+        dispatch(getAdContentByCategory(data?.id, 1, 10));
+        navigation.navigate(screenName.bottomNavigation, {
+          screen: screenName.mainHome,
+          params: {
+            categoryId: data?.id,
+            categoryName: data?.categoryName,
+          },
         });
       }}
       activeOpacity={0.4}

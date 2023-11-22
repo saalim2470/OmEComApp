@@ -1,15 +1,18 @@
 import { StyleSheet, View } from "react-native";
 import React from "react";
-import { Dialog, Portal, Text } from "react-native-paper";
+import { Button, Dialog, Portal, Text } from "react-native-paper";
 
-const CustomeAlert = ({ show, onDismiss = () => {} }) => {
+const CustomeAlert = ({ show, title, msg, onDismiss = () => {} }) => {
   return (
     <Portal>
-      <Dialog visible={show} onDismiss={onDismiss()}>
-        <Dialog.Title>This is a title</Dialog.Title>
+      <Dialog visible={show} onDismiss={() => onDismiss()}>
+        <Dialog.Title>{title}</Dialog.Title>
         <Dialog.Content>
-          <Text variant="bodyMedium">This is simple dialog</Text>
+          <Text variant="bodyMedium">{msg}</Text>
         </Dialog.Content>
+        <Dialog.Actions>
+          <Button onPress={() => onDismiss()}>Done</Button>
+        </Dialog.Actions>
       </Dialog>
     </Portal>
   );

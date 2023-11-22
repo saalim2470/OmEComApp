@@ -16,6 +16,7 @@ import Search from "../Screens/SearchTabScreens/Search";
 import PostItem from "../Screens/PostScreen/PostItem";
 import MessagesHome from "../Screens/MessageTabScreens/MessagesHome";
 import BottomNavigationSearchRoute from "./BottomNavigationSearchRoute";
+import MainHome from "../Screens/HomeTabScreens/MainHome";
 
 const Tab = createBottomTabNavigator();
 
@@ -30,9 +31,25 @@ const BottomNavigation = () => {
         tabBarHideOnKeyboard: true,
       }}
     >
-      <Tab.Screen
+      {/* <Tab.Screen
         name={screenName.bottomNavigationHomeRoute}
         component={BottomNavigationHomeRoute}
+        options={{
+          tabBarLabel: "Home",
+          tabBarIcon: ({ color, size, focused }) =>
+            focused ? (
+              <Image
+                source={images.homeFillIcon}
+                style={[styles.iconStyle, { tintColor: color }]}
+              />
+            ) : (
+              <Image source={images.homeIcon} style={styles.iconStyle} />
+            ),
+        }}
+      /> */}
+      <Tab.Screen
+        name={screenName.mainHome}
+        component={MainHome}
         options={{
           tabBarLabel: "Home",
           tabBarIcon: ({ color, size, focused }) =>

@@ -14,8 +14,8 @@ const TextBoxWithLabel = ({
   ...props
 }) => {
   return (
-    <View style={{ marginBottom: verticalScale(15) }}>
-      <Text style={styles.labelStyle}>{labelTxt}</Text>
+    <View style={{ marginBottom: verticalScale(15), flex: 1 }}>
+      {labelTxt && <Text style={styles.labelStyle}>{labelTxt}</Text>}
       <View style={[styles.txtBoxback, { ...txtBoxStyle }]}>
         {leftIcon ? (
           <Image

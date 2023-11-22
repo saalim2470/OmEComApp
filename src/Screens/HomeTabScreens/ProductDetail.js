@@ -17,11 +17,9 @@ const ProductDetail = ({ route }) => {
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={true}
       >
-        <FeedCardWithDescription
-          itemData={route?.params?.data}
-          isShowContactBtn={true}
-        />
-        <AdView />
+        <FeedCardWithDescription itemData={route?.params?.data} />
+        {/* unComment After 1st version */}
+        {/* <AdView /> */}
       </ScrollView>
     </SafeAreaView>
   );

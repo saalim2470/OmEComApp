@@ -19,7 +19,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const MainHome = ({ navigation, route }) => {
-  const categoryData = useSelector((state) => state.category.categoryData);
+  const categoryDataRes = useSelector((state) => state.category.categoryData);
   const contentDataRes = useSelector(
     (state) => state.getAddContentByCategory.contentData
   );
@@ -28,6 +28,7 @@ const MainHome = ({ navigation, route }) => {
   );
   const [isShowCommentView, setIsShowCommentView] = useState(-1);
   const [contentData, setContentData] = useState([]);
+  const [categoryData, setCategoryData] = useState(null);
   useEffect(() => {
     if (contentDataRes?.Success) {
       const data = [];
@@ -45,6 +46,9 @@ const MainHome = ({ navigation, route }) => {
       setContentData(data);
     }
   }, [contentDataRes]);
+  useEffect(() => {
+    setCategoryData(categoryDataRes?.Data);
+  }, [categoryDataRes]);
 
   const onClickSaved = (index) => {
     // const newData = [...feedData];
@@ -76,7 +80,7 @@ const MainHome = ({ navigation, route }) => {
         }}
       />
       <View style={styles.storyView}>
-        <CategorieCircle data={categoryData?.Data} />
+        <CategorieCircle data={categoryData} />
       </View>
       <Divider style={{ marginVertical: verticalScale(8) }} />
       {contentDataLoading ? (
@@ -99,9 +103,6 @@ const MainHome = ({ navigation, route }) => {
                 itemData={item}
                 isMoreBtn={true}
                 isOfferBtn={true}
-                onClickBookmarkBtn={() => {
-                  onClickSaved(index);
-                }}
                 onClickComment={() => {
                   setIsShowCommentView(0);
                 }}
