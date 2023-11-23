@@ -21,13 +21,14 @@ import { useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import CustomeAlertModal from "../../Components/CustomeAlertModal";
 import { useIsFocused } from "@react-navigation/native";
+import ServerError from "../../Components/ErrorScreens/ServerError";
 
 const HomeScreenIcons = ({ navigation }) => {
   const dispatch = useDispatch();
   const categoryLoading = useSelector((state) => state.category.isLoading);
   const categoryData = useSelector((state) => state.category.categoryData);
+  const categoryStatusCode = useSelector((state) => state.category.statusCode);
   const [category, setCategory] = useState([]);
   const focused = useIsFocused();
   useEffect(() => {
@@ -61,12 +62,16 @@ const HomeScreenIcons = ({ navigation }) => {
         <Loading />
       ) : (
         <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={styles.categoryWrapper}>
-            {category &&
-              category?.map((item, index) => {
-                return <CategoryView data={item} />;
-              })}
-          </View>
+          {categoryStatusCode != null ? (
+            <ServerError statusCode={categoryStatusCode} />
+          ) : (
+            <View style={styles.categoryWrapper}>
+              {category &&
+                category?.map((item, index) => {
+                  return <CategoryView data={item} />;
+                })}
+            </View>
+          )}
         </ScrollView>
       )}
     </SafeAreaView>

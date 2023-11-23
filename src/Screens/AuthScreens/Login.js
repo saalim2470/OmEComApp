@@ -29,12 +29,17 @@ const Login = ({ navigation }) => {
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [showError, setShowError] = useState({ isError: false, msg: null });
-  const [showAlert, setShowAlert] = useState(false);
   useEffect(() => {
     if (loginSuccess) {
       navigation.dispatch(StackActions.replace(screenName.drawerNavigation));
     }
   }, [loginSuccess]);
+  useEffect(() => {
+    if (loginError != null && !loginError?.Success) {
+      const errorData = JSON.parse(loginError?.ErrorMessage);
+      setShowError({ isError: true, msg: errorData?.title });
+    }
+  }, [loginError]);
 
   const onClickLogin = () => {
     if (email != "" && password != "") {
@@ -81,6 +86,7 @@ const Login = ({ navigation }) => {
         <KeyboardAvoidingView behavior="padding">
           <TextBox
             placeholderTextColor={"#cacaca"}
+            containerStyle={{ marginBottom: verticalScale(8) }}
             error={emailError}
             errorMsg={"Email address is invalid!"}
             value={email}

@@ -40,6 +40,7 @@ const screenName = {
   // drawerScreen
   bottomNavigation: "bottonNavigation",
   subscription: "Subscription",
+  authRoute: "AuthRoute",
 };
 
 export default screenName;

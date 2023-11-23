@@ -24,14 +24,19 @@ export default SearchContentSlice.reducer;
 export const { setSearchResult, setLoading, setError } =
   SearchContentSlice.actions;
 
-export const getSearchData = (keyword) => async (dispatch) => {
-  try {
-    dispatch(setLoading(true));
-    const responce = await SearchServices.getSearchData(keyword);
-    await dispatch(setSearchResult(responce.data));
-    dispatch(setLoading(false));
-  } catch (error) {
-    dispatch(setLoading(false));
-    dispatch(setError(error.response.data));
-  }
-};
+export const getSearchData =
+  (keyword, pageNumber, pageSize) => async (dispatch) => {
+    try {
+      dispatch(setLoading(true));
+      const responce = await SearchServices.getSearchData(
+        keyword,
+        pageNumber,
+        pageSize
+      );
+      await dispatch(setSearchResult(responce.data));
+      dispatch(setLoading(false));
+    } catch (error) {
+      dispatch(setLoading(false));
+      dispatch(setError(error.response.data));
+    }
+  };

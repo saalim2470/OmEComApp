@@ -22,11 +22,12 @@ const TextBox = ({
   errorMsg,
   style = {},
   onchange = () => {},
+  containerStyle,
   ...props
 }) => {
   const theme = useTheme();
   return (
-    <>
+    <View style={containerStyle}>
       <TextInput
         label={label}
         mode="outlined"
@@ -53,7 +54,7 @@ const TextBox = ({
           style,
           {
             backgroundColor: "#FFFFFF",
-            marginVertical: moderateVerticalScale(5),
+            // marginVertical: moderateVerticalScale(5),
             fontSize: scale(13),
           },
         ]}
@@ -67,7 +68,7 @@ const TextBox = ({
           {errorMsg}
         </HelperText>
       ) : null}
-    </>
+    </View>
   );
 };
 

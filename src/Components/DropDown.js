@@ -29,6 +29,8 @@ const DropDown = ({
   selectedTxtColor,
   onChangeId = () => {},
   placeholder,
+  valueField,
+  displayField,
 }) => {
   const [selectedData, setSelectedData] = useState(placeholder);
   const [isOpen, setIsOpen] = useState(false);
@@ -37,7 +39,9 @@ const DropDown = ({
   const onSearch = (text) => {
     if (text !== "") {
       let tempData = data.filter((item) => {
-        return item.value.toLowerCase().indexOf(text.toLowerCase()) > -1;
+        return (
+          item[displayField].toLowerCase().indexOf(text.toLowerCase()) > -1
+        );
       });
       setData(tempData);
     } else {
@@ -106,16 +110,16 @@ const DropDown = ({
                     containerRow,
                     {
                       backgroundColor:
-                        selectedData === item.value && selectedColor,
+                        selectedData === item[displayField] && selectedColor,
                     },
                   ]}
                   onPress={() => {
-                    setSelectedData(item.value),
+                    setSelectedData(item[displayField]),
                       onSearch(""),
                       isSearch && searchRef.current.clear();
-                    onChange && onChange(item.value);
+                    onChange && onChange(item[displayField]);
                     onChangeObject && onChangeObject(item);
-                    onChangeId && onChangeId(item.id);
+                    onChangeId && onChangeId(item[valueField]);
                     setIsOpen(false);
                   }}
                 >
@@ -124,11 +128,13 @@ const DropDown = ({
                       dropDownContainerTxt,
                       {
                         color:
-                          selectedData === item.value ? selectedTxtColor : null,
+                          selectedData === item[displayField]
+                            ? selectedTxtColor
+                            : null,
                       },
                     ]}
                   >
-                    {item.value}
+                    {item[displayField]}
                   </Text>
                 </TouchableOpacity>
               );

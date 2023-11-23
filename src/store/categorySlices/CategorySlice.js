@@ -7,6 +7,7 @@ const CategorySlice = createSlice({
     isLoading: false,
     categoryData: [],
     error: null,
+    statusCode: null,
   },
   reducers: {
     setCategory: (state, action) => {
@@ -19,13 +20,19 @@ const CategorySlice = createSlice({
     setError: (state, action) => {
       state.error = action.payload;
     },
+    setStatusCode: (state, action) => {
+      state.statusCode = action.payload;
+    },
   },
 });
 export default CategorySlice.reducer;
-export const { setCategory, setLoading, setError } = CategorySlice.actions;
+export const { setCategory, setLoading, setError, setStatusCode } =
+  CategorySlice.actions;
 
 export const getCategoryData = (pageNumber, pageSize) => async (dispatch) => {
   try {
+    dispatch(setError(null));
+    dispatch(setStatusCode(null));
     dispatch(setLoading(true));
     const responce = await CategoryServices.getCategory(pageNumber, pageSize);
     await dispatch(setCategory(responce.data));
@@ -33,5 +40,7 @@ export const getCategoryData = (pageNumber, pageSize) => async (dispatch) => {
   } catch (error) {
     dispatch(setLoading(false));
     dispatch(setError(error.response.data));
+    dispatch(setStatusCode(error.response.status));
+    dispatch(setCategory([]));
   }
 };

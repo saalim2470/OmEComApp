@@ -6,6 +6,10 @@ import SearchContentSlice from "./searchContentSlices/SearchContentSlice";
 import LoginSlice from "./authSlices/LoginSlice";
 import AddPostData from "./addAdContentSlices/AddPostData";
 import AddAdContent from "./AdContentSlices/AddAdContent";
+import GetCountrySlice from "./contrySlices/GetCountrySlice";
+import GetStateSlice from "./contrySlices/GetStateSlice";
+import GetCitySlice from "./contrySlices/GetCitySlice";
+import CreateAccountSlice from "./authSlices/CreateAccountSlice";
 
 const store = configureStore({
   reducer: {
@@ -15,6 +19,10 @@ const store = configureStore({
     login: LoginSlice,
     addPost: AddPostData,
     addAdContentData: AddAdContent,
+    getCountry: GetCountrySlice,
+    getState: GetStateSlice,
+    getCity: GetCitySlice,
+    createAccount: CreateAccountSlice,
   },
   middleware: [thunk],
 });

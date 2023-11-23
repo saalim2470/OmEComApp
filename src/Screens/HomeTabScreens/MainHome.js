@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, View } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import React from "react";
 import MainHeader from "../../Components/MainHeader";
 import commonStyle from "../../Constants/commonStyle";
@@ -97,6 +97,9 @@ const MainHome = ({ navigation, route }) => {
           ItemSeparatorComponent={
             <Divider style={{ marginBottom: verticalScale(8) }} />
           }
+          ListFooterComponent={
+            <ActivityIndicator style={{ marginVertical: verticalScale(20) }} />
+          }
           renderItem={({ item, index }) => {
             return (
               <FeedCard
@@ -115,12 +118,12 @@ const MainHome = ({ navigation, route }) => {
           }}
         />
       )}
-      <CommentView
+      {/* <CommentView
         isShow={isShowCommentView}
         onChange={(value) => {
           setIsShowCommentView(value);
         }}
-      />
+      /> */}
     </SafeAreaView>
   );
 };

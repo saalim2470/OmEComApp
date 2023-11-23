@@ -9,22 +9,24 @@ const CustomeAlertModal = ({
   isVisible,
   title,
   msg,
-  success,
-  error,
-  warning,
+  type,
   onClickBtn = () => {},
 }) => {
   return (
     <Modal isVisible={isVisible}>
       <View style={styles.modalView}>
-        {success && (
+        {type == "success" && (
           <Image
             source={images.checkedIcon}
             style={[styles.img, { tintColor: colors.themeColor }]}
           />
         )}
-        {error && <Image source={images.errorIcon} style={styles.img} />}
-        {warning && <Image source={images.warningIcon} style={styles.img} />}
+        {type == "error" && (
+          <Image source={images.errorIcon} style={styles.img} />
+        )}
+        {type == "warning" && (
+          <Image source={images.warningIcon} style={styles.img} />
+        )}
 
         <Text style={styles.txt}>{title}</Text>
         <Text style={styles.txt}>{msg}</Text>

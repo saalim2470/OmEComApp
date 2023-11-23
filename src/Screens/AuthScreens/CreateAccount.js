@@ -21,12 +21,26 @@ import {
 import CustomeButton from "../../Components/CustomeButton";
 import { Image } from "react-native";
 import colors from "../../Constants/colors";
-import { useNavigation } from "@react-navigation/native";
+import { StackActions, useNavigation } from "@react-navigation/native";
 import screenName from "../../Constants/screenName";
 import images from "../../Constants/images";
 import DropDown from "../../Components/DropDown";
+import { useDispatch, useSelector } from "react-redux";
+import { getStateData } from "../../store/contrySlices/GetStateSlice";
+import { getCityData } from "../../store/contrySlices/GetCitySlice";
+import DropDownPicker from "react-native-dropdown-picker";
+import { createAccountApi } from "../../store/authSlices/CreateAccountSlice";
 
 const CreateAccount = () => {
+  const dispatch = useDispatch();
+  const countryDataRes = useSelector((state) => state.getCountry.countryData);
+  const stateDataRes = useSelector((state) => state.getState.stateData);
+  const stateDataResLoading = useSelector((state) => state.getState.isLoading);
+  const cityDataRes = useSelector((state) => state.getCity.cityData);
+  const cityDataResLoading = useSelector((state) => state.getCity.isLoading);
+  const authLoading = useSelector((state) => state.createAccount.isLoading);
+  const authSuccess = useSelector((state) => state.createAccount.isLoggedIn);
+  console.log(authSuccess);
   const navigation = useNavigation();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -35,21 +49,17 @@ const CreateAccount = () => {
   const [cPassword, setCPassword] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [cPasswordVisible, setCPasswordVisible] = useState(false);
+  const [errors, setErrors] = useState({});
   const [keyboardStatus, setKeyboardStatus] = useState(false);
-  const cityData = [
-    {
-      id: 1,
-      value: "Surat",
-    },
-    {
-      id: 2,
-      value: "Ahmedabad",
-    },
-    {
-      id: 3,
-      value: "Vadodara",
-    },
-  ];
+  const [openCountryPicker, setOpenCountryPicker] = useState(false);
+  const [countryData, setCountryData] = useState([]);
+  const [country, setCountry] = useState(null);
+  const [openStatePicker, setOpenStatePicker] = useState(false);
+  const [stateData, setStateData] = useState([]);
+  const [state, setState] = useState(null);
+  const [openCityPicker, setOpenCityPicker] = useState(false);
+  const [cityData, setCityData] = useState([]);
+  const [city, setCity] = useState(null);
   const loginBtns = (icon, name, bkColor, txtColor) => {
     return (
       <TouchableOpacity
@@ -69,6 +79,45 @@ const CreateAccount = () => {
       </TouchableOpacity>
     );
   };
+  const onClickBtn = () => {
+    const fName = fullName.split(" ");
+    const data = {
+      username: email,
+      firstname: fName[0],
+      lastname: fName[1],
+      mobileNumber: mobileNo,
+      email: email,
+      password: password,
+      cityId: city,
+      stateId: state,
+      countryId: country,
+      roleId: 0,
+    };
+    console.log(data);
+    dispatch(createAccountApi(data));
+  };
+  useEffect(() => {
+    if (countryDataRes != null && countryDataRes?.Success) {
+      setCountryData(countryDataRes?.Data);
+    }
+    if (stateDataRes != null && stateDataRes?.Success) {
+      setStateData(stateDataRes?.Data);
+    }
+    if (cityDataRes != null && cityDataRes?.Success) {
+      setCityData(cityDataRes?.Data);
+    }
+  }, [countryDataRes, stateDataRes, cityDataRes]);
+  useEffect(() => {
+    if (authSuccess != false && authSuccess) {
+      console.log("succes");
+      navigation.dispatch(
+        StackActions.replace(screenName.drawerNavigation, {
+          screen: screenName.homeScreenIcons,
+        })
+      );
+    }
+  }, [authSuccess]);
+
   useEffect(() => {
     const showKeyboard = Keyboard.addListener("keyboardDidShow", () => {
       setKeyboardStatus(true);
@@ -82,6 +131,7 @@ const CreateAccount = () => {
       hideKeyboard.remove();
     };
   }, []);
+  const validate = () => {};
   return (
     <SafeAreaView style={commonStyle.container}>
       <Header />
@@ -90,7 +140,7 @@ const CreateAccount = () => {
         <KeyboardAvoidingView>
           <TextBox
             label={"Full name"}
-            style={{ marginBottom: moderateVerticalScale(10) }}
+            containerStyle={{ marginBottom: verticalScale(8) }}
             left={<TextInput.Icon icon={"account-outline"} tintColor="grey" />}
             onchange={(value) => {
               setFullName(value);
@@ -98,7 +148,8 @@ const CreateAccount = () => {
           />
           <TextBox
             label={"Email"}
-            style={{ marginBottom: moderateVerticalScale(10) }}
+            keyboardType={"email-address"}
+            containerStyle={{ marginBottom: verticalScale(8) }}
             left={<TextInput.Icon icon={"email-outline"} tintColor="grey" />}
             onchange={(value) => {
               setEmail(value);
@@ -106,7 +157,8 @@ const CreateAccount = () => {
           />
           <TextBox
             label={"Mobile number"}
-            style={{ marginBottom: moderateVerticalScale(10) }}
+            keyboardType={"phone-pad"}
+            containerStyle={{ marginBottom: verticalScale(8) }}
             left={
               <TextInput.Icon icon={"phone-hangup-outline"} tintColor="grey" />
             }
@@ -116,7 +168,7 @@ const CreateAccount = () => {
           />
           <TextBox
             label={"Password"}
-            style={{ marginBottom: moderateVerticalScale(10) }}
+            containerStyle={{ marginBottom: verticalScale(8) }}
             secureTextEntry={!passwordVisible}
             left={<TextInput.Icon icon={"lock-outline"} tintColor="grey" />}
             right={
@@ -134,7 +186,7 @@ const CreateAccount = () => {
           />
           <TextBox
             label={"Confirm password"}
-            style={{ marginBottom: moderateVerticalScale(10) }}
+            containerStyle={{ marginBottom: verticalScale(8) }}
             secureTextEntry={!cPasswordVisible}
             left={<TextInput.Icon icon={"lock-outline"} tintColor="grey" />}
             right={
@@ -150,26 +202,79 @@ const CreateAccount = () => {
               setCPassword(value);
             }}
           />
-          <DropDown
-            dropDownData={cityData}
-            selectedColor={colors.themeColor}
-            placeholder={"Select City"}
-            selectedTxtColor={"#FFFFFF"}
-            dropDownInputStyle={styles.ddStyle}
-            dropDownContainer={styles.ddContainer}
-            containerRow={styles.ddContainerRow}
-            dropDownInputTxt={styles.ddTxt}
-            dropDownContainerTxt={styles.ddTxt}
+          <DropDownPicker
+            schema={{
+              label: "name",
+              value: "id",
+            }}
+            labelStyle={styles.ddTxt}
+            textStyle={styles.ddTxt}
+            placeholder="Select Country"
+            open={openCountryPicker}
+            value={country}
+            items={countryData}
+            setOpen={setOpenCountryPicker}
+            setValue={setCountry}
+            setItems={setCountryData}
+            style={styles.ddStyle}
+            zIndex={3000}
+            zIndexInverse={1000}
+            onSelectItem={(item) => {
+              dispatch(getStateData(item.id, 1, 10));
+            }}
+          />
+          <DropDownPicker
+            loading={stateDataResLoading}
+            schema={{
+              label: "name",
+              value: "id",
+            }}
+            labelStyle={styles.ddTxt}
+            textStyle={styles.ddTxt}
+            placeholder="Select an State"
+            open={openStatePicker}
+            value={state}
+            items={stateData}
+            setOpen={setOpenStatePicker}
+            setValue={setState}
+            setItems={setStateData}
+            style={styles.ddStyle}
+            zIndex={2000}
+            zIndexInverse={2000}
+            onSelectItem={(item) => {
+              dispatch(getCityData(item.id, 1, 10));
+            }}
+          />
+          <DropDownPicker
+            loading={cityDataResLoading}
+            labelStyle={styles.ddTxt}
+            textStyle={styles.ddTxt}
+            schema={{
+              label: "name",
+              value: "id",
+            }}
+            placeholder="Select an City"
+            open={openCityPicker}
+            value={city}
+            items={cityData}
+            setOpen={setOpenCityPicker}
+            setValue={setCity}
+            setItems={setCityData}
+            style={styles.ddStyle}
+            zIndex={1000}
+            zIndexInverse={3000}
           />
           <CustomeButton
             title={"Sign Up"}
+            isLoading={authLoading}
             style={{ marginTop: moderateVerticalScale(40) }}
             onClick={() => {
-              navigation.navigate(screenName.verification);
+              // navigation.navigate(screenName.verification);
+              onClickBtn();
             }}
           />
         </KeyboardAvoidingView>
-        <View
+        {/* <View
           style={[
             styles.bottomBox,
             { display: keyboardStatus ? "none" : null },
@@ -213,7 +318,7 @@ const CreateAccount = () => {
             </Text>
             of the OM
           </Text>
-        </View>
+        </View> */}
       </View>
     </SafeAreaView>
   );
@@ -272,23 +377,20 @@ const styles = StyleSheet.create({
     color: "#cacaca",
   },
   ddStyle: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
     borderWidth: 1,
     height: verticalScale(40),
     borderColor: "#cacaca",
     borderRadius: scale(3),
-    paddingLeft: moderateScale(15),
-    marginTop: verticalScale(10),
+    marginBottom: verticalScale(10),
+    // zIndex: 999,
   },
   ddContainer: {
     borderWidth: 1,
-    height: verticalScale(100),
-    position: "absolute",
-    width: "100%",
-    top: verticalScale(50),
-    zIndex: 1,
+    // height: verticalScale(100),
+    // position: "absolute",
+    // width: "100%",
+    // top: verticalScale(50),
+    // zIndex: 1,
     backgroundColor: "#FFFFFF",
     borderColor: "#cacaca",
   },

@@ -95,7 +95,7 @@ const Introduction = () => {
                   <TouchableOpacity
                     style={styles.btn}
                     onPress={() => {
-                      navigation.navigate("Auth", {
+                      navigation.replace(screenName.authRoute, {
                         screen: screenName.login,
                       });
                       // navigation.dispatch(

@@ -38,6 +38,7 @@ export const { setToken, setLoading, setError, logOut } = LoginSlice.actions;
 
 export const getLoginUser = (data) => async (dispatch) => {
   try {
+    dispatch(setError(null));
     dispatch(setLoading(true));
     const responce = await AuthServices.login(data);
     await AsyncStorage.setItem(

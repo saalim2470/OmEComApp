@@ -19,22 +19,34 @@ import {
 import screenName from "../../Constants/screenName";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { accessToken } from "../../Constants/defaults";
+import { useDispatch, useSelector } from "react-redux";
+import { getCountryData } from "../../store/contrySlices/GetCountrySlice";
 
 const Splash = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
+  const countryData = useSelector((state) => state.getCountry.countryData);
   useEffect(() => {
     setTimeout(() => {
       getToken();
       // navigation.dispatch(StackActions.replace(screenName.introduction));
     }, 1500);
   });
+  useEffect(() => {
+    if (countryData != null && countryData?.Success) {
+      navigation.dispatch(StackActions.replace(screenName.introduction));
+    }
+  }, [countryData]);
+
   const getToken = async () => {
     try {
       const token = await AsyncStorage.getItem(accessToken);
       if (token != "" && token != null) {
         navigation.dispatch(StackActions.replace(screenName.drawerNavigation));
       } else {
-        navigation.dispatch(StackActions.replace(screenName.introduction));
+        // check user user enter first time in app
+        // if user enter first time in app navigate to intro else navigate to login
+        dispatch(getCountryData(1, 10));
       }
     } catch (error) {}
   };

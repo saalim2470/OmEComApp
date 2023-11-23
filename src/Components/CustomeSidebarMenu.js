@@ -35,7 +35,9 @@ const CustomSidebarMenu = (props) => {
     try {
       dispatch(logOut());
       await AsyncStorage.removeItem(accessToken);
-      navigation.dispatch(StackActions.replace(screenName.login));
+      navigation.dispatch(
+        StackActions.replace(screenName.authRoute, { screen: screenName.login })
+      );
     } catch (error) {}
   };
   return (

@@ -107,7 +107,7 @@ const SearchResultScreen = () => {
   ];
   const onClickSearch = () => {
     if (searchTxt != "") {
-      dispatch(getSearchData(searchTxt));
+      dispatch(getSearchData(searchTxt, 1, 10));
     }
   };
   const onClickClearIcon = () => {
@@ -122,7 +122,8 @@ const SearchResultScreen = () => {
           paddingHorizontal: moderateScale(15),
         }}
       >
-        <View style={[commonStyle.row, { marginTop: verticalScale(18) }]}>
+        {/* header view start */}
+        <View style={styles.header}>
           <TouchableOpacity activeOpacity={0.5}>
             <Image
               source={images.back_Icon}
@@ -131,7 +132,7 @@ const SearchResultScreen = () => {
           </TouchableOpacity>
           <TextBox
             placeholder={"Search something"}
-            style={{ width: scale(260) }}
+            style={{ flex: 1 }}
             value={searchTxt}
             activeOutlineColor={"lightgray"}
             autoFocus={true}
@@ -192,5 +193,11 @@ const styles = StyleSheet.create({
   iconStyle: {
     width: scale(20),
     height: scale(20),
+  },
+  header: {
+    marginTop: verticalScale(18),
+    flexDirection: "row",
+    alignItems: "center",
+    gap: scale(10),
   },
 });

@@ -1,8 +1,10 @@
 import { http } from "../../http-common";
 
 class SearchServices {
-  getSearchData(keyword) {
-    return http.get(`/AdContent/SearchAdContent?keyword=${keyword}`);
+  getSearchData(keyword, pageNumber, pageSize) {
+    return http.get(
+      `/AdContent/SearchAdContent?keyword=${keyword}&pageNumber=${pageNumber}&pageSize=${pageSize}`
+    );
   }
 }
 export default new SearchServices();
