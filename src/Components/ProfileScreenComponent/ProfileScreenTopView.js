@@ -8,7 +8,12 @@ import images from "../../Constants/images";
 const ProfileScreenTopView = () => {
   return (
     <>
-      <View style={{ marginHorizontal: moderateScale(15) }}>
+      <View
+        style={{
+          marginHorizontal: moderateScale(15),
+          marginTop: verticalScale(10),
+        }}
+      >
         <View
           style={{
             flexDirection: "row",

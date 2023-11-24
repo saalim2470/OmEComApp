@@ -22,24 +22,26 @@ import { useDispatch, useSelector } from "react-redux";
 import { setItemDetail } from "../../store/addAdContentSlices/AddPostData";
 import images from "../../Constants/images";
 import colors from "../../Constants/colors";
+import CustomeAlertModal from "../../Components/CustomeAlertModal";
 
 const ItemDetail = ({ navigation }) => {
   const dispatch = useDispatch();
   const postData = useSelector((state) => state.addPost);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
   const [classifiedTitle, setClassifiedTitle] = useState("");
   const [condition, setCondition] = useState("");
   const [price, setPrice] = useState(null);
   const [brand, setBrand] = useState("");
   const [shortDesc, setShortDesc] = useState("");
   const [desc, setDesc] = useState("");
-  const [specifications, setSpecifications] = useState([
-    {
-      label: null,
-      value: null,
-    },
-  ]);
+  const [isSpecificationValid, setIsSpecificationValid] = useState(false);
+  const [showAlert, setShowAlert] = useState({
+    show: false,
+    title: null,
+    msg: null,
+    type: null,
+  });
+  const [specifications, setSpecifications] = useState([]);
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       "keyboardDidShow",
@@ -70,7 +72,18 @@ const ItemDetail = ({ navigation }) => {
       setDesc(postData?.itemDetail?.description);
     }
   }, [postData?.itemDetail]);
-
+  const checkSpecification = () => {
+    const isValid = specifications.every((spec) => {
+      return (
+        spec.label !== null &&
+        spec.label !== undefined &&
+        spec.value !== null &&
+        spec.value !== undefined
+      );
+    });
+    setIsSpecificationValid(isValid);
+    return isValid;
+  };
   const onClickNext = () => {
     if (
       classifiedTitle != "" &&
@@ -90,11 +103,18 @@ const ItemDetail = ({ navigation }) => {
         price: price,
         brand: brand,
         specifications: JSON.stringify(specifications),
+        // specifications:
+        //   checkSpecification() == true ? JSON.stringify(specifications) : null,
       };
       dispatch(setItemDetail(data));
       navigation.navigate(screenName.productPreview);
     } else {
-      setShowAlert(true);
+      setShowAlert({
+        show: true,
+        title: "Validation",
+        msg: "Fill Values",
+        type: "warning",
+      });
     }
   };
   const addSpecificationTxtBox = () => {
@@ -183,16 +203,27 @@ const ItemDetail = ({ navigation }) => {
                 setDesc(txt);
               }}
             />
-            <Text style={styles.labelStyle}>Specifications</Text>
+            <View style={commonStyle.row}>
+              <Text style={styles.labelStyle}>Specifications</Text>
+              <TouchableOpacity
+                activeOpacity={0.6}
+                onPress={() => {
+                  addSpecificationTxtBox();
+                }}
+                style={styles.addBtnCircle}
+              >
+                <Image source={images.plusIcon} style={styles.addBtnImg} />
+              </TouchableOpacity>
+            </View>
             {specifications?.map((item, index) => {
               return (
                 <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: scale(8),
-                  }}
+                  style={[
+                    {
+                      gap: scale(8),
+                    },
+                    commonStyle.row,
+                  ]}
                 >
                   <TextBoxWithLabel
                     value={item.label}
@@ -208,37 +239,25 @@ const ItemDetail = ({ navigation }) => {
                       addSpecificationData(index, "value", txt);
                     }}
                   />
-                  {specifications.length - 1 == index ? (
-                    <TouchableOpacity
-                      activeOpacity={0.6}
-                      onPress={() => {
-                        addSpecificationTxtBox();
-                      }}
-                      style={styles.addBtnCircle}
-                    >
-                      <Image
-                        source={images.plusIcon}
-                        style={styles.addBtnImg}
-                      />
-                    </TouchableOpacity>
-                  ) : (
-                    <TouchableOpacity
-                      activeOpacity={0.6}
-                      onPress={() => {
-                        removeSpecificationTxtBox(index);
-                      }}
-                      style={[
-                        styles.addBtnCircle,
-                        { backgroundColor: colors.themeColor },
-                      ]}
-                    >
-                      <View style={styles.btnMinus}></View>
-                    </TouchableOpacity>
-                  )}
+                  <TouchableOpacity
+                    activeOpacity={0.6}
+                    onPress={() => {
+                      removeSpecificationTxtBox(index);
+                    }}
+                    style={[
+                      styles.addBtnCircle,
+                      {
+                        backgroundColor: colors.themeColor,
+                        marginBottom: verticalScale(15),
+                        marginTop: verticalScale(10),
+                      },
+                    ]}
+                  >
+                    <View style={styles.btnMinus}></View>
+                  </TouchableOpacity>
                 </View>
               );
             })}
-            <Divider />
           </KeyboardAvoidingView>
         </ScrollView>
         {isKeyboardOpen ? null : (
@@ -255,12 +274,13 @@ const ItemDetail = ({ navigation }) => {
           />
         )}
       </View>
-      <CustomeAlert
-        show={showAlert}
-        title={"Alert"}
-        msg={"Fill values"}
-        onDismiss={() => {
-          setShowAlert(false);
+      <CustomeAlertModal
+        isVisible={showAlert.show}
+        title={showAlert.title}
+        msg={showAlert.msg}
+        type={showAlert.type}
+        onClickBtn={() => {
+          setShowAlert({ ...showAlert, show: false });
         }}
       />
     </SafeAreaView>
@@ -279,9 +299,6 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     width: scale(20),
     height: scale(20),
-    marginBottom: verticalScale(15),
-    marginTop: verticalScale(10),
-
     alignItems: "center",
     justifyContent: "center",
   },

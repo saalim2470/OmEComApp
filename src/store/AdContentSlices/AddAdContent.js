@@ -20,6 +20,7 @@ const AddAdContent = createSlice({
     },
     reseAdPosttData: (state, action) => {
       state.addContentData = null;
+      state.error = null;
     },
   },
 });
@@ -36,5 +37,6 @@ export const addAdContentApi = (data) => async (dispatch) => {
   } catch (error) {
     dispatch(setLoading(false));
     dispatch(setError(error.response.data));
+    console.log("-=-=-=error in ad content-=-0=-", error.response.data);
   }
 };

@@ -11,20 +11,30 @@ import CustomeButton from "../../Components/CustomeButton";
 import screenName from "../../Constants/screenName";
 import * as ImagePicker from "expo-image-picker";
 import { useDispatch, useSelector } from "react-redux";
-import { setFiles } from "../../store/addAdContentSlices/AddPostData";
+import {
+  setFiles,
+  setFormDataFiles,
+} from "../../store/addAdContentSlices/AddPostData";
 import { useEffect } from "react";
 import { Entypo } from "@expo/vector-icons";
+import CustomeAlertModal from "../../Components/CustomeAlertModal";
 
 const AddProductImage = ({ navigation }) => {
   const dispatch = useDispatch();
   const postData = useSelector((state) => state.addPost);
+  const [showAlert, setShowAlert] = useState({
+    show: false,
+    title: null,
+    msg: null,
+    type: null,
+  });
   const [image, setImage] = useState([]);
   // set data when go back to edit
   useEffect(() => {
-    if (postData?.files) {
-      setImage(postData?.files);
+    if (postData?.formDataFiles) {
+      setImage(postData?.formDataFiles);
     }
-  }, [postData?.files]);
+  }, [postData?.formDataFiles]);
   const openImagePicker = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -34,12 +44,26 @@ const AddProductImage = ({ navigation }) => {
     });
 
     if (!result.canceled) {
-      setImage([...image, result.assets[0].uri]);
+      setImage([...image, result.assets[0]]);
     }
   };
   const onClickNext = () => {
-    dispatch(setFiles(image));
-    navigation.navigate(screenName.postCategory);
+    const files = [];
+    image.map((item, index) => {
+      files.push(item.uri);
+    });
+    dispatch(setFiles(files));
+    dispatch(setFormDataFiles(image));
+    if (image && image.length > 0) {
+      navigation.navigate(screenName.postCategory);
+    } else {
+      setShowAlert({
+        show: true,
+        type: "warning",
+        title: "Validation",
+        msg: "Choose at least one image",
+      });
+    }
   };
   const onClickRemove = (index1) => {
     const tempData = [...image];
@@ -61,7 +85,7 @@ const AddProductImage = ({ navigation }) => {
                     resizeMode="cover"
                     style={styles.imgStyle}
                     source={{
-                      uri: item,
+                      uri: item.uri,
                     }}
                   />
                   <TouchableOpacity
@@ -69,11 +93,7 @@ const AddProductImage = ({ navigation }) => {
                       onClickRemove(index);
                     }}
                     activeOpacity={0.6}
-                    style={{
-                      position: "absolute",
-                      alignSelf: "flex-end",
-                      marginRight: moderateScale(2),
-                    }}
+                    style={styles.removeBtn}
                   >
                     <Entypo
                       name="circle-with-cross"
@@ -113,6 +133,15 @@ const AddProductImage = ({ navigation }) => {
           style={{ paddingVertical: moderateScale(13) }}
         />
       </View>
+      <CustomeAlertModal
+        isVisible={showAlert.show}
+        title={showAlert.title}
+        msg={showAlert.msg}
+        type={showAlert.type}
+        onClickBtn={() => {
+          setShowAlert({ ...showAlert, show: false });
+        }}
+      />
     </SafeAreaView>
   );
 };
@@ -145,5 +174,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     marginBottom: verticalScale(10),
+  },
+  removeBtn: {
+    position: "absolute",
+    alignSelf: "flex-end",
+    marginRight: moderateScale(2),
   },
 });

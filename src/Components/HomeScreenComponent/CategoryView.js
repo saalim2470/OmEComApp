@@ -1,4 +1,11 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import {
+  Dimensions,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React from "react";
 import { TouchableOpacity } from "react-native";
 import screenName from "../../Constants/screenName";
@@ -10,72 +17,67 @@ import { defaultCategoryImg } from "../../Constants/defaults";
 import { useDispatch } from "react-redux";
 import { getAdContentByCategory } from "../../store/AdContentSlices/GetAdContentSlice";
 
+const screenWidth = Dimensions.get("window").width;
+const width = screenWidth / 3 - 15;
 const CategoryView = ({ data }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   return (
-    <TouchableOpacity
-      onPress={() => {
-        dispatch(getAdContentByCategory(data?.id, 1, 10));
-        navigation.navigate(screenName.bottomNavigation, {
-          screen: screenName.mainHome,
-          params: {
-            categoryId: data?.id,
-            categoryName: data?.categoryName,
-          },
-        });
-      }}
-      activeOpacity={0.4}
-      style={styles.categoryCard}
-    >
-      <Text style={styles.categoryTxt}>{data?.categoryName}</Text>
-
-      <View style={styles.imgView}>
-        <SvgUri
-          width={scale(70)}
-          height={verticalScale(75)}
-          uri={
-            data?.svgImagesPath != null
-              ? data?.svgImagesPath
-              : defaultCategoryImg
-          }
-        />
-      </View>
-    </TouchableOpacity>
+    <View style={styles.cardWrapperView}>
+      {data?.map((item, index) => {
+        return (
+          <TouchableOpacity
+            onPress={() => {
+              dispatch(getAdContentByCategory(item?.id, 1, 10));
+              navigation.navigate(screenName.bottomNavigation, {
+                screen: screenName.mainHome,
+                params: {
+                  categoryId: item?.id,
+                  categoryName: item?.categoryName,
+                },
+              });
+            }}
+            activeOpacity={0.4}
+            style={styles.cardView}
+          >
+            <SvgUri
+              width={scale(35)}
+              height={verticalScale(40)}
+              uri={
+                item?.svgImagesPath != null
+                  ? item?.svgImagesPath
+                  : defaultCategoryImg
+              }
+            />
+            <Text style={styles.categoryTxt}>{item?.categoryName}</Text>
+          </TouchableOpacity>
+        );
+      })}
+    </View>
   );
 };
 
 export default CategoryView;
 
 const styles = StyleSheet.create({
-  imgView: {
-    position: "absolute",
-    bottom: 0,
-    right: 0,
-    width: scale(70),
-    height: verticalScale(75),
-  },
-  categoryCard: {
-    width: scale(160),
-    // flex: 1,
-    height: verticalScale(90),
-    // backgroundColor: colors.greyColor,
-    paddingHorizontal: moderateScale(8),
-    paddingVertical: verticalScale(5),
-    borderRadius: scale(8),
+  cardView: {
+    width: width,
+    alignItems: "center",
+    paddingVertical: verticalScale(10),
     backgroundColor: "white",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 4.65,
-    elevation: 8,
-    elevation: 8,
+    elevation: 5,
+    borderRadius: 5,
+  },
+  cardWrapperView: {
+    marginHorizontal: moderateScale(8),
+    flexDirection: "row",
+    gap: scale(10),
+    flexWrap: "wrap",
+    paddingVertical: verticalScale(10),
   },
   categoryTxt: {
     fontFamily: "Montserrat-Medium",
     fontSize: scale(12),
+    marginTop: verticalScale(5),
   },
 });

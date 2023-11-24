@@ -1,4 +1,4 @@
-import { http } from "../../http-common";
+import { http, httpFile } from "../../http-common";
 
 class AdContentServices {
   getContentByCategory(categoryId, pageNumber, pageSize) {
@@ -10,7 +10,7 @@ class AdContentServices {
     return http.post("/UserLikeContent", data);
   }
   addAdContent(data) {
-    return http.post("/AdContent", data);
+    return httpFile.post("/AdContent/PostWithFiles", data);
   }
 }
 

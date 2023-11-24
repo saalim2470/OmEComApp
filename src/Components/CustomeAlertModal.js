@@ -13,7 +13,7 @@ const CustomeAlertModal = ({
   onClickBtn = () => {},
 }) => {
   return (
-    <Modal isVisible={isVisible}>
+    <Modal isVisible={isVisible} backdropOpacity={0.4}>
       <View style={styles.modalView}>
         {type == "success" && (
           <Image
@@ -64,8 +64,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.themeColor,
   },
   txt: {
-    fontFamily: "Montserrat-Medium",
-    fontSize: scale(16),
+    fontFamily: "Montserrat-Regular",
+    fontSize: scale(15),
     marginTop: verticalScale(5),
   },
   img: {

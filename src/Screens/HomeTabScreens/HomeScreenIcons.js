@@ -65,12 +65,7 @@ const HomeScreenIcons = ({ navigation }) => {
           {categoryStatusCode != null ? (
             <ServerError statusCode={categoryStatusCode} />
           ) : (
-            <View style={styles.categoryWrapper}>
-              {category &&
-                category?.map((item, index) => {
-                  return <CategoryView data={item} />;
-                })}
-            </View>
+            <CategoryView data={category} />
           )}
         </ScrollView>
       )}
@@ -80,45 +75,4 @@ const HomeScreenIcons = ({ navigation }) => {
 
 export default HomeScreenIcons;
 
-const styles = StyleSheet.create({
-  categoryWrapper: {
-    flex: 1,
-    marginHorizontal: moderateScale(8),
-    marginTop: verticalScale(10),
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    rowGap: scale(10),
-    // gap: scale(15),
-  },
-  iconView: {
-    width: scale(95),
-    height: scale(90),
-    alignItems: "center",
-    justifyContent: "space-evenly",
-    borderRadius: scale(8),
-    backgroundColor: "#FFFFFF",
-    marginVertical: verticalScale(10),
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    overflow: "hidden",
-  },
-  iconTxt: {
-    fontFamily: "Montserrat-Medium",
-    fontSize: scale(10),
-    textAlign: "center",
-  },
-  iconsParentView: {
-    paddingHorizontal: moderateScale(15),
-    flexDirection: "row",
-    flexWrap: "wrap",
-    columnGap: 20,
-    rowGap: 5,
-  },
-});
+const styles = StyleSheet.create({});

@@ -18,6 +18,7 @@ import Overview from "./Overview";
 import Specification from "./Specification";
 import { Ionicons } from "@expo/vector-icons";
 import Slider from "./Slider";
+import { useEffect } from "react";
 
 const FeedCardWithDescription = ({
   itemData,
@@ -25,6 +26,19 @@ const FeedCardWithDescription = ({
   onClickBookmarkBtn = () => {},
 }) => {
   const [activeTab, setActiveTab] = useState(0);
+  const [files, setFiles] = useState([]);
+  const imageurl = () => {
+    let data = JSON.parse(itemData?.imagesData);
+    let values = [];
+    console.log(data);
+    data.map((item, index) => {
+      values.push(`http://192.168.1.16/ContentImages/${item}`);
+    });
+    setFiles(values);
+  };
+  useEffect(() => {
+    imageurl();
+  }, [itemData]);
   return (
     <View style={{ marginBottom: verticalScale(8) }}>
       {/* card header view */}
@@ -53,7 +67,7 @@ const FeedCardWithDescription = ({
         </TouchableOpacity> */}
       </View>
       {/* image slider view */}
-      <Slider data={itemData?.files} />
+      <Slider data={files} />
       <View style={styles.bottomView}>
         <View style={[commonStyle.row]}>
           <View

@@ -13,3 +13,16 @@ http.interceptors.request.use(async (config) => {
   config.headers["Content-Type"] = "application/json";
   return config;
 });
+
+// for file uploader
+export const httpFile = axios.create({
+  baseURL: "http://192.168.1.16/api",
+});
+httpFile.interceptors.request.use(async (config) => {
+  const token = await AsyncStorage.getItem(accessToken);
+  if (token) {
+    config.headers["Authorization"] = "Bearer " + token;
+  }
+  config.headers["Content-Type"] = "multipart/form-data";
+  return config;
+});

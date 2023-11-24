@@ -20,6 +20,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { addLikeOnContentApi } from "../../store/AdContentSlices/GetAdContentSlice";
 import Slider from "./Slider";
+import { http } from "../../../http-common";
+import { useEffect } from "react";
 
 const FeedCard = ({
   itemData,
@@ -27,6 +29,7 @@ const FeedCard = ({
   isMoreBtn,
   isOfferBtn,
   isShowOptionBtn,
+  menuChildren,
   onClickMsgBtn = () => {},
 }) => {
   const dispatch = useDispatch();
@@ -34,6 +37,7 @@ const FeedCard = ({
     (state) => state.getAddContentByCategory.likeData
   );
   const [visible, setVisible] = useState(false);
+  const [files, setFiles] = useState([]);
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
   const onClickLikeBtn = () => {
@@ -46,6 +50,19 @@ const FeedCard = ({
     );
   };
   const onClickBookmarkBtn = () => {};
+  const imageurl = () => {
+    let data = JSON.parse(itemData?.imagesData);
+    let values = [];
+    console.log(data);
+    data.map((item, index) => {
+      values.push(`http://192.168.1.16/ContentImages/${item}`);
+    });
+    setFiles(values);
+  };
+  useEffect(() => {
+    imageurl();
+  }, [itemData]);
+
   return (
     <Pressable
       onPress={() => {
@@ -93,13 +110,14 @@ const FeedCard = ({
               </TouchableOpacity>
             }
           >
-            <Menu.Item onPress={() => {}} title="Edit" />
-            <Menu.Item onPress={() => {}} title="Delete" />
+            {menuChildren}
+            {/* <Menu.Item onPress={() => {}} title="Edit" />
+            <Menu.Item onPress={() => {}} title="Delete" /> */}
           </Menu>
         ) : null}
       </View>
       {/* slider image view */}
-      <Slider data={itemData?.files} />
+      <Slider data={files} />
       <View style={styles.bottomView}>
         <View style={[commonStyle.row, { marginBottom: verticalScale(10) }]}>
           <View
