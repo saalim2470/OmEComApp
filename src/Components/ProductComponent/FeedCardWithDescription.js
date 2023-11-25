@@ -19,6 +19,7 @@ import Specification from "./Specification";
 import { Ionicons } from "@expo/vector-icons";
 import Slider from "./Slider";
 import { useEffect } from "react";
+import { baseURL, serverImagePath } from "../../Constants/defaults";
 
 const FeedCardWithDescription = ({
   itemData,
@@ -32,7 +33,7 @@ const FeedCardWithDescription = ({
     let values = [];
     console.log(data);
     data.map((item, index) => {
-      values.push(`http://192.168.1.16/ContentImages/${item}`);
+      values.push(`${baseURL}${serverImagePath}/${item}`);
     });
     setFiles(values);
   };

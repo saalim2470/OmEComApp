@@ -10,21 +10,65 @@ import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import screenName from "../../Constants/screenName";
 import colors from "../../Constants/colors";
 import SubscriptionBottomSheet from "../../Components/SubscriptionBottomSheet";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { getSubscriptionPlan } from "../../store/subscriptionSlices/SubscriptionPlanSlice";
+import Loading from "../../Components/Loading";
+import { getSubscriptionPlanId } from "../../store/subscriptionSlices/GetSubscriptionPlanSlice";
+import { useNavigation } from "@react-navigation/native";
+import {
+  addAdContentApi,
+  reseAdPosttData,
+} from "../../store/AdContentSlices/AddAdContent";
+import CustomeAlertModal from "../../Components/CustomeAlertModal";
+import { resetData } from "../../store/addAdContentSlices/AddPostData";
+import { useState } from "react";
 
-const Subscription = ({ navigation }) => {
-  const getStripe = (month, price) => {
-    return (
-      <View style={styles.stripeWrapper}>
-        <Text style={styles.stripeTxt}>{month}</Text>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Text style={styles.stripeTxt}>&#8377; {price}</Text>
-          <TouchableOpacity style={styles.striprBtn} activeOpacity={0.6}>
-            <Text style={[styles.stripeTxt, { color: "white" }]}>Choose</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  };
+const Subscription = ({ route }) => {
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+  const postData = useSelector((state) => state.addPost);
+  const addPostData = useSelector((state) => state.addAdContentData);
+  const subscriptionLoading = useSelector(
+    (state) => state.subscriptionPlan.isLoading
+  );
+  const subscriptionData = useSelector(
+    (state) => state.subscriptionPlan.subscriptionData
+  );
+  const getSubscriptionLoading = useSelector(
+    (state) => state.getSubscriptionPlan.isLoading
+  );
+  const getSubscriptionData = useSelector(
+    (state) => state.getSubscriptionPlan.subscriptionPlanData
+  );
+  const [showAlert, setShowAlert] = useState({
+    show: false,
+    title: null,
+    msg: null,
+    type: null,
+  });
+  console.log(getSubscriptionData);
+  useEffect(() => {
+    dispatch(getSubscriptionPlan(1, 10));
+  }, []);
+  useEffect(() => {
+    if (getSubscriptionData && getSubscriptionData.Success) {
+      // navigation.navigate(screenName.productPreview);
+      // navigation.navigate(screenName.productPreview);
+      dispatch(addAdContentApi(route?.params?.data));
+    }
+  }, [getSubscriptionData]);
+  useEffect(() => {
+    if (addPostData?.addContentData?.Success) {
+      setShowAlert({
+        show: true,
+        title: "Success",
+        msg: "Ad Content Added Successfully",
+        type: "success",
+      });
+    }
+  }, [addPostData?.addContentData]);
+
   return (
     <SafeAreaView style={commonStyle.container}>
       <MainHeader
@@ -44,33 +88,130 @@ const Subscription = ({ navigation }) => {
           navigation.openDrawer();
         }}
       />
-      <View style={styles.headingView}>
-        <Text style={styles.headingTxt}>Inner Ads</Text>
-        <TouchableOpacity activeOpacity={0.6}>
-          <Text style={styles.headingBtnTxt}>Read More...</Text>
-        </TouchableOpacity>
-      </View>
-      {getStripe("1 Month", "1200")}
-      {getStripe("3 Month", "3000")}
-      {getStripe("6 Month", "5400")}
-      {getStripe("12 Month", "8400")}
-      {getStripe("10 Days", "500")}
-      <View style={styles.headingView}>
-        <Text style={styles.headingTxt}>Home page/Front page Ad</Text>
-        <TouchableOpacity activeOpacity={0.6}>
-          <Text style={styles.headingBtnTxt}>Read More...</Text>
-        </TouchableOpacity>
-      </View>
-      {getStripe("1 Month", "13000")}
-      <View style={styles.headingView}>
-        <Text style={styles.headingTxt}>Pin Post</Text>
-        <TouchableOpacity activeOpacity={0.6}>
-          <Text style={styles.headingBtnTxt}>Read More...</Text>
-        </TouchableOpacity>
-      </View>
-      {getStripe("1 Week", "4800")}
-      {getStripe("1 Month", "14400")}
-      {/* <SubscriptionBottomSheet /> */}
+      {subscriptionLoading || getSubscriptionLoading ? (
+        <Loading />
+      ) : (
+        <>
+          <View style={styles.headingView}>
+            <Text style={styles.headingTxt}>Inner Ads</Text>
+            <TouchableOpacity activeOpacity={0.6}>
+              <Text style={styles.headingBtnTxt}>Read More...</Text>
+            </TouchableOpacity>
+          </View>
+          {subscriptionData?.Data?.map((item, index) => {
+            if (item?.subscriptionType == 0) {
+              {
+                return (
+                  <View style={styles.stripeWrapper}>
+                    <Text style={styles.stripeTxt}>{item?.name}</Text>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <Text style={styles.stripeTxt}>
+                        &#8377; {item?.price}
+                      </Text>
+                      <TouchableOpacity
+                        onPress={() => {
+                          dispatch(getSubscriptionPlanId(item?.id));
+                        }}
+                        style={styles.striprBtn}
+                        activeOpacity={0.6}
+                      >
+                        <Text style={[styles.stripeTxt, { color: "white" }]}>
+                          Choose
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                );
+              }
+            }
+          })}
+          <View style={styles.headingView}>
+            <Text style={styles.headingTxt}>Home page/Front page Ad</Text>
+            <TouchableOpacity activeOpacity={0.6}>
+              <Text style={styles.headingBtnTxt}>Read More...</Text>
+            </TouchableOpacity>
+          </View>
+          {subscriptionData?.Data?.map((item, index) => {
+            if (item?.subscriptionType == 1) {
+              {
+                return (
+                  <View style={styles.stripeWrapper}>
+                    <Text style={styles.stripeTxt}>{item?.name}</Text>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <Text style={styles.stripeTxt}>
+                        &#8377; {item?.price}
+                      </Text>
+                      <TouchableOpacity
+                        onPress={() => {
+                          console.log(item.id);
+                        }}
+                        style={styles.striprBtn}
+                        activeOpacity={0.6}
+                      >
+                        <Text style={[styles.stripeTxt, { color: "white" }]}>
+                          Choose
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                );
+              }
+            }
+          })}
+          <View style={styles.headingView}>
+            <Text style={styles.headingTxt}>Pin Post</Text>
+            <TouchableOpacity activeOpacity={0.6}>
+              <Text style={styles.headingBtnTxt}>Read More...</Text>
+            </TouchableOpacity>
+          </View>
+          {subscriptionData?.Data?.map((item, index) => {
+            if (item?.subscriptionType == 2) {
+              {
+                return (
+                  <View style={styles.stripeWrapper}>
+                    <Text style={styles.stripeTxt}>{item?.name}</Text>
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <Text style={styles.stripeTxt}>
+                        &#8377; {item?.price}
+                      </Text>
+                      <TouchableOpacity
+                        onPress={() => {
+                          console.log(item.id);
+                        }}
+                        style={styles.striprBtn}
+                        activeOpacity={0.6}
+                      >
+                        <Text style={[styles.stripeTxt, { color: "white" }]}>
+                          Choose
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                );
+              }
+            }
+          })}
+          {/* <SubscriptionBottomSheet /> */}
+        </>
+      )}
+      <CustomeAlertModal
+        isVisible={showAlert.show}
+        title={showAlert.title}
+        msg={showAlert.msg}
+        type={showAlert.type}
+        onClickBtn={() => {
+          setShowAlert({ ...showAlert, show: false });
+          dispatch(resetData());
+          dispatch(reseAdPosttData());
+          navigation.navigate(screenName.bottomNavigation);
+        }}
+      />
     </SafeAreaView>
   );
 };

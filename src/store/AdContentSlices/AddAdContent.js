@@ -7,6 +7,7 @@ const AddAdContent = createSlice({
     isLoading: false,
     addContentData: null,
     error: null,
+    errorCode: null,
   },
   reducers: {
     setContentResponce: (state, action) => {
@@ -21,12 +22,21 @@ const AddAdContent = createSlice({
     reseAdPosttData: (state, action) => {
       state.addContentData = null;
       state.error = null;
+      state.errorCode = null;
+    },
+    setErrorCode: (state, action) => {
+      state.errorCode = action.payload;
     },
   },
 });
 export default AddAdContent.reducer;
-export const { reseAdPosttData, setContentResponce, setLoading, setError } =
-  AddAdContent.actions;
+export const {
+  reseAdPosttData,
+  setContentResponce,
+  setLoading,
+  setError,
+  setErrorCode,
+} = AddAdContent.actions;
 
 export const addAdContentApi = (data) => async (dispatch) => {
   try {
@@ -37,6 +47,7 @@ export const addAdContentApi = (data) => async (dispatch) => {
   } catch (error) {
     dispatch(setLoading(false));
     dispatch(setError(error.response.data));
+    dispatch(setErrorCode(error.response.status));
     console.log("-=-=-=error in ad content-=-0=-", error.response.data);
   }
 };

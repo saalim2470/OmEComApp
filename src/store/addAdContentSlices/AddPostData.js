@@ -7,6 +7,7 @@ const AddPostData = createSlice({
     category: null,
     itemDetail: null,
     formDataFiles: null,
+    postDataDraft: null,
   },
   reducers: {
     resetData: (state, action) => {
@@ -27,6 +28,9 @@ const AddPostData = createSlice({
     setFormDataFiles: (state, action) => {
       state.formDataFiles = action.payload;
     },
+    setPostDataDraft: (state, action) => {
+      state.postDataDraft = action.payload;
+    },
   },
 });
 export default AddPostData.reducer;
@@ -36,4 +40,5 @@ export const {
   setFiles,
   setCategory,
   setItemDetail,
+  setPostDataDraft,
 } = AddPostData.actions;

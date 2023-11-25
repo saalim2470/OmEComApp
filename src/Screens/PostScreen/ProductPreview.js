@@ -12,7 +12,10 @@ import {
   addAdContentApi,
   reseAdPosttData,
 } from "../../store/AdContentSlices/AddAdContent";
-import { resetData } from "../../store/addAdContentSlices/AddPostData";
+import {
+  resetData,
+  setPostDataDraft,
+} from "../../store/addAdContentSlices/AddPostData";
 import screenName from "../../Constants/screenName";
 import CustomeAlertModal from "../../Components/CustomeAlertModal";
 import Slider from "../../Components/ProductComponent/Slider";
@@ -41,6 +44,15 @@ const ProductPreview = ({ navigation, route }) => {
       });
     }
   }, [addPostData?.addContentData]);
+  useEffect(() => {
+    if (addPostData?.errorCode != null && addPostData?.errorCode == 403) {
+      dispatch(setPostDataDraft(formData));
+      navigation.navigate(screenName.drawerNavigation, {
+        screen: screenName.subscription,
+        params: { data: formData },
+      });
+    }
+  }, [addPostData.errorCode]);
 
   const onClickBtn = () => {
     postData.formDataFiles.forEach((element, index) => {
@@ -63,6 +75,9 @@ const ProductPreview = ({ navigation, route }) => {
     formData.append("brand", postData?.itemDetail?.brand);
     formData.append("specifications", postData?.itemDetail?.specifications);
     dispatch(addAdContentApi(formData));
+    // navigation.navigate(screenName.drawerNavigation, {
+    //   screen: screenName.subscription,
+    // });
   };
   return (
     <SafeAreaView style={commonStyle.container}>
