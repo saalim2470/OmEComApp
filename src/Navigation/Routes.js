@@ -15,6 +15,7 @@ import Notification from "../Screens/HomeTabScreens/Notification";
 import AuthRoute from "./AuthRoute";
 import Login from "../Screens/AuthScreens/Login";
 import CreateAccount from "../Screens/AuthScreens/CreateAccount";
+import Payment from "../Screens/Payment/Payment";
 
 const Stack = createNativeStackNavigator();
 const Routes = () => {
@@ -48,6 +49,7 @@ const Routes = () => {
         component={ProductPreview}
       />
       <Stack.Screen name={screenName.notification} component={Notification} />
+      <Stack.Screen name={'Payment'} component={Payment} />
     </Stack.Navigator>
   );
 };
