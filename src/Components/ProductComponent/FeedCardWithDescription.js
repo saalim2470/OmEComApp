@@ -20,6 +20,7 @@ import { Ionicons } from "@expo/vector-icons";
 import Slider from "./Slider";
 import { useEffect } from "react";
 import { baseURL, serverImagePath } from "../../Constants/defaults";
+import { addLikeOnContentApi } from "../../store/AdContentSlices/GetAdContentSlice";
 
 const FeedCardWithDescription = ({
   itemData,
@@ -40,6 +41,14 @@ const FeedCardWithDescription = ({
   useEffect(() => {
     imageurl();
   }, [itemData]);
+  const onClickLikeBtn = () => {
+    dispatch(
+      addLikeOnContentApi({
+        contentId: itemData?.id,
+        isLiked: !itemData?.isCurrentUserLiked,
+      })
+    );
+  };
   return (
     <View style={{ marginBottom: verticalScale(8) }}>
       {/* card header view */}
@@ -52,7 +61,9 @@ const FeedCardWithDescription = ({
             size={scale(35)}
           />
           <View style={{ marginLeft: moderateScale(5) }}>
-            <Text style={styles.headingTxt}>{itemData?.userName}</Text>
+            <Text
+              style={styles.headingTxt}
+            >{`${itemData?.user?.firstname} ${itemData?.user?.lastname}`}</Text>
             <Text style={styles.subTxt}>
               {itemData?.location.length > 50
                 ? `${itemData?.location.substring(0, 50)}.....`
@@ -82,7 +93,11 @@ const FeedCardWithDescription = ({
                 onClickLikeBtn();
               }}
             >
-              <Ionicons name="heart-outline" size={scale(24)} color="black" />
+              <Ionicons
+                name={itemData?.isCurrentUserLiked ? "heart" : "heart-outline"}
+                size={scale(24)}
+                color={itemData?.isCurrentUserLiked ? "red" : "black"}
+              />
             </TouchableOpacity>
             {/* <TouchableOpacity
               onPress={() => {
@@ -121,7 +136,7 @@ const FeedCardWithDescription = ({
               activeOpacity={0.4}
               onPress={() => {
                 Linking.openURL(
-                  `whatsapp://send?phone=${itemData?.mobileNo}&text=Hello`
+                  `whatsapp://send?phone=${itemData?.user?.phoneNumber}&text=Hello`
                 );
               }}
             >
@@ -132,7 +147,7 @@ const FeedCardWithDescription = ({
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                Linking.openURL(`tel:${itemData?.mobileNo}`);
+                Linking.openURL(`tel:${itemData?.user?.phoneNumber}`);
               }}
               activeOpacity={0.4}
             >

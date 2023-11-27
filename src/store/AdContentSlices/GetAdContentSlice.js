@@ -15,7 +15,7 @@ const GetAdContentSlice = createSlice({
       return { ...state, contentData: action.payload };
     },
     addLikeContent: (state, action) => {
-      return { ...state, likeData: action.payload };
+      state.likeData = action.payload;
     },
     setLoading: (state, action) => {
       state.isLoading = action.payload;
@@ -49,7 +49,8 @@ export const getAdContentByCategory =
 export const addLikeOnContentApi = (data) => async (dispatch) => {
   try {
     const responce = await AdContentServices.addContentLike(data);
-    await dispatch(addLikeContent(responce.data));
+    await dispatch(addLikeContent(responce.status));
+    console.log(responce.data);
   } catch (error) {
     dispatch(setError(error.response.data));
     console.log("-=-=-=like error-=-=-=", error.response.data);

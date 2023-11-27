@@ -47,7 +47,7 @@ const Subscription = ({ route }) => {
     msg: null,
     type: null,
   });
-  console.log(getSubscriptionData);
+  console.log("-=--getsubscriptiondata-=-=-", getSubscriptionData);
   useEffect(() => {
     dispatch(getSubscriptionPlan(1, 10));
   }, []);
@@ -55,7 +55,8 @@ const Subscription = ({ route }) => {
     if (getSubscriptionData && getSubscriptionData.Success) {
       // navigation.navigate(screenName.productPreview);
       // navigation.navigate(screenName.productPreview);
-      dispatch(addAdContentApi(route?.params?.data));
+      console.log("-=-=-=params ", postData?.postDataDraft);
+      dispatch(addAdContentApi(postData?.postDataDraft));
     }
   }, [getSubscriptionData]);
   useEffect(() => {

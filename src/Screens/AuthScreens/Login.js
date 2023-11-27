@@ -16,6 +16,7 @@ import CustomeSnackbar from "../../Components/CustomeSnackbar";
 import { useDispatch, useSelector } from "react-redux";
 import { getLoginUser } from "../../store/authSlices/LoginSlice";
 import { useEffect } from "react";
+import { getCountryData } from "../../store/contrySlices/GetCountrySlice";
 
 const Login = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -206,6 +207,7 @@ const Login = ({ navigation }) => {
               fontFamily: "Montserrat-Medium",
             }}
             onPress={() => {
+              dispatch(getCountryData(1, 10));
               navigation.navigate(screenName.createAccount);
             }}
           >

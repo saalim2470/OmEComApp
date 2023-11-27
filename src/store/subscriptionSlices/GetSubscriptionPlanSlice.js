@@ -5,7 +5,7 @@ const GetSubscriptionPlanSlice = createSlice({
   name: "getSubscriptionPlan",
   initialState: {
     isLoading: false,
-    subscriptionPlanData: {},
+    subscriptionPlanData: null,
     error: null,
   },
   reducers: {

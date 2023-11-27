@@ -26,7 +26,7 @@ const ImageGrid = ({ data }) => {
         >
           <Image
             style={styles.imageThumbnail}
-            source={{ uri: item.assets[0] }}
+            source={{ uri: item.imagesData[0] }}
           />
         </TouchableOpacity>
       )}

@@ -22,6 +22,7 @@ import { addLikeOnContentApi } from "../../store/AdContentSlices/GetAdContentSli
 import Slider from "./Slider";
 import { http } from "../../../http-common";
 import { useEffect } from "react";
+import { baseURL, serverImagePath } from "../../Constants/defaults";
 
 const FeedCard = ({
   itemData,
@@ -32,6 +33,7 @@ const FeedCard = ({
   menuChildren,
   onClickMsgBtn = () => {},
 }) => {
+  console.log(itemData);
   const dispatch = useDispatch();
   const contentDataRes = useSelector(
     (state) => state.getAddContentByCategory.likeData
@@ -43,9 +45,8 @@ const FeedCard = ({
   const onClickLikeBtn = () => {
     dispatch(
       addLikeOnContentApi({
-        userId: itemData?.userId,
         contentId: itemData?.id,
-        isLiked: true,
+        isLiked: !itemData?.isCurrentUserLiked,
       })
     );
   };
@@ -55,7 +56,7 @@ const FeedCard = ({
     let values = [];
     console.log(data);
     data.map((item, index) => {
-      values.push(`http://192.168.1.16/ContentImages/${item}`);
+      values.push(`${baseURL}${serverImagePath}/${item}`);
     });
     setFiles(values);
   };
@@ -79,7 +80,9 @@ const FeedCard = ({
             size={scale(35)}
           />
           <View style={{ marginLeft: moderateScale(5) }}>
-            <Text style={styles.headingTxt}>{itemData?.userName}</Text>
+            <Text
+              style={styles.headingTxt}
+            >{`${itemData?.user?.firstname} ${itemData?.user?.lastname}`}</Text>
             <Text style={styles.subTxt}>
               {itemData?.location?.length > 50
                 ? `${itemData?.location?.substring(0, 50)}.....`
@@ -131,7 +134,11 @@ const FeedCard = ({
                 onClickLikeBtn();
               }}
             >
-              <Ionicons name="heart-outline" size={scale(24)} color="black" />
+              <Ionicons
+                name={itemData?.isCurrentUserLiked ? "heart" : "heart-outline"}
+                size={scale(24)}
+                color={itemData?.isCurrentUserLiked ? "red" : "black"}
+              />
             </TouchableOpacity>
             {/* <TouchableOpacity
               onPress={() => {
@@ -170,7 +177,7 @@ const FeedCard = ({
               activeOpacity={0.4}
               onPress={() => {
                 Linking.openURL(
-                  `whatsapp://send?phone=${itemData?.mobileNo}&text=Hello`
+                  `whatsapp://send?phone=${itemData?.user?.phoneNumber}&text=Hello`
                 );
               }}
             >
@@ -181,7 +188,7 @@ const FeedCard = ({
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                Linking.openURL(`tel:${itemData?.mobileNo}`);
+                Linking.openURL(`tel:${itemData?.user?.phoneNumber}`);
               }}
               activeOpacity={0.4}
             >

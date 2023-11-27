@@ -46,10 +46,10 @@ const ProductPreview = ({ navigation, route }) => {
   }, [addPostData?.addContentData]);
   useEffect(() => {
     if (addPostData?.errorCode != null && addPostData?.errorCode == 403) {
-      dispatch(setPostDataDraft(formData));
+      // dispatch(setPostDataDraft(formData));
       navigation.navigate(screenName.drawerNavigation, {
         screen: screenName.subscription,
-        params: { data: formData },
+        params: { formData },
       });
     }
   }, [addPostData.errorCode]);
@@ -75,6 +75,7 @@ const ProductPreview = ({ navigation, route }) => {
     formData.append("brand", postData?.itemDetail?.brand);
     formData.append("specifications", postData?.itemDetail?.specifications);
     dispatch(addAdContentApi(formData));
+    dispatch(setPostDataDraft(formData));
     // navigation.navigate(screenName.drawerNavigation, {
     //   screen: screenName.subscription,
     // });

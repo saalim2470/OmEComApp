@@ -15,6 +15,8 @@ const AddAdContent = createSlice({
     },
     setLoading: (state, action) => {
       state.isLoading = action.payload;
+      state.error = null;
+      state.errorCode = null;
     },
     setError: (state, action) => {
       state.error = action.payload;
@@ -48,6 +50,6 @@ export const addAdContentApi = (data) => async (dispatch) => {
     dispatch(setLoading(false));
     dispatch(setError(error.response.data));
     dispatch(setErrorCode(error.response.status));
-    console.log("-=-=-=error in ad content-=-0=-", error.response.data);
+    console.log("-=-=-=error in ad content-=-0=-", error);
   }
 };

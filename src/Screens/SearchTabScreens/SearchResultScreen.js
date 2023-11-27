@@ -132,7 +132,8 @@ const SearchResultScreen = () => {
           </TouchableOpacity>
           <TextBox
             placeholder={"Search something"}
-            style={{ flex: 1 }}
+            // style={{ flex: 1 }}
+            containerStyle={{ flex: 1 }}
             value={searchTxt}
             activeOutlineColor={"lightgray"}
             autoFocus={true}
@@ -173,7 +174,7 @@ const SearchResultScreen = () => {
             <Text style={[commonStyle.headingTxt, { fontSize: scale(12) }]}>
               {`${searchData?.length} items found for "${searchTxt}"`}
             </Text>
-            <ImageGrid data={imageListData} />
+            <ImageGrid data={searchData} />
           </>
         ) : (
           <Text

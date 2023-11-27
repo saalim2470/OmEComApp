@@ -97,9 +97,9 @@ const MainHome = ({ navigation, route }) => {
           ItemSeparatorComponent={
             <Divider style={{ marginBottom: verticalScale(8) }} />
           }
-          ListFooterComponent={
-            <ActivityIndicator style={{ marginVertical: verticalScale(20) }} />
-          }
+          // ListFooterComponent={
+          //   <ActivityIndicator style={{ marginVertical: verticalScale(20) }} />
+          // }
           renderItem={({ item, index }) => {
             return (
               <FeedCard
