@@ -9,6 +9,9 @@ class AdContentServices {
   addContentLike(data) {
     return http.post("/UserLikeContent", data);
   }
+  addContentSave(data) {
+    return http.post("/UserSavedAdContent", data);
+  }
   addAdContent(data) {
     return httpFile.post("/AdContent/PostWithFiles", data);
   }

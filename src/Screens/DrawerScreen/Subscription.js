@@ -113,8 +113,8 @@ const Subscription = ({ route }) => {
                       </Text>
                       <TouchableOpacity
                         onPress={() => {
-                          // dispatch(getSubscriptionPlanId(item?.id));
-                          navigation.navigate('Payment')
+                          dispatch(getSubscriptionPlanId(item?.id));
+                          // navigation.navigate('Payment')
                         }}
                         style={styles.striprBtn}
                         activeOpacity={0.6}

@@ -18,7 +18,10 @@ import PropTypes from "prop-types";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { addLikeOnContentApi } from "../../store/AdContentSlices/GetAdContentSlice";
+import {
+  addLikeOnContentApi,
+  saveContentApi,
+} from "../../store/AdContentSlices/GetAdContentSlice";
 import Slider from "./Slider";
 import { http } from "../../../http-common";
 import { useEffect } from "react";
@@ -33,13 +36,10 @@ const FeedCard = ({
   menuChildren,
   onClickMsgBtn = () => {},
 }) => {
-  console.log(itemData);
   const dispatch = useDispatch();
-  const contentDataRes = useSelector(
-    (state) => state.getAddContentByCategory.likeData
-  );
   const [visible, setVisible] = useState(false);
   const [files, setFiles] = useState([]);
+  const [isShowTxtBtn, setIsShowTxtBtn] = useState(false);
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
   const onClickLikeBtn = () => {
@@ -50,11 +50,17 @@ const FeedCard = ({
       })
     );
   };
-  const onClickBookmarkBtn = () => {};
+  const onClickBookmarkBtn = () => {
+    dispatch(
+      saveContentApi({
+        adContentID: itemData?.id,
+        isSaved: !itemData?.isCurrentUserSaved,
+      })
+    );
+  };
   const imageurl = () => {
     let data = JSON.parse(itemData?.imagesData);
     let values = [];
-    console.log(data);
     data.map((item, index) => {
       values.push(`${baseURL}${serverImagePath}/${item}`);
     });
@@ -63,7 +69,8 @@ const FeedCard = ({
   useEffect(() => {
     imageurl();
   }, [itemData]);
-
+  const txt =
+    "Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.It has survived not only five centuries, but";
   return (
     <Pressable
       onPress={() => {
@@ -83,11 +90,11 @@ const FeedCard = ({
             <Text
               style={styles.headingTxt}
             >{`${itemData?.user?.firstname} ${itemData?.user?.lastname}`}</Text>
-            <Text style={styles.subTxt}>
+            {/* <Text style={styles.subTxt}>
               {itemData?.location?.length > 50
                 ? `${itemData?.location?.substring(0, 50)}.....`
                 : itemData?.location}
-            </Text>
+            </Text> */}
           </View>
         </View>
         {isShowOptionBtn ? (
@@ -119,6 +126,29 @@ const FeedCard = ({
           </Menu>
         ) : null}
       </View>
+      <View style={styles.topView}>
+        <Text style={styles.descTxt}>
+          {txt.length > 100 && isShowTxtBtn == false
+            ? `${txt.substring(0, 100)}`
+            : txt}
+          {isShowTxtBtn ? (
+            <Text
+              onPress={() => setIsShowTxtBtn(false)}
+              style={{ color: "blue" }}
+            >
+              ...less
+            </Text>
+          ) : (
+            <Text
+              onPress={() => setIsShowTxtBtn(true)}
+              style={{ color: "blue" }}
+            >
+              ...more
+            </Text>
+          )}
+        </Text>
+      </View>
+
       {/* slider image view */}
       <Slider data={files} />
       <View style={styles.bottomView}>
@@ -164,7 +194,11 @@ const FeedCard = ({
               }}
             >
               <Ionicons
-                name="ios-bookmark-outline"
+                name={
+                  itemData?.isCurrentUserSaved
+                    ? "ios-bookmark"
+                    : "ios-bookmark-outline"
+                }
                 size={scale(24)}
                 color="black"
               />
@@ -194,110 +228,6 @@ const FeedCard = ({
             >
               <Image source={images.phoneIcon} style={styles.iconStyle} />
             </TouchableOpacity>
-          </View>
-        </View>
-        <Text style={styles.bottomTxt("Montserrat-Bold")}>
-          {itemData?.title}
-        </Text>
-        <View
-          style={[
-            styles.onlyRowStyle,
-            {
-              marginTop: verticalScale(8),
-            },
-          ]}
-        >
-          <Text style={styles.bottomTxt("Montserrat-Medium")}>
-            Condition:{" "}
-            <Text style={styles.bottomTxt("Montserrat-Bold")}>
-              {itemData?.condition}
-            </Text>
-          </Text>
-          <Text
-            style={[
-              styles.bottomTxt("Montserrat-Medium"),
-              { marginLeft: moderateScale(10) },
-            ]}
-          >
-            Brand:{" "}
-            <Text style={styles.bottomTxt("Montserrat-Bold")}>
-              {itemData?.brand}
-            </Text>
-          </Text>
-        </View>
-        <Text
-          style={[
-            styles.bottomTxt("Montserrat-Light"),
-            { marginTop: verticalScale(10) },
-          ]}
-        >
-          {itemData?.shorDescription}
-        </Text>
-        <View style={[commonStyle.row, { marginTop: verticalScale(8) }]}>
-          <Text style={styles.bottomTxt("Montserrat-Medium")}>
-            Price:{" "}
-            <Text
-              style={[
-                styles.bottomTxt("Montserrat-Bold"),
-                { color: colors.themeColor },
-              ]}
-            >
-              {itemData?.price}
-            </Text>
-          </Text>
-          <View
-            style={[
-              {
-                flexDirection: "row",
-                justifyContent:
-                  !isMoreBtn || !isOfferBtn ? "flex-end" : "space-between",
-                alignItems: "center",
-                width: "25%",
-              },
-            ]}
-          >
-            {isMoreBtn ? (
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={() => {
-                  onClickMoreBtn();
-                }}
-                style={[
-                  styles.btnStyle,
-                  {
-                    backgroundColor: "#d8d8d8",
-                  },
-                ]}
-              >
-                <Text
-                  style={[
-                    styles.btnTxt,
-                    {
-                      color: "#000000",
-                      fontSize: scale(8),
-                    },
-                  ]}
-                >
-                  More
-                </Text>
-              </TouchableOpacity>
-            ) : null}
-            {isOfferBtn ? (
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={[
-                  styles.btnStyle,
-                  {
-                    backgroundColor: "#fe98bf",
-                    display: !isOfferBtn ? "none" : null,
-                  },
-                ]}
-              >
-                <Text style={[styles.btnTxt, { fontSize: scale(8) }]}>
-                  Offer
-                </Text>
-              </TouchableOpacity>
-            ) : null}
           </View>
         </View>
       </View>
@@ -331,52 +261,25 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat-Bold",
     fontSize: moderateScale(11),
   },
-  subTxt: {
-    fontFamily: "Montserrat-Light",
-    fontSize: moderateScale(9),
-  },
-  cardImgView: {
-    height: verticalScale(300),
-    paddingVertical: verticalScale(3),
-  },
-  btnStyle: {
-    alignSelf: "flex-end",
-    justifyContent: "center",
-    backgroundColor: "#fcc441",
-  },
-  btnTxt: {
-    fontSize: scale(10),
-    marginHorizontal: moderateScale(8),
-    marginVertical: verticalScale(4),
-    color: "#FFFFFF",
-    fontFamily: "Montserrat-Medium",
-  },
-  bottomTxt: (fontFamily) => ({
-    fontSize: scale(10),
-    fontFamily: fontFamily,
-  }),
   onlyRowStyle: {
     flexDirection: "row",
     alignItems: "center",
   },
   bottomView: {
     marginHorizontal: moderateScale(10),
-    marginVertical: verticalScale(8),
-  },
-  descTxt: {
-    fontFamily: "Montserrat-Light",
-    fontSize: moderateScale(11),
-  },
-  dotStyle: {
-    width: scale(7),
-    height: scale(7),
-    borderRadius: scale(5),
-    marginHorizontal: 0,
-    padding: 0,
-    margin: 0,
+    marginTop: verticalScale(8),
+    // borderWidth:1
   },
   iconStyle: {
     width: scale(25),
     height: scale(25),
+  },
+  topView: {
+    marginHorizontal: moderateScale(10),
+    marginVertical: verticalScale(5),
+  },
+  descTxt: {
+    fontFamily: "Montserrat-Regular",
+    fontSize: scale(13),
   },
 });

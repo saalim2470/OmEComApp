@@ -21,18 +21,15 @@ import Slider from "./Slider";
 import { useEffect } from "react";
 import { baseURL, serverImagePath } from "../../Constants/defaults";
 import { addLikeOnContentApi } from "../../store/AdContentSlices/GetAdContentSlice";
+import { useDispatch } from "react-redux";
 
-const FeedCardWithDescription = ({
-  itemData,
-  onClickMsgBtn = () => {},
-  onClickBookmarkBtn = () => {},
-}) => {
+const FeedCardWithDescription = ({itemData}) => {
+  const dispatch=useDispatch()
   const [activeTab, setActiveTab] = useState(0);
   const [files, setFiles] = useState([]);
   const imageurl = () => {
     let data = JSON.parse(itemData?.imagesData);
     let values = [];
-    console.log(data);
     data.map((item, index) => {
       values.push(`${baseURL}${serverImagePath}/${item}`);
     });
@@ -49,6 +46,13 @@ const FeedCardWithDescription = ({
       })
     );
   };
+  const onClickBookmarkBtn = () => {
+    dispatch(saveContentApi({
+      adContentID: itemData?.id,
+      isSaved: !itemData?.isCurrentUserSaved,
+    }))
+  };
+  onClickMsgBtn = () => {}
   return (
     <View style={{ marginBottom: verticalScale(8) }}>
       {/* card header view */}
@@ -64,11 +68,11 @@ const FeedCardWithDescription = ({
             <Text
               style={styles.headingTxt}
             >{`${itemData?.user?.firstname} ${itemData?.user?.lastname}`}</Text>
-            <Text style={styles.subTxt}>
+            {/* <Text style={styles.subTxt}>
               {itemData?.location.length > 50
                 ? `${itemData?.location.substring(0, 50)}.....`
                 : itemData?.location}
-            </Text>
+            </Text> */}
           </View>
         </View>
         {/* <TouchableOpacity activeOpacity={0.5}>
@@ -123,7 +127,7 @@ const FeedCardWithDescription = ({
               }}
             >
               <Ionicons
-                name="ios-bookmark-outline"
+                name={itemData?.isCurrentUserSaved?'ios-bookmark':"ios-bookmark-outline"}
                 size={scale(24)}
                 color="black"
               />

@@ -23,41 +23,35 @@ const MainHome = ({ navigation, route }) => {
   const contentDataRes = useSelector(
     (state) => state.getAddContentByCategory.contentData
   );
+  console.log('-=-=-content data-=-=-', contentDataRes);
   const contentDataLoading = useSelector(
     (state) => state.getAddContentByCategory.isLoading
   );
   const [isShowCommentView, setIsShowCommentView] = useState(-1);
   const [contentData, setContentData] = useState([]);
   const [categoryData, setCategoryData] = useState(null);
-  useEffect(() => {
-    if (contentDataRes?.Success) {
-      const data = [];
-      contentDataRes?.Data.map((item, index) => {
-        data.push({
-          ...item,
-          userName: "_.abc._",
-          location: "Surat",
-          files: [
-            "https://i01.appmifile.com/v1/MI_18455B3E4DA706226CF7535A58E875F0267/pms_1672876197.29825462!600x600!85.jpg",
-            "https://i02.appmifile.com/mi-com-product/fly-birds/pair/pc/pc-pair.png?f=webp",
-          ],
-        });
-      });
-      setContentData(data);
-    }
-  }, [contentDataRes]);
+  // useEffect(() => {
+  //   if (contentDataRes && contentData.length>0) {
+  //     const data = [];
+  //     contentDataRes?.map((item, index) => {
+  //       data.push({
+  //         ...item,
+  //         userName: "_.abc._",
+  //         location: "Surat",
+  //         files: [
+  //           "https://i01.appmifile.com/v1/MI_18455B3E4DA706226CF7535A58E875F0267/pms_1672876197.29825462!600x600!85.jpg",
+  //           "https://i02.appmifile.com/mi-com-product/fly-birds/pair/pc/pc-pair.png?f=webp",
+  //         ],
+  //       });
+  //     });
+  //     setContentData(data);
+  //   }
+  // }, [contentDataRes]);
   useEffect(() => {
     setCategoryData(categoryDataRes?.Data);
   }, [categoryDataRes]);
 
   const onClickSaved = (index) => {
-    // const newData = [...feedData];
-    // const obj = {
-    //   ...newData[index],
-    //   isSaved: !newData[index].isSaved,
-    // };
-    // newData[index] = obj;
-    // setFeedData(newData);
   };
 
   return (
@@ -85,11 +79,11 @@ const MainHome = ({ navigation, route }) => {
       <Divider style={{ marginVertical: verticalScale(8) }} />
       {contentDataLoading ? (
         <Loading />
-      ) : contentData.length <= 0 ? (
+      ) : contentDataRes.length <= 0 ? (
         <Text style={styles.msgTxt}>{`Content not availaibale`}</Text>
       ) : (
         <FlatList
-          data={contentData}
+          data={contentDataRes}
           keyExtractor={(item) => {
             item.id.toString();
           }}
