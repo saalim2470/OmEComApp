@@ -23,8 +23,8 @@ const Routes = () => {
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
-      // initialRouteName={screenName.splash}
-      initialRouteName={'PostData'}
+      initialRouteName={screenName.splash}
+      //initialRouteName={'PostData'}
     >
       {/* Auth screens */}
       <Stack.Screen name={screenName.splash} component={Splash} />
