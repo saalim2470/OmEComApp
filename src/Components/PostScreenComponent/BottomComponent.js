@@ -9,11 +9,32 @@ import {
 } from "@expo/vector-icons";
 import IconButton from "./IconButton";
 import { Pressable } from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import { useState } from "react";
 
 const BottomComponent = () => {
+  const [image, setImage] = useState([]);
+  const openImagePicker = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      // aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage([...image, result.assets[0]]);
+    }
+  };
   return (
     <View style={styles.boxView}>
-      <IconButton name={"ios-images"} color={"green"} />
+      <IconButton
+        name={"ios-images"}
+        color={"green"}
+        onclick={() => {
+          openImagePicker();
+        }}
+      />
       <IconButton name={"ios-camera"} color={"#ed840c"} />
       <Pressable>
         <Entypo name="emoji-happy" size={scale(23)} color="#e3bf3d" />

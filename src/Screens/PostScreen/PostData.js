@@ -4,14 +4,69 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import commonStyle from "../../Constants/commonStyle";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import CustomeButton from "../../Components/CustomeButton";
-import { Avatar } from "react-native-paper";
-import { TextInput } from "react-native";
-import { Ionicons, FontAwesome5, Entypo } from "@expo/vector-icons";
-import BottomComponent from "../../Components/PostScreenComponent/BottomComponent";
-import Modal from "react-native-modal";
+import { Ionicons, Entypo, SimpleLineIcons } from "@expo/vector-icons";
 import { Pressable } from "react-native";
+import UserHeader from "../../Components/PostScreenComponent/UserHeader";
+import IconButton from "../../Components/PostScreenComponent/IconButton";
+import * as ImagePicker from "expo-image-picker";
+import { useState } from "react";
+import PostScreenTextView from "../../Components/PostScreenComponent/PostScreenTextView";
+import EmojiComponent from "../../Components/EmojiComponent";
 
 const PostData = () => {
+  const [image, setImage] = useState([]);
+  const [description, setDescription] = useState("");
+  const [showEmoji, setShowEmoji] = useState(false);
+  const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
+  const [cameraStatus, requestCameraPermission] =
+    ImagePicker.useCameraPermissions();
+  const openImagePicker = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      // aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage([...image, result.assets[0]]);
+    }
+  };
+  const openCamera = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage([...image, result.assets[0]]);
+    }
+  };
+  const onClickRemove = (index1) => {
+    const tempData = [...image];
+    const data = tempData.filter((element, index) => index != index1);
+    setImage(data);
+  };
+  const checkLibrarayPermission = async () => {
+    const { status: currentStatus } =
+      await ImagePicker.getMediaLibraryPermissionsAsync();
+    if (currentStatus !== "granted") {
+      requestPermission();
+    } else if (currentStatus == "granted") {
+      openImagePicker();
+    }
+  };
+  const checkCameraPermission = async () => {
+    const { status: currentStatus } =
+      await ImagePicker.getCameraPermissionsAsync();
+    if (currentStatus !== "granted") {
+      requestCameraPermission();
+    } else if (currentStatus == "granted") {
+      openCamera();
+    }
+  };
   return (
     <SafeAreaProvider style={commonStyle.container}>
       <View style={{ flex: 1 }}>
@@ -33,52 +88,56 @@ const PostData = () => {
             title={"Post"}
           />
         </View>
-        <View style={styles.userView}>
-          <Avatar.Image
-            source={{
-              uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXmEcKM5U_dh_rHnbnc1UHQHu6gtJmxurdXg&usqp=CAU",
-            }}
-            size={scale(45)}
-          />
-          <View style={{ marginLeft: moderateScale(5) }}>
-            <Text style={styles.headingTxt}>Saalim Shaikh</Text>
-          </View>
-        </View>
-        <View style={styles.txtInputView}>
-          <TextInput placeholder="About Something" multiline={true} />
-          <View style={{borderWidth:1}}></View>
-        </View>
+        <UserHeader />
+        <PostScreenTextView
+          imageData={image}
+          value={description}
+          removeImage={(index) => {
+            onClickRemove(index);
+          }}
+          onChange={(text) => {
+            setDescription(text);
+          }}
+        />
       </View>
-      <BottomComponent />
-      {/* <Modal
-        isVisible={false}
-        coverScreen={true}
-        backdropOpacity={0.4}
-        style={{ marginHorizontal: 0, marginVertical: 0 }}
-      >
-        <View
-          style={{
-            backgroundColor: "white",
-            // height: verticalScale(50),
-            position: "absolute",
-            bottom: 0,
-            width: "100%",
-            paddingVertical: verticalScale(5),
+      {/* <BottomComponent /> */}
+      <View style={styles.boxView}>
+        <IconButton
+          name={"ios-images"}
+          color={"green"}
+          onclick={() => {
+            checkLibrarayPermission();
+          }}
+        />
+        <IconButton
+          name={"ios-camera"}
+          color={"#ed840c"}
+          onclick={() => {
+            checkCameraPermission();
+          }}
+        />
+        <Pressable
+          onPress={() => {
+            setShowEmoji(true);
           }}
         >
-          <Pressable
-            style={{
-              borderWidth: 1,
-              flexDirection: "row",
-              alignItems: "center",
-              padding: scale(7),
-            }}
-          >
-            <Ionicons name="ios-images" size={scale(23)} color="green" />
-            <Text style={{ marginRight: moderateScale() }}>Images</Text>
-          </Pressable>
-        </View>
-      </Modal> */}
+          <Entypo name="emoji-happy" size={scale(23)} color="#e3bf3d" />
+        </Pressable>
+        <IconButton name={"ios-location-sharp"} color={"#ed480c"} />
+        <Pressable style={styles.circle}>
+          <SimpleLineIcons name="options" size={scale(20)} color="white" />
+        </Pressable>
+      </View>
+      <EmojiComponent
+        show={showEmoji}
+        onBackdropPress={() => {
+          setShowEmoji(false);
+        }}
+        onClick={(emoji) => {
+          setDescription(`${description} ${emoji}`);
+          setShowEmoji(false);
+        }}
+      />
     </SafeAreaProvider>
   );
 };
@@ -97,21 +156,21 @@ const styles = StyleSheet.create({
   },
   headerTxt: {
     fontFamily: "Montserrat-Light",
-    fontSize: scale(18),
+    fontSize: scale(15),
     marginLeft: moderateScale(4),
   },
-  userView: {
+  boxView: {
+    borderWidth: 0.2,
     flexDirection: "row",
+    justifyContent: "space-around",
     alignItems: "center",
-    paddingHorizontal: moderateScale(8),
-    marginTop: verticalScale(5),
+    padding: scale(7),
+    backgroundColor: "white",
   },
-  headingTxt: {
-    fontFamily: "Montserrat-Bold",
-    fontSize: scale(16),
-  },
-  txtInputView: {
-    marginTop: verticalScale(5),
-    paddingHorizontal: moderateScale(8),
+  circle: {
+    borderWidth: 1,
+    borderRadius: 100,
+    backgroundColor: "#363230",
+    padding: scale(3),
   },
 });

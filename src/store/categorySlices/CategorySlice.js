@@ -35,12 +35,13 @@ export const getCategoryData = (pageNumber, pageSize) => async (dispatch) => {
     dispatch(setStatusCode(null));
     dispatch(setLoading(true));
     const responce = await CategoryServices.getCategory(pageNumber, pageSize);
-    await dispatch(setCategory(responce.data));
+    dispatch(setCategory(responce.data));
     dispatch(setLoading(false));
   } catch (error) {
     dispatch(setLoading(false));
     dispatch(setError(error.response.data));
     dispatch(setStatusCode(error.response.status));
     dispatch(setCategory([]));
+    console.log("-=-=error", error);
   }
 };
