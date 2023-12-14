@@ -46,6 +46,7 @@ const Splash = () => {
       } else {
         // check user user enter first time in app
         // if user enter first time in app navigate to intro else navigate to login
+        navigation.dispatch(StackActions.replace(screenName.authRoute));
         dispatch(getCountryData(1, 10));
       }
     } catch (error) {}

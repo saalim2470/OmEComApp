@@ -17,14 +17,46 @@ import Login from "../Screens/AuthScreens/Login";
 import CreateAccount from "../Screens/AuthScreens/CreateAccount";
 import Payment from "../Screens/Payment/Payment";
 import PostData from "../Screens/PostScreen/PostData";
+import { useEffect } from "react";
+import * as SplashScreen from "expo-splash-screen";
+import { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { accessToken } from "../Constants/defaults";
+import { getCountryData } from "../store/contrySlices/GetCountrySlice";
+import { useDispatch } from "react-redux";
 
+SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
 const Routes = () => {
+  const dispatch = useDispatch();
+  const [appIsReady, setAppIsReady] = useState(false);
+  useEffect(() => {
+    async function prepare() {
+      try {
+        console.log("-=-=-=in ready app");
+        dispatch(getCountryData(1, 10));
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        // Tell the application to render
+        setAppIsReady(true);
+      }
+    }
+
+    prepare();
+  }, []);
+  (async function () {
+    if (appIsReady) {
+      await SplashScreen.hideAsync();
+      console.log("-=-=-app ready");
+    }
+  })();
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
-      // initialRouteName={screenName.splash}
-      initialRouteName={"PostData"}
+      initialRouteName={screenName.splash}
+      // initialRouteName={"PostData"}
     >
       {/* Auth screens */}
       <Stack.Screen name={screenName.splash} component={Splash} />

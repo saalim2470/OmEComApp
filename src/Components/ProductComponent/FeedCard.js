@@ -1,31 +1,17 @@
-import {
-  Image,
-  Linking,
-  Pressable,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
-import { Avatar, Button, Divider, Menu } from "react-native-paper";
-import { SliderBox } from "react-native-image-slider-box";
-import images from "../../Constants/images";
-import commonStyle from "../../Constants/commonStyle";
-import colors from "../../Constants/colors";
 import PropTypes from "prop-types";
-import { Ionicons } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   addLikeOnContentApi,
   saveContentApi,
 } from "../../store/AdContentSlices/GetAdContentSlice";
 import Slider from "./Slider";
-import { http } from "../../../http-common";
 import { useEffect } from "react";
 import { baseURL, serverImagePath } from "../../Constants/defaults";
+import FeedCardHeader from "./FeedCardHeader";
+import FeedCardBottomView from "./FeedCardBottomView";
 
 const FeedCard = ({
   itemData,
@@ -34,14 +20,14 @@ const FeedCard = ({
   isOfferBtn,
   isShowOptionBtn,
   menuChildren,
-  onClickMsgBtn = () => {},
 }) => {
   const dispatch = useDispatch();
-  const [visible, setVisible] = useState(false);
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState([
+    "https://images.unsplash.com/photo-1617713780979-4ae0c726f253?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://plus.unsplash.com/premium_photo-1663926403655-85e6c457826d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  ]);
   const [isShowTxtBtn, setIsShowTxtBtn] = useState(false);
-  const openMenu = () => setVisible(true);
-  const closeMenu = () => setVisible(false);
+  const txtLength = 100;
   const onClickLikeBtn = () => {
     dispatch(
       addLikeOnContentApi({
@@ -66,9 +52,9 @@ const FeedCard = ({
     });
     setFiles(values);
   };
-  useEffect(() => {
-    imageurl();
-  }, [itemData]);
+  // useEffect(() => {
+  //   imageurl();
+  // }, [itemData]);
   const txt =
     "Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.It has survived not only five centuries, but";
   return (
@@ -78,58 +64,16 @@ const FeedCard = ({
       }}
       style={{ marginBottom: verticalScale(8) }}
     >
-      <View style={styles.cardHeaderView}>
-        <View style={styles.onlyRowStyle}>
-          <Avatar.Image
-            source={{
-              uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXmEcKM5U_dh_rHnbnc1UHQHu6gtJmxurdXg&usqp=CAU",
-            }}
-            size={scale(35)}
-          />
-          <View style={{ marginLeft: moderateScale(5) }}>
-            <Text
-              style={styles.headingTxt}
-            >{`${itemData?.user?.firstname} ${itemData?.user?.lastname}`}</Text>
-            {/* <Text style={styles.subTxt}>
-              {itemData?.location?.length > 50
-                ? `${itemData?.location?.substring(0, 50)}.....`
-                : itemData?.location}
-            </Text> */}
-          </View>
-        </View>
-        {isShowOptionBtn ? (
-          <Menu
-            visible={visible}
-            onDismiss={closeMenu}
-            contentStyle={{ backgroundColor: "white" }}
-            anchor={
-              <TouchableOpacity
-                activeOpacity={0.5}
-                onPress={() => {
-                  openMenu();
-                }}
-              >
-                <Image
-                  source={images.optionIcon}
-                  style={{
-                    width: scale(20),
-                    height: scale(20),
-                    tintColor: "grey",
-                  }}
-                />
-              </TouchableOpacity>
-            }
-          >
-            {menuChildren}
-            {/* <Menu.Item onPress={() => {}} title="Edit" />
-            <Menu.Item onPress={() => {}} title="Delete" /> */}
-          </Menu>
-        ) : null}
-      </View>
+      {/* headerView */}
+      <FeedCardHeader
+        isShowOptionBtn={isShowOptionBtn}
+        itemData={itemData}
+        menuChildren={menuChildren}
+      />
       <View style={styles.topView}>
         <Text style={styles.descTxt}>
-          {txt.length > 100 && isShowTxtBtn == false
-            ? `${txt.substring(0, 100)}`
+          {txt.length > txtLength && isShowTxtBtn == false
+            ? `${txt.substring(0, txtLength)}`
             : txt}
           {isShowTxtBtn ? (
             <Text
@@ -151,85 +95,17 @@ const FeedCard = ({
 
       {/* slider image view */}
       <Slider data={files} />
-      <View style={styles.bottomView}>
-        <View style={[commonStyle.row, { marginBottom: verticalScale(10) }]}>
-          <View
-            style={{
-              flexDirection: "row",
-              gap: scale(15),
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                onClickLikeBtn();
-              }}
-            >
-              <Ionicons
-                name={itemData?.isCurrentUserLiked ? "heart" : "heart-outline"}
-                size={scale(24)}
-                color={itemData?.isCurrentUserLiked ? "red" : "black"}
-              />
-            </TouchableOpacity>
-            {/* <TouchableOpacity
-              onPress={() => {
-                onClickComment();
-              }}
-            >
-              <MaterialCommunityIcons
-                name="message-outline"
-                size={scale(24)}
-                color="black"
-              />
-            </TouchableOpacity> */}
-            <TouchableOpacity
-              onPress={() => {
-                onClickMsgBtn();
-              }}
-            >
-              <Ionicons name="mail-outline" size={scale(24)} color="black" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                onClickBookmarkBtn();
-              }}
-            >
-              <Ionicons
-                name={
-                  itemData?.isCurrentUserSaved
-                    ? "ios-bookmark"
-                    : "ios-bookmark-outline"
-                }
-                size={scale(24)}
-                color="black"
-              />
-              {/* fill icon */}
-              {/* <Ionicons name="ios-bookmark" size={scale(24)} color="black" /> */}
-            </TouchableOpacity>
-          </View>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <TouchableOpacity
-              activeOpacity={0.4}
-              onPress={() => {
-                Linking.openURL(
-                  `whatsapp://send?phone=${itemData?.user?.phoneNumber}&text=Hello`
-                );
-              }}
-            >
-              <Image
-                source={images.whatsAppLogo}
-                style={[styles.iconStyle, { marginRight: moderateScale(15) }]}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                Linking.openURL(`tel:${itemData?.user?.phoneNumber}`);
-              }}
-              activeOpacity={0.4}
-            >
-              <Image source={images.phoneIcon} style={styles.iconStyle} />
-            </TouchableOpacity>
-          </View>
-        </View>
+      <View style={[styles.bottomView]}>
+        <FeedCardBottomView
+          itemData={itemData}
+          onClickBookMark={() => {
+            onClickBookmarkBtn();
+          }}
+          onClickLike={() => {
+            onClickLikeBtn();
+          }}
+          onClickMsg={() => {}}
+        />
       </View>
     </Pressable>
   );

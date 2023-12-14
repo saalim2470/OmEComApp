@@ -12,63 +12,67 @@ import { SafeAreaView } from "react-native-safe-area-context";
 const Profile = () => {
   const [feedData, setFeedData] = useState([
     {
-      title: "Ladies wear",
-      shorDescription: "Dbdvdgdjd",
-      description: "Dhxhdhdj sty  ",
-      categoryId: 7,
-      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      promoterId: 0,
-      condition: "Second",
-      price: 200,
-      brand: "Gdjd",
-      specifications: "string",
-      id: 17,
-      userName: "_.abc._",
-      location: "Surat",
-      files: [
-        "https://i01.appmifile.com/v1/MI_18455B3E4DA706226CF7535A58E875F0267/pms_1672876197.29825462!600x600!85.jpg",
-        "https://i02.appmifile.com/mi-com-product/fly-birds/pair/pc/pc-pair.png?f=webp",
-      ],
+      title: "Oven",
+      description: "Dgdjdj to the meaning of science ",
+      categoryId: 1,
+      userId: "6444f3e6-52dd-46aa-80a8-a4b7fd9836ca",
+      specifications: "[]",
+      imagesData:
+        '["9c126dea-7958-427c-9a20-c8e669c31b3dimage_0.jpeg","c89aaf03-a1d4-4a3f-a673-cbcfe41971f3image_1.jpeg","126a8b52-e8d4-4d59-900b-f665d70e7be1image_2.jpeg"]',
+      isDraft: false,
+      isCurrentUserLiked: false,
+      isCurrentUserSaved: false,
+      user: {
+        id: "6444f3e6-52dd-46aa-80a8-a4b7fd9836ca",
+        firstname: "Saalim",
+        lastname: "shaikh",
+        phoneNumber: "9016730106",
+      },
+      id: 1,
+      files: null,
+      filesUrls: null,
     },
     {
       title: "Fridge",
-      shorDescription: "dbfdf fdhfdhfd",
-      description: "djgfgf fjgkf",
-      categoryId: 5,
-      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      promoterId: 0,
-      condition: "string",
-      price: 15000,
-      brand: "LG",
-      specifications: "string",
-      id: 18,
-      userName: "_.abc._",
-      location: "Surat",
-      files: [
-        "https://i01.appmifile.com/v1/MI_18455B3E4DA706226CF7535A58E875F0267/pms_1672876197.29825462!600x600!85.jpg",
-        "https://i02.appmifile.com/mi-com-product/fly-birds/pair/pc/pc-pair.png?f=webp",
-      ],
-    },
-    {
-      title: "Ladies wear",
-      shorDescription: "Dbdvdgdjd",
-      description: "Dhxhdhdj sty  ",
-      categoryId: 6,
-      userId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      promoterId: 0,
-      condition: "Second",
-      price: 200,
-      brand: "Gdjd",
-      specifications: "string",
-      id: 19,
-      userName: "_.abc._",
-      location: "Surat",
-      files: [
-        "https://i01.appmifile.com/v1/MI_18455B3E4DA706226CF7535A58E875F0267/pms_1672876197.29825462!600x600!85.jpg",
-        "https://i02.appmifile.com/mi-com-product/fly-birds/pair/pc/pc-pair.png?f=webp",
-      ],
+      description: "Dhhdjdjd to the meaning of science ",
+      categoryId: 1,
+      userId: "6444f3e6-52dd-46aa-80a8-a4b7fd9836ca",
+      specifications: "[]",
+      imagesData:
+        '["bdd66493-1499-4f20-9f69-b7d11ff50253image_0.jpeg","0ed287ed-a861-4082-89ff-ffa7be184a2fimage_1.jpeg"]',
+      isDraft: false,
+      isCurrentUserLiked: false,
+      isCurrentUserSaved: false,
+      user: {
+        id: "6444f3e6-52dd-46aa-80a8-a4b7fd9836ca",
+        firstname: "Saalim",
+        lastname: "shaikh",
+        phoneNumber: "9016730106",
+      },
+      id: 2,
+      files: null,
+      filesUrls: null,
     },
   ]);
+  const renderItem = ({ item, index }) => {
+    return (
+      <FeedCard
+        itemData={item}
+        isShowOptionBtn={true}
+        isMoreBtn={true}
+        isOfferBtn={true}
+        menuChildren={
+          <>
+            <Menu.Item onPress={() => {}} title="Edit" />
+            <Menu.Item onPress={() => {}} title="Delete" />
+          </>
+        }
+        onClickMoreBtn={() => {
+          // navigation.navigate(screenName.productDetail, { data: item });
+        }}
+      />
+    );
+  };
   return (
     <SafeAreaView style={commonStyle.container}>
       <ProfileScreenTopView />
@@ -81,28 +85,7 @@ const Profile = () => {
         ItemSeparatorComponent={
           <Divider style={{ marginBottom: verticalScale(8) }} />
         }
-        renderItem={({ item, index }) => {
-          return (
-            <FeedCard
-              itemData={item}
-              isShowOptionBtn={true}
-              isMoreBtn={true}
-              isOfferBtn={true}
-              menuChildren={
-                <>
-                  <Menu.Item onPress={() => {}} title="Edit" />
-                  <Menu.Item onPress={() => {}} title="Delete" />
-                </>
-              }
-              onClickBookmarkBtn={() => {}}
-              onClickComment={() => {}}
-              onClickMsgBtn={() => {}}
-              onClickMoreBtn={() => {
-                // navigation.navigate(screenName.productDetail, { data: item });
-              }}
-            />
-          );
-        }}
+        renderItem={renderItem}
       />
     </SafeAreaView>
   );

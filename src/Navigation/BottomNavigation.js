@@ -17,6 +17,7 @@ import PostItem from "../Screens/PostScreen/PostItem";
 import MessagesHome from "../Screens/MessageTabScreens/MessagesHome";
 import BottomNavigationSearchRoute from "./BottomNavigationSearchRoute";
 import MainHome from "../Screens/HomeTabScreens/MainHome";
+import { AntDesign } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 
@@ -82,23 +83,12 @@ const BottomNavigation = () => {
         options={{
           tabBarLabel: "Home",
           tabBarIcon: ({ color, size }) => (
-            <View
-              style={{
-                backgroundColor: "#FFFFFF",
-                borderRadius: 100,
-                elevation: 10,
-                top: verticalScale(-15),
-              }}
-            >
-              <Image
-                source={images.plusIcon}
-                style={{
-                  width: scale(50),
-                  height: scale(50),
-                  tintColor: colors.themeColor,
-                }}
-              />
-            </View>
+            <AntDesign
+              name="pluscircle"
+              size={scale(45)}
+              color={colors.themeColor}
+              style={{ zIndex: 9999, top: verticalScale(-15) }}
+            />
           ),
         }}
       />

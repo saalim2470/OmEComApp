@@ -17,41 +17,76 @@ import { Text } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import CustomeAlertModal from "../../Components/CustomeAlertModal";
+import {
+  getAdContentByCategory,
+  setError,
+} from "../../store/AdContentSlices/GetAdContentSlice";
 
 const MainHome = ({ navigation, route }) => {
+  const dispatch = useDispatch();
   const categoryDataRes = useSelector((state) => state.category.categoryData);
   const contentDataRes = useSelector(
     (state) => state.getAddContentByCategory.contentData
   );
-  console.log('-=-=-content data-=-=-', contentDataRes);
+  const contentdata = useSelector((state) => state.getAddContentByCategory);
   const contentDataLoading = useSelector(
     (state) => state.getAddContentByCategory.isLoading
   );
   const [isShowCommentView, setIsShowCommentView] = useState(-1);
-  const [contentData, setContentData] = useState([]);
   const [categoryData, setCategoryData] = useState(null);
-  // useEffect(() => {
-  //   if (contentDataRes && contentData.length>0) {
-  //     const data = [];
-  //     contentDataRes?.map((item, index) => {
-  //       data.push({
-  //         ...item,
-  //         userName: "_.abc._",
-  //         location: "Surat",
-  //         files: [
-  //           "https://i01.appmifile.com/v1/MI_18455B3E4DA706226CF7535A58E875F0267/pms_1672876197.29825462!600x600!85.jpg",
-  //           "https://i02.appmifile.com/mi-com-product/fly-birds/pair/pc/pc-pair.png?f=webp",
-  //         ],
-  //       });
-  //     });
-  //     setContentData(data);
-  //   }
-  // }, [contentDataRes]);
+  const [pageSize, setPageSize] = useState(10);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [showAlert, setShowAlert] = useState({
+    show: false,
+    title: null,
+    msg: null,
+    type: null,
+  });
+  useEffect(() => {
+    getContentDataByCategory();
+  }, [route]);
+  useEffect(() => {
+    if (
+      contentdata?.error != null &&
+      !contentdata?.error?.Success &&
+      contentdata?.statusCode === 401
+    ) {
+      setShowAlert({
+        show: true,
+        title: "Authentication Error",
+        msg: "Please Login to continue",
+        type: "error",
+      });
+    }
+  }, [contentdata?.error]);
   useEffect(() => {
     setCategoryData(categoryDataRes?.Data);
   }, [categoryDataRes]);
-
-  const onClickSaved = (index) => {
+  const getContentDataByCategory = () => {
+    dispatch(
+      getAdContentByCategory(route?.params?.categoryId, pageNumber, pageSize)
+    );
+    // setPageNumber(pageNumber + 1);
+  };
+  const onClickModalBtn = () => {
+    dispatch(setError(null));
+    setShowAlert({ ...showAlert, show: false });
+  };
+  const renderItem = ({ item, index }) => {
+    return (
+      <FeedCard
+        itemData={item}
+        isMoreBtn={true}
+        isOfferBtn={true}
+        onClickComment={() => {
+          setIsShowCommentView(0);
+        }}
+        onClickMoreBtn={() => {
+          navigation.navigate(screenName.productDetail, { data: item });
+        }}
+      />
+    );
   };
 
   return (
@@ -85,31 +120,18 @@ const MainHome = ({ navigation, route }) => {
         <FlatList
           data={contentDataRes}
           keyExtractor={(item) => {
-            item.id.toString();
+            // item.id.toString();
+            item.id;
           }}
           showsVerticalScrollIndicator={false}
+          onEndReachedThreshold={1}
           ItemSeparatorComponent={
             <Divider style={{ marginBottom: verticalScale(8) }} />
           }
           // ListFooterComponent={
           //   <ActivityIndicator style={{ marginVertical: verticalScale(20) }} />
           // }
-          renderItem={({ item, index }) => {
-            return (
-              <FeedCard
-                itemData={item}
-                isMoreBtn={true}
-                isOfferBtn={true}
-                onClickComment={() => {
-                  setIsShowCommentView(0);
-                }}
-                onClickMsgBtn={() => {}}
-                onClickMoreBtn={() => {
-                  navigation.navigate(screenName.productDetail, { data: item });
-                }}
-              />
-            );
-          }}
+          renderItem={renderItem}
         />
       )}
       {/* <CommentView
@@ -118,6 +140,15 @@ const MainHome = ({ navigation, route }) => {
           setIsShowCommentView(value);
         }}
       /> */}
+      <CustomeAlertModal
+        isVisible={showAlert.show}
+        title={showAlert.title}
+        msg={showAlert.msg}
+        type={showAlert.type}
+        onClickBtn={() => {
+          onClickModalBtn();
+        }}
+      />
     </SafeAreaView>
   );
 };

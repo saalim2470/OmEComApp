@@ -1,32 +1,24 @@
-import {
-  Image,
-  Linking,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
-import { Avatar } from "react-native-paper";
-import { SliderBox } from "react-native-image-slider-box";
-import images from "../../Constants/images";
-import commonStyle from "../../Constants/commonStyle";
 import colors from "../../Constants/colors";
 import PropTypes from "prop-types";
 import Overview from "./Overview";
 import Specification from "./Specification";
-import { Ionicons } from "@expo/vector-icons";
 import Slider from "./Slider";
 import { useEffect } from "react";
 import { baseURL, serverImagePath } from "../../Constants/defaults";
 import { addLikeOnContentApi } from "../../store/AdContentSlices/GetAdContentSlice";
 import { useDispatch } from "react-redux";
+import FeedCardHeader from "./FeedCardHeader";
+import FeedCardBottomView from "./FeedCardBottomView";
 
-const FeedCardWithDescription = ({itemData}) => {
-  const dispatch=useDispatch()
+const FeedCardWithDescription = ({ itemData }) => {
+  const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState(0);
+  const [isShowTxtBtn, setIsShowTxtBtn] = useState(false);
   const [files, setFiles] = useState([]);
+  const txtLength = 100;
   const imageurl = () => {
     let data = JSON.parse(itemData?.imagesData);
     let values = [];
@@ -47,118 +39,57 @@ const FeedCardWithDescription = ({itemData}) => {
     );
   };
   const onClickBookmarkBtn = () => {
-    dispatch(saveContentApi({
-      adContentID: itemData?.id,
-      isSaved: !itemData?.isCurrentUserSaved,
-    }))
+    dispatch(
+      saveContentApi({
+        adContentID: itemData?.id,
+        isSaved: !itemData?.isCurrentUserSaved,
+      })
+    );
   };
-  onClickMsgBtn = () => {}
+  const onClickMsgBtn = () => {};
+  const txt =
+    "Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.It has survived not only five centuries, but";
   return (
     <View style={{ marginBottom: verticalScale(8) }}>
       {/* card header view */}
-      <View style={styles.cardHeaderView}>
-        <View style={styles.onlyRowStyle}>
-          <Avatar.Image
-            source={{
-              uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXmEcKM5U_dh_rHnbnc1UHQHu6gtJmxurdXg&usqp=CAU",
-            }}
-            size={scale(35)}
-          />
-          <View style={{ marginLeft: moderateScale(5) }}>
+      <FeedCardHeader itemData={itemData} />
+      <View style={styles.topView}>
+        <Text style={styles.descTxt}>
+          {txt.length > txtLength && isShowTxtBtn == false
+            ? `${txt.substring(0, txtLength)}`
+            : txt}
+          {isShowTxtBtn ? (
             <Text
-              style={styles.headingTxt}
-            >{`${itemData?.user?.firstname} ${itemData?.user?.lastname}`}</Text>
-            {/* <Text style={styles.subTxt}>
-              {itemData?.location.length > 50
-                ? `${itemData?.location.substring(0, 50)}.....`
-                : itemData?.location}
-            </Text> */}
-          </View>
-        </View>
-        {/* <TouchableOpacity activeOpacity={0.5}>
-          <Image
-            source={images.optionIcon}
-            style={{ width: scale(20), height: scale(20), tintColor: "grey" }}
-          />
-        </TouchableOpacity> */}
+              onPress={() => setIsShowTxtBtn(false)}
+              style={{ color: "blue" }}
+            >
+              ...less
+            </Text>
+          ) : (
+            <Text
+              onPress={() => setIsShowTxtBtn(true)}
+              style={{ color: "blue" }}
+            >
+              ...more
+            </Text>
+          )}
+        </Text>
       </View>
       {/* image slider view */}
       <Slider data={files} />
       <View style={styles.bottomView}>
-        <View style={[commonStyle.row]}>
-          <View
-            style={{
-              flexDirection: "row",
-              gap: scale(15),
-            }}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                onClickLikeBtn();
-              }}
-            >
-              <Ionicons
-                name={itemData?.isCurrentUserLiked ? "heart" : "heart-outline"}
-                size={scale(24)}
-                color={itemData?.isCurrentUserLiked ? "red" : "black"}
-              />
-            </TouchableOpacity>
-            {/* <TouchableOpacity
-              onPress={() => {
-                onClickComment();
-              }}
-            >
-              <MaterialCommunityIcons
-                name="message-outline"
-                size={scale(24)}
-                color="black"
-              />
-            </TouchableOpacity> */}
-            <TouchableOpacity
-              onPress={() => {
-                onClickMsgBtn();
-              }}
-            >
-              <Ionicons name="mail-outline" size={scale(24)} color="black" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                onClickBookmarkBtn();
-              }}
-            >
-              <Ionicons
-                name={itemData?.isCurrentUserSaved?'ios-bookmark':"ios-bookmark-outline"}
-                size={scale(24)}
-                color="black"
-              />
-              {/* fill icon */}
-              {/* <Ionicons name="ios-bookmark" size={scale(24)} color="black" /> */}
-            </TouchableOpacity>
-          </View>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <TouchableOpacity
-              activeOpacity={0.4}
-              onPress={() => {
-                Linking.openURL(
-                  `whatsapp://send?phone=${itemData?.user?.phoneNumber}&text=Hello`
-                );
-              }}
-            >
-              <Image
-                source={images.whatsAppLogo}
-                style={[styles.iconStyle, { marginRight: moderateScale(15) }]}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                Linking.openURL(`tel:${itemData?.user?.phoneNumber}`);
-              }}
-              activeOpacity={0.4}
-            >
-              <Image source={images.phoneIcon} style={styles.iconStyle} />
-            </TouchableOpacity>
-          </View>
-        </View>
+        <FeedCardBottomView
+          itemData={itemData}
+          onClickLike={() => {
+            onClickLikeBtn();
+          }}
+          onClickBookMark={() => {
+            onClickBookmarkBtn();
+          }}
+          onClickMsg={() => {
+            onClickMsgBtn();
+          }}
+        />
         <View style={styles.tabView}>
           <TouchableOpacity
             style={[
@@ -227,44 +158,9 @@ export default FeedCardWithDescription;
 
 const styles = StyleSheet.create({
   cardView: {},
-  cardHeaderView: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: moderateScale(10),
-    justifyContent: "space-between",
-    paddingVertical: verticalScale(5),
-  },
-  headingTxt: {
-    fontFamily: "Montserrat-Bold",
-    fontSize: moderateScale(11),
-  },
-  subTxt: {
-    fontFamily: "Montserrat-Light",
-    fontSize: moderateScale(9),
-  },
-  cardImgView: {
-    height: verticalScale(300),
-    paddingVertical: verticalScale(3),
-  },
-  onlyRowStyle: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
   bottomView: {
     marginHorizontal: moderateScale(10),
     marginVertical: verticalScale(8),
-  },
-  dotStyle: {
-    width: scale(7),
-    height: scale(7),
-    borderRadius: scale(5),
-    marginHorizontal: 0,
-    padding: 0,
-    margin: 0,
-  },
-  iconStyle: {
-    width: scale(25),
-    height: scale(25),
   },
   tabView: {
     flexDirection: "row",
@@ -288,5 +184,13 @@ const styles = StyleSheet.create({
   tabBtnRightRadius: {
     borderTopRightRadius: scale(10),
     borderBottomRightRadius: scale(10),
+  },
+  topView: {
+    marginHorizontal: moderateScale(10),
+    marginVertical: verticalScale(5),
+  },
+  descTxt: {
+    fontFamily: "Montserrat-Regular",
+    fontSize: scale(13),
   },
 });

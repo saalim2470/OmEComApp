@@ -28,7 +28,7 @@ const CategoryView = ({ data }) => {
         return (
           <TouchableOpacity
             onPress={() => {
-              dispatch(getAdContentByCategory(item?.id, 1, 10));
+              // dispatch(getAdContentByCategory(item?.id, 1, 10));
               navigation.navigate(screenName.bottomNavigation, {
                 screen: screenName.mainHome,
                 params: {

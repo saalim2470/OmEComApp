@@ -3,7 +3,8 @@ import axios from "axios";
 import { accessToken } from "./src/Constants/defaults";
 
 export const http = axios.create({
-  baseURL: "https://109.123.236.204:8585/api",
+  // baseURL: "https://suryahealthclub.com:8585/api",
+  baseURL: "http://192.168.1.7/api/",
 });
 http.interceptors.request.use(async (config) => {
   const token = await AsyncStorage.getItem(accessToken);
@@ -11,13 +12,13 @@ http.interceptors.request.use(async (config) => {
     config.headers["Authorization"] = `Bearer ${token.split('"')[1]}`;
   }
   config.headers["Content-Type"] = "application/json";
-  console.log("-=-=config-=-=", config);
   return config;
 });
 
 // for file uploader
 export const httpFile = axios.create({
-  baseURL: "https://suryahealthclub.com:8585/api",
+  // baseURL: "https://suryahealthclub.com:8585/api",
+  baseURL: "http://192.168.1.7/api/",
 });
 httpFile.interceptors.request.use(async (config) => {
   const token = await AsyncStorage.getItem(accessToken);
