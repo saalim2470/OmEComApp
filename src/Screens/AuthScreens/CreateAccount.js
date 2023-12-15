@@ -2,6 +2,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -11,7 +12,7 @@ import React, { useEffect, useState } from "react";
 import commonStyle from "../../Constants/commonStyle";
 import Header from "../../Components/Header";
 import TextBox from "../../Components/TextBox";
-import { TextInput } from "react-native-paper";
+import { HelperText, TextInput } from "react-native-paper";
 import {
   scale,
   verticalScale,
@@ -30,6 +31,7 @@ import { getStateData } from "../../store/contrySlices/GetStateSlice";
 import { getCityData } from "../../store/contrySlices/GetCitySlice";
 import DropDownPicker from "react-native-dropdown-picker";
 import { createAccountApi } from "../../store/authSlices/CreateAccountSlice";
+import { checkPassword, validateEmail } from "../../Constants/Constant";
 
 const CreateAccount = () => {
   const dispatch = useDispatch();
@@ -40,9 +42,9 @@ const CreateAccount = () => {
   const cityDataResLoading = useSelector((state) => state.getCity.isLoading);
   const authLoading = useSelector((state) => state.createAccount.isLoading);
   const authSuccess = useSelector((state) => state.createAccount.isLoggedIn);
-  console.log(authSuccess);
   const navigation = useNavigation();
-  const [fullName, setFullName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [mobileNo, setMobileNo] = useState("");
   const [password, setPassword] = useState("");
@@ -80,11 +82,10 @@ const CreateAccount = () => {
     );
   };
   const onClickBtn = () => {
-    const fName = fullName.split(" ");
     const data = {
       username: email,
-      firstname: fName[0],
-      lastname: fName[1],
+      firstname: firstName,
+      lastname: lastName,
       mobileNumber: mobileNo,
       email: email,
       password: password,
@@ -93,7 +94,6 @@ const CreateAccount = () => {
       countryId: country,
       roleId: 0,
     };
-    console.log(data);
     dispatch(createAccountApi(data));
   };
   useEffect(() => {
@@ -131,23 +131,109 @@ const CreateAccount = () => {
       hideKeyboard.remove();
     };
   }, []);
-  const validate = () => {};
+  const validate = () => {
+    let isValid = true;
+    if (!firstName.trim()) {
+      handleError("Enter First Name", "fName");
+      isValid = false;
+    }
+    if (!lastName.trim()) {
+      handleError("Enter Last Name", "lName");
+      isValid = false;
+    }
+    if (!email.trim()) {
+      handleError("Enter Email Name", "email");
+      isValid = false;
+    } else if (validateEmail(email)) {
+      isValid = true;
+    } else {
+      handleError("Enter Valid Email", "email");
+      isValid = false;
+    }
+    if (!mobileNo.trim()) {
+      handleError("Enter Mobile No.", "mobileNo");
+      isValid = false;
+    } else if (mobileNo.length != 10) {
+      handleError("Enter 10 digit Mobile No", "mobileNo");
+      isValid = false;
+    }
+    if (!password.trim()) {
+      handleError("Enter password", "password");
+      isValid = false;
+    } else if (checkPassword(password)) {
+      isValid = true;
+    } else {
+      handleError(
+        "Enter 8 letter password, with at least a symbol, upper and lower case letters and a number",
+        "password"
+      );
+      isValid = false;
+    }
+    if (!cPassword.trim()) {
+      handleError("Enter Confirm password", "cPassword");
+      isValid = false;
+    } else if (password != cPassword) {
+      handleError("Password and confirm password does not match", "cPassword");
+      isValid = false;
+    }
+    if (!country) {
+      handleError("Select Country", "country");
+      isValid = false;
+    }
+    if (!state) {
+      handleError("Select State", "state");
+      isValid = false;
+    }
+    if (!city) {
+      handleError("Select City", "city");
+      isValid = false;
+    }
+    if (isValid) {
+      onClickBtn();
+    }
+  };
+  const handleError = (msg, fieldName) => {
+    setErrors((prevState) => ({ ...prevState, [fieldName]: msg }));
+  };
   return (
     <SafeAreaView style={commonStyle.container}>
       <Header />
-      <View style={commonStyle.innerContainer}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={commonStyle.innerContainer}
+      >
         <Text style={commonStyle.headingTxt}>Create an Account</Text>
         <KeyboardAvoidingView>
           <TextBox
-            label={"Full name"}
+            label={"First Name"}
+            containerStyle={{ marginBottom: verticalScale(8) }}
+            error={errors.fName}
+            onFocus={() => {
+              handleError(null, "fName");
+            }}
+            left={<TextInput.Icon icon={"account-outline"} tintColor="grey" />}
+            onchange={(value) => {
+              setFirstName(value);
+            }}
+          />
+          <TextBox
+            label={"Last Name"}
+            error={errors.lName}
+            onFocus={() => {
+              handleError(null, "lName");
+            }}
             containerStyle={{ marginBottom: verticalScale(8) }}
             left={<TextInput.Icon icon={"account-outline"} tintColor="grey" />}
             onchange={(value) => {
-              setFullName(value);
+              setLastName(value);
             }}
           />
           <TextBox
             label={"Email"}
+            onFocus={() => {
+              handleError(null, "email");
+            }}
+            error={errors.email}
             keyboardType={"email-address"}
             containerStyle={{ marginBottom: verticalScale(8) }}
             left={<TextInput.Icon icon={"email-outline"} tintColor="grey" />}
@@ -157,6 +243,10 @@ const CreateAccount = () => {
           />
           <TextBox
             label={"Mobile number"}
+            error={errors.mobileNo}
+            onFocus={() => {
+              handleError(null, "mobileNo");
+            }}
             keyboardType={"phone-pad"}
             containerStyle={{ marginBottom: verticalScale(8) }}
             left={
@@ -168,6 +258,10 @@ const CreateAccount = () => {
           />
           <TextBox
             label={"Password"}
+            error={errors.password}
+            onFocus={() => {
+              handleError(null, "password");
+            }}
             containerStyle={{ marginBottom: verticalScale(8) }}
             secureTextEntry={!passwordVisible}
             left={<TextInput.Icon icon={"lock-outline"} tintColor="grey" />}
@@ -186,6 +280,10 @@ const CreateAccount = () => {
           />
           <TextBox
             label={"Confirm password"}
+            error={errors.cPassword}
+            onFocus={() => {
+              handleError(null, "cPassword");
+            }}
             containerStyle={{ marginBottom: verticalScale(8) }}
             secureTextEntry={!cPasswordVisible}
             left={<TextInput.Icon icon={"lock-outline"} tintColor="grey" />}
@@ -216,13 +314,28 @@ const CreateAccount = () => {
             setOpen={setOpenCountryPicker}
             setValue={setCountry}
             setItems={setCountryData}
-            style={styles.ddStyle}
+            style={[
+              styles.ddStyle,
+              { borderColor: errors.country ? "red" : "#cacaca" },
+            ]}
             zIndex={3000}
             zIndexInverse={1000}
             onSelectItem={(item) => {
+              handleError(null, "country");
               dispatch(getStateData(item.id, 1, 10));
             }}
           />
+          {errors.country ? (
+            <Text
+              style={{
+                color: "red",
+                fontFamily: "Montserrat-Regular",
+                fontSize: scale(11),
+              }}
+            >
+              {errors.country}
+            </Text>
+          ) : null}
           <DropDownPicker
             loading={stateDataResLoading}
             schema={{
@@ -238,13 +351,28 @@ const CreateAccount = () => {
             setOpen={setOpenStatePicker}
             setValue={setState}
             setItems={setStateData}
-            style={styles.ddStyle}
+            style={[
+              styles.ddStyle,
+              { borderColor: errors.state ? "red" : "#cacaca" },
+            ]}
             zIndex={2000}
             zIndexInverse={2000}
             onSelectItem={(item) => {
+              handleError(null, "state");
               dispatch(getCityData(item.id, 1, 10));
             }}
           />
+          {errors.state ? (
+            <Text
+              style={{
+                color: "red",
+                fontFamily: "Montserrat-Regular",
+                fontSize: scale(11),
+              }}
+            >
+              {errors.state}
+            </Text>
+          ) : null}
           <DropDownPicker
             loading={cityDataResLoading}
             labelStyle={styles.ddTxt}
@@ -260,17 +388,35 @@ const CreateAccount = () => {
             setOpen={setOpenCityPicker}
             setValue={setCity}
             setItems={setCityData}
-            style={styles.ddStyle}
+            style={[
+              styles.ddStyle,
+              { borderColor: errors.city ? "red" : "#cacaca" },
+            ]}
             zIndex={1000}
             zIndexInverse={3000}
+            onSelectItem={(item) => {
+              handleError(null, "city");
+            }}
           />
+          {errors.city ? (
+            <Text
+              style={{
+                color: "red",
+                fontFamily: "Montserrat-Regular",
+                fontSize: scale(11),
+              }}
+            >
+              {errors.city}
+            </Text>
+          ) : null}
           <CustomeButton
             title={"Sign Up"}
             isLoading={authLoading}
             style={{ marginTop: moderateVerticalScale(40) }}
             onClick={() => {
               // navigation.navigate(screenName.verification);
-              onClickBtn();
+              // onClickBtn();
+              validate();
             }}
           />
         </KeyboardAvoidingView>
@@ -319,7 +465,7 @@ const CreateAccount = () => {
             of the OM
           </Text>
         </View> */}
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };

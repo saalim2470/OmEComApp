@@ -37,6 +37,8 @@ const MainHome = ({ navigation, route }) => {
   const [categoryData, setCategoryData] = useState(null);
   const [pageSize, setPageSize] = useState(10);
   const [pageNumber, setPageNumber] = useState(1);
+  const [adContentData, setAdContentData] = useState([]);
+  const [isReachedEnd, setIsReachedEnd] = useState(false);
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -63,6 +65,7 @@ const MainHome = ({ navigation, route }) => {
   useEffect(() => {
     setCategoryData(categoryDataRes?.Data);
   }, [categoryDataRes]);
+
   const getContentDataByCategory = () => {
     dispatch(
       getAdContentByCategory(route?.params?.categoryId, pageNumber, pageSize)
@@ -114,7 +117,7 @@ const MainHome = ({ navigation, route }) => {
       <Divider style={{ marginVertical: verticalScale(8) }} />
       {contentDataLoading ? (
         <Loading />
-      ) : contentDataRes.length <= 0 ? (
+      ) : !contentDataLoading && contentDataRes.length <= 0 ? (
         <Text style={styles.msgTxt}>{`Content not availaibale`}</Text>
       ) : (
         <FlatList
@@ -129,7 +132,11 @@ const MainHome = ({ navigation, route }) => {
             <Divider style={{ marginBottom: verticalScale(8) }} />
           }
           // ListFooterComponent={
-          //   <ActivityIndicator style={{ marginVertical: verticalScale(20) }} />
+          //   contentDataLoading && (
+          //     <ActivityIndicator
+          //       style={{ marginVertical: verticalScale(20) }}
+          //     />
+          //   )
           // }
           renderItem={renderItem}
         />

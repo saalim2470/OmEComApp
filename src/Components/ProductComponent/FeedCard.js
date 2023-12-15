@@ -22,10 +22,7 @@ const FeedCard = ({
   menuChildren,
 }) => {
   const dispatch = useDispatch();
-  const [files, setFiles] = useState([
-    "https://images.unsplash.com/photo-1617713780979-4ae0c726f253?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "https://plus.unsplash.com/premium_photo-1663926403655-85e6c457826d?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  ]);
+  const [files, setFiles] = useState([]);
   const [isShowTxtBtn, setIsShowTxtBtn] = useState(false);
   const txtLength = 100;
   const onClickLikeBtn = () => {
@@ -52,9 +49,9 @@ const FeedCard = ({
     });
     setFiles(values);
   };
-  // useEffect(() => {
-  //   imageurl();
-  // }, [itemData]);
+  useEffect(() => {
+    imageurl();
+  }, [itemData]);
   const txt =
     "Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.It has survived not only five centuries, but";
   return (
@@ -71,10 +68,10 @@ const FeedCard = ({
         menuChildren={menuChildren}
       />
       <View style={styles.topView}>
-        <Text style={styles.descTxt}>
-          {txt.length > txtLength && isShowTxtBtn == false
-            ? `${txt.substring(0, txtLength)}`
-            : txt}
+        {/* <Text style={styles.descTxt}>
+          {itemData?.description?.length > txtLength && isShowTxtBtn == false
+            ? `${itemData?.description?.substring(0, txtLength)}`
+            : itemData?.description}
           {isShowTxtBtn ? (
             <Text
               onPress={() => setIsShowTxtBtn(false)}
@@ -90,6 +87,17 @@ const FeedCard = ({
               ...more
             </Text>
           )}
+        </Text> */}
+        <Text
+          style={styles.descTxt}
+          disabled={itemData?.description?.length < txtLength}
+          onPress={() => {
+            setIsShowTxtBtn(!isShowTxtBtn);
+          }}
+        >
+          {itemData?.description?.length > txtLength
+            ? `${itemData?.description?.substring(0, txtLength)} ...more`
+            : `${itemData?.description?.substring(0, txtLength)}`}
         </Text>
       </View>
 

@@ -20,6 +20,7 @@ const screenName = {
   postCategory: "PostCategory",
   itemDetail: "ItemDetail",
   productPreview: "ProductPreview",
+  postData: "PostData",
   // bottomNavigation home route
   homeScreenIcons: "HomeScreenIcons",
   mainHome: "Main Home",

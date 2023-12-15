@@ -7,6 +7,7 @@ const GetSubscriptionPlanSlice = createSlice({
     isLoading: false,
     subscriptionPlanData: null,
     error: null,
+    errorCode: null,
   },
   reducers: {
     setLoading: (state, action) => {
@@ -18,11 +19,24 @@ const GetSubscriptionPlanSlice = createSlice({
     setError: (state, action) => {
       state.error = action.payload;
     },
+    setErrorCode: (state, action) => {
+      state.errorCode = action.payload;
+    },
+    resetGetSubscriptionPlanData: (state, action) => {
+      state.error = null;
+      state.subscriptionPlanData = null;
+      state.errorCode = null;
+    },
   },
 });
 export default GetSubscriptionPlanSlice.reducer;
-export const { setSubscriptionPlanData, setLoading, setError } =
-  GetSubscriptionPlanSlice.actions;
+export const {
+  setSubscriptionPlanData,
+  setLoading,
+  setError,
+  setErrorCode,
+  resetGetSubscriptionPlanData,
+} = GetSubscriptionPlanSlice.actions;
 
 export const getSubscriptionPlanId = (subscriptionId) => async (dispatch) => {
   try {
@@ -35,6 +49,7 @@ export const getSubscriptionPlanId = (subscriptionId) => async (dispatch) => {
   } catch (error) {
     dispatch(setLoading(false));
     dispatch(setError(error.response.data));
+    dispatch(setErrorCode(error.response.status));
     console.log(error);
   }
 };

@@ -12,14 +12,64 @@ import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import PostScreenTextView from "../../Components/PostScreenComponent/PostScreenTextView";
 import EmojiComponent from "../../Components/EmojiComponent";
+import { Divider } from "react-native-paper";
+import {
+  addAdContentApi,
+  reseAdPosttData,
+} from "../../store/AdContentSlices/AddAdContent";
+import {
+  resetData,
+  setPostDataDraft,
+} from "../../store/addAdContentSlices/AddPostData";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import screenName from "../../Constants/screenName";
+import CustomeAlertModal from "../../Components/CustomeAlertModal";
 
-const PostData = () => {
+const PostData = ({ navigation, route }) => {
+  const dispatch = useDispatch();
+  const { categoryId } = route.params;
+  const formData = new FormData();
+  const addPostData = useSelector((state) => state.addAdContentData);
   const [image, setImage] = useState([]);
   const [description, setDescription] = useState("");
   const [showEmoji, setShowEmoji] = useState(false);
+  const [showAlert, setShowAlert] = useState({
+    show: false,
+    title: null,
+    msg: null,
+    type: null,
+  });
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
   const [cameraStatus, requestCameraPermission] =
     ImagePicker.useCameraPermissions();
+
+  useEffect(() => {
+    if (addPostData?.addContentData?.Success) {
+      setShowAlert({
+        show: true,
+        title: "Success",
+        msg: "Ad Content Added Successfully",
+        type: "success",
+      });
+    }
+  }, [addPostData?.addContentData]);
+  useEffect(() => {
+    if (addPostData?.errorCode != null && addPostData?.errorCode == 403) {
+      navigation.navigate(screenName.drawerNavigation, {
+        screen: screenName.subscription,
+        params: { formData },
+      });
+    }
+    if (addPostData?.errorCode != null && addPostData?.errorCode == 401) {
+      setShowAlert({
+        show: true,
+        title: "UnAuthorized",
+        msg: "Please login to continue",
+        type: "warning",
+      });
+    }
+  }, [addPostData.errorCode]);
   const openImagePicker = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -67,6 +117,36 @@ const PostData = () => {
       openCamera();
     }
   };
+  const onClickBtn = () => {
+    image.forEach((element, index) => {
+      const uriParts = element.uri.split(".");
+      const fileType = uriParts[uriParts.length - 1];
+      formData.append("files", {
+        uri: element.uri,
+        name: `image_${index}.${fileType}`,
+        type: `image/${fileType}`,
+      });
+    });
+    formData.append("description", description);
+    formData.append("categoryId", categoryId);
+    dispatch(addAdContentApi(formData));
+    dispatch(setPostDataDraft(formData));
+    // navigation.navigate(screenName.drawerNavigation, {
+    //   screen: screenName.subscription,
+    // });
+  };
+  const onClickModalBtn = () => {
+    setShowAlert({ ...showAlert, show: false });
+    dispatch(resetData());
+    dispatch(reseAdPosttData());
+    showAlert.type == "success" &&
+      navigation.navigate(screenName.drawerNavigation, {
+        screen: screenName.bottomNavigation,
+        params: {
+          screen: screenName.mainHome,
+        },
+      });
+  };
   return (
     <SafeAreaProvider style={commonStyle.container}>
       <View style={{ flex: 1 }}>
@@ -85,9 +165,14 @@ const PostData = () => {
               borderRadius: scale(5),
               marginVertical: moderateScale(0),
             }}
+            disabled={!description ? true : false}
             title={"Post"}
+            onClick={() => {
+              onClickBtn();
+            }}
           />
         </View>
+        <Divider bold />
         <UserHeader />
         <PostScreenTextView
           imageData={image}
@@ -138,6 +223,15 @@ const PostData = () => {
           setShowEmoji(false);
         }}
       />
+      <CustomeAlertModal
+        isVisible={showAlert.show}
+        title={showAlert.title}
+        msg={showAlert.msg}
+        type={showAlert.type}
+        onClickBtn={() => {
+          onClickModalBtn();
+        }}
+      />
     </SafeAreaProvider>
   );
 };
@@ -146,7 +240,7 @@ export default PostData;
 
 const styles = StyleSheet.create({
   headerView: {
-    borderBottomWidth: 0.5,
+    // borderBottomWidth: 0.5,
     marginTop: verticalScale(30),
     paddingHorizontal: moderateScale(8),
     flexDirection: "row",

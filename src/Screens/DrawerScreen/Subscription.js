@@ -9,12 +9,14 @@ import images from "../../Constants/images";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import screenName from "../../Constants/screenName";
 import colors from "../../Constants/colors";
-import SubscriptionBottomSheet from "../../Components/SubscriptionBottomSheet";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getSubscriptionPlan } from "../../store/subscriptionSlices/SubscriptionPlanSlice";
 import Loading from "../../Components/Loading";
-import { getSubscriptionPlanId } from "../../store/subscriptionSlices/GetSubscriptionPlanSlice";
+import {
+  getSubscriptionPlanId,
+  resetGetSubscriptionPlanData,
+} from "../../store/subscriptionSlices/GetSubscriptionPlanSlice";
 import { useNavigation } from "@react-navigation/native";
 import {
   addAdContentApi,
@@ -23,16 +25,17 @@ import {
 import CustomeAlertModal from "../../Components/CustomeAlertModal";
 import { resetData } from "../../store/addAdContentSlices/AddPostData";
 import { useState } from "react";
+import SubscriptionStripe from "../../Components/SubscriptionComponents/SubscriptionStripe";
 
 const Subscription = ({ route }) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const postData = useSelector((state) => state.addPost);
-  const addPostData = useSelector((state) => state.addAdContentData);
-  const subscriptionLoading = useSelector(
+  const addContentDataRes = useSelector((state) => state.addAdContentData);
+  const subscriptionPlanLoading = useSelector(
     (state) => state.subscriptionPlan.isLoading
   );
-  const subscriptionData = useSelector(
+  const subscriptionPlanData = useSelector(
     (state) => state.subscriptionPlan.subscriptionData
   );
   const getSubscriptionLoading = useSelector(
@@ -41,26 +44,26 @@ const Subscription = ({ route }) => {
   const getSubscriptionData = useSelector(
     (state) => state.getSubscriptionPlan.subscriptionPlanData
   );
+  const {
+    error: getSubscriptionPlanError,
+    errorCode: getSubscriptionPlanErrorCode,
+  } = useSelector((state) => state.getSubscriptionPlan);
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
     msg: null,
     type: null,
   });
-  console.log("-=--getsubscriptiondata-=-=-", getSubscriptionData);
   useEffect(() => {
     dispatch(getSubscriptionPlan(1, 10));
   }, []);
   useEffect(() => {
-    if (getSubscriptionData && getSubscriptionData.Success) {
-      // navigation.navigate(screenName.productPreview);
-      // navigation.navigate(screenName.productPreview);
-      console.log("-=-=-=params ", postData?.postDataDraft);
+    if (getSubscriptionData && getSubscriptionData?.Success) {
       dispatch(addAdContentApi(postData?.postDataDraft));
     }
   }, [getSubscriptionData]);
   useEffect(() => {
-    if (addPostData?.addContentData?.Success) {
+    if (addContentDataRes?.addContentData?.Success) {
       setShowAlert({
         show: true,
         title: "Success",
@@ -68,8 +71,41 @@ const Subscription = ({ route }) => {
         type: "success",
       });
     }
-  }, [addPostData?.addContentData]);
+  }, [addContentDataRes?.addContentData]);
+  useEffect(() => {
+    if (
+      getSubscriptionPlanErrorCode != null &&
+      getSubscriptionPlanErrorCode === 401
+    ) {
+      setShowAlert({
+        show: true,
+        title: "UnAuthorized",
+        msg: "Please login to continue",
+        type: "warning",
+      });
+    } else if (
+      getSubscriptionPlanError != null &&
+      !getSubscriptionPlanError?.Success
+    ) {
+      setShowAlert({
+        show: true,
+        title: "Error",
+        msg: getSubscriptionPlanError?.ErrorMessage,
+        type: "error",
+      });
+    }
+  }, [getSubscriptionPlanErrorCode, getSubscriptionPlanError]);
 
+  const onClickModalBtn = () => {
+    setShowAlert({ ...showAlert, show: false });
+    dispatch(resetData());
+    dispatch(resetGetSubscriptionPlanData());
+    dispatch(reseAdPosttData());
+    showAlert.type == "success" &&
+      navigation.navigate(screenName.drawerNavigation, {
+        screen: screenName.bottomNavigation,
+      });
+  };
   return (
     <SafeAreaView style={commonStyle.container}>
       <MainHeader
@@ -89,7 +125,7 @@ const Subscription = ({ route }) => {
           navigation.openDrawer();
         }}
       />
-      {subscriptionLoading || getSubscriptionLoading ? (
+      {subscriptionPlanLoading || getSubscriptionLoading ? (
         <Loading />
       ) : (
         <>
@@ -99,32 +135,16 @@ const Subscription = ({ route }) => {
               <Text style={styles.headingBtnTxt}>Read More...</Text>
             </TouchableOpacity>
           </View>
-          {subscriptionData?.Data?.map((item, index) => {
+          {subscriptionPlanData?.Data?.map((item, index) => {
             if (item?.subscriptionType == 0) {
               {
                 return (
-                  <View style={styles.stripeWrapper}>
-                    <Text style={styles.stripeTxt}>{item?.name}</Text>
-                    <View
-                      style={{ flexDirection: "row", alignItems: "center" }}
-                    >
-                      <Text style={styles.stripeTxt}>
-                        &#8377; {item?.price}
-                      </Text>
-                      <TouchableOpacity
-                        onPress={() => {
-                          dispatch(getSubscriptionPlanId(item?.id));
-                          // navigation.navigate('Payment')
-                        }}
-                        style={styles.striprBtn}
-                        activeOpacity={0.6}
-                      >
-                        <Text style={[styles.stripeTxt, { color: "white" }]}>
-                          Choose
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
+                  <SubscriptionStripe
+                    item={item}
+                    onClick={() => {
+                      dispatch(getSubscriptionPlanId(item?.id));
+                    }}
+                  />
                 );
               }
             }
@@ -135,31 +155,16 @@ const Subscription = ({ route }) => {
               <Text style={styles.headingBtnTxt}>Read More...</Text>
             </TouchableOpacity>
           </View>
-          {subscriptionData?.Data?.map((item, index) => {
+          {subscriptionPlanData?.Data?.map((item, index) => {
             if (item?.subscriptionType == 1) {
               {
                 return (
-                  <View style={styles.stripeWrapper}>
-                    <Text style={styles.stripeTxt}>{item?.name}</Text>
-                    <View
-                      style={{ flexDirection: "row", alignItems: "center" }}
-                    >
-                      <Text style={styles.stripeTxt}>
-                        &#8377; {item?.price}
-                      </Text>
-                      <TouchableOpacity
-                        onPress={() => {
-                          console.log(item.id);
-                        }}
-                        style={styles.striprBtn}
-                        activeOpacity={0.6}
-                      >
-                        <Text style={[styles.stripeTxt, { color: "white" }]}>
-                          Choose
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
+                  <SubscriptionStripe
+                    item={item}
+                    onClick={() => {
+                      dispatch(getSubscriptionPlanId(item?.id));
+                    }}
+                  />
                 );
               }
             }
@@ -170,31 +175,16 @@ const Subscription = ({ route }) => {
               <Text style={styles.headingBtnTxt}>Read More...</Text>
             </TouchableOpacity>
           </View>
-          {subscriptionData?.Data?.map((item, index) => {
+          {subscriptionPlanData?.Data?.map((item, index) => {
             if (item?.subscriptionType == 2) {
               {
                 return (
-                  <View style={styles.stripeWrapper}>
-                    <Text style={styles.stripeTxt}>{item?.name}</Text>
-                    <View
-                      style={{ flexDirection: "row", alignItems: "center" }}
-                    >
-                      <Text style={styles.stripeTxt}>
-                        &#8377; {item?.price}
-                      </Text>
-                      <TouchableOpacity
-                        onPress={() => {
-                          console.log(item.id);
-                        }}
-                        style={styles.striprBtn}
-                        activeOpacity={0.6}
-                      >
-                        <Text style={[styles.stripeTxt, { color: "white" }]}>
-                          Choose
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
+                  <SubscriptionStripe
+                    item={item}
+                    onClick={() => {
+                      dispatch(getSubscriptionPlanId(item?.id));
+                    }}
+                  />
                 );
               }
             }
@@ -208,10 +198,7 @@ const Subscription = ({ route }) => {
         msg={showAlert.msg}
         type={showAlert.type}
         onClickBtn={() => {
-          setShowAlert({ ...showAlert, show: false });
-          dispatch(resetData());
-          dispatch(reseAdPosttData());
-          navigation.navigate(screenName.bottomNavigation);
+          onClickModalBtn();
         }}
       />
     </SafeAreaView>

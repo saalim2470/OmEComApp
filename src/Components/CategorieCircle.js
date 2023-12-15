@@ -10,40 +10,41 @@ import { useDispatch } from "react-redux";
 
 const CategorieCircle = ({ data, disabled }) => {
   const dispatch = useDispatch();
+  const renderItem = ({ item, index }) => {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          dispatch(getAdContentByCategory(item.id, 1, 10));
+        }}
+        disabled={disabled}
+        style={{
+          alignItems: "center",
+          marginLeft: moderateScale(15),
+          marginRight: data?.length - 1 == index ? moderateScale(10) : null,
+        }}
+      >
+        <View style={[styles.storyCircle]}>
+          <SvgUri
+            width={scale(43)}
+            height={scale(43)}
+            uri={
+              item?.svgImagesPath != null
+                ? item?.svgImagesPath
+                : defaultCategoryImg
+            }
+          />
+        </View>
+        <Text style={styles.categoryTxt}>{item?.categoryName}</Text>
+      </TouchableOpacity>
+    );
+  };
   return (
     <FlatList
       data={data}
       keyExtractor={(item) => item.id}
       showsHorizontalScrollIndicator={false}
       horizontal
-      renderItem={({ item, index }) => {
-        return (
-          <TouchableOpacity
-            onPress={() => {
-              dispatch(getAdContentByCategory(item.id, 1, 10));
-            }}
-            disabled={disabled}
-            style={{
-              alignItems: "center",
-              marginLeft: moderateScale(15),
-              marginRight: data?.length - 1 == index ? moderateScale(10) : null,
-            }}
-          >
-            <View style={[styles.storyCircle]}>
-              <SvgUri
-                width={scale(43)}
-                height={scale(43)}
-                uri={
-                  item?.svgImagesPath != null
-                    ? item?.svgImagesPath
-                    : defaultCategoryImg
-                }
-              />
-            </View>
-            <Text style={styles.categoryTxt}>{item?.categoryName}</Text>
-          </TouchableOpacity>
-        );
-      }}
+      renderItem={renderItem}
     />
   );
 };

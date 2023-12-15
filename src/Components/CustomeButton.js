@@ -14,7 +14,7 @@ const CustomeButton = ({
 }) => {
   return (
     <TouchableOpacity
-      style={[styles.btn, { ...style }]}
+      style={[disabled ? styles.btnDisabled : styles.btn, { ...style }]}
       activeOpacity={0.7}
       disabled={disabled || isLoading}
       onPress={() => {
@@ -44,5 +44,12 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat-Bold",
     fontSize: moderateScale(12),
     color: "#FFFFFF",
+  },
+  btnDisabled: {
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: moderateScale(10),
+    marginVertical: moderateScale(15),
+    backgroundColor: "#cccccc",
   },
 });

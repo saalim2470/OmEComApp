@@ -64,9 +64,18 @@ const TextBox = ({
         {...props}
       />
       {error ? (
-        <HelperText type="error" visible={error}>
-          {errorMsg}
-        </HelperText>
+        // <HelperText type="error" visible={error}>
+        //   {errorMsg}
+        // </HelperText>
+        <Text
+          style={{
+            color: "red",
+            fontFamily: "Montserrat-Regular",
+            fontSize: scale(11),
+          }}
+        >
+          {error}
+        </Text>
       ) : null}
     </View>
   );

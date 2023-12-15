@@ -9,10 +9,12 @@ const GetAdContentSlice = createSlice({
     likeData: null,
     error: null,
     statusCode: null,
+    isSuccess: false,
   },
   reducers: {
     setAdContent: (state, action) => {
       state.contentData = action.payload;
+      state.isSuccess = true;
     },
     addLikeContent: (state, action) => {
       state.contentData = state.contentData.map((item, index) => {
@@ -37,6 +39,11 @@ const GetAdContentSlice = createSlice({
       state.error = action.payload?.data;
       state.statusCode = action.payload?.status;
     },
+    resetAdContentData: (state, action) => {
+      state.error = null;
+      state.statusCode = null;
+      state.isSuccess = false;
+    },
   },
 });
 export default GetAdContentSlice.reducer;
@@ -46,12 +53,13 @@ export const {
   setLoading,
   setError,
   saveContent,
+  resetAdContentData,
 } = GetAdContentSlice.actions;
 
 export const getAdContentByCategory =
   (categoryId, pageNumber, pageSize) => async (dispatch) => {
     try {
-      dispatch(setError(null));
+      dispatch(resetAdContentData());
       dispatch(setLoading(true));
       const responce = await AdContentServices.getContentByCategory(
         categoryId,

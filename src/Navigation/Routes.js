@@ -23,18 +23,27 @@ import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { accessToken } from "../Constants/defaults";
 import { getCountryData } from "../store/contrySlices/GetCountrySlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { jwtDecode } from "jwt-decode";
 
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
 const Routes = () => {
   const dispatch = useDispatch();
+  const countryData = useSelector((state) => state.getCountry.countryData);
   const [appIsReady, setAppIsReady] = useState(false);
+  const [isToken, setIsToken] = useState(false);
+  console.log("-=-=--is token before-=-=", isToken);
   useEffect(() => {
     async function prepare() {
       try {
-        console.log("-=-=-=in ready app");
         dispatch(getCountryData(1, 10));
+        const token = await AsyncStorage.getItem(accessToken);
+        if (token != "" && token != null) {
+          setIsToken(true);
+        } else {
+          setIsToken(false);
+        }
         await new Promise((resolve) => setTimeout(resolve, 2000));
       } catch (e) {
         console.warn(e);
@@ -47,15 +56,18 @@ const Routes = () => {
     prepare();
   }, []);
   (async function () {
-    if (appIsReady) {
+    if (appIsReady && countryData != null && countryData?.Success) {
       await SplashScreen.hideAsync();
       console.log("-=-=-app ready");
+      console.log("-=-=--is token after-=-=", isToken);
     }
   })();
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName={screenName.splash}
+      initialRouteName={
+        isToken ? screenName.drawerNavigation : screenName.authRoute
+      }
       // initialRouteName={"PostData"}
     >
       {/* Auth screens */}
@@ -84,7 +96,7 @@ const Routes = () => {
       />
       <Stack.Screen name={screenName.notification} component={Notification} />
       <Stack.Screen name={"Payment"} component={Payment} />
-      <Stack.Screen name={"PostData"} component={PostData} />
+      <Stack.Screen name={screenName.postData} component={PostData} />
     </Stack.Navigator>
   );
 };

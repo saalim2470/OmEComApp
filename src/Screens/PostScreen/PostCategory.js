@@ -34,14 +34,27 @@ const PostCategory = ({ navigation, route }) => {
       setShowAlert(true);
     } else {
       dispatch(setCategory(checked));
-      navigation.navigate(screenName.itemDetail);
+      // navigation.navigate(screenName.itemDetail);
+      navigation.navigate(screenName.postData, { categoryId: checked });
     }
   };
-
+  const renderItem = ({ item, index }) => {
+    return (
+      <CategoryCard
+        item={item}
+        onClick={() => {
+          setChecked(item.id);
+        }}
+        status={checked}
+      />
+    );
+  };
   return (
     <SafeAreaView style={commonStyle.container}>
-      <Header />
-      <View style={commonStyle.innerContainer}>
+      {/* <Header /> */}
+      <View
+        style={[commonStyle.innerContainer, { marginTop: verticalScale(30) }]}
+      >
         <Text style={commonStyle.headingTxt}>Category</Text>
         <Text style={styles.SmallHading}>Select relavant category</Text>
         <FlatList
@@ -51,17 +64,7 @@ const PostCategory = ({ navigation, route }) => {
           keyExtractor={(item) => {
             item.id;
           }}
-          renderItem={({ item, index }) => {
-            return (
-              <CategoryCard
-                item={item}
-                onClick={() => {
-                  setChecked(item.id);
-                }}
-                status={checked}
-              />
-            );
-          }}
+          renderItem={renderItem}
         />
         <CustomeButton
           title={"Next"}

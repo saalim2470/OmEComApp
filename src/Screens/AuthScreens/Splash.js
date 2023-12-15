@@ -41,8 +41,10 @@ const Splash = () => {
   const getToken = async () => {
     try {
       const token = await AsyncStorage.getItem(accessToken);
+      console.log("-=-=-token-=-=", token);
       if (token != "" && token != null) {
-        navigation.dispatch(StackActions.replace(screenName.drawerNavigation));
+        navigation.dispatch(StackActions.replace(screenName.authRoute));
+        // navigation.dispatch(StackActions.replace(screenName.drawerNavigation));
       } else {
         // check user user enter first time in app
         // if user enter first time in app navigate to intro else navigate to login

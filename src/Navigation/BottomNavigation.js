@@ -18,6 +18,8 @@ import MessagesHome from "../Screens/MessageTabScreens/MessagesHome";
 import BottomNavigationSearchRoute from "./BottomNavigationSearchRoute";
 import MainHome from "../Screens/HomeTabScreens/MainHome";
 import { AntDesign } from "@expo/vector-icons";
+import PostData from "../Screens/PostScreen/PostData";
+import PostCategory from "../Screens/PostScreen/PostCategory";
 
 const Tab = createBottomTabNavigator();
 
@@ -79,7 +81,9 @@ const BottomNavigation = () => {
       />
       <Tab.Screen
         name={screenName.postItem}
-        component={PostItem}
+        // component={PostItem}
+        // component={PostData}
+        component={PostCategory}
         options={{
           tabBarLabel: "Home",
           tabBarIcon: ({ color, size }) => (
