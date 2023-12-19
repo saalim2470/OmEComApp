@@ -14,6 +14,7 @@ const PostScreenTextView = ({
   onChange = () => {},
   value,
   imageData,
+  disabled,
   removeImage = () => {},
 }) => {
   return (
@@ -37,6 +38,7 @@ const PostScreenTextView = ({
           addCloseBtn={(index) => {
             return (
               <TouchableOpacity
+                disabled={disabled}
                 onPress={() => {
                   removeImage(index);
                 }}

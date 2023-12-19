@@ -115,32 +115,39 @@ const MainHome = ({ navigation, route }) => {
         <CategorieCircle data={categoryData} />
       </View>
       <Divider style={{ marginVertical: verticalScale(8) }} />
-      {contentDataLoading ? (
-        <Loading />
-      ) : !contentDataLoading && contentDataRes.length <= 0 ? (
-        <Text style={styles.msgTxt}>{`Content not availaibale`}</Text>
-      ) : (
-        <FlatList
-          data={contentDataRes}
-          keyExtractor={(item) => {
-            // item.id.toString();
-            item.id;
-          }}
-          showsVerticalScrollIndicator={false}
-          onEndReachedThreshold={1}
-          ItemSeparatorComponent={
-            <Divider style={{ marginBottom: verticalScale(8) }} />
-          }
-          // ListFooterComponent={
-          //   contentDataLoading && (
-          //     <ActivityIndicator
-          //       style={{ marginVertical: verticalScale(20) }}
-          //     />
-          //   )
-          // }
-          renderItem={renderItem}
-        />
-      )}
+      {
+        // contentDataLoading ? (
+        //   <Loading />
+        // ) :
+        !contentDataLoading && contentDataRes.length <= 0 ? (
+          <Text style={styles.msgTxt}>{`Content not availaibale`}</Text>
+        ) : (
+          <FlatList
+            data={contentDataRes}
+            keyExtractor={(item) => {
+              // item.id.toString();
+              item.id;
+            }}
+            showsVerticalScrollIndicator={false}
+            onEndReachedThreshold={1}
+            // onEndReached={() => {
+            //   !contentdata?.isReachedEnd;
+            //   getAdContentByCategory();
+            // }}
+            ItemSeparatorComponent={
+              <Divider style={{ marginBottom: verticalScale(8) }} />
+            }
+            // ListFooterComponent={
+            //   contentDataLoading && (
+            //     <ActivityIndicator
+            //       style={{ marginVertical: verticalScale(20) }}
+            //     />
+            //   )
+            // }
+            renderItem={renderItem}
+          />
+        )
+      }
       {/* <CommentView
         isShow={isShowCommentView}
         onChange={(value) => {

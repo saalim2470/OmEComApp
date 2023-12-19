@@ -15,9 +15,21 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.om.classified",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Om needs camera access to take photos",
+        "NSLocationWhenInUseUsageDescription": "Om needs location access to show your current location"
+      }
     },
     "android": {
+      "permissions": [
+        "INTERNET",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "LOCATION"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"

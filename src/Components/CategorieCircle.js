@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { SvgUri } from "react-native-svg";
@@ -7,13 +7,16 @@ import { defaultCategoryImg } from "../Constants/defaults";
 import { TouchableOpacity } from "react-native";
 import { getAdContentByCategory } from "../store/AdContentSlices/GetAdContentSlice";
 import { useDispatch } from "react-redux";
+import colors from "../Constants/colors";
 
 const CategorieCircle = ({ data, disabled }) => {
   const dispatch = useDispatch();
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const renderItem = ({ item, index }) => {
     return (
       <TouchableOpacity
         onPress={() => {
+          setSelectedCategory(item?.id);
           dispatch(getAdContentByCategory(item.id, 1, 10));
         }}
         disabled={disabled}
@@ -23,7 +26,16 @@ const CategorieCircle = ({ data, disabled }) => {
           marginRight: data?.length - 1 == index ? moderateScale(10) : null,
         }}
       >
-        <View style={[styles.storyCircle]}>
+        <View
+          style={[
+            styles.storyCircle,
+            {
+              borderColor:
+                selectedCategory === item?.id ? colors.themeColor : null,
+              borderWidth: selectedCategory === item?.id ? 2 : 0.5,
+            },
+          ]}
+        >
           <SvgUri
             width={scale(43)}
             height={scale(43)}

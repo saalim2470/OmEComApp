@@ -44,6 +44,10 @@ const Subscription = ({ route }) => {
   const getSubscriptionData = useSelector(
     (state) => state.getSubscriptionPlan.subscriptionPlanData
   );
+  const getSubscriptionData1 = useSelector(
+    (state) => state.getSubscriptionPlan
+  );
+  console.log("-=-=-=-subscriptop-=-=-", getSubscriptionData1);
   const {
     error: getSubscriptionPlanError,
     errorCode: getSubscriptionPlanErrorCode,
@@ -59,7 +63,17 @@ const Subscription = ({ route }) => {
   }, []);
   useEffect(() => {
     if (getSubscriptionData && getSubscriptionData?.Success) {
-      dispatch(addAdContentApi(postData?.postDataDraft));
+      console.log("-=-=-postd data-=-=", postData?.postDataDraft);
+      if (postData?.postDataDraft != null) {
+        dispatch(addAdContentApi(postData?.postDataDraft));
+      } else {
+        setShowAlert({
+          show: true,
+          title: "Success",
+          msg: "Subscription Added",
+          type: "success",
+        });
+      }
     }
   }, [getSubscriptionData]);
   useEffect(() => {

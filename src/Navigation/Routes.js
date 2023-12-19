@@ -33,7 +33,6 @@ const Routes = () => {
   const countryData = useSelector((state) => state.getCountry.countryData);
   const [appIsReady, setAppIsReady] = useState(false);
   const [isToken, setIsToken] = useState(false);
-  console.log("-=-=--is token before-=-=", isToken);
   useEffect(() => {
     async function prepare() {
       try {

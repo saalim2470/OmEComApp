@@ -10,11 +10,14 @@ const GetAdContentSlice = createSlice({
     error: null,
     statusCode: null,
     isSuccess: false,
+    isReachedEnd: false,
   },
   reducers: {
     setAdContent: (state, action) => {
-      state.contentData = action.payload;
       state.isSuccess = true;
+      // console.log("-=-=-=in redu8vcer-=-=-=", action.payload);
+      // state.contentData = [...state.contentData, ...action.payload];
+      state.contentData = action.payload;
     },
     addLikeContent: (state, action) => {
       state.contentData = state.contentData.map((item, index) => {
@@ -35,6 +38,9 @@ const GetAdContentSlice = createSlice({
     setLoading: (state, action) => {
       state.isLoading = action.payload;
     },
+    setReachedEnd: (state, action) => {
+      state.isReachedEnd = action.payload;
+    },
     setError: (state, action) => {
       state.error = action.payload?.data;
       state.statusCode = action.payload?.status;
@@ -54,6 +60,7 @@ export const {
   setError,
   saveContent,
   resetAdContentData,
+  setReachedEnd,
 } = GetAdContentSlice.actions;
 
 export const getAdContentByCategory =
@@ -66,6 +73,8 @@ export const getAdContentByCategory =
         pageNumber,
         pageSize
       );
+      // console.log("-=-=-res outer-=-=", responce.data);
+      dispatch(setReachedEnd(false));
       dispatch(setAdContent(responce.data?.Data));
       dispatch(setLoading(false));
     } catch (error) {

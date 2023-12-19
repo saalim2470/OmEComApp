@@ -111,9 +111,13 @@ const CreateAccount = () => {
     if (authSuccess != false && authSuccess) {
       console.log("succes");
       navigation.dispatch(
-        StackActions.replace(screenName.drawerNavigation, {
-          screen: screenName.homeScreenIcons,
+        StackActions.replace(screenName.authRoute, {
+          screen: screenName.login,
         })
+        // navigation.dispatch(
+        //   StackActions.replace(screenName.drawerNavigation, {
+        //     screen: screenName.homeScreenIcons,
+        //   })
       );
     }
   }, [authSuccess]);

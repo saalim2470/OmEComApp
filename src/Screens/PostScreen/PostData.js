@@ -31,6 +31,7 @@ const PostData = ({ navigation, route }) => {
   const { categoryId } = route.params;
   const formData = new FormData();
   const addPostData = useSelector((state) => state.addAdContentData);
+  console.log("-=-=add post data-==-=", addPostData);
   const [image, setImage] = useState([]);
   const [description, setDescription] = useState("");
   const [showEmoji, setShowEmoji] = useState(false);
@@ -69,7 +70,15 @@ const PostData = ({ navigation, route }) => {
         type: "warning",
       });
     }
-  }, [addPostData.errorCode]);
+    if (addPostData?.errorCode != null && addPostData?.error != null) {
+      setShowAlert({
+        show: true,
+        title: "Error",
+        msg: `Some Error Occured`,
+        type: "error",
+      });
+    }
+  }, [addPostData.errorCode, addPostData?.error]);
   const openImagePicker = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -129,8 +138,8 @@ const PostData = ({ navigation, route }) => {
     });
     formData.append("description", description);
     formData.append("categoryId", categoryId);
-    dispatch(addAdContentApi(formData));
     dispatch(setPostDataDraft(formData));
+    dispatch(addAdContentApi(formData));
     // navigation.navigate(screenName.drawerNavigation, {
     //   screen: screenName.subscription,
     // });
@@ -165,6 +174,7 @@ const PostData = ({ navigation, route }) => {
               borderRadius: scale(5),
               marginVertical: moderateScale(0),
             }}
+            isLoading={addPostData?.isLoading}
             disabled={!description ? true : false}
             title={"Post"}
             onClick={() => {
@@ -176,6 +186,7 @@ const PostData = ({ navigation, route }) => {
         <UserHeader />
         <PostScreenTextView
           imageData={image}
+          disabled={addPostData?.isLoading}
           value={description}
           removeImage={(index) => {
             onClickRemove(index);
