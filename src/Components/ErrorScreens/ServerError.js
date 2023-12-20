@@ -10,8 +10,13 @@ const ServerError = ({ statusCode }) => {
         { alignItems: "center", justifyContent: "center" },
       ]}
     >
-      {statusCode == 500 && <Text>Internal server Error</Text>}
-      {statusCode == 404 && <Text>Not Found</Text>}
+      {statusCode == 500 ? (
+        <Text>Internal server Error</Text>
+      ) : statusCode == 404 ? (
+        <Text>Not Found</Text>
+      ) : (
+        <Text>Some error occured</Text>
+      )}
     </View>
   );
 };

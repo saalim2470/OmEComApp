@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CustomeAlertModal from "../../Components/CustomeAlertModal";
 import { useEffect } from "react";
 import { setError } from "../../store/AdContentSlices/GetAdContentSlice";
+import FeedCard from "../../Components/ProductComponent/FeedCard";
 
 const ProductDetail = ({ route }) => {
   const dispatch = useDispatch();
@@ -48,7 +49,7 @@ const ProductDetail = ({ route }) => {
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={true}
       >
-        <FeedCardWithDescription itemData={route?.params?.data} />
+        <FeedCard itemData={route?.params?.data} disable={true} />
         {/* unComment After 1st version */}
         {/* <AdView /> */}
       </ScrollView>

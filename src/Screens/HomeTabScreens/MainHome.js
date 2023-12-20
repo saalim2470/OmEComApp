@@ -23,6 +23,8 @@ import {
   setError,
 } from "../../store/AdContentSlices/GetAdContentSlice";
 import HomeScreenCategory from "../../Components/HomeScreenComponent/HomeScreenCategory";
+import colors from "../../Constants/colors";
+import ServerError from "../../Components/ErrorScreens/ServerError";
 
 const MainHome = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -38,8 +40,8 @@ const MainHome = ({ navigation, route }) => {
   const [isShowCommentView, setIsShowCommentView] = useState(-1);
   const [categoryData, setCategoryData] = useState(null);
   const [pageSize, setPageSize] = useState(10);
-  const [pageNumber, setPageNumber] = useState(0);
-  const [adContentData, setAdContentData] = useState([]);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [postData, setPostData] = useState([]);
   const [isReachedEnd, setIsReachedEnd] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showAlert, setShowAlert] = useState({
@@ -49,13 +51,9 @@ const MainHome = ({ navigation, route }) => {
     type: null,
   });
   useEffect(() => {
-    // setPageNumber((prevPageNumber) => prevPageNumber + 1);
-    // getContentDataByCategory(route?.params?.categoryId);
     setSelectedCategory(route?.params?.categoryId);
+    getContentDataByCategory(route?.params?.categoryId);
   }, [route]);
-  useEffect(() => {
-    getContentDataByCategory(selectedCategory);
-  }, [selectedCategory]);
 
   useEffect(() => {
     if (
@@ -74,12 +72,17 @@ const MainHome = ({ navigation, route }) => {
   useEffect(() => {
     setCategoryData(categoryDataRes?.Data);
   }, [categoryDataRes]);
+  useEffect(() => {
+    if (contentdata?.contentData.length > 0) {
+      setPostData([...postData, ...contentdata?.contentData]);
+    } else if (contentdata?.contentData.length == 0) {
+      setIsReachedEnd(true);
+    }
+  }, [contentdata?.isSuccess]);
 
   const getContentDataByCategory = (categoryID) => {
-    const updatedPageNumber = pageNumber + 1;
-    console.log("-=-=pagenu -=-=", updatedPageNumber);
-    dispatch(getAdContentByCategory(categoryID, updatedPageNumber, pageSize));
-    setPageNumber(updatedPageNumber);
+    dispatch(getAdContentByCategory(categoryID, pageNumber, pageSize));
+    setPageNumber((prev) => prev + 1);
   };
   const onClickModalBtn = () => {
     dispatch(setError(null));
@@ -108,7 +111,7 @@ const MainHome = ({ navigation, route }) => {
         index={index}
         selectedCategory={selectedCategory}
         onClick={() => {
-          setPageNumber(0);
+          setPageNumber(1);
           setSelectedCategory(item?.id);
           // getContentDataByCategory(item.id);
         }}
@@ -118,12 +121,16 @@ const MainHome = ({ navigation, route }) => {
   const listFooterComponent = () => {
     return (
       contentDataLoading && (
-        <ActivityIndicator style={{ marginVertical: verticalScale(20) }} />
+        <ActivityIndicator
+          style={{ marginVertical: verticalScale(20) }}
+          size={"large"}
+          color={colors.themeColor}
+        />
       )
     );
   };
   const onReachedEnd = () => {
-    if (contentdata?.isReachedEnd == false) {
+    if (!isReachedEnd) {
       getContentDataByCategory(selectedCategory);
     }
   };
@@ -143,11 +150,10 @@ const MainHome = ({ navigation, route }) => {
           navigation.navigate(screenName.notification);
         }}
         onClickLeftIcon={() => {
-          navigation.openDrawer();
+          navigation.toggleDrawer();
         }}
       />
       <View style={styles.storyView}>
-        {/* <CategorieCircle data={categoryData} /> */}
         <FlatList
           data={categoryData}
           keyExtractor={(item) => item.id}
@@ -161,11 +167,13 @@ const MainHome = ({ navigation, route }) => {
         // contentDataLoading ? (
         //   <Loading />
         // ) :
-        !contentDataLoading && contentDataRes.length <= 0 ? (
+        !contentDataLoading && contentdata?.error != null ? (
+          <ServerError />
+        ) : !contentDataLoading && contentDataRes.length <= 0 ? (
           <Text style={styles.msgTxt}>{`Content not availaibale`}</Text>
         ) : (
           <FlatList
-            data={contentDataRes}
+            data={postData}
             keyExtractor={(item) => {
               item.id;
             }}

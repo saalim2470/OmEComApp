@@ -4,7 +4,7 @@ import { Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { scale } from "react-native-size-matters";
 
-const IconButton = ({ name, color, onclick }) => {
+const IconButton = ({ name, color, onclick = () => {} }) => {
   return (
     <Pressable
       onPress={() => {

@@ -10,6 +10,7 @@ import React, { useState } from "react";
 import commonStyle from "../../Constants/commonStyle";
 import images from "../../Constants/images";
 import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import CustomeAlertModal from "../CustomeAlertModal";
 
@@ -18,6 +19,7 @@ const FeedCardBottomView = ({
   onClickLike = () => {},
   onClickMsg = () => {},
   onClickBookMark = () => {},
+  onClickComment = () => {},
 }) => {
   const [showAlert, setShowAlert] = useState({
     show: false,
@@ -63,17 +65,17 @@ const FeedCardBottomView = ({
               color={itemData?.isCurrentUserLiked ? "red" : "black"}
             />
           </TouchableOpacity>
-          {/* <TouchableOpacity
-        onPress={() => {
-          onClickComment();
-        }}
-      >
-        <MaterialCommunityIcons
-          name="message-outline"
-          size={scale(24)}
-          color="black"
-        />
-      </TouchableOpacity> */}
+          <TouchableOpacity
+            onPress={() => {
+              onClickComment();
+            }}
+          >
+            <MaterialCommunityIcons
+              name="message-outline"
+              size={scale(24)}
+              color="black"
+            />
+          </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
               onClickMsg();

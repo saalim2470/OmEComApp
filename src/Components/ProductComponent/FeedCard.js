@@ -16,10 +16,9 @@ import FeedCardBottomView from "./FeedCardBottomView";
 const FeedCard = ({
   itemData,
   onClickMoreBtn = () => {},
-  isMoreBtn,
-  isOfferBtn,
   isShowOptionBtn,
   menuChildren,
+  disable,
 }) => {
   const dispatch = useDispatch();
   const [files, setFiles] = useState([]);
@@ -52,14 +51,12 @@ const FeedCard = ({
   useEffect(() => {
     imageurl();
   }, [itemData]);
-  console.log(files);
-  const txt =
-    "Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.It has survived not only five centuries, but";
   return (
     <Pressable
       onPress={() => {
         onClickMoreBtn();
       }}
+      disabled={disable}
       style={{ marginBottom: verticalScale(8) }}
     >
       {/* headerView */}

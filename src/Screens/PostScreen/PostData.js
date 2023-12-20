@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import commonStyle from "../../Constants/commonStyle";
@@ -161,11 +161,18 @@ const PostData = ({ navigation, route }) => {
       <View style={{ flex: 1 }}>
         <View style={styles.headerView}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Ionicons
-              name="arrow-back-outline"
-              size={scale(25)}
-              color="black"
-            />
+            <TouchableOpacity
+              activeOpacity={0.6}
+              onPress={() => {
+                navigation.goBack();
+              }}
+            >
+              <Ionicons
+                name="arrow-back-outline"
+                size={scale(25)}
+                color="black"
+              />
+            </TouchableOpacity>
             <Text style={styles.headerTxt}>Create post</Text>
           </View>
           <CustomeButton
@@ -219,10 +226,14 @@ const PostData = ({ navigation, route }) => {
         >
           <Entypo name="emoji-happy" size={scale(23)} color="#e3bf3d" />
         </Pressable>
-        <IconButton name={"ios-location-sharp"} color={"#ed480c"} />
-        <Pressable style={styles.circle}>
+        <IconButton
+          name={"ios-location-sharp"}
+          color={"#ed480c"}
+          onclick={() => {}}
+        />
+        {/* <Pressable style={styles.circle}>
           <SimpleLineIcons name="options" size={scale(20)} color="white" />
-        </Pressable>
+        </Pressable> */}
       </View>
       <EmojiComponent
         show={showEmoji}

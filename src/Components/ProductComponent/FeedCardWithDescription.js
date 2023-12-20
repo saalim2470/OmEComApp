@@ -54,7 +54,7 @@ const FeedCardWithDescription = ({ itemData }) => {
       {/* card header view */}
       <FeedCardHeader itemData={itemData} />
       <View style={styles.topView}>
-        <Text style={styles.descTxt}>
+        {/* <Text style={styles.descTxt}>
           {txt.length > txtLength && isShowTxtBtn == false
             ? `${txt.substring(0, txtLength)}`
             : txt}
@@ -73,6 +73,17 @@ const FeedCardWithDescription = ({ itemData }) => {
               ...more
             </Text>
           )}
+        </Text> */}
+        <Text
+          style={styles.descTxt}
+          disabled={itemData?.description?.length < txtLength}
+          onPress={() => {
+            setIsShowTxtBtn(!isShowTxtBtn);
+          }}
+        >
+          {itemData?.description?.length > txtLength
+            ? `${itemData?.description?.substring(0, txtLength)} ...more`
+            : `${itemData?.description?.substring(0, txtLength)}`}
         </Text>
       </View>
       {/* image slider view */}
@@ -90,7 +101,7 @@ const FeedCardWithDescription = ({ itemData }) => {
             onClickMsgBtn();
           }}
         />
-        <View style={styles.tabView}>
+        {/* <View style={styles.tabView}>
           <TouchableOpacity
             style={[
               styles.tabBtnView,
@@ -136,7 +147,7 @@ const FeedCardWithDescription = ({ itemData }) => {
           <Overview itemData={itemData} />
         ) : (
           <Specification data1={itemData?.specifications} />
-        )}
+        )} */}
       </View>
     </View>
   );

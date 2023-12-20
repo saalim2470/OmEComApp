@@ -15,18 +15,7 @@ const GetAdContentSlice = createSlice({
   reducers: {
     setAdContent: (state, action) => {
       state.isSuccess = true;
-      // console.log("-=-=-=in redu8vcer-=-=-=", action.payload);
-      if (action.payload?.length == 0) {
-        state.contentData = [];
-      } else {
-        state.contentData = [...state.contentData, ...action.payload];
-      }
-      if (action.payload?.length < 10) {
-        state.isReachedEnd = true;
-      } else {
-        state.isReachedEnd = false;
-      }
-      // state.contentData = action.payload;
+      state.contentData = action.payload;
     },
     addLikeContent: (state, action) => {
       state.contentData = state.contentData.map((item, index) => {
