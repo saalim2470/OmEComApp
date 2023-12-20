@@ -9,7 +9,7 @@ import { getAdContentByCategory } from "../store/AdContentSlices/GetAdContentSli
 import { useDispatch } from "react-redux";
 import colors from "../Constants/colors";
 
-const CategorieCircle = ({ data, disabled }) => {
+const CategorieCircle = ({ data, disabled, onClick = () => {} }) => {
   const dispatch = useDispatch();
   const [selectedCategory, setSelectedCategory] = useState(null);
   const renderItem = ({ item, index }) => {

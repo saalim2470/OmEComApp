@@ -16,8 +16,17 @@ const GetAdContentSlice = createSlice({
     setAdContent: (state, action) => {
       state.isSuccess = true;
       // console.log("-=-=-=in redu8vcer-=-=-=", action.payload);
-      // state.contentData = [...state.contentData, ...action.payload];
-      state.contentData = action.payload;
+      if (action.payload?.length == 0) {
+        state.contentData = [];
+      } else {
+        state.contentData = [...state.contentData, ...action.payload];
+      }
+      if (action.payload?.length < 10) {
+        state.isReachedEnd = true;
+      } else {
+        state.isReachedEnd = false;
+      }
+      // state.contentData = action.payload;
     },
     addLikeContent: (state, action) => {
       state.contentData = state.contentData.map((item, index) => {
@@ -65,6 +74,7 @@ export const {
 
 export const getAdContentByCategory =
   (categoryId, pageNumber, pageSize) => async (dispatch) => {
+    console.log("-=-=data in api-==--=", categoryId, pageNumber);
     try {
       dispatch(resetAdContentData());
       dispatch(setLoading(true));
@@ -74,7 +84,7 @@ export const getAdContentByCategory =
         pageSize
       );
       // console.log("-=-=-res outer-=-=", responce.data);
-      dispatch(setReachedEnd(false));
+      // dispatch(setReachedEnd(false));
       dispatch(setAdContent(responce.data?.Data));
       dispatch(setLoading(false));
     } catch (error) {

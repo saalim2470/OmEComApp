@@ -22,6 +22,7 @@ import {
   getAdContentByCategory,
   setError,
 } from "../../store/AdContentSlices/GetAdContentSlice";
+import HomeScreenCategory from "../../Components/HomeScreenComponent/HomeScreenCategory";
 
 const MainHome = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -30,15 +31,17 @@ const MainHome = ({ navigation, route }) => {
     (state) => state.getAddContentByCategory.contentData
   );
   const contentdata = useSelector((state) => state.getAddContentByCategory);
+  console.log("-=-=contnt-=-=-", contentdata);
   const contentDataLoading = useSelector(
     (state) => state.getAddContentByCategory.isLoading
   );
   const [isShowCommentView, setIsShowCommentView] = useState(-1);
   const [categoryData, setCategoryData] = useState(null);
   const [pageSize, setPageSize] = useState(10);
-  const [pageNumber, setPageNumber] = useState(1);
+  const [pageNumber, setPageNumber] = useState(0);
   const [adContentData, setAdContentData] = useState([]);
   const [isReachedEnd, setIsReachedEnd] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -46,8 +49,14 @@ const MainHome = ({ navigation, route }) => {
     type: null,
   });
   useEffect(() => {
-    getContentDataByCategory();
+    // setPageNumber((prevPageNumber) => prevPageNumber + 1);
+    // getContentDataByCategory(route?.params?.categoryId);
+    setSelectedCategory(route?.params?.categoryId);
   }, [route]);
+  useEffect(() => {
+    getContentDataByCategory(selectedCategory);
+  }, [selectedCategory]);
+
   useEffect(() => {
     if (
       contentdata?.error != null &&
@@ -66,11 +75,11 @@ const MainHome = ({ navigation, route }) => {
     setCategoryData(categoryDataRes?.Data);
   }, [categoryDataRes]);
 
-  const getContentDataByCategory = () => {
-    dispatch(
-      getAdContentByCategory(route?.params?.categoryId, pageNumber, pageSize)
-    );
-    // setPageNumber(pageNumber + 1);
+  const getContentDataByCategory = (categoryID) => {
+    const updatedPageNumber = pageNumber + 1;
+    console.log("-=-=pagenu -=-=", updatedPageNumber);
+    dispatch(getAdContentByCategory(categoryID, updatedPageNumber, pageSize));
+    setPageNumber(updatedPageNumber);
   };
   const onClickModalBtn = () => {
     dispatch(setError(null));
@@ -91,7 +100,33 @@ const MainHome = ({ navigation, route }) => {
       />
     );
   };
-
+  const renderCategory = ({ item, index }) => {
+    return (
+      <HomeScreenCategory
+        item={item}
+        data={categoryData}
+        index={index}
+        selectedCategory={selectedCategory}
+        onClick={() => {
+          setPageNumber(0);
+          setSelectedCategory(item?.id);
+          // getContentDataByCategory(item.id);
+        }}
+      />
+    );
+  };
+  const listFooterComponent = () => {
+    return (
+      contentDataLoading && (
+        <ActivityIndicator style={{ marginVertical: verticalScale(20) }} />
+      )
+    );
+  };
+  const onReachedEnd = () => {
+    if (contentdata?.isReachedEnd == false) {
+      getContentDataByCategory(selectedCategory);
+    }
+  };
   return (
     <SafeAreaView style={commonStyle.container}>
       <MainHeader
@@ -112,7 +147,14 @@ const MainHome = ({ navigation, route }) => {
         }}
       />
       <View style={styles.storyView}>
-        <CategorieCircle data={categoryData} />
+        {/* <CategorieCircle data={categoryData} /> */}
+        <FlatList
+          data={categoryData}
+          keyExtractor={(item) => item.id}
+          showsHorizontalScrollIndicator={false}
+          horizontal
+          renderItem={renderCategory}
+        />
       </View>
       <Divider style={{ marginVertical: verticalScale(8) }} />
       {
@@ -125,25 +167,17 @@ const MainHome = ({ navigation, route }) => {
           <FlatList
             data={contentDataRes}
             keyExtractor={(item) => {
-              // item.id.toString();
               item.id;
             }}
             showsVerticalScrollIndicator={false}
             onEndReachedThreshold={1}
-            // onEndReached={() => {
-            //   !contentdata?.isReachedEnd;
-            //   getAdContentByCategory();
-            // }}
+            onEndReached={() => {
+              onReachedEnd();
+            }}
             ItemSeparatorComponent={
               <Divider style={{ marginBottom: verticalScale(8) }} />
             }
-            // ListFooterComponent={
-            //   contentDataLoading && (
-            //     <ActivityIndicator
-            //       style={{ marginVertical: verticalScale(20) }}
-            //     />
-            //   )
-            // }
+            ListFooterComponent={listFooterComponent}
             renderItem={renderItem}
           />
         )
