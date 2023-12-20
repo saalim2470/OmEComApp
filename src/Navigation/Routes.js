@@ -24,7 +24,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { accessToken } from "../Constants/defaults";
 import { getCountryData } from "../store/contrySlices/GetCountrySlice";
 import { useDispatch, useSelector } from "react-redux";
-import { jwtDecode } from "jwt-decode";
 
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
