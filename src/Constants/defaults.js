@@ -3,3 +3,4 @@ export const defaultCategoryImg =
 export const accessToken = "accessToken";
 export const baseURL = "https://suryahealthclub.com:8585/";
 export const serverImagePath = "ContentImages";
+export const userDetail = "userDetail";

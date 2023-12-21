@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import AuthServices from "../../services/AuthServices";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { accessToken } from "../../Constants/defaults";
+import { accessToken, userDetail } from "../../Constants/defaults";
 
 const LoginSlice = createSlice({
   name: "login",
@@ -10,6 +10,7 @@ const LoginSlice = createSlice({
     accessToken: null,
     error: null,
     isSuccess: false,
+    userDetail: null,
   },
   reducers: {
     logOut: (state, action) => {
@@ -31,10 +32,23 @@ const LoginSlice = createSlice({
     setError: (state, action) => {
       state.error = action.payload;
     },
+    setAccessToken: (state, action) => {
+      state.accessToken = action.payload;
+    },
+    setuserDetail: (state, action) => {
+      state.userDetail = action.payload;
+    },
   },
 });
 export default LoginSlice.reducer;
-export const { setToken, setLoading, setError, logOut } = LoginSlice.actions;
+export const {
+  setToken,
+  setLoading,
+  setError,
+  logOut,
+  setAccessToken,
+  setuserDetail,
+} = LoginSlice.actions;
 
 export const getLoginUser = (data) => async (dispatch) => {
   try {
@@ -45,6 +59,12 @@ export const getLoginUser = (data) => async (dispatch) => {
       accessToken,
       JSON.stringify(responce?.data?.Data?.token)
     );
+    const userResponce = await AuthServices.getUserInfo();
+    await AsyncStorage.setItem(
+      userDetail,
+      JSON.stringify(userResponce?.data?.Data)
+    );
+    dispatch(setuserDetail(userResponce?.data?.Data));
     dispatch(setToken(responce?.data));
     dispatch(setLoading(false));
   } catch (error) {

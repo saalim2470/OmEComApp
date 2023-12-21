@@ -7,5 +7,8 @@ class AuthServices {
   createAccount(data) {
     return http.post("/Account/Register", data);
   }
+  getUserInfo() {
+    return http.get("/Account/GetUserInfo");
+  }
 }
 export default new AuthServices();

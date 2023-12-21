@@ -24,6 +24,7 @@ const Login = ({ navigation }) => {
   const loginLoading = useSelector((state) => state.login.isLoading);
   const loginError = useSelector((state) => state.login.error);
   const logindata = useSelector((state) => state.login);
+  console.log("-=-=-user-=-=", logindata);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,7 +33,7 @@ const Login = ({ navigation }) => {
   const [showError, setShowError] = useState({ isError: false, msg: null });
   useEffect(() => {
     if (loginSuccess) {
-      navigation.dispatch(StackActions.replace(screenName.drawerNavigation));
+      // navigation.dispatch(StackActions.replace(screenName.drawerNavigation));
     }
   }, [loginSuccess]);
   useEffect(() => {

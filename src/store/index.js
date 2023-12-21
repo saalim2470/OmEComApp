@@ -12,6 +12,7 @@ import GetCitySlice from "./contrySlices/GetCitySlice";
 import CreateAccountSlice from "./authSlices/CreateAccountSlice";
 import SubscriptionPlanSlice from "./subscriptionSlices/SubscriptionPlanSlice";
 import GetSubscriptionPlanSlice from "./subscriptionSlices/GetSubscriptionPlanSlice";
+import StoreDataSlice from "./StoreDataSlice";
 
 const store = configureStore({
   reducer: {
@@ -27,6 +28,7 @@ const store = configureStore({
     createAccount: CreateAccountSlice,
     subscriptionPlan: SubscriptionPlanSlice,
     getSubscriptionPlan: GetSubscriptionPlanSlice,
+    storeData: StoreDataSlice,
   },
   middleware: [thunk],
 });

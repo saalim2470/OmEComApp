@@ -4,8 +4,10 @@ import { Avatar, Divider } from "react-native-paper";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import colors from "../../Constants/colors";
 import images from "../../Constants/images";
+import { useSelector } from "react-redux";
 
 const ProfileScreenTopView = () => {
+  const userDetail = useSelector((state) => state.login?.userDetail);
   return (
     <>
       <View
@@ -28,9 +30,11 @@ const ProfileScreenTopView = () => {
             }}
           />
           <View>
-            <Text style={styles.titleTxt}>Albert Flores</Text>
-            <Text style={styles.lightTxt}>elenarpenfashion@gmail.com</Text>
-            <Text style={styles.lightTxt}>Other</Text>
+            <Text
+              style={styles.titleTxt}
+            >{`${userDetail?.firstName} ${userDetail?.lastName}`}</Text>
+            <Text style={styles.lightTxt}>{userDetail?.email}</Text>
+            {/* <Text style={styles.lightTxt}>Other</Text> */}
           </View>
         </View>
         <View

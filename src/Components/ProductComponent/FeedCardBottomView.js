@@ -13,6 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import CustomeAlertModal from "../CustomeAlertModal";
+import CustomeBottomSheet from "../CustomeBottomSheet";
 
 const FeedCardBottomView = ({
   itemData,
@@ -27,6 +28,7 @@ const FeedCardBottomView = ({
     msg: null,
     type: null,
   });
+  const [isShowBottomSheet, setIsShowBottomSheet] = useState(-1);
   const url = `whatsapp://send?phone=${itemData?.user?.phoneNumber}&text=Hello`;
   const checkWhatsAppInstalled = async () => {
     try {
@@ -76,13 +78,13 @@ const FeedCardBottomView = ({
               color="black"
             />
           </TouchableOpacity>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               onClickMsg();
             }}
           >
             <Ionicons name="mail-outline" size={scale(24)} color="black" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
             onPress={() => {
               onClickBookMark();
@@ -123,6 +125,16 @@ const FeedCardBottomView = ({
           </TouchableOpacity>
         </View>
       </View>
+      <Text style={styles.likeTxt}>452 likes</Text>
+      <TouchableOpacity
+        style={{ alignSelf: "flex-start", marginTop: verticalScale(4) }}
+        activeOpacity={0.6}
+        onPress={() => {
+          onClickComment();
+        }}
+      >
+        <Text style={styles.commentTxt}>View all 2 comments</Text>
+      </TouchableOpacity>
       <CustomeAlertModal
         isVisible={showAlert.show}
         title={showAlert.title}
@@ -149,5 +161,13 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     alignItems: "center",
+  },
+  likeTxt: {
+    fontFamily: "Montserrat-Bold",
+    fontSize: scale(11),
+  },
+  commentTxt: {
+    fontFamily: "Montserrat-Medium",
+    fontSize: scale(12),
   },
 });

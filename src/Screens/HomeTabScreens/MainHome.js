@@ -25,21 +25,24 @@ import {
 import HomeScreenCategory from "../../Components/HomeScreenComponent/HomeScreenCategory";
 import colors from "../../Constants/colors";
 import ServerError from "../../Components/ErrorScreens/ServerError";
+import { useIsFocused } from "@react-navigation/native";
 
 const MainHome = ({ navigation, route }) => {
   const dispatch = useDispatch();
+  const isFocus = useIsFocused();
+  const categoryId = useSelector((state) => state.storeData.categoryId);
+  console.log("-=-=-cate in store--=-", categoryId);
   const categoryDataRes = useSelector((state) => state.category.categoryData);
   const contentDataRes = useSelector(
     (state) => state.getAddContentByCategory.contentData
   );
   const contentdata = useSelector((state) => state.getAddContentByCategory);
-  console.log("-=-=contnt-=-=-", contentdata);
   const contentDataLoading = useSelector(
     (state) => state.getAddContentByCategory.isLoading
   );
   const [isShowCommentView, setIsShowCommentView] = useState(-1);
   const [categoryData, setCategoryData] = useState(null);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(70);
   const [pageNumber, setPageNumber] = useState(1);
   const [postData, setPostData] = useState([]);
   const [isReachedEnd, setIsReachedEnd] = useState(false);
@@ -50,10 +53,11 @@ const MainHome = ({ navigation, route }) => {
     msg: null,
     type: null,
   });
+
   useEffect(() => {
-    setSelectedCategory(route?.params?.categoryId);
-    getContentDataByCategory(route?.params?.categoryId);
-  }, [route]);
+    setSelectedCategory(categoryId);
+    getContentDataByCategory(categoryId);
+  }, [categoryId, route, dispatch, isFocus]);
 
   useEffect(() => {
     if (
@@ -72,17 +76,16 @@ const MainHome = ({ navigation, route }) => {
   useEffect(() => {
     setCategoryData(categoryDataRes?.Data);
   }, [categoryDataRes]);
-  useEffect(() => {
-    if (contentdata?.contentData.length > 0) {
-      setPostData([...postData, ...contentdata?.contentData]);
-    } else if (contentdata?.contentData.length == 0) {
-      setIsReachedEnd(true);
-    }
-  }, [contentdata?.isSuccess]);
+  // useEffect(() => {
+  //   if (contentdata?.contentData.length > 0) {
+  //     setPostData([...postData, ...contentdata?.contentData]);
+  //   } else if (contentdata?.contentData.length == 0) {
+  //     setIsReachedEnd(true);
+  //   }
+  // }, [contentdata?.isSuccess]);
 
   const getContentDataByCategory = (categoryID) => {
-    dispatch(getAdContentByCategory(categoryID, pageNumber, pageSize));
-    setPageNumber((prev) => prev + 1);
+    dispatch(getAdContentByCategory(categoryID, 1, pageSize));
   };
   const onClickModalBtn = () => {
     dispatch(setError(null));
@@ -111,9 +114,8 @@ const MainHome = ({ navigation, route }) => {
         index={index}
         selectedCategory={selectedCategory}
         onClick={() => {
-          setPageNumber(1);
           setSelectedCategory(item?.id);
-          // getContentDataByCategory(item.id);
+          getContentDataByCategory(item.id);
         }}
       />
     );
@@ -163,33 +165,30 @@ const MainHome = ({ navigation, route }) => {
         />
       </View>
       <Divider style={{ marginVertical: verticalScale(8) }} />
-      {
-        // contentDataLoading ? (
-        //   <Loading />
-        // ) :
-        !contentDataLoading && contentdata?.error != null ? (
-          <ServerError />
-        ) : !contentDataLoading && contentDataRes.length <= 0 ? (
-          <Text style={styles.msgTxt}>{`Content not availaibale`}</Text>
-        ) : (
-          <FlatList
-            data={postData}
-            keyExtractor={(item) => {
-              item.id;
-            }}
-            showsVerticalScrollIndicator={false}
-            onEndReachedThreshold={1}
-            onEndReached={() => {
-              onReachedEnd();
-            }}
-            ItemSeparatorComponent={
-              <Divider style={{ marginBottom: verticalScale(8) }} />
-            }
-            ListFooterComponent={listFooterComponent}
-            renderItem={renderItem}
-          />
-        )
-      }
+      {contentDataLoading ? (
+        <Loading />
+      ) : !contentDataLoading && contentdata?.error != null ? (
+        <ServerError />
+      ) : !contentDataLoading && contentDataRes.length <= 0 ? (
+        <Text style={styles.msgTxt}>{`Content not availaibale`}</Text>
+      ) : (
+        <FlatList
+          data={contentDataRes}
+          keyExtractor={(item) => {
+            item.id;
+          }}
+          showsVerticalScrollIndicator={false}
+          onEndReachedThreshold={1}
+          onEndReached={() => {
+            // onReachedEnd();
+          }}
+          ItemSeparatorComponent={
+            <Divider style={{ marginBottom: verticalScale(8) }} />
+          }
+          // ListFooterComponent={listFooterComponent}
+          renderItem={renderItem}
+        />
+      )}
       {/* <CommentView
         isShow={isShowCommentView}
         onChange={(value) => {

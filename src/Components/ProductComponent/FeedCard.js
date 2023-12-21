@@ -19,6 +19,7 @@ const FeedCard = ({
   isShowOptionBtn,
   menuChildren,
   disable,
+  onClickCommentBtn = () => {},
 }) => {
   const dispatch = useDispatch();
   const [files, setFiles] = useState([]);
@@ -111,6 +112,9 @@ const FeedCard = ({
             onClickLikeBtn();
           }}
           onClickMsg={() => {}}
+          onClickComment={() => {
+            onClickCommentBtn();
+          }}
         />
       </View>
     </Pressable>

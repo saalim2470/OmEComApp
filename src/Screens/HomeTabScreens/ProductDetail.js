@@ -12,9 +12,11 @@ import CustomeAlertModal from "../../Components/CustomeAlertModal";
 import { useEffect } from "react";
 import { setError } from "../../store/AdContentSlices/GetAdContentSlice";
 import FeedCard from "../../Components/ProductComponent/FeedCard";
+import BottomSheet from "../../Components/BottomSheet";
 
 const ProductDetail = ({ route }) => {
   const dispatch = useDispatch();
+  const [isShowCommentView, setIsShowCommentView] = useState(-1);
   const contentdata = useSelector((state) => state.getAddContentByCategory);
   const [showAlert, setShowAlert] = useState({
     show: false,
@@ -53,6 +55,13 @@ const ProductDetail = ({ route }) => {
         {/* unComment After 1st version */}
         {/* <AdView /> */}
       </ScrollView>
+      {/* <CommentView
+        isShow={isShowCommentView}
+        onChange={(value) => {
+          setIsShowCommentView(value);
+        }}
+      /> */}
+      {/* <BottomSheet isVisible={true} onClickBtn={}/> */}
       <CustomeAlertModal
         isVisible={showAlert.show}
         title={showAlert.title}

@@ -21,9 +21,15 @@ import { useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { accessToken } from "../Constants/defaults";
+import { accessToken, userDetail } from "../Constants/defaults";
 import { getCountryData } from "../store/contrySlices/GetCountrySlice";
 import { useDispatch, useSelector } from "react-redux";
+import { jwtDecode } from "jwt-decode";
+import {
+  getUserInfo,
+  setAccessToken,
+  setuserDetail,
+} from "../store/authSlices/LoginSlice";
 
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
@@ -32,21 +38,25 @@ const Routes = () => {
   const countryData = useSelector((state) => state.getCountry.countryData);
   const [appIsReady, setAppIsReady] = useState(false);
   const [isToken, setIsToken] = useState(false);
+  const accessToken = useSelector((state) => state.login.accessToken);
   useEffect(() => {
     async function prepare() {
       try {
-        dispatch(getCountryData(1, 10));
-        const token = await AsyncStorage.getItem(accessToken);
-        if (token != "" && token != null) {
-          setIsToken(true);
-        } else {
+        dispatch(getCountryData(1, 50));
+        const token = await AsyncStorage.getItem("accessToken");
+        console.log(token);
+        if (!token) {
+          await AsyncStorage.removeItem("accessToken");
           setIsToken(false);
+        } else {
+          dispatch(setAccessToken(token));
+          getUserInfo();
+          setIsToken(true);
         }
         await new Promise((resolve) => setTimeout(resolve, 2000));
       } catch (e) {
         console.warn(e);
       } finally {
-        // Tell the application to render
         setAppIsReady(true);
       }
     }
@@ -56,45 +66,62 @@ const Routes = () => {
   (async function () {
     if (appIsReady && countryData != null && countryData?.Success) {
       await SplashScreen.hideAsync();
-      console.log("-=-=-app ready");
-      console.log("-=-=--is token after-=-=", isToken);
     }
   })();
+  const getUserInfo = async () => {
+    try {
+      const data = await AsyncStorage.getItem(userDetail);
+      const data1 = JSON.parse(data);
+      await dispatch(setuserDetail(data1));
+    } catch (e) {
+      // error reading value
+    }
+  };
   return (
-    <Stack.Navigator
-      screenOptions={{ headerShown: false }}
-      initialRouteName={
-        isToken ? screenName.drawerNavigation : screenName.authRoute
-      }
-      // initialRouteName={"PostData"}
-    >
-      {/* Auth screens */}
-      <Stack.Screen name={screenName.splash} component={Splash} />
-      <Stack.Screen name={screenName.introduction} component={Introduction} />
-      <Stack.Screen name={screenName.authRoute} component={AuthRoute} />
-      <Stack.Screen
-        name={screenName.drawerNavigation}
-        component={DrawerNavigation}
-      />
-      <Stack.Screen name={screenName.productDetail} component={ProductDetail} />
-      <Stack.Screen name={screenName.mPin} component={Mpin} />
-      <Stack.Screen
-        name={screenName.messageChatScreen}
-        component={MessageChatScreen}
-      />
-      <Stack.Screen
-        name={screenName.addProductImage}
-        component={AddProductImage}
-      />
-      <Stack.Screen name={screenName.postCategory} component={PostCategory} />
-      <Stack.Screen name={screenName.itemDetail} component={ItemDetail} />
-      <Stack.Screen
-        name={screenName.productPreview}
-        component={ProductPreview}
-      />
-      <Stack.Screen name={screenName.notification} component={Notification} />
-      <Stack.Screen name={"Payment"} component={Payment} />
-      <Stack.Screen name={screenName.postData} component={PostData} />
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      {/* <Stack.Screen name={screenName.splash} component={Splash} /> */}
+      {accessToken == null ? (
+        <>
+          {/* <Stack.Screen name={screenName.introduction} component={Introduction} /> */}
+
+          <Stack.Screen name={screenName.authRoute} component={AuthRoute} />
+        </>
+      ) : (
+        <>
+          <Stack.Screen
+            name={screenName.drawerNavigation}
+            component={DrawerNavigation}
+          />
+          <Stack.Screen
+            name={screenName.productDetail}
+            component={ProductDetail}
+          />
+          <Stack.Screen name={screenName.mPin} component={Mpin} />
+          <Stack.Screen
+            name={screenName.messageChatScreen}
+            component={MessageChatScreen}
+          />
+          <Stack.Screen
+            name={screenName.addProductImage}
+            component={AddProductImage}
+          />
+          <Stack.Screen
+            name={screenName.postCategory}
+            component={PostCategory}
+          />
+          <Stack.Screen name={screenName.itemDetail} component={ItemDetail} />
+          <Stack.Screen
+            name={screenName.productPreview}
+            component={ProductPreview}
+          />
+          <Stack.Screen
+            name={screenName.notification}
+            component={Notification}
+          />
+          <Stack.Screen name={"Payment"} component={Payment} />
+          <Stack.Screen name={screenName.postData} component={PostData} />
+        </>
+      )}
     </Stack.Navigator>
   );
 };

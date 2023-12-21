@@ -15,6 +15,7 @@ import CustomeAlert from "../../Components/CustomeAlert";
 import { useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setCategory } from "../../store/addAdContentSlices/AddPostData";
+import { setCategoryId } from "../../store/StoreDataSlice";
 
 const PostCategory = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -44,6 +45,7 @@ const PostCategory = ({ navigation, route }) => {
         item={item}
         onClick={() => {
           setChecked(item.id);
+          dispatch(setCategoryId(item?.id));
         }}
         status={checked}
       />

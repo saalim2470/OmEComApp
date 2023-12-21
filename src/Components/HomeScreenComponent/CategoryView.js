@@ -16,6 +16,7 @@ import { SvgUri } from "react-native-svg";
 import { defaultCategoryImg } from "../../Constants/defaults";
 import { useDispatch } from "react-redux";
 import { getAdContentByCategory } from "../../store/AdContentSlices/GetAdContentSlice";
+import { setCategoryId } from "../../store/StoreDataSlice";
 
 const screenWidth = Dimensions.get("window").width;
 const width = screenWidth / 3 - 15;
@@ -29,6 +30,7 @@ const CategoryView = ({ data }) => {
           <TouchableOpacity
             onPress={() => {
               // dispatch(getAdContentByCategory(item?.id, 1, 10));
+              dispatch(setCategoryId(item?.id));
               navigation.navigate(screenName.bottomNavigation, {
                 screen: screenName.mainHome,
                 params: {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   View,
@@ -19,22 +19,25 @@ import commonStyle from "../Constants/commonStyle";
 import { Divider, Menu } from "react-native-paper";
 import { TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { accessToken } from "../Constants/defaults";
-import { useDispatch } from "react-redux";
+import { accessToken, userDetail } from "../Constants/defaults";
+import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "../store/authSlices/LoginSlice";
 import { StackActions, useNavigation } from "@react-navigation/native";
 import screenName from "../Constants/screenName";
 
 const CustomSidebarMenu = (props) => {
   const navigation = useNavigation();
+  const userDetail = useSelector((state) => state.login?.userDetail);
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
+
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
   const logout = async () => {
     try {
       dispatch(logOut());
       await AsyncStorage.removeItem(accessToken);
+      await AsyncStorage.removeItem(userDetail);
       navigation.dispatch(
         StackActions.replace(screenName.authRoute, { screen: screenName.login })
       );
@@ -51,9 +54,11 @@ const CustomSidebarMenu = (props) => {
               style={{ width: "100%", height: "100%" }}
             />
           </View>
-          <Text style={styles.boldTxt}>Andrew Wade</Text>
+          <Text
+            style={styles.boldTxt}
+          >{`${userDetail?.firstName} ${userDetail?.lastName}`}</Text>
           <Text style={[styles.txt, { marginVertical: verticalScale(5) }]}>
-            elenarpenafashion@gmail.com
+            {userDetail?.email}
           </Text>
           <View style={styles.topViewFollowingView}>
             <Text style={[styles.txt, { marginRight: moderateScale(20) }]}>

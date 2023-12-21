@@ -32,7 +32,7 @@ const HomeScreenIcons = ({ navigation }) => {
   const [category, setCategory] = useState([]);
   const focused = useIsFocused();
   useEffect(() => {
-    dispatch(getCategoryData(1, 10));
+    dispatch(getCategoryData(1, 50));
   }, []);
   useEffect(() => {
     if (categoryData?.Success) {
