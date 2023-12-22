@@ -2,68 +2,39 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import images from "../Constants/images";
-import colors from "../Constants/colors";
-import { Avatar } from "react-native-paper";
-import commonStyle from "../Constants/commonStyle";
+import { Feather } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
-const MainHeader = ({
-  leftIcon,
-  middleIcon,
-  rightIcon,
-  middleTxt,
-  leftView,
-  rightTxt,
-  onClickRightIcon = () => {},
-  onClickLeftIcon = () => {},
-}) => {
+const MainHeader = () => {
+  const navigation = useNavigation();
   return (
     <View style={styles.headerStyle}>
-      {leftView && (
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Avatar.Image source={images.facebookIcon} size={scale(30)} />
-          <Text
-            style={[
-              commonStyle.headingTxt,
-              { fontSize: scale(13), marginLeft: moderateScale(3) },
-            ]}
-          >
-            Welcome to the
-          </Text>
-        </View>
-      )}
-      {leftIcon && (
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => {
-            onClickLeftIcon();
-          }}
-        >
-          {leftIcon}
-        </TouchableOpacity>
-      )}
-      {middleTxt && <Text>{middleTxt}</Text>}
-      {middleIcon && (
-        <Image
-          source={middleIcon}
-          style={{
-            width: scale(50),
-            height: scale(50),
-          }}
-          resizeMode="contain"
-        />
-      )}
-      {rightTxt && <Text>{rightTxt}</Text>}
-      {rightIcon && (
-        <TouchableOpacity
-          activeOpacity={0.5}
-          style={[styles.storyCircle]}
-          onPress={() => {
-            onClickRightIcon();
-          }}
-        >
-          {rightIcon}
-        </TouchableOpacity>
-      )}
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={() => {
+          navigation.toggleDrawer();
+        }}
+      >
+        <Feather name="menu" size={scale(30)} color="black" />
+      </TouchableOpacity>
+      <Image
+        source={images.omLogo}
+        style={{
+          width: scale(50),
+          height: scale(50),
+        }}
+        resizeMode="contain"
+      />
+      <TouchableOpacity
+        activeOpacity={0.5}
+        style={[styles.storyCircle]}
+        onPress={() => {
+          navigation.navigate(screenName.notification);
+        }}
+      >
+        <Ionicons name="notifications-outline" size={scale(30)} color="black" />
+      </TouchableOpacity>
     </View>
   );
 };

@@ -19,7 +19,12 @@ import commonStyle from "../Constants/commonStyle";
 import { Divider, Menu } from "react-native-paper";
 import { TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { accessToken, userDetail } from "../Constants/defaults";
+import {
+  accessToken,
+  baseURL,
+  serverImagePath,
+  userDetail,
+} from "../Constants/defaults";
 import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "../store/authSlices/LoginSlice";
 import { StackActions, useNavigation } from "@react-navigation/native";
@@ -51,7 +56,9 @@ const CustomSidebarMenu = (props) => {
         <View style={styles.topProfileView}>
           <View style={styles.sideMenuProfileIcon}>
             <Image
-              source={images.omLogo}
+              source={{
+                uri: `${baseURL}${serverImagePath}/${userDetail?.profilePicture}`,
+              }}
               resizeMode="contain"
               style={{ width: "100%", height: "100%" }}
             />
@@ -64,10 +71,10 @@ const CustomSidebarMenu = (props) => {
           </Text>
           <View style={styles.topViewFollowingView}>
             <Text style={[styles.txt, { marginRight: moderateScale(20) }]}>
-              <Text style={styles.boldTxt}>4.8K </Text> followers
+              <Text style={styles.boldTxt}>00</Text> followers
             </Text>
             <Text style={styles.txt}>
-              <Text style={styles.boldTxt}>2 </Text> following
+              <Text style={styles.boldTxt}>00</Text> following
             </Text>
           </View>
           <TouchableOpacity

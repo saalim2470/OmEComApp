@@ -49,7 +49,8 @@ const Routes = () => {
           setIsToken(false);
         } else {
           dispatch(setAccessToken(token));
-          getUserInfo();
+          console.log(token);
+          await getUserInfo();
           setIsToken(true);
         }
         await new Promise((resolve) => setTimeout(resolve, 2000));

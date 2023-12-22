@@ -126,7 +126,7 @@ const FeedCardBottomView = ({
           </TouchableOpacity>
         </View>
       </View>
-      <Text style={styles.likeTxt}>452 likes</Text>
+      <Text style={styles.likeTxt}>0 likes</Text>
       <TouchableOpacity
         style={{ alignSelf: "flex-start", marginTop: verticalScale(4) }}
         activeOpacity={0.6}

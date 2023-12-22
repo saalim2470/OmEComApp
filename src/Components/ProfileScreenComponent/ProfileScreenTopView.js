@@ -5,6 +5,7 @@ import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import colors from "../../Constants/colors";
 import images from "../../Constants/images";
 import { useSelector } from "react-redux";
+import { baseURL, serverImagePath } from "../../Constants/defaults";
 
 const ProfileScreenTopView = () => {
   const userDetail = useSelector((state) => state.login?.userDetail);
@@ -26,7 +27,7 @@ const ProfileScreenTopView = () => {
             size={scale(60)}
             style={{ marginRight: moderateScale(8) }}
             source={{
-              uri: "https://pbs.twimg.com/profile_images/685700874434314240/80T5j3HF_400x400.jpg",
+              uri: `${baseURL}${serverImagePath}/${userDetail?.profilePicture}`,
             }}
           />
           <View>
@@ -64,10 +65,10 @@ const ProfileScreenTopView = () => {
             <Text style={styles.lightTxt}>4.8 (20 Reviews)</Text>
           </View>
           <Text style={[styles.txt, { marginRight: moderateScale(20) }]}>
-            <Text style={styles.boldTxt}>4.8K </Text> followers
+            <Text style={styles.boldTxt}>00</Text> followers
           </Text>
           <Text style={styles.txt}>
-            <Text style={styles.boldTxt}>2 </Text> following
+            <Text style={styles.boldTxt}>00</Text> following
           </Text>
         </View>
         <View style={{ flexDirection: "row", marginTop: verticalScale(15) }}>

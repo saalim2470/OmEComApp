@@ -2,9 +2,7 @@ import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
 import React from "react";
 import MainHeader from "../../Components/MainHeader";
 import commonStyle from "../../Constants/commonStyle";
-import images from "../../Constants/images";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
-import CategorieCircle from "../../Components/CategorieCircle";
 import { Divider } from "react-native-paper";
 import FeedCard from "../../Components/ProductComponent/FeedCard";
 import screenName from "../../Constants/screenName";
@@ -14,8 +12,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import Loading from "../../Components/Loading";
 import { Text } from "react-native";
-import { Feather } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomeAlertModal from "../../Components/CustomeAlertModal";
 import {
@@ -138,23 +134,7 @@ const MainHome = ({ navigation, route }) => {
   };
   return (
     <SafeAreaView style={commonStyle.container}>
-      <MainHeader
-        leftIcon={<Feather name="menu" size={scale(30)} color="black" />}
-        middleIcon={images.omLogo}
-        rightIcon={
-          <Ionicons
-            name="notifications-outline"
-            size={scale(30)}
-            color="black"
-          />
-        }
-        onClickRightIcon={() => {
-          navigation.navigate(screenName.notification);
-        }}
-        onClickLeftIcon={() => {
-          navigation.toggleDrawer();
-        }}
-      />
+      <MainHeader />
       <View style={styles.storyView}>
         <FlatList
           data={categoryData}

@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Loading from "../../Components/Loading";
 import { getSearchData } from "../../store/searchContentSlices/SearchContentSlice";
 
-const SearchResultScreen = () => {
+const SearchResultScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const searchResultRes = useSelector(
     (state) => state.searchContent.searchResult
@@ -124,7 +124,12 @@ const SearchResultScreen = () => {
       >
         {/* header view start */}
         <View style={styles.header}>
-          <TouchableOpacity activeOpacity={0.5}>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          >
             <Image
               source={images.back_Icon}
               style={[styles.iconStyle, { tintColor: "grey" }]}

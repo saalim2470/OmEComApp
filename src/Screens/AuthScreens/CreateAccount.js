@@ -36,6 +36,7 @@ import { Entypo } from "@expo/vector-icons";
 import BottomSheetCustome from "../../Components/BottomSheet/BottomSheetCustome";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
+import { FontAwesome } from "@expo/vector-icons";
 
 const CreateAccount = () => {
   const dispatch = useDispatch();
@@ -46,7 +47,10 @@ const CreateAccount = () => {
   const cityDataResLoading = useSelector((state) => state.getCity.isLoading);
   const authLoading = useSelector((state) => state.createAccount.isLoading);
   const authSuccess = useSelector((state) => state.createAccount.isLoggedIn);
+  const a = useSelector((state) => state.createAccount);
+  console.log("-=-=-create acc-=-=", a);
   const navigation = useNavigation();
+  const formData = new FormData();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -69,6 +73,8 @@ const CreateAccount = () => {
   const [openCameraMenu, setOpenCameraMenu] = useState(false);
   const [profileImage, setProfileImage] = useState("");
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
+  const [cameraStatus, requestCameraPermission] =
+    ImagePicker.useCameraPermissions();
   const loginBtns = (icon, name, bkColor, txtColor) => {
     return (
       <TouchableOpacity
@@ -89,19 +95,25 @@ const CreateAccount = () => {
     );
   };
   const onClickBtn = () => {
-    const data = {
-      username: email,
-      firstname: firstName,
-      lastname: lastName,
-      mobileNumber: mobileNo,
-      email: email,
-      password: password,
-      cityId: city,
-      stateId: state,
-      countryId: country,
-      roleId: 0,
-    };
-    dispatch(createAccountApi(data));
+    formData.append("firstname", firstName);
+    formData.append("lastname", lastName);
+    formData.append("mobileNumber", mobileNo);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("cityId", city);
+    formData.append("stateId", state);
+    formData.append("countryId", country);
+    formData.append("username", email);
+    formData.append("roleId", 0);
+    const uriParts = profileImage.uri.split(".");
+    const fileType = uriParts[uriParts.length - 1];
+    formData.append("ProfilePicture", {
+      uri: profileImage.uri,
+      name: `image_.${fileType}`,
+      type: `image/${fileType}`,
+    });
+    console.log(formData);
+    dispatch(createAccountApi(formData));
   };
   useEffect(() => {
     if (countryDataRes != null && countryDataRes?.Success) {
@@ -226,6 +238,30 @@ const CreateAccount = () => {
       setProfileImage(result.assets[0]);
     }
   };
+  const checkCameraPermission = async () => {
+    const { status: currentStatus } =
+      await ImagePicker.getCameraPermissionsAsync();
+    if (currentStatus !== "granted") {
+      requestCameraPermission();
+    } else if (currentStatus == "granted") {
+      openCamera();
+    }
+  };
+  const openCamera = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      // aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setProfileImage(result.assets[0]);
+    }
+  };
+  const removeImage = () => {
+    setProfileImage("");
+  };
   return (
     <SafeAreaView style={commonStyle.container}>
       <Header />
@@ -240,17 +276,25 @@ const CreateAccount = () => {
               activeOpacity={0.6}
               style={styles.profileImgBtn}
               onPress={() => {
-                setOpenCameraMenu(true);
+                !profileImage ? setOpenCameraMenu(true) : removeImage();
               }}
             >
-              <Entypo name="camera" size={scale(13)} color="white" />
+              {!profileImage ? (
+                <Entypo name="camera" size={scale(13)} color="white" />
+              ) : (
+                <FontAwesome name="remove" size={scale(13)} color="white" />
+              )}
             </TouchableOpacity>
-            <Image
-              source={{
-                uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1sE47wDfhJWPfb_C6ceXAImxmTZe1DE_CpeZYtgg_Vw&s",
-              }}
-              style={styles.profileImg}
-            />
+            {profileImage ? (
+              <Image source={profileImage} style={styles.profileImg} />
+            ) : (
+              <Image
+                source={{
+                  uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1sE47wDfhJWPfb_C6ceXAImxmTZe1DE_CpeZYtgg_Vw&s",
+                }}
+                style={styles.profileImg}
+              />
+            )}
           </View>
           <TextBox
             label={"First Name"}
@@ -457,7 +501,7 @@ const CreateAccount = () => {
               {errors.city}
             </Text>
           ) : null}
-          <CustomeButton
+          {/* <CustomeButton
             title={"Sign Up"}
             isLoading={authLoading}
             style={{ marginTop: moderateVerticalScale(40) }}
@@ -466,7 +510,7 @@ const CreateAccount = () => {
               // onClickBtn();
               validate();
             }}
-          />
+          /> */}
         </KeyboardAvoidingView>
         {/* <View
           style={[
@@ -514,6 +558,16 @@ const CreateAccount = () => {
           </Text>
         </View> */}
       </ScrollView>
+      <CustomeButton
+        title={"Sign Up"}
+        isLoading={authLoading}
+        style={{ marginHorizontal: moderateScale(15) }}
+        onClick={() => {
+          // navigation.navigate(screenName.verification);
+          // onClickBtn();
+          validate();
+        }}
+      />
       <BottomSheetCustome
         isVisible={openCameraMenu}
         height={verticalScale(200)}
@@ -522,7 +576,14 @@ const CreateAccount = () => {
         }}
         children={
           <>
-            <TouchableOpacity activeOpacity={0.6} style={styles.optionBtn}>
+            <TouchableOpacity
+              activeOpacity={0.6}
+              style={styles.optionBtn}
+              onPress={() => {
+                checkLibrarayPermission();
+                setOpenCameraMenu(false);
+              }}
+            >
               <MaterialIcons
                 name="photo-album"
                 size={scale(17)}
@@ -530,7 +591,14 @@ const CreateAccount = () => {
               />
               <Text style={styles.optionTxt}>select from gallery</Text>
             </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.6} style={styles.optionBtn}>
+            <TouchableOpacity
+              activeOpacity={0.6}
+              style={styles.optionBtn}
+              onPress={() => {
+                checkCameraPermission();
+                setOpenCameraMenu(false);
+              }}
+            >
               <Entypo
                 name="camera"
                 size={scale(17)}
