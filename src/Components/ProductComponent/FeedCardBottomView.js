@@ -13,7 +13,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import CustomeAlertModal from "../CustomeAlertModal";
-import CustomeBottomSheet from "../CustomeBottomSheet";
+import BottomSheet from "../CommentComponent/CommentView";
+import CommentView from "../CommentComponent/CommentView";
 
 const FeedCardBottomView = ({
   itemData,
@@ -28,7 +29,7 @@ const FeedCardBottomView = ({
     msg: null,
     type: null,
   });
-  const [isShowBottomSheet, setIsShowBottomSheet] = useState(-1);
+  const [isShowBottomSheet, setIsShowBottomSheet] = useState(false);
   const url = `whatsapp://send?phone=${itemData?.user?.phoneNumber}&text=Hello`;
   const checkWhatsAppInstalled = async () => {
     try {
@@ -131,10 +132,29 @@ const FeedCardBottomView = ({
         activeOpacity={0.6}
         onPress={() => {
           onClickComment();
+          setIsShowBottomSheet(true);
         }}
       >
         <Text style={styles.commentTxt}>View all 2 comments</Text>
       </TouchableOpacity>
+      <CommentView
+        isVisible={isShowBottomSheet}
+        onBackDropPress={() => {
+          setIsShowBottomSheet(false);
+        }}
+        commentData={[
+          {
+            id: 1,
+            userName: "saalim shaikh",
+            comment: "this product is very easy to use",
+          },
+          {
+            id: 2,
+            userName: "Afzal patel",
+            comment: "Test comment",
+          },
+        ]}
+      />
       <CustomeAlertModal
         isVisible={showAlert.show}
         title={showAlert.title}

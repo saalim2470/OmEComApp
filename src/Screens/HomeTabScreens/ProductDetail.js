@@ -12,7 +12,6 @@ import CustomeAlertModal from "../../Components/CustomeAlertModal";
 import { useEffect } from "react";
 import { setError } from "../../store/AdContentSlices/GetAdContentSlice";
 import FeedCard from "../../Components/ProductComponent/FeedCard";
-import BottomSheet from "../../Components/BottomSheet";
 
 const ProductDetail = ({ route }) => {
   const dispatch = useDispatch();
