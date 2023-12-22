@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import commonStyle from "../../Constants/commonStyle";
 
-const ServerError = ({ statusCode }) => {
+const ServerError = ({ statusCode, msg }) => {
   return (
     <View
       style={[
@@ -15,7 +15,7 @@ const ServerError = ({ statusCode }) => {
       ) : statusCode == 404 ? (
         <Text>Not Found</Text>
       ) : (
-        <Text>Some error occured</Text>
+        <Text>{msg ? msg : "Some error occured"}</Text>
       )}
     </View>
   );

@@ -12,7 +12,7 @@ import React, { useEffect, useState } from "react";
 import commonStyle from "../../Constants/commonStyle";
 import Header from "../../Components/Header";
 import TextBox from "../../Components/TextBox";
-import { HelperText, TextInput } from "react-native-paper";
+import { Avatar, HelperText, TextInput } from "react-native-paper";
 import {
   scale,
   verticalScale,
@@ -32,6 +32,10 @@ import { getCityData } from "../../store/contrySlices/GetCitySlice";
 import DropDownPicker from "react-native-dropdown-picker";
 import { createAccountApi } from "../../store/authSlices/CreateAccountSlice";
 import { checkPassword, validateEmail } from "../../Constants/Constant";
+import { Entypo } from "@expo/vector-icons";
+import BottomSheetCustome from "../../Components/BottomSheet/BottomSheetCustome";
+import { MaterialIcons } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
 
 const CreateAccount = () => {
   const dispatch = useDispatch();
@@ -62,6 +66,9 @@ const CreateAccount = () => {
   const [openCityPicker, setOpenCityPicker] = useState(false);
   const [cityData, setCityData] = useState([]);
   const [city, setCity] = useState(null);
+  const [openCameraMenu, setOpenCameraMenu] = useState(false);
+  const [profileImage, setProfileImage] = useState("");
+  const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
   const loginBtns = (icon, name, bkColor, txtColor) => {
     return (
       <TouchableOpacity
@@ -109,7 +116,6 @@ const CreateAccount = () => {
   }, [countryDataRes, stateDataRes, cityDataRes]);
   useEffect(() => {
     if (authSuccess != false && authSuccess) {
-      console.log("succes");
       navigation.dispatch(
         StackActions.replace(screenName.authRoute, {
           screen: screenName.login,
@@ -199,6 +205,27 @@ const CreateAccount = () => {
   const handleError = (msg, fieldName) => {
     setErrors((prevState) => ({ ...prevState, [fieldName]: msg }));
   };
+  const checkLibrarayPermission = async () => {
+    const { status: currentStatus } =
+      await ImagePicker.getMediaLibraryPermissionsAsync();
+    if (currentStatus !== "granted") {
+      requestPermission();
+    } else if (currentStatus == "granted") {
+      openImagePicker();
+    }
+  };
+  const openImagePicker = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      // aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setProfileImage(result.assets[0]);
+    }
+  };
   return (
     <SafeAreaView style={commonStyle.container}>
       <Header />
@@ -208,6 +235,23 @@ const CreateAccount = () => {
       >
         <Text style={commonStyle.headingTxt}>Create an Account</Text>
         <KeyboardAvoidingView>
+          <View style={styles.profileImgView}>
+            <TouchableOpacity
+              activeOpacity={0.6}
+              style={styles.profileImgBtn}
+              onPress={() => {
+                setOpenCameraMenu(true);
+              }}
+            >
+              <Entypo name="camera" size={scale(13)} color="white" />
+            </TouchableOpacity>
+            <Image
+              source={{
+                uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1sE47wDfhJWPfb_C6ceXAImxmTZe1DE_CpeZYtgg_Vw&s",
+              }}
+              style={styles.profileImg}
+            />
+          </View>
           <TextBox
             label={"First Name"}
             containerStyle={{ marginBottom: verticalScale(8) }}
@@ -470,6 +514,33 @@ const CreateAccount = () => {
           </Text>
         </View> */}
       </ScrollView>
+      <BottomSheetCustome
+        isVisible={openCameraMenu}
+        height={verticalScale(200)}
+        onBackDropPress={() => {
+          setOpenCameraMenu(false);
+        }}
+        children={
+          <>
+            <TouchableOpacity activeOpacity={0.6} style={styles.optionBtn}>
+              <MaterialIcons
+                name="photo-album"
+                size={scale(17)}
+                color={colors.themeColor}
+              />
+              <Text style={styles.optionTxt}>select from gallery</Text>
+            </TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.6} style={styles.optionBtn}>
+              <Entypo
+                name="camera"
+                size={scale(17)}
+                color={colors.themeColor}
+              />
+              <Text style={styles.optionTxt}>Open camera</Text>
+            </TouchableOpacity>
+          </>
+        }
+      />
     </SafeAreaView>
   );
 };
@@ -550,5 +621,39 @@ const styles = StyleSheet.create({
   },
   ddTxt: {
     fontFamily: "Montserrat-Regular",
+  },
+  profileImgView: {
+    width: scale(80),
+    height: scale(80),
+    borderRadius: 100,
+    alignSelf: "center",
+    marginVertical: verticalScale(8),
+  },
+  profileImgBtn: {
+    width: scale(25),
+    height: scale(25),
+    borderRadius: 100,
+    position: "absolute",
+    bottom: 0,
+    alignSelf: "flex-end",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.themeColor,
+    zIndex: 999,
+  },
+  profileImg: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 100,
+  },
+  optionBtn: {
+    padding: moderateScale(8),
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  optionTxt: {
+    marginLeft: moderateScale(8),
+    fontFamily: "Montserrat-Regular",
+    fontSize: scale(15),
   },
 });

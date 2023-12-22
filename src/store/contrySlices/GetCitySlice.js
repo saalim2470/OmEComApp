@@ -26,13 +26,14 @@ export const { setCityData, setLoading, setError } = GetCitySlice.actions;
 export const getCityData =
   (stateId, pageNumber, pageSize) => async (dispatch) => {
     try {
+      dispatch(setError(null));
       dispatch(setLoading(true));
       const responce = await CountryServices.getCityByStateId(
         stateId,
         pageNumber,
         pageSize
       );
-      await dispatch(setCityData(responce.data));
+      dispatch(setCityData(responce.data));
       dispatch(setLoading(false));
     } catch (error) {
       dispatch(setLoading(false));

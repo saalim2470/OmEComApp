@@ -71,13 +71,16 @@ const Routes = () => {
     try {
       const data = await AsyncStorage.getItem(userDetail);
       const data1 = JSON.parse(data);
-      await dispatch(setuserDetail(data1));
+      dispatch(setuserDetail(data1));
     } catch (e) {
       // error reading value
     }
   };
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      // initialRouteName="location"
+    >
       {/* <Stack.Screen name={screenName.splash} component={Splash} /> */}
       {accessToken == null ? (
         <>

@@ -24,6 +24,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "../store/authSlices/LoginSlice";
 import { StackActions, useNavigation } from "@react-navigation/native";
 import screenName from "../Constants/screenName";
+import { resetUserAdContent } from "../store/profileSlices/GetUserContentSlice";
 
 const CustomSidebarMenu = (props) => {
   const navigation = useNavigation();
@@ -36,6 +37,7 @@ const CustomSidebarMenu = (props) => {
   const logout = async () => {
     try {
       dispatch(logOut());
+      dispatch(resetUserAdContent());
       await AsyncStorage.removeItem(accessToken);
       await AsyncStorage.removeItem(userDetail);
       navigation.dispatch(
