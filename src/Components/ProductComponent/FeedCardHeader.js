@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import { Avatar, Menu } from "react-native-paper";
 import images from "../../Constants/images";
+import { baseURL, serverImagePath } from "../../Constants/defaults";
 
 const FeedCardHeader = ({ itemData, isShowOptionBtn, menuChildren }) => {
   const [visible, setVisible] = useState(false);
@@ -13,7 +14,7 @@ const FeedCardHeader = ({ itemData, isShowOptionBtn, menuChildren }) => {
       <View style={styles.onlyRowStyle}>
         <Avatar.Image
           source={{
-            uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXmEcKM5U_dh_rHnbnc1UHQHu6gtJmxurdXg&usqp=CAU",
+            uri: `${baseURL}${serverImagePath}/${itemData?.user?.profilePicturePath}`,
           }}
           size={scale(35)}
         />

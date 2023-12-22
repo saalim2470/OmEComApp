@@ -2,18 +2,23 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Avatar } from "react-native-paper";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
+import { useSelector } from "react-redux";
+import { baseURL, serverImagePath } from "../../Constants/defaults";
 
 const UserHeader = () => {
+  const userDetail = useSelector((state) => state.login?.userDetail);
   return (
     <View style={styles.userView}>
       <Avatar.Image
         source={{
-          uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXmEcKM5U_dh_rHnbnc1UHQHu6gtJmxurdXg&usqp=CAU",
+          uri: `${baseURL}${serverImagePath}/${userDetail?.profilePicture}`,
         }}
         size={scale(45)}
       />
       <View style={{ marginLeft: moderateScale(5) }}>
-        <Text style={styles.headingTxt}>Saalim Shaikh</Text>
+        <Text
+          style={styles.headingTxt}
+        >{`${userDetail?.firstName} ${userDetail?.lastName}`}</Text>
       </View>
     </View>
   );

@@ -28,6 +28,7 @@ import CustomeAlertModal from "../../Components/CustomeAlertModal";
 
 const PostData = ({ navigation, route }) => {
   const dispatch = useDispatch();
+
   const { categoryId } = route.params;
   const formData = new FormData();
   const addPostData = useSelector((state) => state.addAdContentData);
