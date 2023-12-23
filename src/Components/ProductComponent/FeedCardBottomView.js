@@ -13,16 +13,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import CustomeAlertModal from "../CustomeAlertModal";
-import BottomSheet from "../CommentComponent/CommentView";
 import CommentView from "../CommentComponent/CommentView";
+import { useDispatch } from "react-redux";
+import { addLikeOnContentApi, saveContentApi } from "../../store/AdContentSlices/GetAdContentSlice";
 
-const FeedCardBottomView = ({
-  itemData,
-  onClickLike = () => {},
-  onClickMsg = () => {},
-  onClickBookMark = () => {},
-  onClickComment = () => {},
-}) => {
+const FeedCardBottomView = ({ itemData }) => {
+  const dispatch = useDispatch();
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -48,6 +44,23 @@ const FeedCardBottomView = ({
       console.log("-=-=-wa error-=-=-", error);
     }
   };
+  const onClickBookmarkBtn = () => {
+    dispatch(
+      saveContentApi({
+        adContentID: itemData?.id,
+        isSaved: !itemData?.isCurrentUserSaved,
+      })
+    );
+  };
+  const onClickLikeBtn = () => {
+    dispatch(
+      addLikeOnContentApi({
+        contentId: itemData?.id,
+        isLiked: !itemData?.isCurrentUserLiked,
+      })
+    );
+  };
+
   return (
     <>
       <View style={[commonStyle.row]}>
@@ -59,7 +72,7 @@ const FeedCardBottomView = ({
         >
           <TouchableOpacity
             onPress={() => {
-              onClickLike();
+              onClickLikeBtn();
             }}
           >
             <Ionicons
@@ -70,7 +83,7 @@ const FeedCardBottomView = ({
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              onClickComment();
+              setIsShowBottomSheet(true);
             }}
           >
             <MaterialCommunityIcons
@@ -88,7 +101,7 @@ const FeedCardBottomView = ({
           </TouchableOpacity> */}
           <TouchableOpacity
             onPress={() => {
-              onClickBookMark();
+              onClickBookmarkBtn();
             }}
           >
             <Ionicons
@@ -131,7 +144,6 @@ const FeedCardBottomView = ({
         style={{ alignSelf: "flex-start", marginTop: verticalScale(4) }}
         activeOpacity={0.6}
         onPress={() => {
-          onClickComment();
           setIsShowBottomSheet(true);
         }}
       >

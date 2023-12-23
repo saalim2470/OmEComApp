@@ -7,7 +7,6 @@ import { Divider } from "react-native-paper";
 import FeedCard from "../../Components/ProductComponent/FeedCard";
 import screenName from "../../Constants/screenName";
 import { useState } from "react";
-import CommentView from "../../Components/PostScreenComponent/CommentView";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import Loading from "../../Components/Loading";
@@ -27,7 +26,6 @@ const MainHome = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const isFocus = useIsFocused();
   const categoryId = useSelector((state) => state.storeData.categoryId);
-  console.log("-=-=-cate in store--=-", categoryId);
   const categoryDataRes = useSelector((state) => state.category.categoryData);
   const contentDataRes = useSelector(
     (state) => state.getAddContentByCategory.contentData
@@ -36,7 +34,6 @@ const MainHome = ({ navigation, route }) => {
   const contentDataLoading = useSelector(
     (state) => state.getAddContentByCategory.isLoading
   );
-  const [isShowCommentView, setIsShowCommentView] = useState(-1);
   const [categoryData, setCategoryData] = useState(null);
   const [pageSize, setPageSize] = useState(70);
   const [pageNumber, setPageNumber] = useState(1);
@@ -91,11 +88,6 @@ const MainHome = ({ navigation, route }) => {
     return (
       <FeedCard
         itemData={item}
-        isMoreBtn={true}
-        isOfferBtn={true}
-        onClickComment={() => {
-          setIsShowCommentView(0);
-        }}
         onClickMoreBtn={() => {
           navigation.navigate(screenName.productDetail, { data: item });
         }}
@@ -138,10 +130,13 @@ const MainHome = ({ navigation, route }) => {
       <View style={styles.storyView}>
         <FlatList
           data={categoryData}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item, index) => `category${item.id}_${index}`}
           showsHorizontalScrollIndicator={false}
           horizontal
           renderItem={renderCategory}
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          windowSize={10}
         />
       </View>
       <Divider style={{ marginVertical: verticalScale(8) }} />
@@ -154,8 +149,8 @@ const MainHome = ({ navigation, route }) => {
       ) : (
         <FlatList
           data={contentDataRes}
-          keyExtractor={(item) => {
-            item.id;
+          keyExtractor={(item, index) => {
+            `data_${item.id}_${index}`;
           }}
           showsVerticalScrollIndicator={false}
           onEndReachedThreshold={1}
@@ -167,14 +162,11 @@ const MainHome = ({ navigation, route }) => {
           }
           // ListFooterComponent={listFooterComponent}
           renderItem={renderItem}
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          windowSize={10}
         />
       )}
-      {/* <CommentView
-        isShow={isShowCommentView}
-        onChange={(value) => {
-          setIsShowCommentView(value);
-        }}
-      /> */}
       <CustomeAlertModal
         isVisible={showAlert.show}
         title={showAlert.title}

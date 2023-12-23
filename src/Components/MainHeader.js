@@ -5,6 +5,7 @@ import images from "../Constants/images";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import screenName from "../Constants/screenName";
 
 const MainHeader = () => {
   const navigation = useNavigation();
@@ -13,7 +14,7 @@ const MainHeader = () => {
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={() => {
-          navigation.toggleDrawer();
+          navigation.openDrawer();
         }}
       >
         <Feather name="menu" size={scale(30)} color="black" />

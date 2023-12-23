@@ -2,11 +2,6 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import PropTypes from "prop-types";
-import { useDispatch } from "react-redux";
-import {
-  addLikeOnContentApi,
-  saveContentApi,
-} from "../../store/AdContentSlices/GetAdContentSlice";
 import Slider from "./Slider";
 import { useEffect } from "react";
 import { baseURL, serverImagePath } from "../../Constants/defaults";
@@ -19,28 +14,10 @@ const FeedCard = ({
   isShowOptionBtn,
   menuChildren,
   disable,
-  onClickCommentBtn = () => {},
 }) => {
-  const dispatch = useDispatch();
   const [files, setFiles] = useState([]);
   const [isShowTxtBtn, setIsShowTxtBtn] = useState(false);
   const txtLength = 100;
-  const onClickLikeBtn = () => {
-    dispatch(
-      addLikeOnContentApi({
-        contentId: itemData?.id,
-        isLiked: !itemData?.isCurrentUserLiked,
-      })
-    );
-  };
-  const onClickBookmarkBtn = () => {
-    dispatch(
-      saveContentApi({
-        adContentID: itemData?.id,
-        isSaved: !itemData?.isCurrentUserSaved,
-      })
-    );
-  };
   const imageurl = () => {
     let data = JSON.parse(itemData?.imagesData);
     let values = [];
@@ -53,71 +30,37 @@ const FeedCard = ({
     imageurl();
   }, [itemData]);
   return (
-    <Pressable
-      onPress={() => {
-        onClickMoreBtn();
-      }}
-      disabled={disable}
-      style={{ marginBottom: verticalScale(8) }}
-    >
-      {/* headerView */}
+    <View style={{ marginBottom: verticalScale(8) }}>
       <FeedCardHeader
         isShowOptionBtn={isShowOptionBtn}
         itemData={itemData}
         menuChildren={menuChildren}
       />
-      <View style={styles.topView}>
-        {/* <Text style={styles.descTxt}>
-          {itemData?.description?.length > txtLength && isShowTxtBtn == false
-            ? `${itemData?.description?.substring(0, txtLength)}`
-            : itemData?.description}
-          {isShowTxtBtn ? (
-            <Text
-              onPress={() => setIsShowTxtBtn(false)}
-              style={{ color: "blue" }}
-            >
-              ...less
-            </Text>
-          ) : (
-            <Text
-              onPress={() => setIsShowTxtBtn(true)}
-              style={{ color: "blue" }}
-            >
-              ...more
-            </Text>
-          )}
-        </Text> */}
-        <Text
-          style={styles.descTxt}
-          disabled={itemData?.description?.length < txtLength}
-          onPress={() => {
-            setIsShowTxtBtn(!isShowTxtBtn);
-          }}
-        >
-          {itemData?.description?.length > txtLength
-            ? `${itemData?.description?.substring(0, txtLength)} ...more`
-            : `${itemData?.description?.substring(0, txtLength)}`}
-        </Text>
-      </View>
-
-      {/* slider image view */}
+      <Pressable
+        onPress={() => {
+          onClickMoreBtn();
+        }}
+        disabled={disable}
+      >
+        <View style={styles.topView}>
+          <Text
+            style={styles.descTxt}
+            disabled={itemData?.description?.length < txtLength}
+            onPress={() => {
+              setIsShowTxtBtn(!isShowTxtBtn);
+            }}
+          >
+            {itemData?.description?.length > txtLength
+              ? `${itemData?.description?.substring(0, txtLength)} ...more`
+              : `${itemData?.description?.substring(0, txtLength)}`}
+          </Text>
+        </View>
+      </Pressable>
       <Slider data={files} />
       <View style={[styles.bottomView]}>
-        <FeedCardBottomView
-          itemData={itemData}
-          onClickBookMark={() => {
-            onClickBookmarkBtn();
-          }}
-          onClickLike={() => {
-            onClickLikeBtn();
-          }}
-          onClickMsg={() => {}}
-          onClickComment={() => {
-            onClickCommentBtn();
-          }}
-        />
+        <FeedCardBottomView itemData={itemData} />
       </View>
-    </Pressable>
+    </View>
   );
 };
 
