@@ -34,7 +34,7 @@ const DrawerNavigation = () => {
       }}
       drawerContent={(props) => <CustomSidebarMenu {...props} />}
     >
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name={screenName.homeScreenIcons}
         component={HomeScreenIcons}
         options={{
@@ -47,7 +47,7 @@ const DrawerNavigation = () => {
             />
           ),
         }}
-      />
+      /> */}
       <Drawer.Screen
         name={screenName.bottomNavigation}
         component={BottomNavigation}

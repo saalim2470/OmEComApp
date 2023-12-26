@@ -21,10 +21,11 @@ import { useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import ServerError from "../../Components/ErrorScreens/ServerError";
 
-const HomeScreenIcons = ({ navigation }) => {
+const HomeScreenIcons = () => {
+  const navigation = useNavigation();
   const dispatch = useDispatch();
   const categoryLoading = useSelector((state) => state.category.isLoading);
   const categoryData = useSelector((state) => state.category.categoryData);

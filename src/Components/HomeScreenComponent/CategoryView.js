@@ -31,13 +31,7 @@ const CategoryView = ({ data }) => {
             onPress={() => {
               // dispatch(getAdContentByCategory(item?.id, 1, 10));
               dispatch(setCategoryId(item?.id));
-              navigation.navigate(screenName.bottomNavigation, {
-                screen: screenName.mainHome,
-                params: {
-                  categoryId: item?.id,
-                  categoryName: item?.categoryName,
-                },
-              });
+              navigation.navigate(screenName.mainHome);
             }}
             activeOpacity={0.4}
             style={styles.cardView}

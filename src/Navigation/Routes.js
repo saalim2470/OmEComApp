@@ -29,6 +29,8 @@ import {
   setAccessToken,
   setuserDetail,
 } from "../store/authSlices/LoginSlice";
+import Location from "../Screens/Location";
+import BottomNavigation from "./BottomNavigation";
 
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
@@ -46,6 +48,7 @@ const Routes = () => {
         console.log(token);
         if (!token) {
           await AsyncStorage.removeItem("accessToken");
+          await AsyncStorage.removeItem(userDetail);
           setIsToken(false);
         } else {
           dispatch(setAccessToken(token));
@@ -80,7 +83,7 @@ const Routes = () => {
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
-      // initialRouteName="location"
+      // initialRouteName="Location"
     >
       {/* <Stack.Screen name={screenName.splash} component={Splash} /> */}
       {accessToken == null ? (
@@ -91,10 +94,15 @@ const Routes = () => {
         </>
       ) : (
         <>
+          {/* <Stack.Screen name={"Location"} component={Location} /> */}
           <Stack.Screen
             name={screenName.drawerNavigation}
             component={DrawerNavigation}
           />
+          {/* <Stack.Screen
+            name={screenName.bottomNavigation}
+            component={BottomNavigation}
+          /> */}
           <Stack.Screen
             name={screenName.productDetail}
             component={ProductDetail}
@@ -108,10 +116,10 @@ const Routes = () => {
             name={screenName.addProductImage}
             component={AddProductImage}
           />
-          <Stack.Screen
+          {/* <Stack.Screen
             name={screenName.postCategory}
             component={PostCategory}
-          />
+          /> */}
           <Stack.Screen name={screenName.itemDetail} component={ItemDetail} />
           <Stack.Screen
             name={screenName.productPreview}

@@ -42,6 +42,8 @@ const screenName = {
   bottomNavigation: "bottonNavigation",
   subscription: "Subscription",
   authRoute: "AuthRoute",
+  profileRoute: "ProfileRoute",
+  editProfile: "EditProfile",
 };
 
 export default screenName;

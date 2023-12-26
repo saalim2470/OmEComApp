@@ -18,6 +18,7 @@ const LoginSlice = createSlice({
       state.isLoading = false;
       state.error = null;
       state.isSuccess = false;
+      state.userDetail = null;
     },
     setToken: (state, action) => {
       return {

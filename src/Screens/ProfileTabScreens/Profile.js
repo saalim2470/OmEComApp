@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserContentApi } from "../../store/profileSlices/GetUserContentSlice";
 import Loading from "../../Components/Loading";
 import ServerError from "../../Components/ErrorScreens/ServerError";
+import ProfileFeedCard from "../../Components/ProfileScreenComponent/ProfileFeedCard";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -20,30 +21,12 @@ const Profile = () => {
     error: userContentError,
     isLoading: userContentLoading,
   } = useSelector((state) => state.getUSerContent);
-  const a = useSelector((state) => state.getUSerContent);
-  console.log("-=-=-user content-==-=-", a);
   useEffect(() => {
     dispatch(getUserContentApi(1, 70));
   }, []);
 
   const renderItem = ({ item, index }) => {
-    return (
-      <FeedCard
-        itemData={item}
-        isShowOptionBtn={true}
-        isMoreBtn={true}
-        isOfferBtn={true}
-        menuChildren={
-          <>
-            <Menu.Item onPress={() => {}} title="Edit" />
-            <Menu.Item onPress={() => {}} title="Delete" />
-          </>
-        }
-        onClickMoreBtn={() => {
-          // navigation.navigate(screenName.productDetail, { data: item });
-        }}
-      />
-    );
+    return <ProfileFeedCard itemData={item} />;
   };
   return (
     <SafeAreaView style={commonStyle.container}>

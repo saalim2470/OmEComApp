@@ -35,8 +35,7 @@ const PostCategory = ({ navigation, route }) => {
       setShowAlert(true);
     } else {
       dispatch(setCategory(checked));
-      // navigation.navigate(screenName.itemDetail);
-      navigation.navigate(screenName.postData, { categoryId: checked });
+      navigation.navigate(screenName.postData);
     }
   };
   const renderItem = ({ item, index }) => {

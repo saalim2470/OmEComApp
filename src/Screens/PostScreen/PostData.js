@@ -25,14 +25,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import screenName from "../../Constants/screenName";
 import CustomeAlertModal from "../../Components/CustomeAlertModal";
+import BottomComponent from "../../Components/PostScreenComponent/BottomComponent";
+import { baseURL, serverImagePath } from "../../Constants/defaults";
 
 const PostData = ({ navigation, route }) => {
   const dispatch = useDispatch();
-
-  const { categoryId } = route.params;
   const formData = new FormData();
+  const categoryId = useSelector((state) => state.storeData.categoryId);
   const addPostData = useSelector((state) => state.addAdContentData);
-  console.log("-=-=add post data-==-=", addPostData);
   const [image, setImage] = useState([]);
   const [description, setDescription] = useState("");
   const [showEmoji, setShowEmoji] = useState(false);
@@ -204,38 +204,18 @@ const PostData = ({ navigation, route }) => {
           }}
         />
       </View>
-      {/* <BottomComponent /> */}
-      <View style={styles.boxView}>
-        <IconButton
-          name={"ios-images"}
-          color={"green"}
-          onclick={() => {
-            checkLibrarayPermission();
-          }}
-        />
-        <IconButton
-          name={"ios-camera"}
-          color={"#ed840c"}
-          onclick={() => {
-            checkCameraPermission();
-          }}
-        />
-        <Pressable
-          onPress={() => {
-            setShowEmoji(true);
-          }}
-        >
-          <Entypo name="emoji-happy" size={scale(23)} color="#e3bf3d" />
-        </Pressable>
-        <IconButton
-          name={"ios-location-sharp"}
-          color={"#ed480c"}
-          onclick={() => {}}
-        />
-        {/* <Pressable style={styles.circle}>
-          <SimpleLineIcons name="options" size={scale(20)} color="white" />
-        </Pressable> */}
-      </View>
+      <BottomComponent
+        onClickGallery={() => {
+          checkLibrarayPermission();
+        }}
+        onClickCamera={() => {
+          checkCameraPermission();
+        }}
+        onClickEmoji={() => {
+          setShowEmoji(true);
+        }}
+        onClickLocation={() => {}}
+      />
       <EmojiComponent
         show={showEmoji}
         onBackdropPress={() => {

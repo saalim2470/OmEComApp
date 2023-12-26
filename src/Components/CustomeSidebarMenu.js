@@ -15,7 +15,6 @@ import {
 } from "@react-navigation/drawer";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import images from "../Constants/images";
-import commonStyle from "../Constants/commonStyle";
 import { Divider, Menu } from "react-native-paper";
 import { TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -78,7 +77,10 @@ const CustomSidebarMenu = (props) => {
             </Text>
           </View>
           <TouchableOpacity
-            activeOpacity={0.5}
+            activeOpacity={0.6}
+            onPress={() => {
+              // navigation.closeDrawer();
+            }}
             style={{ position: "absolute", right: moderateScale(10) }}
           >
             <Image

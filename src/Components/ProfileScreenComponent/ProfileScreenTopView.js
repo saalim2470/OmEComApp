@@ -6,8 +6,11 @@ import colors from "../../Constants/colors";
 import images from "../../Constants/images";
 import { useSelector } from "react-redux";
 import { baseURL, serverImagePath } from "../../Constants/defaults";
+import screenName from "../../Constants/screenName";
+import { useNavigation } from "@react-navigation/native";
 
 const ProfileScreenTopView = () => {
+  const navigation = useNavigation();
   const userDetail = useSelector((state) => state.login?.userDetail);
   return (
     <>
@@ -73,6 +76,10 @@ const ProfileScreenTopView = () => {
         </View>
         <View style={{ flexDirection: "row", marginTop: verticalScale(15) }}>
           <TouchableOpacity
+            activeOpacity={0.6}
+            onPress={() => {
+              navigation.navigate(screenName.editProfile);
+            }}
             style={[
               styles.btn,
               {

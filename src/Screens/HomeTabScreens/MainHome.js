@@ -20,9 +20,11 @@ import {
 import HomeScreenCategory from "../../Components/HomeScreenComponent/HomeScreenCategory";
 import colors from "../../Constants/colors";
 import ServerError from "../../Components/ErrorScreens/ServerError";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 
-const MainHome = ({ navigation, route }) => {
+const MainHome = ({ route }) => {
+  const navigation = useNavigation();
+  console.log(navigation);
   const dispatch = useDispatch();
   const isFocus = useIsFocused();
   const categoryId = useSelector((state) => state.storeData.categoryId);

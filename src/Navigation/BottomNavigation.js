@@ -20,6 +20,7 @@ import MainHome from "../Screens/HomeTabScreens/MainHome";
 import { AntDesign } from "@expo/vector-icons";
 import PostData from "../Screens/PostScreen/PostData";
 import PostCategory from "../Screens/PostScreen/PostCategory";
+import BottomNavigationProfileRoute from "./BottomNavigationProfileRoute";
 
 const Tab = createBottomTabNavigator();
 
@@ -34,25 +35,9 @@ const BottomNavigation = () => {
         tabBarHideOnKeyboard: true,
       }}
     >
-      {/* <Tab.Screen
-        name={screenName.bottomNavigationHomeRoute}
-        component={BottomNavigationHomeRoute}
-        options={{
-          tabBarLabel: "Home",
-          tabBarIcon: ({ color, size, focused }) =>
-            focused ? (
-              <Image
-                source={images.homeFillIcon}
-                style={[styles.iconStyle, { tintColor: color }]}
-              />
-            ) : (
-              <Image source={images.homeIcon} style={styles.iconStyle} />
-            ),
-        }}
-      /> */}
       <Tab.Screen
         name={screenName.mainHome}
-        component={MainHome}
+        component={BottomNavigationHomeRoute}
         options={{
           tabBarLabel: "Home",
           tabBarIcon: ({ color, size, focused }) =>
@@ -80,9 +65,7 @@ const BottomNavigation = () => {
         }}
       />
       <Tab.Screen
-        name={screenName.postItem}
-        // component={PostItem}
-        // component={PostData}
+        name={screenName.postCategory}
         component={PostCategory}
         options={{
           tabBarLabel: "Home",
@@ -110,8 +93,8 @@ const BottomNavigation = () => {
         }}
       />
       <Tab.Screen
-        name={screenName.profile}
-        component={Profile}
+        name={screenName.profileRoute}
+        component={BottomNavigationProfileRoute}
         options={{
           tabBarLabel: "Home",
           tabBarIcon: ({ color, size, focused }) =>
