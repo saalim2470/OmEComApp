@@ -15,12 +15,18 @@ import CustomSidebarMenu from "../Components/CustomeSidebarMenu";
 import Profile from "../Screens/ProfileTabScreens/Profile";
 import BookmarkScreen from "../Screens/HomeTabScreens/BookmarkScreen";
 import Subscription from "../Screens/DrawerScreen/Subscription";
+import { useRef } from "react";
 
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigation = () => {
+  const drawerRef = useRef(null); 
+  const closeDrawer = () => {
+    drawerRef.current && drawerRef.current.closeDrawer(); // Close Drawer
+  };
   return (
     <Drawer.Navigator
+    ref={drawerRef} 
       screenOptions={{
         headerShown: false,
         drawerStyle: { width: scale(280), backgroundColor: "#FFFFFF" },
@@ -32,22 +38,10 @@ const DrawerNavigation = () => {
           fontFamily: "Montserrat-Medium",
         },
       }}
-      drawerContent={(props) => <CustomSidebarMenu {...props} />}
+      initialRouteName={screenName.bottomNavigation} 
+      drawerContent={(props) => <CustomSidebarMenu {...props} closeDrawer={closeDrawer} />}
+    
     >
-      {/* <Drawer.Screen
-        name={screenName.homeScreenIcons}
-        component={HomeScreenIcons}
-        options={{
-          drawerLabel: "Categories",
-
-          drawerIcon: ({ color, size, focused }) => (
-            <Image
-              source={images.homeIcon}
-              style={{ width: scale(15), height: scale(15) }}
-            />
-          ),
-        }}
-      /> */}
       <Drawer.Screen
         name={screenName.bottomNavigation}
         component={BottomNavigation}

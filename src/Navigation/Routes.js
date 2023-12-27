@@ -99,10 +99,6 @@ const Routes = () => {
             name={screenName.drawerNavigation}
             component={DrawerNavigation}
           />
-          {/* <Stack.Screen
-            name={screenName.bottomNavigation}
-            component={BottomNavigation}
-          /> */}
           <Stack.Screen
             name={screenName.productDetail}
             component={ProductDetail}

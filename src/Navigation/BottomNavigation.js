@@ -36,7 +36,7 @@ const BottomNavigation = () => {
       }}
     >
       <Tab.Screen
-        name={screenName.mainHome}
+        name={screenName.bottomNavigationHomeRoute}
         component={BottomNavigationHomeRoute}
         options={{
           tabBarLabel: "Home",

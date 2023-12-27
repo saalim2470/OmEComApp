@@ -1,20 +1,17 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
-import commonStyle from "../../Constants/commonStyle";
+import { FlatList, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect } from 'react'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import commonStyle from '../../Constants/commonStyle'
+import MainHeader from '../../Components/MainHeader'
+import ServerError from '../../Components/ErrorScreens/ServerError'
+import Loading from '../../Components/Loading'
+import { Divider } from 'react-native-paper'
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
-import Header from "../../Components/Header";
-import ProfileScreenTopView from "../../Components/ProfileScreenComponent/ProfileScreenTopView";
-import FeedCard from "../../Components/ProductComponent/FeedCard";
-import images from "../../Constants/images";
-import { Divider, Menu } from "react-native-paper";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useDispatch, useSelector } from "react-redux";
-import { getUserContentApi } from "../../store/profileSlices/GetUserContentSlice";
-import Loading from "../../Components/Loading";
-import ServerError from "../../Components/ErrorScreens/ServerError";
-import ProfileFeedCard from "../../Components/ProfileScreenComponent/ProfileFeedCard";
+import ProfileFeedCard from '../../Components/ProfileScreenComponent/ProfileFeedCard'
+import { useDispatch, useSelector } from 'react-redux'
+import { getUserContentApi } from '../../store/profileSlices/GetUserContentSlice'
 
-const Profile = ({route}) => {
+const MyAds = ({route}) => {
   const dispatch = useDispatch();
   const {
     userContentData: userContentRes,
@@ -24,14 +21,13 @@ const Profile = ({route}) => {
   useEffect(() => {
     dispatch(getUserContentApi(1, 70));
   }, [route]);
-
   const renderItem = ({ item, index }) => {
     return <ProfileFeedCard itemData={item} />;
   };
   return (
-    <SafeAreaView style={commonStyle.container}>
-      <ProfileScreenTopView />
-      {userContentLoading ? (
+   <SafeAreaView style={commonStyle.container}>
+  <MainHeader />
+  {userContentLoading ? (
         <Loading />
       ) : userContentError != null && !userContentError.Success ? (
         <ServerError
@@ -58,10 +54,10 @@ const Profile = ({route}) => {
           renderItem={renderItem}
         />
       )}
-    </SafeAreaView>
-  );
-};
+   </SafeAreaView>
+  )
+}
 
-export default Profile;
+export default MyAds
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({})

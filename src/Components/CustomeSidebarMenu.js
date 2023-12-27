@@ -30,12 +30,11 @@ import { StackActions, useNavigation } from "@react-navigation/native";
 import screenName from "../Constants/screenName";
 import { resetUserAdContent } from "../store/profileSlices/GetUserContentSlice";
 
-const CustomSidebarMenu = (props) => {
+const CustomSidebarMenu = (props,{ closeDrawer=()=>{} }) => {
   const navigation = useNavigation();
   const userDetail = useSelector((state) => state.login?.userDetail);
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
-
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
   const logout = async () => {
@@ -44,9 +43,9 @@ const CustomSidebarMenu = (props) => {
       dispatch(resetUserAdContent());
       await AsyncStorage.removeItem(accessToken);
       await AsyncStorage.removeItem(userDetail);
-      navigation.dispatch(
-        StackActions.replace(screenName.authRoute, { screen: screenName.login })
-      );
+      // navigation.dispatch(
+      //   StackActions.replace(screenName.authRoute, { screen: screenName.login })
+      // );
     } catch (error) {}
   };
   return (
@@ -79,7 +78,8 @@ const CustomSidebarMenu = (props) => {
           <TouchableOpacity
             activeOpacity={0.6}
             onPress={() => {
-              // navigation.closeDrawer();
+              navigation.closeDrawer();
+              // closeDrawer()
             }}
             style={{ position: "absolute", right: moderateScale(10) }}
           >
@@ -96,9 +96,30 @@ const CustomSidebarMenu = (props) => {
         <Divider style={{ marginTop: verticalScale(15) }} />
         <View style={{ marginTop: verticalScale(20) }}>
           <DrawerItemList {...props} />
+
+          <DrawerItem
+            label="Categories"
+            onPress={() => {
+              navigation.navigate(screenName.homeScreenIcons);
+            }}
+            labelStyle={styles.labelStyle}
+            icon={({ color, size, focused }) => (
+              <Image
+                source={images.homeIcon}
+                style={{ width: scale(15), height: scale(15) }}
+              />
+            )}
+          />
+
+
+
+
+
           <DrawerItem
             label="My Ads"
-            onPress={() => {}}
+            onPress={() => {
+              navigation.navigate(screenName.myAds);
+            }}
             labelStyle={styles.labelStyle}
             icon={({ color, size, focused }) => (
               <Image
@@ -110,9 +131,7 @@ const CustomSidebarMenu = (props) => {
           <DrawerItem
             label="Profile"
             onPress={() => {
-              navigation.navigate(screenName.bottomNavigation, {
-                screen: screenName.profile,
-              });
+              navigation.navigate(screenName.profile);
             }}
             labelStyle={styles.labelStyle}
             icon={({ color, size, focused }) => (
