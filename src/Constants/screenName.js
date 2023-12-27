@@ -44,7 +44,8 @@ const screenName = {
   authRoute: "AuthRoute",
   profileRoute: "ProfileRoute",
   editProfile: "EditProfile",
-  myAds:'MyAds'
+  myAds: "MyAds",
+  otherUserProfile: "OtherUserProfile",
 };
 
 export default screenName;

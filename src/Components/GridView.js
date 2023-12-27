@@ -12,7 +12,7 @@ const GridView = ({ data, col = 2, addCloseBtn = () => {} }) => {
               <View style={styles.image1}>
                 {addCloseBtn(index)}
                 <Image
-                  source={{ uri: item?.uri }}
+                  source={{ uri: item }}
                   style={{ width: "100%", height: "100%" }}
                   resizeMode="cover"
                 />

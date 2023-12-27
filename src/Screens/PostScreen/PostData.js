@@ -27,15 +27,27 @@ import screenName from "../../Constants/screenName";
 import CustomeAlertModal from "../../Components/CustomeAlertModal";
 import BottomComponent from "../../Components/PostScreenComponent/BottomComponent";
 import { baseURL, serverImagePath } from "../../Constants/defaults";
+import { imageurl } from "../../Constants/functions";
+import {
+  resetUpdateAdContent,
+  updateAdContentApi,
+} from "../../store/AdContentSlices/UpdateAdContent";
+import { setCategoryId } from "../../store/StoreDataSlice";
+import PostScreenHeader from "../../Components/PostScreenComponent/PostScreenHeader";
 
 const PostData = ({ navigation, route }) => {
+  console.log("-=-=route-=-", route);
   const dispatch = useDispatch();
   const formData = new FormData();
   const categoryId = useSelector((state) => state.storeData.categoryId);
   const addPostData = useSelector((state) => state.addAdContentData);
+  const updatePostData = useSelector((state) => state.updateAdContentData);
+  console.log("-=-=-=update Data-=-=", updatePostData);
   const [image, setImage] = useState([]);
   const [description, setDescription] = useState("");
   const [showEmoji, setShowEmoji] = useState(false);
+  const [btnTxt, setBtnTxt] = useState("Post");
+  const [screenTitle, setScreenTitle] = useState("Create post");
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -47,7 +59,19 @@ const PostData = ({ navigation, route }) => {
     ImagePicker.useCameraPermissions();
 
   useEffect(() => {
-    if (addPostData?.addContentData?.Success) {
+    if (route?.params != null) {
+      setDescription(route?.params?.editData?.description);
+      setImage(imageurl(route?.params?.editData?.imagesData));
+      setBtnTxt("Update");
+      setScreenTitle("Update post");
+    }
+  }, [route?.params]);
+
+  useEffect(() => {
+    if (
+      addPostData?.addContentData?.Success ||
+      updatePostData?.updateContentData?.Success
+    ) {
       setShowAlert({
         show: true,
         title: "Success",
@@ -55,31 +79,83 @@ const PostData = ({ navigation, route }) => {
         type: "success",
       });
     }
-  }, [addPostData?.addContentData]);
+  }, [addPostData?.addContentData, updatePostData?.updateContentData]);
+  // useEffect(() => {
+  //   if (
+  //     (addPostData?.errorCode != null && addPostData?.errorCode == 403) ||
+  //     (updatePostData?.errorCode != null && updatePostData?.errorCode == 403)
+  //   ) {
+  //     navigation.navigate(screenName.drawerNavigation, {
+  //       screen: screenName.subscription,
+  //       params: { formData },
+  //     });
+  //   }
+  //   if (
+  //     (addPostData?.errorCode != null && addPostData?.errorCode == 401) ||
+  //     (updatePostData?.errorCode != null && updatePostData?.errorCode == 401)
+  //   ) {
+  //     setShowAlert({
+  //       show: true,
+  //       title: "UnAuthorized",
+  //       msg: "Please login to continue",
+  //       type: "warning",
+  //     });
+  //   }
+  //   if (
+  //     (addPostData?.errorCode != null && addPostData?.error != null) ||
+  //     (updatePostData?.errorCode != null && updatePostData?.error != null)
+  //   ) {
+  //     setShowAlert({
+  //       show: true,
+  //       title: "Error",
+  //       msg: `Some Error Occured`,
+  //       type: "error",
+  //     });
+  //   }
+  // }, [
+  //   addPostData.errorCode,
+  //   addPostData?.error,
+  //   updatePostData.errorCode,
+  //   updatePostData?.error,
+  // ]);
   useEffect(() => {
-    if (addPostData?.errorCode != null && addPostData?.errorCode == 403) {
-      navigation.navigate(screenName.drawerNavigation, {
-        screen: screenName.subscription,
-        params: { formData },
-      });
-    }
-    if (addPostData?.errorCode != null && addPostData?.errorCode == 401) {
-      setShowAlert({
-        show: true,
-        title: "UnAuthorized",
-        msg: "Please login to continue",
-        type: "warning",
-      });
-    }
-    if (addPostData?.errorCode != null && addPostData?.error != null) {
-      setShowAlert({
-        show: true,
-        title: "Error",
-        msg: `Some Error Occured`,
-        type: "error",
-      });
-    }
-  }, [addPostData.errorCode, addPostData?.error]);
+    const { errorCode, error } = addPostData;
+    const { errorCode: updateErrorCode, error: updateError } = updatePostData;
+
+    const handleErrorCode = (code) => {
+      if (code === 403) {
+        navigation.navigate(screenName.drawerNavigation, {
+          screen: screenName.subscription,
+          params: { formData },
+        });
+      } else if (code === 401) {
+        setShowAlert({
+          show: true,
+          title: "UnAuthorized",
+          msg: "Please login to continue",
+          type: "warning",
+        });
+      } else if (
+        (code != null && error != null) ||
+        (code != null && updateError != null)
+      ) {
+        setShowAlert({
+          show: true,
+          title: "Error",
+          msg: "Some Error Occurred",
+          type: "error",
+        });
+      }
+    };
+
+    handleErrorCode(errorCode);
+    handleErrorCode(updateErrorCode);
+  }, [
+    addPostData.errorCode,
+    addPostData?.error,
+    updatePostData.errorCode,
+    updatePostData?.error,
+  ]);
   const openImagePicker = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -89,7 +165,7 @@ const PostData = ({ navigation, route }) => {
     });
 
     if (!result.canceled) {
-      setImage([...image, result.assets[0]]);
+      setImage([...image, result.assets[0].uri]);
     }
   };
   const openCamera = async () => {
@@ -101,7 +177,7 @@ const PostData = ({ navigation, route }) => {
     });
 
     if (!result.canceled) {
-      setImage([...image, result.assets[0]]);
+      setImage([...image, result.assets[0].uri]);
     }
   };
   const onClickRemove = (index1) => {
@@ -129,10 +205,10 @@ const PostData = ({ navigation, route }) => {
   };
   const onClickBtn = () => {
     image.forEach((element, index) => {
-      const uriParts = element.uri.split(".");
+      const uriParts = element.split(".");
       const fileType = uriParts[uriParts.length - 1];
       formData.append("files", {
-        uri: element.uri,
+        uri: element,
         name: `image_${index}.${fileType}`,
         type: `image/${fileType}`,
       });
@@ -145,10 +221,27 @@ const PostData = ({ navigation, route }) => {
     //   screen: screenName.subscription,
     // });
   };
+  const onClickUpdate = () => {
+    image.forEach((element, index) => {
+      const uriParts = element.split(".");
+      const fileType = uriParts[uriParts.length - 1];
+      formData.append("files", {
+        uri: element,
+        name: `image_${index}.${fileType}`,
+        type: `image/${fileType}`,
+      });
+    });
+    formData.append("description", description);
+    formData.append("categoryId", categoryId);
+    dispatch(setPostDataDraft(formData));
+    dispatch(setCategoryId(route?.params?.editData?.categoryId));
+    dispatch(updateAdContentApi(formData, route?.params?.editData?.id));
+  };
   const onClickModalBtn = () => {
     setShowAlert({ ...showAlert, show: false });
     dispatch(resetData());
     dispatch(reseAdPosttData());
+    dispatch(resetUpdateAdContent());
     showAlert.type == "success" &&
       navigation.navigate(screenName.drawerNavigation, {
         screen: screenName.bottomNavigation,
@@ -160,41 +253,20 @@ const PostData = ({ navigation, route }) => {
   return (
     <SafeAreaProvider style={commonStyle.container}>
       <View style={{ flex: 1 }}>
-        <View style={styles.headerView}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <TouchableOpacity
-              activeOpacity={0.6}
-              onPress={() => {
-                navigation.goBack();
-              }}
-            >
-              <Ionicons
-                name="arrow-back-outline"
-                size={scale(25)}
-                color="black"
-              />
-            </TouchableOpacity>
-            <Text style={styles.headerTxt}>Create post</Text>
-          </View>
-          <CustomeButton
-            style={{
-              width: scale(50),
-              borderRadius: scale(5),
-              marginVertical: moderateScale(0),
-            }}
-            isLoading={addPostData?.isLoading}
-            disabled={!description ? true : false}
-            title={"Post"}
-            onClick={() => {
-              onClickBtn();
-            }}
-          />
-        </View>
+        <PostScreenHeader
+          btnTxt={btnTxt}
+          screenTitle={screenTitle}
+          loading={addPostData?.isLoading || updatePostData?.isLoading}
+          disabled={!description ? true : false}
+          onClick={() => {
+            route?.params != null ? onClickUpdate() : onClickBtn();
+          }}
+        />
         <Divider bold />
         <UserHeader />
         <PostScreenTextView
           imageData={image}
-          disabled={addPostData?.isLoading}
+          disabled={addPostData?.isLoading || updatePostData?.isLoading}
           value={description}
           removeImage={(index) => {
             onClickRemove(index);

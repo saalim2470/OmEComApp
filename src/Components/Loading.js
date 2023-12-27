@@ -10,6 +10,7 @@ const Loading = () => {
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
+        backgroundColor: "white",
       }}
     >
       <ActivityIndicator size={"large"} color={colors.themeColor} />

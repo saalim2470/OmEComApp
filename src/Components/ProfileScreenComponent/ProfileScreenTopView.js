@@ -9,9 +9,8 @@ import { baseURL, serverImagePath } from "../../Constants/defaults";
 import screenName from "../../Constants/screenName";
 import { useNavigation } from "@react-navigation/native";
 
-const ProfileScreenTopView = () => {
+const ProfileScreenTopView = ({ profileData, isEditBtn }) => {
   const navigation = useNavigation();
-  const userDetail = useSelector((state) => state.login?.userDetail);
   return (
     <>
       <View
@@ -30,14 +29,14 @@ const ProfileScreenTopView = () => {
             size={scale(60)}
             style={{ marginRight: moderateScale(8) }}
             source={{
-              uri: `${baseURL}${serverImagePath}/${userDetail?.profilePicture}`,
+              uri: `${baseURL}${serverImagePath}/${profileData?.profilePicture}`,
             }}
           />
           <View>
             <Text
               style={styles.titleTxt}
-            >{`${userDetail?.firstName} ${userDetail?.lastName}`}</Text>
-            <Text style={styles.lightTxt}>{userDetail?.email}</Text>
+            >{`${profileData?.firstName} ${profileData?.lastName}`}</Text>
+            <Text style={styles.lightTxt}>{profileData?.email}</Text>
             {/* <Text style={styles.lightTxt}>Other</Text> */}
           </View>
         </View>
@@ -75,34 +74,36 @@ const ProfileScreenTopView = () => {
           </Text>
         </View>
         <View style={{ flexDirection: "row", marginTop: verticalScale(15) }}>
-          <TouchableOpacity
-            activeOpacity={0.6}
-            onPress={() => {
-              navigation.navigate(screenName.editProfile);
-            }}
-            style={[
-              styles.btn,
-              {
-                flexDirection: "row",
-                backgroundColor: colors.selectedColor,
-                alignItems: "center",
-                marginRight: moderateScale(10),
-              },
-            ]}
-          >
-            <Image source={images.editIcon} style={styles.editIcon} />
-            <Text
+          {isEditBtn ? (
+            <TouchableOpacity
+              activeOpacity={0.6}
+              onPress={() => {
+                navigation.navigate(screenName.editProfile);
+              }}
               style={[
-                styles.btnTxt,
+                styles.btn,
                 {
-                  color: "#FFFFFF",
+                  flexDirection: "row",
+                  backgroundColor: colors.selectedColor,
+                  alignItems: "center",
+                  marginRight: moderateScale(10),
                 },
               ]}
             >
-              Edit
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
+              <Image source={images.editIcon} style={styles.editIcon} />
+              <Text
+                style={[
+                  styles.btnTxt,
+                  {
+                    color: "#FFFFFF",
+                  },
+                ]}
+              >
+                Edit
+              </Text>
+            </TouchableOpacity>
+          ) : null}
+          <View
             style={[
               styles.btn,
               {
@@ -111,7 +112,7 @@ const ProfileScreenTopView = () => {
             ]}
           >
             <Text style={[styles.btnTxt]}>40 Listings</Text>
-          </TouchableOpacity>
+          </View>
         </View>
       </View>
       <Divider style={{ marginVertical: verticalScale(15) }} />

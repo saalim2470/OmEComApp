@@ -7,21 +7,15 @@ import { baseURL, serverImagePath } from "../../Constants/defaults";
 import Slider from "../ProductComponent/Slider";
 import ProfileFeedCardBottomView from "./ProfileFeedCardBottomView";
 import ProfileFeedCardHeader from "./ProfileFeedCardHeader";
+import FeedCardBottomView from "../ProductComponent/FeedCardBottomView";
+import { imageurl } from "../../Constants/functions";
 
 const ProfileFeedCard = ({ itemData, onClickMoreBtn = () => {}, disable }) => {
   const [files, setFiles] = useState([]);
   const [isShowTxtBtn, setIsShowTxtBtn] = useState(false);
   const txtLength = 100;
-  const imageurl = () => {
-    let data = JSON.parse(itemData?.imagesData);
-    let values = [];
-    data.map((item, index) => {
-      values.push(`${baseURL}${serverImagePath}/${item}`);
-    });
-    setFiles(values);
-  };
   useEffect(() => {
-    imageurl();
+    setFiles(imageurl(itemData?.imagesData));
   }, [itemData]);
   return (
     <View style={{ marginBottom: verticalScale(8) }}>
@@ -48,7 +42,8 @@ const ProfileFeedCard = ({ itemData, onClickMoreBtn = () => {}, disable }) => {
       </Pressable>
       <Slider data={files} />
       <View style={[styles.bottomView]}>
-        <ProfileFeedCardBottomView itemData={itemData} />
+        {/* <ProfileFeedCardBottomView itemData={itemData} /> */}
+        <FeedCardBottomView itemData={itemData} />
       </View>
     </View>
   );

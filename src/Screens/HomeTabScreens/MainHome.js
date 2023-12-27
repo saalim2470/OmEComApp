@@ -1,5 +1,5 @@
 import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
-import React from "react";
+import React, { useCallback } from "react";
 import MainHeader from "../../Components/MainHeader";
 import commonStyle from "../../Constants/commonStyle";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
@@ -20,17 +20,24 @@ import {
 import HomeScreenCategory from "../../Components/HomeScreenComponent/HomeScreenCategory";
 import colors from "../../Constants/colors";
 import ServerError from "../../Components/ErrorScreens/ServerError";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from "@react-navigation/native";
+import FriendlyMsg from "../../Components/ErrorScreens/FriendlyMsg";
 
 const MainHome = ({ route }) => {
   const navigation = useNavigation();
-  console.log(navigation);
   const dispatch = useDispatch();
   const isFocus = useIsFocused();
   const categoryId = useSelector((state) => state.storeData.categoryId);
   const categoryDataRes = useSelector((state) => state.category.categoryData);
   const contentDataRes = useSelector(
     (state) => state.getAddContentByCategory.contentData
+  );
+  const likeDataRes = useSelector(
+    (state) => state.getAddContentByCategory.likeData
   );
   const contentdata = useSelector((state) => state.getAddContentByCategory);
   const contentDataLoading = useSelector(
@@ -42,17 +49,19 @@ const MainHome = ({ route }) => {
   const [postData, setPostData] = useState([]);
   const [isReachedEnd, setIsReachedEnd] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [contentData, setContentData] = useState(null);
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
     msg: null,
     type: null,
   });
-
-  useEffect(() => {
-    setSelectedCategory(categoryId);
-    getContentDataByCategory(categoryId);
-  }, [categoryId, route, dispatch, isFocus]);
+  useFocusEffect(
+    useCallback(() => {
+      setSelectedCategory(categoryId);
+      getContentDataByCategory(categoryId);
+    }, [categoryId])
+  );
 
   useEffect(() => {
     if (
@@ -71,6 +80,29 @@ const MainHome = ({ route }) => {
   useEffect(() => {
     setCategoryData(categoryDataRes?.Data);
   }, [categoryDataRes]);
+  useEffect(() => {
+    if (contentDataRes != null && contentDataRes.Success) {
+      setPostData(contentDataRes?.Data);
+    }
+  }, [contentDataRes]);
+  useEffect(() => {
+    if (likeDataRes != null && likeDataRes.Success) {
+      const val = [];
+      postData?.map((item, index) => {
+        if (item?.id === likeDataRes?.Data?.contentId) {
+          val.push({
+            ...item,
+            isCurrentUserLiked: likeDataRes?.Data?.isLiked,
+            totalLikes: likeDataRes?.Data?.totalLikes,
+          });
+        } else {
+          val.push(item);
+        }
+      });
+      setPostData(val);
+    }
+  }, [likeDataRes]);
+
   // useEffect(() => {
   //   if (contentdata?.contentData.length > 0) {
   //     setPostData([...postData, ...contentdata?.contentData]);
@@ -146,11 +178,11 @@ const MainHome = ({ route }) => {
         <Loading />
       ) : !contentDataLoading && contentdata?.error != null ? (
         <ServerError />
-      ) : !contentDataLoading && contentDataRes.length <= 0 ? (
-        <Text style={styles.msgTxt}>{`Content not availaibale`}</Text>
+      ) : !contentDataLoading && postData?.length <= 0 ? (
+        <FriendlyMsg msg={"Content not availaibale"} />
       ) : (
         <FlatList
-          data={contentDataRes}
+          data={postData}
           keyExtractor={(item, index) => {
             `data_${item.id}_${index}`;
           }}

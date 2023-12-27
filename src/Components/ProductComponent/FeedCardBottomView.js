@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import commonStyle from "../../Constants/commonStyle";
 import images from "../../Constants/images";
 import { Ionicons } from "@expo/vector-icons";
@@ -14,11 +14,25 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import CustomeAlertModal from "../CustomeAlertModal";
 import CommentView from "../CommentComponent/CommentView";
-import { useDispatch } from "react-redux";
-import { addLikeOnContentApi, saveContentApi } from "../../store/AdContentSlices/GetAdContentSlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addLikeOnContentApi,
+  saveContentApi,
+} from "../../store/AdContentSlices/GetAdContentSlice";
+import {
+  getCommentByContentIdApi,
+  resetCommentData,
+} from "../../store/commentSlices/GetCommentByContentIdSlice";
 
 const FeedCardBottomView = ({ itemData }) => {
   const dispatch = useDispatch();
+  const {
+    commentData: commentDataRes,
+    isLoading: commentLoading,
+    error: commentError,
+    errorCode: commentErrorCode,
+  } = useSelector((state) => state.getCommentByContentId);
+  const url = `whatsapp://send?phone=${itemData?.user?.phoneNumber}&text=Hello`;
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -26,7 +40,28 @@ const FeedCardBottomView = ({ itemData }) => {
     type: null,
   });
   const [isShowBottomSheet, setIsShowBottomSheet] = useState(false);
-  const url = `whatsapp://send?phone=${itemData?.user?.phoneNumber}&text=Hello`;
+  useEffect(() => {
+    const handleErrorCode = (code) => {
+      if (code === 401) {
+        setShowAlert({
+          show: true,
+          title: "UnAuthorized",
+          msg: "Please login to continue",
+          type: "warning",
+        });
+      } else if (code != null && commentError != null) {
+        setShowAlert({
+          show: true,
+          title: "Error",
+          msg: commentError.ErrorMessage || "Some Error Occurred",
+          type: "error",
+        });
+      }
+    };
+
+    handleErrorCode(commentErrorCode);
+  }, [commentError, commentErrorCode]);
+
   const checkWhatsAppInstalled = async () => {
     try {
       const canOpen = await Linking.canOpenURL(url);
@@ -59,6 +94,10 @@ const FeedCardBottomView = ({ itemData }) => {
         isLiked: !itemData?.isCurrentUserLiked,
       })
     );
+  };
+  const onClickComment = () => {
+    setIsShowBottomSheet(true);
+    dispatch(getCommentByContentIdApi(itemData?.id, 1, 10));
   };
 
   return (
@@ -139,33 +178,40 @@ const FeedCardBottomView = ({ itemData }) => {
           </TouchableOpacity>
         </View>
       </View>
-      <Text style={styles.likeTxt}>0 likes</Text>
+      <Text style={styles.likeTxt}>{`${itemData?.totalLikes} likes`}</Text>
       <TouchableOpacity
         style={{ alignSelf: "flex-start", marginTop: verticalScale(4) }}
         activeOpacity={0.6}
         onPress={() => {
-          setIsShowBottomSheet(true);
+          onClickComment();
         }}
       >
-        <Text style={styles.commentTxt}>View all 2 comments</Text>
+        <Text
+          style={styles.commentTxt}
+        >{`View all ${itemData?.totalComments} comments`}</Text>
       </TouchableOpacity>
       <CommentView
+        postDetail={itemData}
         isVisible={isShowBottomSheet}
+        isLoading={commentLoading}
+        error={commentError}
+        errorCode={commentErrorCode}
         onBackDropPress={() => {
           setIsShowBottomSheet(false);
         }}
-        commentData={[
-          {
-            id: 1,
-            userName: "saalim shaikh",
-            comment: "this product is very easy to use",
-          },
-          {
-            id: 2,
-            userName: "Afzal patel",
-            comment: "Test comment",
-          },
-        ]}
+        commentData={commentDataRes?.Data}
+        // commentData={[
+        //   {
+        //     id: 1,
+        //     userName: "saalim shaikh",
+        //     comment: "this product is very easy to use",
+        //   },
+        //   {
+        //     id: 2,
+        //     userName: "Afzal patel",
+        //     comment: "Test comment",
+        //   },
+        // ]}
       />
       <CustomeAlertModal
         isVisible={showAlert.show}
@@ -173,6 +219,7 @@ const FeedCardBottomView = ({ itemData }) => {
         msg={showAlert.msg}
         type={showAlert.type}
         onClickBtn={() => {
+          dispatch(resetCommentData());
           setShowAlert({
             ...showAlert,
             show: false,

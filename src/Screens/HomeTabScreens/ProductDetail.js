@@ -50,17 +50,14 @@ const ProductDetail = ({ route }) => {
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={true}
       >
-        <FeedCard itemData={route?.params?.data} disable={true} />
+        <FeedCard
+          itemData={route?.params?.data}
+          disable={true}
+          showFullDesc={true}
+        />
         {/* unComment After 1st version */}
         {/* <AdView /> */}
       </ScrollView>
-      {/* <CommentView
-        isShow={isShowCommentView}
-        onChange={(value) => {
-          setIsShowCommentView(value);
-        }}
-      /> */}
-      {/* <BottomSheet isVisible={true} onClickBtn={}/> */}
       <CustomeAlertModal
         isVisible={showAlert.show}
         title={showAlert.title}

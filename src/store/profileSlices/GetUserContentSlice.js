@@ -11,16 +11,16 @@ const GetUserContentSlice = createSlice({
   },
   reducers: {
     setUserContent: (state, action) => {
-      if(action.payload?.pageNumber===1){
-        state.userContentData =  action.payload?.data?.Data
-      }else{
+      if (action.payload?.pageNumber === 1) {
+        state.userContentData = action.payload?.data?.Data;
+      } else {
         state.userContentData = [
           ...state.userContentData,
-          ...action.payload?.Data,
+          ...action.payload?.data?.Data,
         ];
       }
-    
-      state.isSuccess = action.payload?.Success;
+
+      state.isSuccess = action.payload?.data?.Success;
     },
     setLoading: (state, action) => {
       state.isLoading = action.payload;
@@ -48,7 +48,7 @@ export const getUserContentApi = (pageNumber, pageSize) => async (dispatch) => {
       pageNumber,
       pageSize
     );
-    dispatch(setUserContent({data:responce?.data,pageNumber:pageNumber}));
+    dispatch(setUserContent({ data: responce?.data, pageNumber: pageNumber }));
     dispatch(setLoading(false));
   } catch (error) {
     dispatch(setLoading(false));

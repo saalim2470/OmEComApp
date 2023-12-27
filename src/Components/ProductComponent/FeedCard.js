@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { baseURL, serverImagePath } from "../../Constants/defaults";
 import FeedCardHeader from "./FeedCardHeader";
 import FeedCardBottomView from "./FeedCardBottomView";
+import { imageurl } from "../../Constants/functions";
 
 const FeedCard = ({
   itemData,
@@ -14,20 +15,13 @@ const FeedCard = ({
   isShowOptionBtn,
   menuChildren,
   disable,
+  showFullDesc,
 }) => {
   const [files, setFiles] = useState([]);
   const [isShowTxtBtn, setIsShowTxtBtn] = useState(false);
   const txtLength = 100;
-  const imageurl = () => {
-    let data = JSON.parse(itemData?.imagesData);
-    let values = [];
-    data.map((item, index) => {
-      values.push(`${baseURL}${serverImagePath}/${item}`);
-    });
-    setFiles(values);
-  };
   useEffect(() => {
-    imageurl();
+    setFiles(imageurl(itemData?.imagesData));
   }, [itemData]);
   return (
     <View style={{ marginBottom: verticalScale(8) }}>
@@ -50,9 +44,11 @@ const FeedCard = ({
               setIsShowTxtBtn(!isShowTxtBtn);
             }}
           >
-            {itemData?.description?.length > txtLength
-              ? `${itemData?.description?.substring(0, txtLength)} ...more`
-              : `${itemData?.description?.substring(0, txtLength)}`}
+            {!showFullDesc
+              ? itemData?.description?.length > txtLength
+                ? `${itemData?.description?.substring(0, txtLength)} ...more`
+                : `${itemData?.description?.substring(0, txtLength)}`
+              : itemData?.description}
           </Text>
         </View>
       </Pressable>

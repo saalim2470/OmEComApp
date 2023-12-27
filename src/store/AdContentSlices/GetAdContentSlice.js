@@ -5,7 +5,7 @@ const GetAdContentSlice = createSlice({
   name: "getAddContentByCategory",
   initialState: {
     isLoading: false,
-    contentData: [],
+    contentData: null,
     likeData: null,
     error: null,
     statusCode: null,
@@ -18,12 +18,7 @@ const GetAdContentSlice = createSlice({
       state.contentData = action.payload;
     },
     addLikeContent: (state, action) => {
-      state.contentData = state.contentData.map((item, index) => {
-        if (action.payload?.contentId === item?.id) {
-          return { ...item, isCurrentUserLiked: action.payload.isLiked };
-        }
-        return item;
-      });
+      state.likeData = action.payload;
     },
     saveContent: (state, action) => {
       state.contentData = state.contentData.map((item, index) => {
@@ -74,7 +69,7 @@ export const getAdContentByCategory =
       );
       // console.log("-=-=-res outer-=-=", responce.data);
       // dispatch(setReachedEnd(false));
-      dispatch(setAdContent(responce.data?.Data));
+      dispatch(setAdContent(responce.data));
       dispatch(setLoading(false));
     } catch (error) {
       dispatch(setLoading(false));
@@ -85,8 +80,9 @@ export const getAdContentByCategory =
 export const addLikeOnContentApi = (data) => async (dispatch) => {
   try {
     dispatch(setError(null));
+    dispatch(addLikeContent(null));
     const responce = await AdContentServices.addContentLike(data);
-    dispatch(addLikeContent(responce.data?.Data));
+    dispatch(addLikeContent(responce.data));
     console.log(responce.data);
   } catch (error) {
     dispatch(setError(error.response));

@@ -7,21 +7,82 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import Modal from "react-native-modal";
 import { Avatar } from "react-native-paper";
 import CommentItem from "./CommentItem";
+import Loading from "../Loading";
+import ServerError from "../ErrorScreens/ServerError";
+import FriendlyMsg from "../ErrorScreens/FriendlyMsg";
+import { useDispatch, useSelector } from "react-redux";
+import { baseURL, serverImagePath } from "../../Constants/defaults";
+import {
+  postCommentApi,
+  resetPostCommentData,
+} from "../../store/commentSlices/PostCommentSlice";
+import { getCommentByContentIdApi } from "../../store/commentSlices/GetCommentByContentIdSlice";
+import CustomeAlertModal from "../CustomeAlertModal";
 
 const CommentView = ({
   isVisible,
   commentData,
+  isLoading,
+  error,
+  errorCode,
+  postDetail,
   onBackDropPress = () => {},
 }) => {
+  const dispatch = useDispatch();
+  const userDetail = useSelector((state) => state.login?.userDetail);
+  const {
+    postComment: postCommentRes,
+    isLoading: postCommentLoading,
+    error: postCommentError,
+    errorCode: postCommentErrorCode,
+  } = useSelector((state) => state.postComment);
   const [commentTxt, setCommentTxt] = useState("");
-  const onClickPost = () => {};
+  const [showAlert, setShowAlert] = useState({
+    show: false,
+    title: null,
+    msg: null,
+    type: null,
+  });
+  useEffect(() => {
+    const handleErrorCode = (code) => {
+      if (code === 401) {
+        setShowAlert({
+          show: true,
+          title: "UnAuthorized",
+          msg: "Please login to continue",
+          type: "warning",
+        });
+      } else if (code != null && postCommentError != null) {
+        setShowAlert({
+          show: true,
+          title: "Error",
+          msg: postCommentError.ErrorMessage || "Some Error Occurred",
+          type: "error",
+        });
+      }
+    };
+
+    handleErrorCode(postCommentErrorCode);
+  }, [postCommentError, postCommentErrorCode]);
+  const onClickPost = () => {
+    const data = {
+      title: "string",
+      description: commentTxt.trim(),
+      userId: userDetail?.userId,
+      adContentId: postDetail?.id,
+    };
+    dispatch(postCommentApi(data)).then((res) => {
+      setCommentTxt("");
+      dispatch(getCommentByContentIdApi(postDetail?.id, 1, 10));
+    });
+  };
   const renderItem = ({ item, index }) => {
-    return <CommentItem item={item}/>;
+    return <CommentItem item={item} />;
   };
   return (
     <Modal
@@ -35,17 +96,26 @@ const CommentView = ({
     >
       <View style={styles.modalView}>
         <Text style={{ alignSelf: "center" }}>Comments</Text>
-        <FlatList
-          data={commentData}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={renderItem}
-          showsVerticalScrollIndicator={false}
-        />
-
+        {isLoading ? (
+          <Loading />
+        ) : !isLoading && error != null ? (
+          <ServerError msg={error?.ErrorMessage} statusCode={errorCode} />
+        ) : commentData?.length <= 0 ? (
+          <FriendlyMsg />
+        ) : (
+          <>
+            <FlatList
+              data={commentData}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={renderItem}
+              showsVerticalScrollIndicator={false}
+            />
+          </>
+        )}
         <View style={styles.txtInputView}>
           <Avatar.Image
             source={{
-              uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXmEcKM5U_dh_rHnbnc1UHQHu6gtJmxurdXg&usqp=CAU",
+              uri: `${baseURL}${serverImagePath}/${userDetail?.profilePicture}`,
             }}
             size={scale(30)}
           />
@@ -60,6 +130,7 @@ const CommentView = ({
           {commentTxt != "" ? (
             <TouchableOpacity
               style={{ paddingHorizontal: moderateScale(5) }}
+              disabled={postCommentLoading}
               onPress={() => {
                 onClickPost();
               }}
@@ -69,6 +140,19 @@ const CommentView = ({
           ) : null}
         </View>
       </View>
+      <CustomeAlertModal
+        isVisible={showAlert.show}
+        title={showAlert.title}
+        msg={showAlert.msg}
+        type={showAlert.type}
+        onClickBtn={() => {
+          dispatch(resetPostCommentData());
+          setShowAlert({
+            ...showAlert,
+            show: false,
+          });
+        }}
+      />
     </Modal>
   );
 };

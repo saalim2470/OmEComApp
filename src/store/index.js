@@ -15,6 +15,10 @@ import GetSubscriptionPlanSlice from "./subscriptionSlices/GetSubscriptionPlanSl
 import StoreDataSlice from "./StoreDataSlice";
 import GetUserContentSlice from "./profileSlices/GetUserContentSlice";
 import EditProfileSlice from "./authSlices/EditProfileSlice";
+import UpdateAdContent from "./AdContentSlices/UpdateAdContent";
+import GetCommentByContentIdSlice from "./commentSlices/GetCommentByContentIdSlice";
+import PostCommentSlice from "./commentSlices/PostCommentSlice";
+import GetContentByUserId from "./profileSlices/GetContentByUserId";
 
 const store = configureStore({
   reducer: {
@@ -33,6 +37,10 @@ const store = configureStore({
     storeData: StoreDataSlice,
     getUSerContent: GetUserContentSlice,
     editProfile: EditProfileSlice,
+    updateAdContentData: UpdateAdContent,
+    getCommentByContentId: GetCommentByContentIdSlice,
+    postComment: PostCommentSlice,
+    getContentByUserId: GetContentByUserId,
   },
   middleware: [thunk],
 });
