@@ -30,6 +30,7 @@ import { logOut } from "../store/authSlices/LoginSlice";
 import { StackActions, useNavigation } from "@react-navigation/native";
 import screenName from "../Constants/screenName";
 import { resetUserAdContent } from "../store/profileSlices/GetUserContentSlice";
+import CustomeAlert from "./CustomeAlert";
 
 const CustomSidebarMenu = (props) => {
   const navigation = useNavigation();
@@ -44,7 +45,6 @@ const CustomSidebarMenu = (props) => {
       dispatch(resetUserAdContent());
       await AsyncStorage.removeItem(accessToken);
       await AsyncStorage.removeItem(userDetail);
-     
     } catch (error) {}
   };
   return (
@@ -157,7 +157,20 @@ const CustomSidebarMenu = (props) => {
         </View>
       </DrawerContentScrollView>
       <Divider />
-      <Menu
+      <DrawerItem
+        label="Log out"
+        onPress={() => {
+          openMenu();
+        }}
+        labelStyle={styles.labelStyle}
+        icon={({ color, size, focused }) => (
+          <Image
+            source={images.logoutIcon}
+            style={{ width: scale(15), height: scale(15) }}
+          />
+        )}
+      />
+      {/* <Menu
         visible={visible}
         onDismiss={closeMenu}
         contentStyle={{ backgroundColor: "white" }}
@@ -183,7 +196,17 @@ const CustomSidebarMenu = (props) => {
           }}
           title="Log out"
         />
-      </Menu>
+      </Menu> */}
+      <CustomeAlert
+        show={visible}
+        title={"Log out"}
+        msg={"Are you sure you want to logout?"}
+        onDismiss={()=>closeMenu()}
+        onCliCkOk={()=>{
+          logout();
+          closeMenu()
+        }}
+      />
     </SafeAreaView>
   );
 };

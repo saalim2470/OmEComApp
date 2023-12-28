@@ -47,7 +47,6 @@ const DrawerNavigation = () => {
         component={BottomNavigation}
         options={{
           drawerLabel: "Home",
-
           drawerIcon: ({ color, size, focused }) => (
             <Image
               source={images.homeIcon}

@@ -49,7 +49,7 @@ const ProfileScreenTopView = ({ profileData, isEditBtn }) => {
             },
           ]}
         >
-          <View
+          {/* <View
             style={{
               flexDirection: "row",
               alignItems: "center",
@@ -65,7 +65,7 @@ const ProfileScreenTopView = ({ profileData, isEditBtn }) => {
               }}
             />
             <Text style={styles.lightTxt}>4.8 (20 Reviews)</Text>
-          </View>
+          </View> */}
           <Text style={[styles.txt, { marginRight: moderateScale(20) }]}>
             <Text style={styles.boldTxt}>00</Text> followers
           </Text>
