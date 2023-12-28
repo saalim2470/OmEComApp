@@ -22,10 +22,15 @@ const EditProfileSlice = createSlice({
     setError: (state, action) => {
       state.error = action.payload;
     },
+    resetEditProfileData: (state, action) => {
+      state.error = null;
+      state.isLoading=false
+      state.updateProfileData=null
+    },
   },
 });
 export default EditProfileSlice.reducer;
-export const { setUpdateProfileData, setLoading, setError } =
+export const { setUpdateProfileData, setLoading, setError,resetEditProfileData } =
   EditProfileSlice.actions;
 
 export const editProfileApi = (data) => async (dispatch) => {

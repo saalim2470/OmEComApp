@@ -20,29 +20,33 @@ import {
 import HomeScreenCategory from "../../Components/HomeScreenComponent/HomeScreenCategory";
 import colors from "../../Constants/colors";
 import ServerError from "../../Components/ErrorScreens/ServerError";
-import {
-  useFocusEffect,
-  useIsFocused,
-  useNavigation,
-} from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import FriendlyMsg from "../../Components/ErrorScreens/FriendlyMsg";
+import { resetSaveData } from "../../store/AdContentSlices/SaveContentSlice";
+import { resetLikeData } from "../../store/AdContentSlices/LikeSlice";
 
 const MainHome = ({ route }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const isFocus = useIsFocused();
   const categoryId = useSelector((state) => state.storeData.categoryId);
   const categoryDataRes = useSelector((state) => state.category.categoryData);
   const contentDataRes = useSelector(
     (state) => state.getAddContentByCategory.contentData
   );
-  const likeDataRes = useSelector(
-    (state) => state.getAddContentByCategory.likeData
-  );
   const contentdata = useSelector((state) => state.getAddContentByCategory);
   const contentDataLoading = useSelector(
     (state) => state.getAddContentByCategory.isLoading
   );
+  const {
+    error: likeError,
+    statusCode: likeErrorCode,
+    likeData: likeDataRes,
+  } = useSelector((state) => state.like);
+  const {
+    error: saveError,
+    statusCode: saveErrorCode,
+    saveData: saveDataRes,
+  } = useSelector((state) => state.saveContent);
   const [categoryData, setCategoryData] = useState(null);
   const [pageSize, setPageSize] = useState(70);
   const [pageNumber, setPageNumber] = useState(1);
@@ -62,7 +66,6 @@ const MainHome = ({ route }) => {
       getContentDataByCategory(categoryId);
     }, [categoryId])
   );
-
   useEffect(() => {
     if (
       contentdata?.error != null &&
@@ -87,35 +90,65 @@ const MainHome = ({ route }) => {
   }, [contentDataRes]);
   useEffect(() => {
     if (likeDataRes != null && likeDataRes.Success) {
-      const val = [];
-      postData?.map((item, index) => {
-        if (item?.id === likeDataRes?.Data?.contentId) {
-          val.push({
-            ...item,
-            isCurrentUserLiked: likeDataRes?.Data?.isLiked,
-            totalLikes: likeDataRes?.Data?.totalLikes,
-          });
-        } else {
-          val.push(item);
-        }
-      });
-      setPostData(val);
+      updateData(likeDataRes?.Data, "like");
     }
   }, [likeDataRes]);
+  useEffect(() => {
+    if (saveDataRes != null && saveDataRes.Success) {
+      updateData(saveDataRes?.Data, "save");
+    }
+  }, [saveDataRes]);
+  useEffect(() => {
+    const handleErrorCode = (code) => {
+      if (code === 401) {
+        showModal("UnAuthorized", "Please login to continue", "warning");
+      } else if (likeError != null || saveError != null) {
+        const errorMessage =
+          likeError?.ErrorMessage ||
+          saveError?.ErrorMessage ||
+          "Some Error Occurred";
+        showModal("Error", errorMessage, "error");
+      }
+    };
 
-  // useEffect(() => {
-  //   if (contentdata?.contentData.length > 0) {
-  //     setPostData([...postData, ...contentdata?.contentData]);
-  //   } else if (contentdata?.contentData.length == 0) {
-  //     setIsReachedEnd(true);
-  //   }
-  // }, [contentdata?.isSuccess]);
+    handleErrorCode(likeErrorCode || saveErrorCode);
+  }, [likeError, likeErrorCode, saveError, saveErrorCode]);
 
+  const updateData = (data, actionType) => {
+    const updatedData = postData.map((item) => {
+      if (actionType === "like" && item.id === data.contentId) {
+        return {
+          ...item,
+          isCurrentUserLiked: data.isLiked,
+          totalLikes: data.totalLikes,
+        };
+      }
+      if (actionType === "save" && item.id === data.adContentID) {
+        return {
+          ...item,
+          isCurrentUserSaved: data.isSaved,
+        };
+      }
+      return item;
+    });
+    setPostData(updatedData);
+  };
+
+  const showModal = (title, msg, type) => {
+    setShowAlert({
+      show: true,
+      title: title,
+      msg: msg,
+      type: type,
+    });
+  };
   const getContentDataByCategory = (categoryID) => {
-    dispatch(getAdContentByCategory(categoryID, 1, pageSize));
+    dispatch(getAdContentByCategory(categoryID, pageNumber, pageSize));
   };
   const onClickModalBtn = () => {
     dispatch(setError(null));
+    dispatch(resetSaveData());
+    dispatch(resetLikeData());
     setShowAlert({ ...showAlert, show: false });
   };
   const renderItem = ({ item, index }) => {
@@ -138,6 +171,8 @@ const MainHome = ({ route }) => {
         onClick={() => {
           setSelectedCategory(item?.id);
           getContentDataByCategory(item.id);
+          setPageNumber(1);
+          setIsReachedEnd(false);
         }}
       />
     );

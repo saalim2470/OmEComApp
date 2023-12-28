@@ -16,7 +16,7 @@ class AdContentServices {
     return httpFile.post("/AdContent/PostWithFiles", data);
   }
   updateAdContent(data, id) {
-    return httpFile.put(`/AdContent/${id}`, data);
+    return httpFile.post("/AdContent/PostWithFiles", data);
   }
   getAdContentByUserId(userId, pageNumber, pageSize) {
     return http.get(

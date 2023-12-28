@@ -3,25 +3,24 @@ import {
   Pressable,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from "react-native";
 import React, { useState } from "react";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
-import { Avatar, Menu } from "react-native-paper";
-import images from "../../Constants/images";
-import { baseURL, serverImagePath } from "../../Constants/defaults";
+import { Avatar } from "react-native-paper";
+import {
+  baseURL,
+  defaultProfileImg,
+  serverImagePath,
+} from "../../Constants/defaults";
 import { useNavigation } from "@react-navigation/native";
 import screenName from "../../Constants/screenName";
 import { useDispatch } from "react-redux";
 import { getOtherUserInfoApi } from "../../store/profileSlices/GetContentByUserId";
 
-const FeedCardHeader = ({ itemData, isShowOptionBtn, menuChildren }) => {
+const FeedCardHeader = ({ itemData }) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const [visible, setVisible] = useState(false);
-  const openMenu = () => setVisible(true);
-  const closeMenu = () => setVisible(false);
   return (
     <Pressable
       onPress={() => {
@@ -31,12 +30,22 @@ const FeedCardHeader = ({ itemData, isShowOptionBtn, menuChildren }) => {
     >
       <View style={styles.cardHeaderView}>
         <View style={styles.onlyRowStyle}>
-          <Avatar.Image
-            source={{
-              uri: `${baseURL}${serverImagePath}/${itemData?.user?.profilePicturePath}`,
-            }}
-            size={scale(35)}
-          />
+          {itemData?.user?.profilePicturePath != null ||
+          itemData?.user?.profilePicturePath != "" ? (
+            <Avatar.Image
+              source={{
+                uri: `${baseURL}${serverImagePath}/${itemData?.user?.profilePicturePath}`,
+              }}
+              size={scale(35)}
+            />
+          ) : (
+            <Avatar.Image
+              source={{
+                uri: defaultProfileImg,
+              }}
+              size={scale(35)}
+            />
+          )}
           <View style={{ marginLeft: moderateScale(5) }}>
             <Text
               style={styles.headingTxt}
@@ -48,34 +57,6 @@ const FeedCardHeader = ({ itemData, isShowOptionBtn, menuChildren }) => {
         </Text> */}
           </View>
         </View>
-        {isShowOptionBtn ? (
-          <Menu
-            visible={visible}
-            onDismiss={closeMenu}
-            contentStyle={{ backgroundColor: "white" }}
-            anchor={
-              <TouchableOpacity
-                activeOpacity={0.5}
-                onPress={() => {
-                  openMenu();
-                }}
-              >
-                <Image
-                  source={images.optionIcon}
-                  style={{
-                    width: scale(20),
-                    height: scale(20),
-                    tintColor: "grey",
-                  }}
-                />
-              </TouchableOpacity>
-            }
-          >
-            {menuChildren}
-            {/* <Menu.Item onPress={() => {}} title="Edit" />
-        <Menu.Item onPress={() => {}} title="Delete" /> */}
-          </Menu>
-        ) : null}
       </View>
     </Pressable>
   );

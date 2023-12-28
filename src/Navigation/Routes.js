@@ -29,8 +29,6 @@ import {
   setAccessToken,
   setuserDetail,
 } from "../store/authSlices/LoginSlice";
-import Location from "../Screens/Location";
-import BottomNavigation from "./BottomNavigation";
 
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();

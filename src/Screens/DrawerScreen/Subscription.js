@@ -3,8 +3,7 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import commonStyle from "../../Constants/commonStyle";
 import MainHeader from "../../Components/MainHeader";
-import { Feather } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
+import { Feather ,Ionicons} from "@expo/vector-icons";
 import images from "../../Constants/images";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import screenName from "../../Constants/screenName";
@@ -115,9 +114,13 @@ const Subscription = ({ route }) => {
     dispatch(resetData());
     dispatch(resetGetSubscriptionPlanData());
     dispatch(reseAdPosttData());
+    dispatch(setPostDataDraft(null));
     showAlert.type == "success" &&
-      navigation.navigate(screenName.drawerNavigation, {
-        screen: screenName.bottomNavigation,
+    navigation.navigate(screenName.drawerNavigation, {
+      screen: screenName.bottomNavigation,
+      params: {
+        screen: screenName.mainHome,
+      },
       });
   };
   return (

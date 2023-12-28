@@ -6,7 +6,6 @@ const GetAdContentSlice = createSlice({
   initialState: {
     isLoading: false,
     contentData: null,
-    likeData: null,
     error: null,
     statusCode: null,
     isSuccess: false,
@@ -16,17 +15,6 @@ const GetAdContentSlice = createSlice({
     setAdContent: (state, action) => {
       state.isSuccess = true;
       state.contentData = action.payload;
-    },
-    addLikeContent: (state, action) => {
-      state.likeData = action.payload;
-    },
-    saveContent: (state, action) => {
-      state.contentData = state.contentData.map((item, index) => {
-        if (action.payload?.adContentID === item?.id) {
-          return { ...item, isCurrentUserSaved: action.payload.isSaved };
-        }
-        return item;
-      });
     },
     setLoading: (state, action) => {
       state.isLoading = action.payload;
@@ -48,10 +36,8 @@ const GetAdContentSlice = createSlice({
 export default GetAdContentSlice.reducer;
 export const {
   setAdContent,
-  addLikeContent,
   setLoading,
   setError,
-  saveContent,
   resetAdContentData,
   setReachedEnd,
 } = GetAdContentSlice.actions;
@@ -77,27 +63,5 @@ export const getAdContentByCategory =
     }
   };
 
-export const addLikeOnContentApi = (data) => async (dispatch) => {
-  try {
-    dispatch(setError(null));
-    dispatch(addLikeContent(null));
-    const responce = await AdContentServices.addContentLike(data);
-    dispatch(addLikeContent(responce.data));
-    console.log(responce.data);
-  } catch (error) {
-    dispatch(setError(error.response));
-    console.log("-=-=-=like error-=-=-=", error);
-  }
-};
 
-export const saveContentApi = (data) => async (dispatch) => {
-  try {
-    dispatch(setError(null));
-    const responce = await AdContentServices.addContentSave(data);
-    dispatch(saveContent(responce.data?.Data));
-    console.log(responce.data);
-  } catch (error) {
-    dispatch(setError(error.response));
-    console.log("-=-=-=save error-=-=-=", error);
-  }
-};
+

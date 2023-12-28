@@ -16,23 +16,25 @@ import CustomeAlertModal from "../CustomeAlertModal";
 import CommentView from "../CommentComponent/CommentView";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addLikeOnContentApi,
-  saveContentApi,
-} from "../../store/AdContentSlices/GetAdContentSlice";
-import {
   getCommentByContentIdApi,
   resetCommentData,
 } from "../../store/commentSlices/GetCommentByContentIdSlice";
+import {
+  addLikeOnContentApi,
+  resetLikeData,
+} from "../../store/AdContentSlices/LikeSlice";
+import { saveContentApi } from "../../store/AdContentSlices/SaveContentSlice";
 
 const FeedCardBottomView = ({ itemData }) => {
   const dispatch = useDispatch();
+  const url = `whatsapp://send?phone=${itemData?.user?.phoneNumber}&text=Hello`;
   const {
     commentData: commentDataRes,
     isLoading: commentLoading,
     error: commentError,
     errorCode: commentErrorCode,
   } = useSelector((state) => state.getCommentByContentId);
-  const url = `whatsapp://send?phone=${itemData?.user?.phoneNumber}&text=Hello`;
+
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -49,11 +51,11 @@ const FeedCardBottomView = ({ itemData }) => {
           msg: "Please login to continue",
           type: "warning",
         });
-      } else if (code != null && commentError != null) {
+      } else if (code != null || commentError != null) {
         setShowAlert({
           show: true,
           title: "Error",
-          msg: commentError.ErrorMessage || "Some Error Occurred",
+          msg: commentError?.ErrorMessage || "Some Error Occurred",
           type: "error",
         });
       }
@@ -97,9 +99,16 @@ const FeedCardBottomView = ({ itemData }) => {
   };
   const onClickComment = () => {
     setIsShowBottomSheet(true);
-    dispatch(getCommentByContentIdApi(itemData?.id, 1, 10));
+    dispatch(getCommentByContentIdApi(itemData?.id, 1, 30));
   };
-
+  const onClickModalBtn = () => {
+    dispatch(resetCommentData());
+    dispatch(resetLikeData());
+    setShowAlert({
+      ...showAlert,
+      show: false,
+    });
+  };
   return (
     <>
       <View style={[commonStyle.row]}>
@@ -131,13 +140,7 @@ const FeedCardBottomView = ({ itemData }) => {
               color="black"
             />
           </TouchableOpacity>
-          {/* <TouchableOpacity
-            onPress={() => {
-              onClickMsg();
-            }}
-          >
-            <Ionicons name="mail-outline" size={scale(24)} color="black" />
-          </TouchableOpacity> */}
+
           <TouchableOpacity
             onPress={() => {
               onClickBookmarkBtn();
@@ -152,8 +155,6 @@ const FeedCardBottomView = ({ itemData }) => {
               size={scale(24)}
               color="black"
             />
-            {/* fill icon */}
-            {/* <Ionicons name="ios-bookmark" size={scale(24)} color="black" /> */}
           </TouchableOpacity>
         </View>
         <View style={styles.row}>
@@ -200,18 +201,6 @@ const FeedCardBottomView = ({ itemData }) => {
           setIsShowBottomSheet(false);
         }}
         commentData={commentDataRes?.Data}
-        // commentData={[
-        //   {
-        //     id: 1,
-        //     userName: "saalim shaikh",
-        //     comment: "this product is very easy to use",
-        //   },
-        //   {
-        //     id: 2,
-        //     userName: "Afzal patel",
-        //     comment: "Test comment",
-        //   },
-        // ]}
       />
       <CustomeAlertModal
         isVisible={showAlert.show}
@@ -219,11 +208,7 @@ const FeedCardBottomView = ({ itemData }) => {
         msg={showAlert.msg}
         type={showAlert.type}
         onClickBtn={() => {
-          dispatch(resetCommentData());
-          setShowAlert({
-            ...showAlert,
-            show: false,
-          });
+          onClickModalBtn();
         }}
       />
     </>

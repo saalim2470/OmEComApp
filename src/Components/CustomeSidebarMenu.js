@@ -21,6 +21,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   accessToken,
   baseURL,
+  defaultProfileImg,
   serverImagePath,
   userDetail,
 } from "../Constants/defaults";
@@ -30,7 +31,7 @@ import { StackActions, useNavigation } from "@react-navigation/native";
 import screenName from "../Constants/screenName";
 import { resetUserAdContent } from "../store/profileSlices/GetUserContentSlice";
 
-const CustomSidebarMenu = (props,{ closeDrawer=()=>{} }) => {
+const CustomSidebarMenu = (props) => {
   const navigation = useNavigation();
   const userDetail = useSelector((state) => state.login?.userDetail);
   const dispatch = useDispatch();
@@ -43,9 +44,7 @@ const CustomSidebarMenu = (props,{ closeDrawer=()=>{} }) => {
       dispatch(resetUserAdContent());
       await AsyncStorage.removeItem(accessToken);
       await AsyncStorage.removeItem(userDetail);
-      // navigation.dispatch(
-      //   StackActions.replace(screenName.authRoute, { screen: screenName.login })
-      // );
+     
     } catch (error) {}
   };
   return (
@@ -53,13 +52,24 @@ const CustomSidebarMenu = (props,{ closeDrawer=()=>{} }) => {
       <DrawerContentScrollView {...props}>
         <View style={styles.topProfileView}>
           <View style={styles.sideMenuProfileIcon}>
-            <Image
-              source={{
-                uri: `${baseURL}${serverImagePath}/${userDetail?.profilePicture}`,
-              }}
-              resizeMode="contain"
-              style={{ width: "100%", height: "100%" }}
-            />
+            {userDetail?.profilePicture != null ||
+            userDetail?.profilePicture != "" ? (
+              <Image
+                source={{
+                  uri: `${baseURL}${serverImagePath}/${userDetail?.profilePicture}`,
+                }}
+                resizeMode="contain"
+                style={{ width: "100%", height: "100%" }}
+              />
+            ) : (
+              <Image
+                source={{
+                  uri: defaultProfileImg,
+                }}
+                resizeMode="contain"
+                style={{ width: "100%", height: "100%" }}
+              />
+            )}
           </View>
           <Text
             style={styles.boldTxt}
@@ -77,10 +87,7 @@ const CustomSidebarMenu = (props,{ closeDrawer=()=>{} }) => {
           </View>
           <TouchableOpacity
             activeOpacity={0.6}
-            onPress={() => {
-              navigation.closeDrawer();
-              // closeDrawer()
-            }}
+            onPress={props.closeDrawer}
             style={{ position: "absolute", right: moderateScale(10) }}
           >
             <Image
@@ -100,7 +107,12 @@ const CustomSidebarMenu = (props,{ closeDrawer=()=>{} }) => {
           <DrawerItem
             label="Categories"
             onPress={() => {
-              navigation.navigate(screenName.homeScreenIcons);
+              navigation.navigate(screenName.bottomNavigation, {
+                screen: screenName.bottomNavigationHomeRoute,
+                params: {
+                  screen: screenName.homeScreenIcons,
+                },
+              });
             }}
             labelStyle={styles.labelStyle}
             icon={({ color, size, focused }) => (
@@ -111,14 +123,15 @@ const CustomSidebarMenu = (props,{ closeDrawer=()=>{} }) => {
             )}
           />
 
-
-
-
-
           <DrawerItem
             label="My Ads"
             onPress={() => {
-              navigation.navigate(screenName.myAds);
+              navigation.navigate(screenName.bottomNavigation, {
+                screen: screenName.bottomNavigationHomeRoute,
+                params: {
+                  screen: screenName.myAds,
+                },
+              });
             }}
             labelStyle={styles.labelStyle}
             icon={({ color, size, focused }) => (

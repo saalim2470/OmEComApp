@@ -15,16 +15,16 @@ const BookmarkScreen = ({ navigation }) => {
     (state) => state.getAddContentByCategory.contentData
   );
   const [contentData,setContentData]=useState([])
-  useEffect(() => {
-    const data=contentDataRes?.filter((item,index)=>item?.isCurrentUserSaved)
-    setContentData(data)
-  }, [contentDataRes])
+  // useEffect(() => {
+  //   const data=contentDataRes?.filter((item,index)=>item?.isCurrentUserSaved)
+  //   setContentData(data)
+  // }, [contentDataRes])
   
   
   return (
     <SafeAreaView style={commonStyle.container}>
       <CustomeHeader isBackBtn={true} title={"Saved Items"} />
-      <FlatList
+      {/* <FlatList
         data={contentData}
         keyExtractor={(item) => {
           item.id.toString();
@@ -48,7 +48,7 @@ const BookmarkScreen = ({ navigation }) => {
             />
           );
         }}
-      />
+      /> */}
     </SafeAreaView>
   );
 };

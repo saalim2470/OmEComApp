@@ -23,14 +23,10 @@ import CustomeButton from "../../Components/CustomeButton";
 import { Image } from "react-native";
 import colors from "../../Constants/colors";
 import { StackActions, useNavigation } from "@react-navigation/native";
-import screenName from "../../Constants/screenName";
-import images from "../../Constants/images";
-import DropDown from "../../Components/DropDown";
 import { useDispatch, useSelector } from "react-redux";
 import { getStateData } from "../../store/contrySlices/GetStateSlice";
 import { getCityData } from "../../store/contrySlices/GetCitySlice";
 import DropDownPicker from "react-native-dropdown-picker";
-import { createAccountApi } from "../../store/authSlices/CreateAccountSlice";
 import { checkPassword, validateEmail } from "../../Constants/Constant";
 import { Entypo } from "@expo/vector-icons";
 import BottomSheetCustome from "../../Components/BottomSheet/BottomSheetCustome";
@@ -40,6 +36,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { baseURL, serverImagePath } from "../../Constants/defaults";
 import {
   editProfileApi,
+  resetEditProfileData,
   setError,
 } from "../../store/authSlices/EditProfileSlice";
 import CustomeAlertModal from "../../Components/CustomeAlertModal";
@@ -61,8 +58,6 @@ const EditProfile = () => {
     (state) => state.editProfile.updateProfileData
   );
   const editProfileError = useSelector((state) => state.editProfile.error);
-  const a = useSelector((state) => state.editProfile);
-  console.log("-=-=-update=-=-=-", a);
   const userDetail = useSelector((state) => state.login?.userDetail);
 
   const [showAlert, setShowAlert] = useState({
@@ -121,22 +116,16 @@ const EditProfile = () => {
 
   useEffect(() => {
     if (editProfileError != null && !editProfileError?.success) {
-      setShowAlert({
-        show: true,
-        title: "Error",
-        msg: editProfileError?.ErrorMessage || "Some error occured",
-        type: "error",
-      });
+      showModal(
+        "Error",
+        editProfileError?.ErrorMessage || "Some error occured",
+        "error"
+      );
     }
   }, [editProfileError]);
   useEffect(() => {
     if (editProfileDataRes?.Success) {
-      setShowAlert({
-        show: true,
-        title: "Success",
-        msg: "Profile update successfully",
-        type: "success",
-      });
+      showModal("Success", "Profile update successfully", "success");
     }
   }, [editProfileDataRes]);
 
@@ -153,6 +142,14 @@ const EditProfile = () => {
       hideKeyboard.remove();
     };
   }, []);
+  const showModal = (title, msg, type) => {
+    setShowAlert({
+      show: true,
+      title: title,
+      msg: msg,
+      type: type,
+    });
+  };
   const onClickBtn = () => {
     formData.append("firstname", firstName);
     formData.append("lastname", lastName);
@@ -170,7 +167,6 @@ const EditProfile = () => {
       name: `image_.${fileType}`,
       type: `image/${fileType}`,
     });
-    console.log("form data-=-=", formData);
     dispatch(editProfileApi(formData));
   };
   const validate = () => {
@@ -266,6 +262,7 @@ const EditProfile = () => {
   const onClickModalBtn = () => {
     setShowAlert({ ...showAlert, show: false });
     dispatch(setError(null));
+    dispatch(resetEditProfileData())
     showAlert.type == "success" && navigation.goBack();
   };
   return (

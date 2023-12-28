@@ -69,8 +69,7 @@ const PostData = ({ navigation, route }) => {
 
   useEffect(() => {
     if (
-      addPostData?.addContentData?.Success ||
-      updatePostData?.updateContentData?.Success
+      addPostData?.addContentData?.Success 
     ) {
       setShowAlert({
         show: true,
@@ -78,46 +77,21 @@ const PostData = ({ navigation, route }) => {
         msg: "Ad Content Added Successfully",
         type: "success",
       });
+      dispatch(setPostDataDraft(null));
+    }
+    if (
+      updatePostData?.updateContentData?.Success
+    ) {
+      setShowAlert({
+        show: true,
+        title: "Success",
+        msg: "Ad Content Updated Successfully",
+        type: "success",
+      });
+      dispatch(setPostDataDraft(null));
     }
   }, [addPostData?.addContentData, updatePostData?.updateContentData]);
-  // useEffect(() => {
-  //   if (
-  //     (addPostData?.errorCode != null && addPostData?.errorCode == 403) ||
-  //     (updatePostData?.errorCode != null && updatePostData?.errorCode == 403)
-  //   ) {
-  //     navigation.navigate(screenName.drawerNavigation, {
-  //       screen: screenName.subscription,
-  //       params: { formData },
-  //     });
-  //   }
-  //   if (
-  //     (addPostData?.errorCode != null && addPostData?.errorCode == 401) ||
-  //     (updatePostData?.errorCode != null && updatePostData?.errorCode == 401)
-  //   ) {
-  //     setShowAlert({
-  //       show: true,
-  //       title: "UnAuthorized",
-  //       msg: "Please login to continue",
-  //       type: "warning",
-  //     });
-  //   }
-  //   if (
-  //     (addPostData?.errorCode != null && addPostData?.error != null) ||
-  //     (updatePostData?.errorCode != null && updatePostData?.error != null)
-  //   ) {
-  //     setShowAlert({
-  //       show: true,
-  //       title: "Error",
-  //       msg: `Some Error Occured`,
-  //       type: "error",
-  //     });
-  //   }
-  // }, [
-  //   addPostData.errorCode,
-  //   addPostData?.error,
-  //   updatePostData.errorCode,
-  //   updatePostData?.error,
-  // ]);
+  
   useEffect(() => {
     const { errorCode, error } = addPostData;
     const { errorCode: updateErrorCode, error: updateError } = updatePostData;
@@ -135,10 +109,7 @@ const PostData = ({ navigation, route }) => {
           msg: "Please login to continue",
           type: "warning",
         });
-      } else if (
-        (code != null && error != null) ||
-        (code != null && updateError != null)
-      ) {
+      } else if (error != null || updateError != null) {
         setShowAlert({
           show: true,
           title: "Error",
@@ -232,10 +203,11 @@ const PostData = ({ navigation, route }) => {
       });
     });
     formData.append("description", description);
-    formData.append("categoryId", categoryId);
+    formData.append("categoryId", route?.params?.editData?.categoryId);
+    formData.append("id", route?.params?.editData?.id);
     dispatch(setPostDataDraft(formData));
     dispatch(setCategoryId(route?.params?.editData?.categoryId));
-    dispatch(updateAdContentApi(formData, route?.params?.editData?.id));
+    dispatch(updateAdContentApi(formData));
   };
   const onClickModalBtn = () => {
     setShowAlert({ ...showAlert, show: false });

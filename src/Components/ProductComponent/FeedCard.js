@@ -4,18 +4,17 @@ import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import PropTypes from "prop-types";
 import Slider from "./Slider";
 import { useEffect } from "react";
-import { baseURL, serverImagePath } from "../../Constants/defaults";
 import FeedCardHeader from "./FeedCardHeader";
 import FeedCardBottomView from "./FeedCardBottomView";
 import { imageurl } from "../../Constants/functions";
+import ProfileFeedCardHeader from "../ProfileScreenComponent/ProfileFeedCardHeader";
 
 const FeedCard = ({
   itemData,
   onClickMoreBtn = () => {},
-  isShowOptionBtn,
-  menuChildren,
   disable,
   showFullDesc,
+  profile,
 }) => {
   const [files, setFiles] = useState([]);
   const [isShowTxtBtn, setIsShowTxtBtn] = useState(false);
@@ -25,32 +24,31 @@ const FeedCard = ({
   }, [itemData]);
   return (
     <View style={{ marginBottom: verticalScale(8) }}>
-      <FeedCardHeader
-        isShowOptionBtn={isShowOptionBtn}
-        itemData={itemData}
-        menuChildren={menuChildren}
-      />
+      {profile ? (
+        <ProfileFeedCardHeader itemData={itemData} />
+      ) : (
+        <FeedCardHeader itemData={itemData} />
+      )}
       <Pressable
         onPress={() => {
           onClickMoreBtn();
         }}
         disabled={disable}
+        style={styles.topView}
       >
-        <View style={styles.topView}>
-          <Text
-            style={styles.descTxt}
-            disabled={itemData?.description?.length < txtLength}
-            onPress={() => {
-              setIsShowTxtBtn(!isShowTxtBtn);
-            }}
-          >
-            {!showFullDesc
-              ? itemData?.description?.length > txtLength
-                ? `${itemData?.description?.substring(0, txtLength)} ...more`
-                : `${itemData?.description?.substring(0, txtLength)}`
-              : itemData?.description}
-          </Text>
-        </View>
+        <Text
+          style={styles.descTxt}
+          disabled={itemData?.description?.length < txtLength}
+          onPress={() => {
+            setIsShowTxtBtn(!isShowTxtBtn);
+          }}
+        >
+          {!showFullDesc
+            ? itemData?.description?.length > txtLength
+              ? `${itemData?.description?.substring(0, txtLength)} ...more`
+              : `${itemData?.description?.substring(0, txtLength)}`
+            : itemData?.description}
+        </Text>
       </Pressable>
       <Slider data={files} />
       <View style={[styles.bottomView]}>

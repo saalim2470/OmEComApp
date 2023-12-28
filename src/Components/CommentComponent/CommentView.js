@@ -51,24 +51,26 @@ const CommentView = ({
   useEffect(() => {
     const handleErrorCode = (code) => {
       if (code === 401) {
-        setShowAlert({
-          show: true,
-          title: "UnAuthorized",
-          msg: "Please login to continue",
-          type: "warning",
-        });
+        showModal("UnAuthorized", "Please login to continue", "warning");
       } else if (code != null && postCommentError != null) {
-        setShowAlert({
-          show: true,
-          title: "Error",
-          msg: postCommentError.ErrorMessage || "Some Error Occurred",
-          type: "error",
-        });
+        showModal(
+          "Error",
+          postCommentError.ErrorMessage || "Some Error Occurred",
+          "error"
+        );
       }
     };
 
     handleErrorCode(postCommentErrorCode);
   }, [postCommentError, postCommentErrorCode]);
+  const showModal = (title, msg, type) => {
+    setShowAlert({
+      show: true,
+      title: title,
+      msg: msg,
+      type: type,
+    });
+  };
   const onClickPost = () => {
     const data = {
       title: "string",
@@ -78,7 +80,7 @@ const CommentView = ({
     };
     dispatch(postCommentApi(data)).then((res) => {
       setCommentTxt("");
-      dispatch(getCommentByContentIdApi(postDetail?.id, 1, 10));
+      dispatch(getCommentByContentIdApi(postDetail?.id, 1, 30));
     });
   };
   const renderItem = ({ item, index }) => {
@@ -100,7 +102,7 @@ const CommentView = ({
           <Loading />
         ) : !isLoading && error != null ? (
           <ServerError msg={error?.ErrorMessage} statusCode={errorCode} />
-        ) : commentData?.length <= 0 ? (
+        ) : !isLoading && commentData?.length <= 0 ? (
           <FriendlyMsg />
         ) : (
           <>

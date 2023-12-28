@@ -40,12 +40,12 @@ export const {
   setErrorCode,
 } = UpdateAdContent.actions;
 
-export const updateAdContentApi = (data, id) => async (dispatch) => {
+export const updateAdContentApi = (data) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     dispatch(setError(null));
     dispatch(setErrorCode(null));
-    const responce = await AdContentServices.updateAdContent(data, id);
+    const responce = await AdContentServices.updateAdContent(data);
     await dispatch(setUpdateContent(responce.data));
     dispatch(setLoading(false));
   } catch (error) {

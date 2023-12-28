@@ -19,6 +19,8 @@ import UpdateAdContent from "./AdContentSlices/UpdateAdContent";
 import GetCommentByContentIdSlice from "./commentSlices/GetCommentByContentIdSlice";
 import PostCommentSlice from "./commentSlices/PostCommentSlice";
 import GetContentByUserId from "./profileSlices/GetContentByUserId";
+import LikeSlice from "./AdContentSlices/LikeSlice";
+import SaveContentSlice from "./AdContentSlices/SaveContentSlice";
 
 const store = configureStore({
   reducer: {
@@ -41,6 +43,8 @@ const store = configureStore({
     getCommentByContentId: GetCommentByContentIdSlice,
     postComment: PostCommentSlice,
     getContentByUserId: GetContentByUserId,
+    like:LikeSlice,
+    saveContent:SaveContentSlice
   },
   middleware: [thunk],
 });

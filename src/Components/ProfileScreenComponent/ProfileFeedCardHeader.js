@@ -3,7 +3,11 @@ import React, { useState } from "react";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import { Avatar, Menu } from "react-native-paper";
 import images from "../../Constants/images";
-import { baseURL, serverImagePath } from "../../Constants/defaults";
+import {
+  baseURL,
+  defaultProfileImg,
+  serverImagePath,
+} from "../../Constants/defaults";
 import screenName from "../../Constants/screenName";
 import { useNavigation } from "@react-navigation/native";
 
@@ -15,12 +19,22 @@ const ProfileFeedCardHeader = ({ itemData }) => {
   return (
     <View style={styles.cardHeaderView}>
       <View style={styles.onlyRowStyle}>
-        <Avatar.Image
-          source={{
-            uri: `${baseURL}${serverImagePath}/${itemData?.user?.profilePicturePath}`,
-          }}
-          size={scale(35)}
-        />
+        {itemData?.user?.profilePicturePath != null ||
+        itemData?.user?.profilePicturePath != "" ? (
+          <Avatar.Image
+            source={{
+              uri: `${baseURL}${serverImagePath}/${itemData?.user?.profilePicturePath}`,
+            }}
+            size={scale(35)}
+          />
+        ) : (
+          <Avatar.Image
+            source={{
+              uri: defaultProfileImg,
+            }}
+            size={scale(35)}
+          />
+        )}
         <View style={{ marginLeft: moderateScale(5) }}>
           <Text
             style={styles.headingTxt}

@@ -3,9 +3,7 @@ import React, { useState } from "react";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import PropTypes from "prop-types";
 import { useEffect } from "react";
-import { baseURL, serverImagePath } from "../../Constants/defaults";
 import Slider from "../ProductComponent/Slider";
-import ProfileFeedCardBottomView from "./ProfileFeedCardBottomView";
 import ProfileFeedCardHeader from "./ProfileFeedCardHeader";
 import FeedCardBottomView from "../ProductComponent/FeedCardBottomView";
 import { imageurl } from "../../Constants/functions";
@@ -20,13 +18,11 @@ const ProfileFeedCard = ({ itemData, onClickMoreBtn = () => {}, disable }) => {
   return (
     <View style={{ marginBottom: verticalScale(8) }}>
       <ProfileFeedCardHeader itemData={itemData} />
-      <Pressable
+        <Pressable
         onPress={() => {
           onClickMoreBtn();
         }}
-        disabled={disable}
-      >
-        <View style={styles.topView}>
+        disabled={disable} style={styles.topView}>
           <Text
             style={styles.descTxt}
             disabled={itemData?.description?.length < txtLength}
@@ -38,11 +34,9 @@ const ProfileFeedCard = ({ itemData, onClickMoreBtn = () => {}, disable }) => {
               ? `${itemData?.description?.substring(0, txtLength)} ...more`
               : `${itemData?.description?.substring(0, txtLength)}`}
           </Text>
-        </View>
-      </Pressable>
+        </Pressable>
       <Slider data={files} />
       <View style={[styles.bottomView]}>
-        {/* <ProfileFeedCardBottomView itemData={itemData} /> */}
         <FeedCardBottomView itemData={itemData} />
       </View>
     </View>
