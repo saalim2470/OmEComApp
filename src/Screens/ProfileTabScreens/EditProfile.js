@@ -86,7 +86,7 @@ const EditProfile = () => {
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
   const [cameraStatus, requestCameraPermission] =
     ImagePicker.useCameraPermissions();
-
+console.log('=-=-user detail-=-=-',userDetail);
   useEffect(() => {
     dispatch(getStateData(userDetail?.stateId, 1, 10));
     dispatch(getCityData(userDetail?.cityId, 1, 10));
@@ -426,7 +426,7 @@ const EditProfile = () => {
                 { borderColor: errors.state ? "red" : "#cacaca" },
               ]}
               zIndex={2000}
-              zIndexInverse={2000}
+              // zIndexInverse={2000}
               onSelectItem={(item) => {
                 handleError(null, "state");
                 dispatch(getCityData(item.id, 1, 10));

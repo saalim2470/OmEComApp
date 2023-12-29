@@ -1,3 +1,5 @@
+import { defaultCategoryImg } from "./defaults";
+
 export const validateEmail = (email) => {
   return String(email)
     .toLowerCase()
@@ -8,4 +10,11 @@ export const validateEmail = (email) => {
 export const checkPassword = (str) => {
   var re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
   return re.test(str);
+};
+export const allCategorie = {
+  categoryName: "All Categorie",
+  svgImagesPath: defaultCategoryImg,
+  id: 0,
+  files: null,
+  filesUrls: null,
 };

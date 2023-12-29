@@ -15,6 +15,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import CustomeAlertModal from "../../Components/CustomeAlertModal";
 import {
   getAdContentByCategory,
+  getAllContentApi,
   setError,
 } from "../../store/AdContentSlices/GetAdContentSlice";
 import HomeScreenCategory from "../../Components/HomeScreenComponent/HomeScreenCategory";
@@ -24,6 +25,8 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import FriendlyMsg from "../../Components/ErrorScreens/FriendlyMsg";
 import { resetSaveData } from "../../store/AdContentSlices/SaveContentSlice";
 import { resetLikeData } from "../../store/AdContentSlices/LikeSlice";
+import { setCategoryId } from "../../store/StoreDataSlice";
+import RoundCategoryView from "../../Components/HomeScreenComponent/RoundCategoryView";
 
 const MainHome = ({ route }) => {
   const navigation = useNavigation();
@@ -47,13 +50,10 @@ const MainHome = ({ route }) => {
     statusCode: saveErrorCode,
     saveData: saveDataRes,
   } = useSelector((state) => state.saveContent);
-  const [categoryData, setCategoryData] = useState(null);
   const [pageSize, setPageSize] = useState(70);
   const [pageNumber, setPageNumber] = useState(1);
   const [postData, setPostData] = useState([]);
   const [isReachedEnd, setIsReachedEnd] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [contentData, setContentData] = useState(null);
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -62,7 +62,6 @@ const MainHome = ({ route }) => {
   });
   useFocusEffect(
     useCallback(() => {
-      setSelectedCategory(categoryId);
       getContentDataByCategory(categoryId);
     }, [categoryId])
   );
@@ -80,9 +79,6 @@ const MainHome = ({ route }) => {
       });
     }
   }, [contentdata?.error]);
-  useEffect(() => {
-    setCategoryData(categoryDataRes?.Data);
-  }, [categoryDataRes]);
   useEffect(() => {
     if (contentDataRes != null && contentDataRes.Success) {
       setPostData(contentDataRes?.Data);
@@ -143,7 +139,11 @@ const MainHome = ({ route }) => {
     });
   };
   const getContentDataByCategory = (categoryID) => {
-    dispatch(getAdContentByCategory(categoryID, pageNumber, pageSize));
+    if (categoryID === 0) {
+      dispatch(getAllContentApi(pageNumber, pageSize));
+    } else {
+      dispatch(getAdContentByCategory(categoryID, pageNumber, pageSize));
+    }
   };
   const onClickModalBtn = () => {
     dispatch(setError(null));
@@ -161,22 +161,7 @@ const MainHome = ({ route }) => {
       />
     );
   };
-  const renderCategory = ({ item, index }) => {
-    return (
-      <HomeScreenCategory
-        item={item}
-        data={categoryData}
-        index={index}
-        selectedCategory={selectedCategory}
-        onClick={() => {
-          setSelectedCategory(item?.id);
-          getContentDataByCategory(item.id);
-          setPageNumber(1);
-          setIsReachedEnd(false);
-        }}
-      />
-    );
-  };
+
   const listFooterComponent = () => {
     return (
       contentDataLoading && (
@@ -190,24 +175,19 @@ const MainHome = ({ route }) => {
   };
   const onReachedEnd = () => {
     if (!isReachedEnd) {
-      getContentDataByCategory(selectedCategory);
+      getContentDataByCategory(categoryId);
     }
   };
   return (
     <SafeAreaView style={commonStyle.container}>
-      <MainHeader />
-      <View style={styles.storyView}>
-        <FlatList
-          data={categoryData}
-          keyExtractor={(item, index) => `category${item.id}_${index}`}
-          showsHorizontalScrollIndicator={false}
-          horizontal
-          renderItem={renderCategory}
-          initialNumToRender={10}
-          maxToRenderPerBatch={10}
-          windowSize={10}
-        />
-      </View>
+      <MainHeader navigation={navigation} />
+      <RoundCategoryView
+        onClickCategory={(id) => {
+          getContentDataByCategory(id);
+          setPageNumber(1);
+          setIsReachedEnd(false);
+        }}
+      />
       <Divider style={{ marginVertical: verticalScale(8) }} />
       {contentDataLoading ? (
         <Loading />

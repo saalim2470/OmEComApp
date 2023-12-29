@@ -123,7 +123,7 @@ const MyAds = ({ navigation, route }) => {
   };
   return (
     <SafeAreaView style={commonStyle.container}>
-      <MainHeader />
+      <MainHeader navigation={navigation}/>
       {userContentLoading ? (
         <Loading />
       ) : userContentError != null && !userContentError.Success ? (

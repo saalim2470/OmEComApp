@@ -1,22 +1,14 @@
-import {
-  Dimensions,
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { TouchableOpacity } from "react-native";
 import screenName from "../../Constants/screenName";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
-import colors from "../../Constants/colors";
 import { useNavigation } from "@react-navigation/native";
 import { SvgUri } from "react-native-svg";
 import { defaultCategoryImg } from "../../Constants/defaults";
 import { useDispatch } from "react-redux";
-import { getAdContentByCategory } from "../../store/AdContentSlices/GetAdContentSlice";
 import { setCategoryId } from "../../store/StoreDataSlice";
+import { allCategorie } from "../../Constants/Constant";
 
 const screenWidth = Dimensions.get("window").width;
 const width = screenWidth / 3 - 15;
@@ -25,11 +17,25 @@ const CategoryView = ({ data }) => {
   const dispatch = useDispatch();
   return (
     <View style={styles.cardWrapperView}>
+      <TouchableOpacity
+        onPress={() => {
+          dispatch(setCategoryId(allCategorie?.id));
+          navigation.navigate(screenName.mainHome);
+        }}
+        activeOpacity={0.4}
+        style={styles.cardView}
+      >
+        <SvgUri
+          width={scale(35)}
+          height={verticalScale(40)}
+          uri={allCategorie.svgImagesPath}
+        />
+        <Text style={styles.categoryTxt}>{allCategorie.categoryName}</Text>
+      </TouchableOpacity>
       {data?.map((item, index) => {
         return (
           <TouchableOpacity
             onPress={() => {
-              // dispatch(getAdContentByCategory(item?.id, 1, 10));
               dispatch(setCategoryId(item?.id));
               navigation.navigate(screenName.mainHome);
             }}

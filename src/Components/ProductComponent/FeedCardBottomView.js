@@ -24,9 +24,12 @@ import {
   resetLikeData,
 } from "../../store/AdContentSlices/LikeSlice";
 import { saveContentApi } from "../../store/AdContentSlices/SaveContentSlice";
+import { useNavigation } from "@react-navigation/native";
+import screenName from "../../Constants/screenName";
 
 const FeedCardBottomView = ({ itemData }) => {
   const dispatch = useDispatch();
+  const navigation=useNavigation()
   const url = `whatsapp://send?phone=${itemData?.user?.phoneNumber}&text=Hello`;
   const {
     commentData: commentDataRes,
@@ -131,7 +134,7 @@ const FeedCardBottomView = ({ itemData }) => {
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-              setIsShowBottomSheet(true);
+              navigation.navigate(screenName.message)
             }}
           >
             <MaterialCommunityIcons

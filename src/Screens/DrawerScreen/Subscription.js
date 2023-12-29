@@ -22,7 +22,7 @@ import {
   reseAdPosttData,
 } from "../../store/AdContentSlices/AddAdContent";
 import CustomeAlertModal from "../../Components/CustomeAlertModal";
-import { resetData } from "../../store/addAdContentSlices/AddPostData";
+import { resetData, setPostDataDraft } from "../../store/addAdContentSlices/AddPostData";
 import { useState } from "react";
 import SubscriptionStripe from "../../Components/SubscriptionComponents/SubscriptionStripe";
 
@@ -126,21 +126,7 @@ const Subscription = ({ route }) => {
   return (
     <SafeAreaView style={commonStyle.container}>
       <MainHeader
-        leftIcon={<Feather name="menu" size={scale(30)} color="black" />}
-        middleIcon={images.omLogo}
-        rightIcon={
-          <Ionicons
-            name="notifications-outline"
-            size={scale(30)}
-            color="black"
-          />
-        }
-        onClickRightIcon={() => {
-          navigation.navigate(screenName.notification);
-        }}
-        onClickLeftIcon={() => {
-          navigation.openDrawer();
-        }}
+        navigation={navigation}
       />
       {subscriptionPlanLoading || getSubscriptionLoading ? (
         <Loading />

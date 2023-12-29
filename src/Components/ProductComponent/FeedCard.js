@@ -50,7 +50,9 @@ const FeedCard = ({
             : itemData?.description}
         </Text>
       </Pressable>
+      <Pressable onPress={()=>{onClickMoreBtn()}}>
       <Slider data={files} />
+      </Pressable>
       <View style={[styles.bottomView]}>
         <FeedCardBottomView itemData={itemData} />
       </View>

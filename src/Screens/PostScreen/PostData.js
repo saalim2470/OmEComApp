@@ -77,7 +77,7 @@ const PostData = ({ navigation, route }) => {
         msg: "Ad Content Added Successfully",
         type: "success",
       });
-      dispatch(setPostDataDraft(null));
+      // dispatch(setPostDataDraft(null));
     }
     if (
       updatePostData?.updateContentData?.Success
@@ -88,7 +88,7 @@ const PostData = ({ navigation, route }) => {
         msg: "Ad Content Updated Successfully",
         type: "success",
       });
-      dispatch(setPostDataDraft(null));
+      // dispatch(setPostDataDraft(null));
     }
   }, [addPostData?.addContentData, updatePostData?.updateContentData]);
   
@@ -218,7 +218,8 @@ const PostData = ({ navigation, route }) => {
       navigation.navigate(screenName.drawerNavigation, {
         screen: screenName.bottomNavigation,
         params: {
-          screen: screenName.mainHome,
+          screen: screenName.bottomNavigationHomeRoute,
+          screen:screenName.mainHome
         },
       });
   };
@@ -267,7 +268,7 @@ const PostData = ({ navigation, route }) => {
         }}
         onClick={(emoji) => {
           setDescription(`${description} ${emoji}`);
-          setShowEmoji(false);
+          // setShowEmoji(false);
         }}
       />
       <CustomeAlertModal

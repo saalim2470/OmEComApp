@@ -46,10 +46,10 @@ const Profile = ({navigation, route }) => {
     dispatch(getUserContentApi(1, 70));
   }, []);
   useEffect(() => {
-    if (userContentSuccess) {
-      setPostData(userContentRes);
+    if (userContentRes!=null&&userContentRes?.Success) {
+      setPostData(userContentRes?.Data);
     }
-  }, [userContentSuccess,userContentRes]);
+  }, [userContentRes]);
   useEffect(() => {
     if (likeDataRes != null && likeDataRes.Success) {
       updateData(likeDataRes?.Data, "like");
@@ -133,7 +133,7 @@ const Profile = ({navigation, route }) => {
             "Some error occured during fetching data"
           }
         />
-      ) : !userContentLoading && userContentRes.length <= 0 ? (
+      ) : !userContentLoading && postData.length <= 0 ? (
         <FriendlyMsg msg={"Post Your First Ad"} />
       ) : (
         <FlatList

@@ -4,11 +4,9 @@ import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import images from "../Constants/images";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
 import screenName from "../Constants/screenName";
 
-const MainHeader = () => {
-  const navigation = useNavigation();
+const MainHeader = ({navigation}) => {
   return (
     <View style={styles.headerStyle}>
       <TouchableOpacity

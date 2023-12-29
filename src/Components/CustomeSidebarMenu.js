@@ -85,7 +85,7 @@ const CustomSidebarMenu = (props) => {
               <Text style={styles.boldTxt}>00</Text> following
             </Text>
           </View>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             activeOpacity={0.6}
             onPress={props.closeDrawer}
             style={{ position: "absolute", right: moderateScale(10) }}
@@ -98,7 +98,7 @@ const CustomSidebarMenu = (props) => {
                 height: scale(20),
               }}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <Divider style={{ marginTop: verticalScale(15) }} />
         <View style={{ marginTop: verticalScale(20) }}>
@@ -144,7 +144,10 @@ const CustomSidebarMenu = (props) => {
           <DrawerItem
             label="Profile"
             onPress={() => {
-              navigation.navigate(screenName.profile);
+              navigation.navigate(screenName.bottomNavigation, {
+                screen: screenName.profileRoute,
+             
+              });
             }}
             labelStyle={styles.labelStyle}
             icon={({ color, size, focused }) => (

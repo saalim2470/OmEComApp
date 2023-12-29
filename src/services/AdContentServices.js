@@ -6,6 +6,11 @@ class AdContentServices {
       `/AdContent/GetAdContentsByCategory?categtoryId=${categoryId}&pageNumber=${pageNumber}&pageSize=${pageSize}`
     );
   }
+  getAllContent( pageNumber, pageSize) {
+    return http.get(
+      `/AdContent/GetAllAdContents?pageNumber=${pageNumber}&pageSize=${pageSize}`
+    );
+  }
   addContentLike(data) {
     return http.post("/UserLikeContent", data);
   }

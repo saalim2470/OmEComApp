@@ -62,6 +62,21 @@ export const getAdContentByCategory =
       dispatch(setError(error.response));
     }
   };
-
+  export const getAllContentApi =
+  ( pageNumber, pageSize) => async (dispatch) => {
+    try {
+      dispatch(resetAdContentData());
+      dispatch(setLoading(true));
+      const responce = await AdContentServices.getAllContent(
+        pageNumber,
+        pageSize
+      );
+      dispatch(setAdContent(responce.data));
+      dispatch(setLoading(false));
+    } catch (error) {
+      dispatch(setLoading(false));
+      dispatch(setError(error.response));
+    }
+  };
 
 

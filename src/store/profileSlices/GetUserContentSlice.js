@@ -5,20 +5,13 @@ const GetUserContentSlice = createSlice({
   name: "getUSerContent",
   initialState: {
     isLoading: false,
-    userContentData: [],
+    userContentData: null,
     error: null,
     isSuccess: false,
   },
   reducers: {
     setUserContent: (state, action) => {
-      if (action.payload?.pageNumber === 1) {
-        state.userContentData = action.payload?.data?.Data;
-      } else {
-        state.userContentData = [
-          ...state.userContentData,
-          ...action.payload?.data?.Data,
-        ];
-      }
+        state.userContentData = action.payload?.data
 
       state.isSuccess = action.payload?.data?.Success;
     },
@@ -32,7 +25,7 @@ const GetUserContentSlice = createSlice({
       state.error = null;
       state.isLoading = false;
       state.isSuccess = false;
-      state.userContentData = [];
+      state.userContentData = null;
     },
   },
 });

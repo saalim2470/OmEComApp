@@ -19,7 +19,6 @@ const HomeScreenCategory = ({
       onPress={() => {
         onClick();
       }}
-      //   disabled={disabled}
       style={{
         alignItems: "center",
         marginLeft: moderateScale(15),
