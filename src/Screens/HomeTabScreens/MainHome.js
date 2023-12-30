@@ -199,7 +199,7 @@ const MainHome = ({ route }) => {
         <FlatList
           data={postData}
           keyExtractor={(item, index) => {
-            `data_${item.id}_${index}`;
+           return `data_${item.id}_${index}`;
           }}
           showsVerticalScrollIndicator={false}
           onEndReachedThreshold={1}
@@ -214,6 +214,7 @@ const MainHome = ({ route }) => {
           initialNumToRender={10}
           maxToRenderPerBatch={10}
           windowSize={10}
+          removeClippedSubviews={true}
         />
       )}
       <CustomeAlertModal
