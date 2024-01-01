@@ -101,15 +101,15 @@ console.log('=-=-user detail-=-=-',userDetail);
 
   useEffect(() => {
     if (countryDataRes != null && countryDataRes?.Success) {
-      setCountryData(countryDataRes?.Data);
+      setCountryData(countryDataRes?.Data?.items);
       setCountry(userDetail?.countryId);
     }
     if (stateDataRes != null && stateDataRes?.Success) {
-      setStateData(stateDataRes?.Data);
+      setStateData(stateDataRes?.Data?.items);
       setState(userDetail?.stateId);
     }
     if (cityDataRes != null && cityDataRes?.Success) {
-      setCityData(cityDataRes?.Data);
+      setCityData(cityDataRes?.Data?.items);
       setCity(userDetail?.cityId);
     }
   }, [countryDataRes, stateDataRes, cityDataRes]);

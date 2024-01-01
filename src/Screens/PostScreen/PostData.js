@@ -68,9 +68,7 @@ const PostData = ({ navigation, route }) => {
   }, [route?.params]);
 
   useEffect(() => {
-    if (
-      addPostData?.addContentData?.Success 
-    ) {
+    if (addPostData?.addContentData?.Success) {
       setShowAlert({
         show: true,
         title: "Success",
@@ -79,9 +77,7 @@ const PostData = ({ navigation, route }) => {
       });
       // dispatch(setPostDataDraft(null));
     }
-    if (
-      updatePostData?.updateContentData?.Success
-    ) {
+    if (updatePostData?.updateContentData?.Success) {
       setShowAlert({
         show: true,
         title: "Success",
@@ -91,7 +87,7 @@ const PostData = ({ navigation, route }) => {
       // dispatch(setPostDataDraft(null));
     }
   }, [addPostData?.addContentData, updatePostData?.updateContentData]);
-  
+
   useEffect(() => {
     const { errorCode, error } = addPostData;
     const { errorCode: updateErrorCode, error: updateError } = updatePostData;
@@ -219,7 +215,9 @@ const PostData = ({ navigation, route }) => {
         screen: screenName.bottomNavigation,
         params: {
           screen: screenName.bottomNavigationHomeRoute,
-          screen:screenName.mainHome
+          params: {
+            screen: screenName.mainHome,
+          },
         },
       });
   };

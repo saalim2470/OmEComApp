@@ -14,7 +14,7 @@ import { CommonActions, StackActions } from "@react-navigation/native";
 import { emailValidate, passwordValidate } from "../../Constants/functions";
 import CustomeSnackbar from "../../Components/CustomeSnackbar";
 import { useDispatch, useSelector } from "react-redux";
-import { getLoginUser } from "../../store/authSlices/LoginSlice";
+import { getLoginUser, setError } from "../../store/authSlices/LoginSlice";
 import { useEffect } from "react";
 import { getCountryData } from "../../store/contrySlices/GetCountrySlice";
 
@@ -218,7 +218,10 @@ const Login = ({ navigation }) => {
       </View>
       <CustomeSnackbar
         data={showError}
-        onClickDismiss={() => setShowError({ isError: false, msg: null })}
+        onClickDismiss={() => {
+          setShowError({ isError: false, msg: null });
+          dispatch(setError(null))
+        }}
       />
     </SafeAreaView>
   );

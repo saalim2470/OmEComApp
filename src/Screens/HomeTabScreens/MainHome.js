@@ -27,6 +27,7 @@ import { resetSaveData } from "../../store/AdContentSlices/SaveContentSlice";
 import { resetLikeData } from "../../store/AdContentSlices/LikeSlice";
 import { setCategoryId } from "../../store/StoreDataSlice";
 import RoundCategoryView from "../../Components/HomeScreenComponent/RoundCategoryView";
+import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 
 const MainHome = ({ route }) => {
   const navigation = useNavigation();
@@ -81,7 +82,7 @@ const MainHome = ({ route }) => {
   }, [contentdata?.error]);
   useEffect(() => {
     if (contentDataRes != null && contentDataRes.Success) {
-      setPostData(contentDataRes?.Data);
+      setPostData(contentDataRes?.Data?.items);
     }
   }, [contentDataRes]);
   useEffect(() => {
@@ -192,7 +193,7 @@ const MainHome = ({ route }) => {
       {contentDataLoading ? (
         <Loading />
       ) : !contentDataLoading && contentdata?.error != null ? (
-        <ServerError />
+        <ErrorMsg />
       ) : !contentDataLoading && postData?.length <= 0 ? (
         <FriendlyMsg msg={"Content not availaibale"} />
       ) : (

@@ -24,7 +24,7 @@ const HomeScreenIcons = () => {
   }, []);
   useEffect(() => {
     if (categoryData?.Success) {
-      setCategory(categoryData?.Data);
+      setCategory(categoryData?.Data?.items);
     }
   }, [categoryData]);
   return (

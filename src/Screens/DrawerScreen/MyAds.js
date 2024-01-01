@@ -15,6 +15,7 @@ import FriendlyMsg from "../../Components/ErrorScreens/FriendlyMsg";
 import { resetLikeData } from "../../store/AdContentSlices/LikeSlice";
 import { resetSaveData } from "../../store/AdContentSlices/SaveContentSlice";
 import CustomeAlertModal from "../../Components/CustomeAlertModal";
+import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 
 const MyAds = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -47,7 +48,7 @@ const MyAds = ({ navigation, route }) => {
   }, []);
   useEffect(() => {
     if (userContentSuccess) {
-      setPostData(userContentRes);
+      setPostData(userContentRes?.Data?.items);
     }
   }, [userContentSuccess,userContentRes]);
   useEffect(() => {
@@ -127,13 +128,14 @@ const MyAds = ({ navigation, route }) => {
       {userContentLoading ? (
         <Loading />
       ) : userContentError != null && !userContentError.Success ? (
-        <ServerError
-          msg={
-            userContentError?.ErrorMessage ||
-            "Some error occured during fetching data"
-          }
-        />
-      ) : !userContentLoading && userContentRes.length <= 0 ? (
+        // <ServerError
+        //   msg={
+        //     userContentError?.ErrorMessage ||
+        //     "Some error occured during fetching data"
+        //   }
+        // />
+        <ErrorMsg/>
+      ) : !userContentLoading && userContentRes?.Data?.items.length <= 0 ? (
         <FriendlyMsg msg={"No My Ads"} />
       ) : (
         <FlatList

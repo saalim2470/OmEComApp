@@ -13,7 +13,7 @@ const RoundCategoryView = ({ onClickCategory = () => {} }) => {
   const categoryId = useSelector((state) => state.storeData.categoryId);
   const [categoryData, setCategoryData] = useState(null);
   useEffect(() => {
-    setCategoryData(categoryDataRes?.Data);
+    setCategoryData(categoryDataRes?.Data?.items);
   }, [categoryDataRes]);
   const renderCategory = ({ item, index }) => {
   
@@ -34,6 +34,7 @@ const RoundCategoryView = ({ onClickCategory = () => {} }) => {
     <View style={styles.storyView}>
        <HomeScreenCategory
         item={allCategorie}
+        single={true}
         selectedCategory={categoryId}
         onClick={() => {
           dispatch(setCategoryId(allCategorie?.id));

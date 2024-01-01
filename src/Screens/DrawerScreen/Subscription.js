@@ -119,9 +119,12 @@ const Subscription = ({ route }) => {
     navigation.navigate(screenName.drawerNavigation, {
       screen: screenName.bottomNavigation,
       params: {
-        screen: screenName.mainHome,
+        screen: screenName.bottomNavigationHomeRoute,
+        params: {
+          screen: screenName.mainHome,
+        },
       },
-      });
+    });
   };
   return (
     <SafeAreaView style={commonStyle.container}>
@@ -138,7 +141,7 @@ const Subscription = ({ route }) => {
               <Text style={styles.headingBtnTxt}>Read More...</Text>
             </TouchableOpacity>
           </View>
-          {subscriptionPlanData?.Data?.map((item, index) => {
+          {subscriptionPlanData?.Data?.items?.map((item, index) => {
             if (item?.subscriptionType == 0) {
               {
                 return (
@@ -158,7 +161,7 @@ const Subscription = ({ route }) => {
               <Text style={styles.headingBtnTxt}>Read More...</Text>
             </TouchableOpacity>
           </View>
-          {subscriptionPlanData?.Data?.map((item, index) => {
+          {subscriptionPlanData?.Data?.items?.map((item, index) => {
             if (item?.subscriptionType == 1) {
               {
                 return (
@@ -178,7 +181,7 @@ const Subscription = ({ route }) => {
               <Text style={styles.headingBtnTxt}>Read More...</Text>
             </TouchableOpacity>
           </View>
-          {subscriptionPlanData?.Data?.map((item, index) => {
+          {subscriptionPlanData?.Data?.items?.map((item, index) => {
             if (item?.subscriptionType == 2) {
               {
                 return (

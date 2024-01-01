@@ -5,7 +5,11 @@ import screenName from "../../Constants/screenName";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { useNavigation } from "@react-navigation/native";
 import { SvgUri } from "react-native-svg";
-import { defaultCategoryImg } from "../../Constants/defaults";
+import {
+  baseURL,
+  defaultCategoryImg,
+  serverImagePath,
+} from "../../Constants/defaults";
 import { useDispatch } from "react-redux";
 import { setCategoryId } from "../../store/StoreDataSlice";
 import { allCategorie } from "../../Constants/Constant";
@@ -47,7 +51,7 @@ const CategoryView = ({ data }) => {
               height={verticalScale(40)}
               uri={
                 item?.svgImagesPath != null
-                  ? item?.svgImagesPath
+                  ? `${baseURL}${serverImagePath}/${item?.svgImagesPath}`
                   : defaultCategoryImg
               }
             />

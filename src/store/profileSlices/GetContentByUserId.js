@@ -13,6 +13,7 @@ const GetContentByUserId = createSlice({
     error: null,
     isSuccess: false,
     otherUserDetail: null,
+    statusCode:null
   },
   reducers: {
     setOtherUserContent: (state, action) => {
@@ -22,7 +23,8 @@ const GetContentByUserId = createSlice({
       state.isLoading = action.payload;
     },
     setError: (state, action) => {
-      state.error = action.payload;
+      state.error = action.payload.data;
+      state.statusCode=action.payload.status
     },
     setOtherUserDetail: (state, action) => {
       state.otherUserDetail = action.payload;
@@ -47,7 +49,7 @@ export const getContentByUserIdApi =
       dispatch(setLoading(false));
     } catch (error) {
       dispatch(setLoading(false));
-      dispatch(setError(error.response.data));
+      dispatch(setError(error.response));
       console.log("-=-=-get content  error-=-=-", error.response.data);
     }
   };
@@ -59,7 +61,7 @@ export const getOtherUserInfoApi = (userId) => async (dispatch) => {
     dispatch(setOtherUserDetail(responce.data));
   } catch (error) {
     dispatch(setLoading(false));
-    dispatch(setError(error.response.data));
+    dispatch(setError(error.response));
     console.log("-=-=-get user info error-=-=-", error.response.data);
   }
 };

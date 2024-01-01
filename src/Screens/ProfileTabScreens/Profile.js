@@ -47,7 +47,7 @@ const Profile = ({navigation, route }) => {
   }, []);
   useEffect(() => {
     if (userContentRes!=null&&userContentRes?.Success) {
-      setPostData(userContentRes?.Data);
+      setPostData(userContentRes?.Data?.items);
     }
   }, [userContentRes]);
   useEffect(() => {

@@ -3,21 +3,29 @@ import React from "react";
 import images from "../../Constants/images";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
-const FriendlyMsg = ({ msg }) => {
+const ErrorMsg = ({ statusCode }) => {
   return (
     <View style={[{ alignItems: "center", justifyContent: "center", flex: 1 }]}>
-          <View style={styles.imgView}>
+      <View style={styles.imgView}>
+        {statusCode === 500 ? (
           <Image
-            source={images.noData}
+            source={images.error500}
             resizeMode="contain"
             style={{ width: "100%", height: "100%" }}
           />
+        ) : (
+          <Image
+            source={images.error}
+            resizeMode="contain"
+            style={{ width: "100%", height: "100%" }}
+          />
+        )}
       </View>
     </View>
   );
 };
 
-export default FriendlyMsg;
+export default ErrorMsg;
 
 const styles = StyleSheet.create({
   imgView: {

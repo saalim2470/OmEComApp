@@ -59,7 +59,7 @@ const PostCategory = ({ navigation, route }) => {
         <Text style={commonStyle.headingTxt}>Category</Text>
         <Text style={styles.SmallHading}>Select relavant category</Text>
         <FlatList
-          data={categoryData?.Data}
+          data={categoryData?.Data?.items}
           showsVerticalScrollIndicator={false}
           style={{ marginTop: verticalScale(10) }}
           keyExtractor={(item) => {

@@ -4,7 +4,11 @@ import React from "react";
 import { moderateScale, scale } from "react-native-size-matters";
 import { SvgUri } from "react-native-svg";
 import { TouchableOpacity } from "react-native";
-import { defaultCategoryImg } from "../../Constants/defaults";
+import {
+  baseURL,
+  defaultCategoryImg,
+  serverImagePath,
+} from "../../Constants/defaults";
 import colors from "../../Constants/colors";
 
 const HomeScreenCategory = ({
@@ -12,6 +16,7 @@ const HomeScreenCategory = ({
   item,
   index,
   selectedCategory,
+  single,
   onClick = () => {},
 }) => {
   return (
@@ -35,15 +40,23 @@ const HomeScreenCategory = ({
           },
         ]}
       >
-        <SvgUri
-          width={scale(43)}
-          height={scale(43)}
-          uri={
-            item?.svgImagesPath != null
-              ? item?.svgImagesPath
-              : defaultCategoryImg
-          }
-        />
+        {single ? (
+          <SvgUri
+            width={scale(43)}
+            height={scale(43)}
+            uri={item?.svgImagesPath}
+          />
+        ) : (
+          <SvgUri
+            width={scale(43)}
+            height={scale(43)}
+            uri={
+              item?.svgImagesPath != null
+                ? `${baseURL}${serverImagePath}/${item?.svgImagesPath}`
+                : defaultCategoryImg
+            }
+          />
+        )}
       </View>
       <Text style={styles.categoryTxt}>{item?.categoryName}</Text>
     </TouchableOpacity>

@@ -18,6 +18,7 @@ import screenName from "../../Constants/screenName";
 import CustomeAlertModal from "../../Components/CustomeAlertModal";
 import { resetLikeData } from "../../store/AdContentSlices/LikeSlice";
 import { resetSaveData } from "../../store/AdContentSlices/SaveContentSlice";
+import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 
 const OtherUserProfile = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -26,6 +27,7 @@ const OtherUserProfile = ({ navigation }) => {
     contentData: contentData,
     error: contentError,
     isLoading: contentLoading,
+    statusCode:statusCode
   } = useSelector((state) => state.getContentByUserId);
   const {
     error: likeError,
@@ -51,7 +53,7 @@ const OtherUserProfile = ({ navigation }) => {
   }, [userDetail]);
   useEffect(() => {
     if (contentData != null && contentData.Success) {
-      setPostData(contentData?.Data);
+      setPostData(contentData?.Data?.items);
     }
   }, [contentData]);
   useEffect(() => {
@@ -119,7 +121,8 @@ const OtherUserProfile = ({ navigation }) => {
   }
   if (contentError != null && !contentError.Success) {
     return (
-      <ServerError msg={contentError?.ErrorMessage || "Some error occured"} />
+      // <ServerError msg={contentError?.ErrorMessage || "Some error occured"} />
+      <ErrorMsg statusCode={statusCode}/>
     );
   }
   const renderItem = ({ item, index }) => {
@@ -140,7 +143,7 @@ const OtherUserProfile = ({ navigation }) => {
       />
       <ProfileScreenTopView isEditBtn={false} profileData={userDetail?.Data} />
       {contentData != null && contentData?.Data?.length <= 0 ? (
-        <FriendlyMsg msg={"Ad Not Found"} />
+        <FriendlyMsg />
       ) : (
         <FlatList
           data={postData}

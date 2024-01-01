@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { Image } from "react-native";
 import { RadioButton } from "react-native-paper";
@@ -6,18 +6,28 @@ import colors from "../../Constants/colors";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { useSelector } from "react-redux";
 import { SvgUri } from "react-native-svg";
-import { defaultCategoryImg } from "../../Constants/defaults";
+import {
+  baseURL,
+  defaultCategoryImg,
+  serverImagePath,
+} from "../../Constants/defaults";
 
 const CategoryCard = ({ item, onClick = () => {}, status }) => {
   return (
-    <View style={styles.categoryCard}>
+    <TouchableOpacity
+      activeOpacity={0.6}
+      onPress={() => {
+        onClick();
+      }}
+      style={styles.categoryCard}
+    >
       <View style={styles.categoryCardLeftView}>
         <SvgUri
           width={scale(40)}
           height={verticalScale(40)}
           uri={
             item?.svgImagesPath != null
-              ? item?.svgImagesPath
+              ? `${baseURL}${serverImagePath}/${item?.svgImagesPath}`
               : defaultCategoryImg
           }
         />
@@ -31,7 +41,7 @@ const CategoryCard = ({ item, onClick = () => {}, status }) => {
           onClick();
         }}
       />
-    </View>
+    </TouchableOpacity>
   );
 };
 

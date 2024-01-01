@@ -105,25 +105,30 @@ const CreateAccount = () => {
     formData.append("countryId", country);
     formData.append("username", email);
     formData.append("roleId", 0);
-    const uriParts = profileImage.uri.split(".");
-    const fileType = uriParts[uriParts.length - 1];
-    formData.append("ProfilePicture", {
-      uri: profileImage.uri,
-      name: `image_.${fileType}`,
-      type: `image/${fileType}`,
-    });
+    if (profileImage != "") {
+      const uriParts = profileImage.uri.split(".");
+      const fileType = uriParts[uriParts.length - 1];
+      formData.append("ProfilePicture", {
+        uri: profileImage.uri,
+        name: `image_.${fileType}`,
+        type: `image/${fileType}`,
+      });
+    }else{
+      formData.append("ProfilePicture",'')
+    }
+
     console.log(formData);
     dispatch(createAccountApi(formData));
   };
   useEffect(() => {
     if (countryDataRes != null && countryDataRes?.Success) {
-      setCountryData(countryDataRes?.Data);
+      setCountryData(countryDataRes?.Data?.items);
     }
     if (stateDataRes != null && stateDataRes?.Success) {
-      setStateData(stateDataRes?.Data);
+      setStateData(stateDataRes?.Data?.items);
     }
     if (cityDataRes != null && cityDataRes?.Success) {
-      setCityData(cityDataRes?.Data);
+      setCityData(cityDataRes?.Data?.items);
     }
   }, [countryDataRes, stateDataRes, cityDataRes]);
   useEffect(() => {
@@ -448,7 +453,7 @@ const CreateAccount = () => {
               { borderColor: errors.state ? "red" : "#cacaca" },
             ]}
             zIndex={2000}
-            zIndexInverse={2000}
+            // zIndexInverse={2000}
             onSelectItem={(item) => {
               handleError(null, "state");
               dispatch(getCityData(item.id, 1, 10));
