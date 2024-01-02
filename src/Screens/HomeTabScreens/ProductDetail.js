@@ -5,18 +5,26 @@ import commonStyle from "../../Constants/commonStyle";
 import CustomeHeader from "../../Components/CustomeHeader";
 import { Divider } from "react-native-paper";
 import { ScrollView } from "react-native";
-import AdView from "../../Components/SearchScreenComponents/AdView";
-import FeedCardWithDescription from "../../Components/ProductComponent/FeedCardWithDescription";
 import { useDispatch, useSelector } from "react-redux";
 import CustomeAlertModal from "../../Components/CustomeAlertModal";
 import { useEffect } from "react";
 import { setError } from "../../store/AdContentSlices/GetAdContentSlice";
 import FeedCard from "../../Components/ProductComponent/FeedCard";
+import Loading from "../../Components/Loading";
 
 const ProductDetail = ({ route }) => {
   const dispatch = useDispatch();
-  const [isShowCommentView, setIsShowCommentView] = useState(-1);
-  const contentdata = useSelector((state) => state.getAddContentByCategory);
+  const {
+    error: likeError,
+    statusCode: likeErrorCode,
+    likeData: likeDataRes,
+  } = useSelector((state) => state.like);
+  const {
+    error: saveError,
+    statusCode: saveErrorCode,
+    saveData: saveDataRes,
+  } = useSelector((state) => state.saveContent);
+  const [adContent, setAdContent] = useState(null);
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -24,24 +32,41 @@ const ProductDetail = ({ route }) => {
     type: null,
   });
   useEffect(() => {
-    if (
-      contentdata?.error != null ||
-      (undefined &&
-        !contentdata?.error?.Success &&
-        contentdata?.statusCode === 401)
-    ) {
-      setShowAlert({
-        show: true,
-        title: "Authentication Error",
-        msg: "Please Login to continue",
-        type: "error",
-      });
+    setAdContent(route?.params?.data);
+  }, [route?.params]);
+  useEffect(() => {
+    if (likeDataRes != null && likeDataRes.Success) {
+      updateData(likeDataRes?.Data, "like");
     }
-  }, [contentdata?.error]);
+  }, [likeDataRes]);
+  useEffect(() => {
+    if (saveDataRes != null && saveDataRes.Success) {
+      updateData(saveDataRes?.Data, "save");
+    }
+  }, [saveDataRes]);
+
   const onClickModalBtn = () => {
     dispatch(setError(null));
     setShowAlert({ ...showAlert, show: false });
   };
+  const updateData = (data, actionType) => {
+    if (actionType === "like" && adContent?.id === data?.contentId) {
+      setAdContent({
+        ...adContent,
+        isCurrentUserLiked: data?.isLiked,
+        totalLikes: data?.totalLikes,
+      });
+    }
+    if (actionType === "save" && adContent?.id === data?.adContentID) {
+      setAdContent({
+        ...adContent,
+        isCurrentUserSaved: data?.isSaved,
+      });
+    }
+  };
+  if (!adContent && adContent == null) {
+    return <Loading />;
+  }
   return (
     <SafeAreaView style={commonStyle.container}>
       <CustomeHeader isBackBtn={true} title={"Product Detail"} />
@@ -50,11 +75,7 @@ const ProductDetail = ({ route }) => {
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={true}
       >
-        <FeedCard
-          itemData={route?.params?.data}
-          disable={true}
-          showFullDesc={true}
-        />
+        <FeedCard itemData={adContent} disable={true} showFullDesc={true} />
         {/* unComment After 1st version */}
         {/* <AdView /> */}
       </ScrollView>

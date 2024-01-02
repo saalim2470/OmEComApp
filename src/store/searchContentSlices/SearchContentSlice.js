@@ -5,18 +5,33 @@ const SearchContentSlice = createSlice({
   name: "searchContent",
   initialState: {
     isLoading: false,
-    searchResult: [],
+    searchResult: null,
     error: null,
+    isSuccess: false,
   },
   reducers: {
     setSearchResult: (state, action) => {
-      return { ...state, searchResult: action.payload };
+      if (state.searchResult != null) {
+        state.searchResult = [
+          ...state.searchResult,
+          ...action.payload?.Data?.items,
+        ];
+      } else {
+        state.searchResult = action.payload?.Data?.items;
+      }
+      state.isSuccess = action.payload?.Success;
     },
     setLoading: (state, action) => {
       state.isLoading = action.payload;
     },
     setError: (state, action) => {
       state.error = action.payload;
+    },
+    resetSearchData: (state, action) => {
+      state.error = null;
+      state.searchResult = null;
+      state.isLoading = false;
+      state.isSuccess = false;
     },
   },
 });
@@ -27,6 +42,7 @@ export const { setSearchResult, setLoading, setError } =
 export const getSearchData =
   (keyword, pageNumber, pageSize) => async (dispatch) => {
     try {
+      dispatch(setError(null));
       dispatch(setLoading(true));
       const responce = await SearchServices.getSearchData(
         keyword,

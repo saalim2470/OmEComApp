@@ -15,9 +15,13 @@ import { resetLikeData } from "../../store/AdContentSlices/LikeSlice";
 import { resetSaveData } from "../../store/AdContentSlices/SaveContentSlice";
 import FeedCard from "../../Components/ProductComponent/FeedCard";
 import screenName from "../../Constants/screenName";
+import { resetDeleteAdContentData } from "../../store/AdContentSlices/DeleteAdContent";
+import { useIsFocused } from "@react-navigation/native";
+import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 
-const Profile = ({navigation, route }) => {
+const Profile = ({ navigation, route }) => {
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
   const {
     userContentData: userContentRes,
     error: userContentError,
@@ -35,6 +39,12 @@ const Profile = ({navigation, route }) => {
     statusCode: saveErrorCode,
     saveData: saveDataRes,
   } = useSelector((state) => state.saveContent);
+  const {
+    error: deleteError,
+    statusCode: deleteStatusCode,
+    deleteData: deleteDataRes,
+    isLoading: deleteLoading,
+  } = useSelector((state) => state.deleteAdContent);
   const [postData, setPostData] = useState([]);
   const [showAlert, setShowAlert] = useState({
     show: false,
@@ -44,9 +54,9 @@ const Profile = ({navigation, route }) => {
   });
   useEffect(() => {
     dispatch(getUserContentApi(1, 70));
-  }, []);
+  }, [isFocused, deleteDataRes?.Success]);
   useEffect(() => {
-    if (userContentRes!=null&&userContentRes?.Success) {
+    if (userContentRes != null && userContentRes?.Success) {
       setPostData(userContentRes?.Data?.items);
     }
   }, [userContentRes]);
@@ -64,17 +74,29 @@ const Profile = ({navigation, route }) => {
     const handleErrorCode = (code) => {
       if (code === 401) {
         showModal("UnAuthorized", "Please login to continue", "warning");
-      } else if (likeError != null || saveError != null) {
+      } else if (
+        likeError != null ||
+        saveError != null ||
+        deleteError != null
+      ) {
         const errorMessage =
           likeError?.ErrorMessage ||
           saveError?.ErrorMessage ||
+          deleteError?.ErrorMessage ||
           "Some Error Occurred";
         showModal("Error", errorMessage, "error");
       }
     };
 
-    handleErrorCode(likeErrorCode || saveErrorCode);
-  }, [likeError, likeErrorCode, saveError, saveErrorCode]);
+    handleErrorCode(likeErrorCode || saveErrorCode || deleteStatusCode);
+  }, [
+    likeError,
+    likeErrorCode,
+    saveError,
+    saveErrorCode,
+    deleteError,
+    deleteStatusCode,
+  ]);
   const updateData = (data, actionType) => {
     const updatedData = postData.map((item) => {
       if (actionType === "like" && item.id === data.contentId) {
@@ -105,6 +127,7 @@ const Profile = ({navigation, route }) => {
   const onClickModalBtn = () => {
     dispatch(resetLikeData());
     dispatch(resetSaveData());
+    dispatch(resetDeleteAdContentData());
     setShowAlert({
       ...showAlert,
       show: false,
@@ -124,15 +147,10 @@ const Profile = ({navigation, route }) => {
   return (
     <SafeAreaView style={commonStyle.container}>
       <ProfileScreenTopView profileData={userDetail} isEditBtn={true} />
-      {userContentLoading ? (
+      {userContentLoading || deleteLoading ? (
         <Loading />
       ) : userContentError != null && !userContentError.Success ? (
-        <ServerError
-          msg={
-            userContentError?.ErrorMessage ||
-            "Some error occured during fetching data"
-          }
-        />
+        <ErrorMsg />
       ) : !userContentLoading && postData.length <= 0 ? (
         <FriendlyMsg msg={"Post Your First Ad"} />
       ) : (

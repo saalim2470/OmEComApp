@@ -51,7 +51,7 @@ const MainHome = ({ route }) => {
     statusCode: saveErrorCode,
     saveData: saveDataRes,
   } = useSelector((state) => state.saveContent);
-  const [pageSize, setPageSize] = useState(70);
+  const [pageSize, setPageSize] = useState(2);
   const [pageNumber, setPageNumber] = useState(1);
   const [postData, setPostData] = useState([]);
   const [isReachedEnd, setIsReachedEnd] = useState(false);
@@ -200,7 +200,7 @@ const MainHome = ({ route }) => {
         <FlatList
           data={postData}
           keyExtractor={(item, index) => {
-           return `data_${item.id}_${index}`;
+            return `data_${item.id}_${index}`;
           }}
           showsVerticalScrollIndicator={false}
           onEndReachedThreshold={1}

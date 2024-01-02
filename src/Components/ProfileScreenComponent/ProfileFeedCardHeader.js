@@ -10,10 +10,15 @@ import {
 } from "../../Constants/defaults";
 import screenName from "../../Constants/screenName";
 import { useNavigation } from "@react-navigation/native";
+import CustomeAlert from "../CustomeAlert";
+import { useDispatch } from "react-redux";
+import { deleteAdContentApi } from "../../store/AdContentSlices/DeleteAdContent";
 
 const ProfileFeedCardHeader = ({ itemData }) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
+  const [alertVisible, setAlertVisible] = useState(false);
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
   return (
@@ -75,8 +80,24 @@ const ProfileFeedCardHeader = ({ itemData }) => {
           }}
           title="Edit"
         />
-        <Menu.Item onPress={() => {}} title="Delete" />
+        <Menu.Item
+          onPress={() => {
+            setAlertVisible(true);
+            closeMenu();
+          }}
+          title="Delete"
+        />
       </Menu>
+      <CustomeAlert
+        show={alertVisible}
+        title={"Delete"}
+        msg={"Are you sure you want to delete this?"}
+        onDismiss={() => setAlertVisible(false)}
+        onCliCkOk={() => {
+          setAlertVisible(false);
+          dispatch(deleteAdContentApi(itemData?.id));
+        }}
+      />
     </View>
   );
 };

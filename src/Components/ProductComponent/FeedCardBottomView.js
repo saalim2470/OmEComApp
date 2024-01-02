@@ -1,16 +1,6 @@
-import {
-  Image,
-  Linking,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import commonStyle from "../../Constants/commonStyle";
-import images from "../../Constants/images";
-import { Ionicons } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import CustomeAlertModal from "../CustomeAlertModal";
 import CommentView from "../CommentComponent/CommentView";
@@ -19,18 +9,12 @@ import {
   getCommentByContentIdApi,
   resetCommentData,
 } from "../../store/commentSlices/GetCommentByContentIdSlice";
-import {
-  addLikeOnContentApi,
-  resetLikeData,
-} from "../../store/AdContentSlices/LikeSlice";
-import { saveContentApi } from "../../store/AdContentSlices/SaveContentSlice";
-import { useNavigation } from "@react-navigation/native";
-import screenName from "../../Constants/screenName";
+import { resetLikeData } from "../../store/AdContentSlices/LikeSlice";
+import FeedCardBottomLeftView from "./FeedCardBottomLeftView";
+import FeedCardBottomRightView from "./FeedCardBottomRightView";
 
 const FeedCardBottomView = ({ itemData }) => {
   const dispatch = useDispatch();
-  const navigation=useNavigation()
-  const url = `whatsapp://send?phone=${itemData?.user?.phoneNumber}&text=Hello`;
   const {
     commentData: commentDataRes,
     isLoading: commentLoading,
@@ -54,7 +38,7 @@ const FeedCardBottomView = ({ itemData }) => {
           msg: "Please login to continue",
           type: "warning",
         });
-      } else if (code != null || commentError != null) {
+      } else if (!commentError?.Success && commentError != null) {
         setShowAlert({
           show: true,
           title: "Error",
@@ -67,39 +51,6 @@ const FeedCardBottomView = ({ itemData }) => {
     handleErrorCode(commentErrorCode);
   }, [commentError, commentErrorCode]);
 
-  const checkWhatsAppInstalled = async () => {
-    try {
-      const canOpen = await Linking.canOpenURL(url);
-      if (canOpen) {
-        Linking.openURL(url);
-      } else {
-        setShowAlert({
-          show: true,
-          title: "WhatsApp",
-          msg: "Please Install WhatsApp",
-          type: "warning",
-        });
-      }
-    } catch (error) {
-      console.log("-=-=-wa error-=-=-", error);
-    }
-  };
-  const onClickBookmarkBtn = () => {
-    dispatch(
-      saveContentApi({
-        adContentID: itemData?.id,
-        isSaved: !itemData?.isCurrentUserSaved,
-      })
-    );
-  };
-  const onClickLikeBtn = () => {
-    dispatch(
-      addLikeOnContentApi({
-        contentId: itemData?.id,
-        isLiked: !itemData?.isCurrentUserLiked,
-      })
-    );
-  };
   const onClickComment = () => {
     setIsShowBottomSheet(true);
     dispatch(getCommentByContentIdApi(itemData?.id, 1, 30));
@@ -115,72 +66,8 @@ const FeedCardBottomView = ({ itemData }) => {
   return (
     <>
       <View style={[commonStyle.row]}>
-        <View
-          style={{
-            flexDirection: "row",
-            gap: scale(15),
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              onClickLikeBtn();
-            }}
-          >
-            <Ionicons
-              name={itemData?.isCurrentUserLiked ? "heart" : "heart-outline"}
-              size={scale(24)}
-              color={itemData?.isCurrentUserLiked ? "red" : "black"}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate(screenName.message)
-            }}
-          >
-            <MaterialCommunityIcons
-              name="message-outline"
-              size={scale(24)}
-              color="black"
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => {
-              onClickBookmarkBtn();
-            }}
-          >
-            <Ionicons
-              name={
-                itemData?.isCurrentUserSaved
-                  ? "ios-bookmark"
-                  : "ios-bookmark-outline"
-              }
-              size={scale(24)}
-              color="black"
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.row}>
-          <TouchableOpacity
-            activeOpacity={0.4}
-            onPress={() => {
-              checkWhatsAppInstalled();
-            }}
-          >
-            <Image
-              source={images.whatsAppLogo}
-              style={[styles.iconStyle, { marginRight: moderateScale(15) }]}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              Linking.openURL(`tel:${itemData?.user?.phoneNumber}`);
-            }}
-            activeOpacity={0.4}
-          >
-            <Image source={images.phoneIcon} style={styles.iconStyle} />
-          </TouchableOpacity>
-        </View>
+        <FeedCardBottomLeftView itemData={itemData} />
+        <FeedCardBottomRightView itemData={itemData} />
       </View>
       <Text style={styles.likeTxt}>{`${itemData?.totalLikes} likes`}</Text>
       <TouchableOpacity
@@ -203,7 +90,7 @@ const FeedCardBottomView = ({ itemData }) => {
         onBackDropPress={() => {
           setIsShowBottomSheet(false);
         }}
-        commentData={commentDataRes?.Data}
+        commentData={commentDataRes?.Data?.items}
       />
       <CustomeAlertModal
         isVisible={showAlert.show}

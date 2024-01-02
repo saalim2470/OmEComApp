@@ -6,7 +6,7 @@ class AdContentServices {
       `/AdContent/GetAdContentsByCategory?categtoryId=${categoryId}&pageNumber=${pageNumber}&pageSize=${pageSize}`
     );
   }
-  getAllContent( pageNumber, pageSize) {
+  getAllContent(pageNumber, pageSize) {
     return http.get(
       `/AdContent/GetAllAdContents?pageNumber=${pageNumber}&pageSize=${pageSize}`
     );
@@ -22,6 +22,9 @@ class AdContentServices {
   }
   updateAdContent(data, id) {
     return httpFile.post("/AdContent/PostWithFiles", data);
+  }
+  deleteAdContent(id) {
+    return http.delete(`/AdContent/${id}`);
   }
   getAdContentByUserId(userId, pageNumber, pageSize) {
     return http.get(

@@ -1,7 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import AuthServices from "../../services/AuthServices";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { accessToken, userDetail } from "../../Constants/defaults";
 import ProfileServices from "../../services/ProfileServices";
 import AdContentServices from "../../services/AdContentServices";
 
@@ -13,7 +10,7 @@ const GetContentByUserId = createSlice({
     error: null,
     isSuccess: false,
     otherUserDetail: null,
-    statusCode:null
+    statusCode: null,
   },
   reducers: {
     setOtherUserContent: (state, action) => {
@@ -24,7 +21,7 @@ const GetContentByUserId = createSlice({
     },
     setError: (state, action) => {
       state.error = action.payload.data;
-      state.statusCode=action.payload.status
+      state.statusCode = action.payload.status;
     },
     setOtherUserDetail: (state, action) => {
       state.otherUserDetail = action.payload;
@@ -54,10 +51,12 @@ export const getContentByUserIdApi =
     }
   };
 export const getOtherUserInfoApi = (userId) => async (dispatch) => {
+  console.log("---other uaer id-=-=-=", userId);
   try {
     dispatch(setError(null));
     dispatch(setLoading(true));
     const responce = await ProfileServices.getOtherUserInfo(userId);
+    console.log("---other uaer id-=-=-=", responce.data);
     dispatch(setOtherUserDetail(responce.data));
   } catch (error) {
     dispatch(setLoading(false));

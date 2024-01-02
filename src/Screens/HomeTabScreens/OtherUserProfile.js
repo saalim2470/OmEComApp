@@ -27,8 +27,10 @@ const OtherUserProfile = ({ navigation }) => {
     contentData: contentData,
     error: contentError,
     isLoading: contentLoading,
-    statusCode:statusCode
+    statusCode: statusCode,
   } = useSelector((state) => state.getContentByUserId);
+  const a = useSelector((state) => state.getContentByUserId);
+  console.log("-=-=-=other user-=-=-=-", a);
   const {
     error: likeError,
     statusCode: likeErrorCode,
@@ -122,7 +124,7 @@ const OtherUserProfile = ({ navigation }) => {
   if (contentError != null && !contentError.Success) {
     return (
       // <ServerError msg={contentError?.ErrorMessage || "Some error occured"} />
-      <ErrorMsg statusCode={statusCode}/>
+      <ErrorMsg statusCode={statusCode} />
     );
   }
   const renderItem = ({ item, index }) => {
@@ -160,7 +162,7 @@ const OtherUserProfile = ({ navigation }) => {
           renderItem={renderItem}
         />
       )}
-       <CustomeAlertModal
+      <CustomeAlertModal
         isVisible={showAlert.show}
         title={showAlert.title}
         msg={showAlert.msg}

@@ -1,10 +1,21 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React from "react";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
 const GridView = ({ data, col = 2, addCloseBtn = () => {} }) => {
   return (
-    <View style={styles.container}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      nestedScrollEnabled={true}
+      style={styles.container}
+    >
       {data?.map((item, index) => {
         return (
           <View key={index} style={{ width: 100 / col + "%" }}>
@@ -21,7 +32,7 @@ const GridView = ({ data, col = 2, addCloseBtn = () => {} }) => {
           </View>
         );
       })}
-    </View>
+    </ScrollView>
   );
 };
 
