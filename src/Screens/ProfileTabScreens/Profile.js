@@ -1,5 +1,5 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import { FlatList, RefreshControl, StyleSheet, Text, View } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
 import commonStyle from "../../Constants/commonStyle";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import ProfileScreenTopView from "../../Components/ProfileScreenComponent/ProfileScreenTopView";
@@ -46,6 +46,9 @@ const Profile = ({ navigation, route }) => {
     isLoading: deleteLoading,
   } = useSelector((state) => state.deleteAdContent);
   const [postData, setPostData] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const [pageSize, setPageSize] = useState(70);
+  const [pageNumber, setPageNumber] = useState(1);
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -53,11 +56,12 @@ const Profile = ({ navigation, route }) => {
     type: null,
   });
   useEffect(() => {
-    dispatch(getUserContentApi(1, 70));
+    getUserContent();
   }, [isFocused, deleteDataRes?.Success]);
   useEffect(() => {
     if (userContentRes != null && userContentRes?.Success) {
       setPostData(userContentRes?.Data?.items);
+      setRefreshing(false);
     }
   }, [userContentRes]);
   useEffect(() => {
@@ -97,6 +101,15 @@ const Profile = ({ navigation, route }) => {
     deleteError,
     deleteStatusCode,
   ]);
+  useEffect(() => {
+    if (userContentError != null && !userContentError?.Success) {
+      setRefreshing(false);
+    }
+  }, [userContentError]);
+
+  const getUserContent = () => {
+    dispatch(getUserContentApi(pageNumber, pageSize));
+  };
   const updateData = (data, actionType) => {
     const updatedData = postData.map((item) => {
       if (actionType === "like" && item.id === data.contentId) {
@@ -144,10 +157,15 @@ const Profile = ({ navigation, route }) => {
       />
     );
   };
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setPageNumber(1);
+    getUserContent();
+  }, []);
   return (
     <SafeAreaView style={commonStyle.container}>
       <ProfileScreenTopView profileData={userDetail} isEditBtn={true} />
-      {userContentLoading || deleteLoading ? (
+      {(!refreshing && userContentLoading) || deleteLoading ? (
         <Loading />
       ) : userContentError != null && !userContentError.Success ? (
         <ErrorMsg />
@@ -167,6 +185,9 @@ const Profile = ({ navigation, route }) => {
           maxToRenderPerBatch={10}
           windowSize={10}
           renderItem={renderItem}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
         />
       )}
       <CustomeAlertModal

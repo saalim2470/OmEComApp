@@ -70,7 +70,7 @@ export default CustomeHeader;
 const styles = StyleSheet.create({
   headerStyle: {
     height: verticalScale(44),
-    marginTop: verticalScale(30),
+    // marginTop: verticalScale(30),
     paddingHorizontal: moderateScale(17),
     flexDirection: "row",
     justifyContent: "space-between",

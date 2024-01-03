@@ -46,6 +46,8 @@ const screenName = {
   editProfile: "EditProfile",
   myAds: "MyAds",
   otherUserProfile: "OtherUserProfile",
+  termsAndCondition: "TermsAndCondition",
+  aboutUs: "AboutUs",
 };
 
 export default screenName;

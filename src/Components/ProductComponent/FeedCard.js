@@ -8,6 +8,7 @@ import FeedCardHeader from "./FeedCardHeader";
 import FeedCardBottomView from "./FeedCardBottomView";
 import { imageurl } from "../../Constants/functions";
 import ProfileFeedCardHeader from "../ProfileScreenComponent/ProfileFeedCardHeader";
+import FeedCardTopView from "./FeedCardTopView";
 
 const FeedCard = ({
   itemData,
@@ -29,7 +30,7 @@ const FeedCard = ({
       ) : (
         <FeedCardHeader itemData={itemData} />
       )}
-      <Pressable
+      {/* <Pressable
         onPress={() => {
           onClickMoreBtn();
         }}
@@ -49,7 +50,12 @@ const FeedCard = ({
               : `${itemData?.description?.substring(0, txtLength)}`
             : itemData?.description}
         </Text>
-      </Pressable>
+      </Pressable> */}
+      <FeedCardTopView
+        itemData={itemData}
+        disable={disable}
+        showFullDesc={showFullDesc}
+      />
       <Slider data={files} onClick={onClickMoreBtn} disable={disable} />
       <View style={[styles.bottomView]}>
         <FeedCardBottomView itemData={itemData} />

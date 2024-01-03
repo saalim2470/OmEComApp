@@ -61,6 +61,6 @@ export const getOtherUserInfoApi = (userId) => async (dispatch) => {
   } catch (error) {
     dispatch(setLoading(false));
     dispatch(setError(error.response));
-    console.log("-=-=-get user info error-=-=-", error.response.data);
+    console.log("-=-=-get user info error-=-=-", error);
   }
 };

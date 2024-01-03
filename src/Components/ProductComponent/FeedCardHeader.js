@@ -1,10 +1,4 @@
-import {
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import { Avatar } from "react-native-paper";
@@ -25,7 +19,7 @@ const FeedCardHeader = ({ itemData }) => {
     <Pressable
       onPress={() => {
         navigation.navigate(screenName.otherUserProfile);
-        dispatch(getOtherUserInfoApi(itemData?.user?.id));
+        dispatch(getOtherUserInfoApi(itemData?.user?.id.toString()));
       }}
     >
       <View style={styles.cardHeaderView}>

@@ -1,9 +1,15 @@
-import { ActivityIndicator, FlatList, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  View,
+} from "react-native";
 import React, { useCallback } from "react";
 import MainHeader from "../../Components/MainHeader";
 import commonStyle from "../../Constants/commonStyle";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
-import { Divider } from "react-native-paper";
+import { Dialog, Divider } from "react-native-paper";
 import FeedCard from "../../Components/ProductComponent/FeedCard";
 import screenName from "../../Constants/screenName";
 import { useState } from "react";
@@ -16,6 +22,7 @@ import CustomeAlertModal from "../../Components/CustomeAlertModal";
 import {
   getAdContentByCategory,
   getAllContentApi,
+  resetAdContent,
   setError,
 } from "../../store/AdContentSlices/GetAdContentSlice";
 import HomeScreenCategory from "../../Components/HomeScreenComponent/HomeScreenCategory";
@@ -32,15 +39,18 @@ import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 const MainHome = ({ route }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const pageSize = 4;
   const categoryId = useSelector((state) => state.storeData.categoryId);
-  const categoryDataRes = useSelector((state) => state.category.categoryData);
-  const contentDataRes = useSelector(
-    (state) => state.getAddContentByCategory.contentData
-  );
-  const contentdata = useSelector((state) => state.getAddContentByCategory);
-  const contentDataLoading = useSelector(
-    (state) => state.getAddContentByCategory.isLoading
-  );
+  const {
+    contentData: contentDataRes,
+    isLoading: contentDataLoading,
+    isSuccess: contentDataSuccess,
+    error: contentDataError,
+    statusCode: statusCode,
+    isMoreLoading: contentMoreLoading,
+    isReachedEnd: contentReachedEnd,
+  } = useSelector((state) => state.getAddContentByCategory);
+
   const {
     error: likeError,
     statusCode: likeErrorCode,
@@ -51,10 +61,10 @@ const MainHome = ({ route }) => {
     statusCode: saveErrorCode,
     saveData: saveDataRes,
   } = useSelector((state) => state.saveContent);
-  const [pageSize, setPageSize] = useState(2);
   const [pageNumber, setPageNumber] = useState(1);
   const [postData, setPostData] = useState([]);
   const [isReachedEnd, setIsReachedEnd] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -68,10 +78,11 @@ const MainHome = ({ route }) => {
   );
   useEffect(() => {
     if (
-      contentdata?.error != null &&
-      !contentdata?.error?.Success &&
-      contentdata?.statusCode === 401
+      contentDataError != null &&
+      !contentDataError?.Success &&
+      statusCode === 401
     ) {
+      setRefreshing(false);
       setShowAlert({
         show: true,
         title: "Authentication Error",
@@ -79,12 +90,14 @@ const MainHome = ({ route }) => {
         type: "error",
       });
     }
-  }, [contentdata?.error]);
+  }, [contentDataError]);
   useEffect(() => {
-    if (contentDataRes != null && contentDataRes.Success) {
-      setPostData(contentDataRes?.Data?.items);
+    if (contentDataRes != null && contentDataSuccess) {
+      // setPostData(contentDataRes?.Data?.items);
+      setPostData(contentDataRes);
+      setRefreshing(false);
     }
-  }, [contentDataRes]);
+  }, [contentDataRes, contentDataSuccess]);
   useEffect(() => {
     if (likeDataRes != null && likeDataRes.Success) {
       updateData(likeDataRes?.Data, "like");
@@ -110,6 +123,11 @@ const MainHome = ({ route }) => {
 
     handleErrorCode(likeErrorCode || saveErrorCode);
   }, [likeError, likeErrorCode, saveError, saveErrorCode]);
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setPageNumber(1);
+    getContentDataByCategory(categoryId);
+  }, []);
 
   const updateData = (data, actionType) => {
     const updatedData = postData.map((item) => {
@@ -130,7 +148,6 @@ const MainHome = ({ route }) => {
     });
     setPostData(updatedData);
   };
-
   const showModal = (title, msg, type) => {
     setShowAlert({
       show: true,
@@ -145,6 +162,7 @@ const MainHome = ({ route }) => {
     } else {
       dispatch(getAdContentByCategory(categoryID, pageNumber, pageSize));
     }
+    setPageNumber((prev) => prev + 1);
   };
   const onClickModalBtn = () => {
     dispatch(setError(null));
@@ -162,10 +180,9 @@ const MainHome = ({ route }) => {
       />
     );
   };
-
   const listFooterComponent = () => {
     return (
-      contentDataLoading && (
+      contentMoreLoading && (
         <ActivityIndicator
           style={{ marginVertical: verticalScale(20) }}
           size={"large"}
@@ -175,7 +192,7 @@ const MainHome = ({ route }) => {
     );
   };
   const onReachedEnd = () => {
-    if (!isReachedEnd) {
+    if (!contentReachedEnd) {
       getContentDataByCategory(categoryId);
     }
   };
@@ -184,15 +201,16 @@ const MainHome = ({ route }) => {
       <MainHeader navigation={navigation} />
       <RoundCategoryView
         onClickCategory={(id) => {
-          getContentDataByCategory(id);
           setPageNumber(1);
+          dispatch(resetAdContent());
+          getContentDataByCategory(id);
           setIsReachedEnd(false);
         }}
       />
       <Divider style={{ marginVertical: verticalScale(8) }} />
-      {contentDataLoading ? (
+      {!refreshing && contentDataLoading ? (
         <Loading />
-      ) : !contentDataLoading && contentdata?.error != null ? (
+      ) : !contentDataLoading && contentDataError != null ? (
         <ErrorMsg />
       ) : !contentDataLoading && postData?.length <= 0 ? (
         <FriendlyMsg msg={"Content not availaibale"} />
@@ -205,17 +223,20 @@ const MainHome = ({ route }) => {
           showsVerticalScrollIndicator={false}
           onEndReachedThreshold={1}
           onEndReached={() => {
-            // onReachedEnd();
+            onReachedEnd();
           }}
           ItemSeparatorComponent={
             <Divider style={{ marginBottom: verticalScale(8) }} />
           }
-          // ListFooterComponent={listFooterComponent}
+          ListFooterComponent={listFooterComponent}
           renderItem={renderItem}
           initialNumToRender={10}
           maxToRenderPerBatch={10}
           windowSize={10}
           removeClippedSubviews={true}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
         />
       )}
       <CustomeAlertModal

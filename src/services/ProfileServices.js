@@ -7,6 +7,7 @@ class ProfileServices {
     );
   }
   getOtherUserInfo(userId) {
+    console.log("--=-get user info call-=-=", userId);
     return http.get(`/Account/GetUserInfoByUserId?userId=${userId}`);
   }
 }

@@ -85,20 +85,6 @@ const CustomSidebarMenu = (props) => {
               <Text style={styles.boldTxt}>00</Text> following
             </Text>
           </View>
-          {/* <TouchableOpacity
-            activeOpacity={0.6}
-            onPress={props.closeDrawer}
-            style={{ position: "absolute", right: moderateScale(10) }}
-          >
-            <Image
-              source={images.close_Icon}
-              style={{
-                tintColor: "grey",
-                width: scale(20),
-                height: scale(20),
-              }}
-            />
-          </TouchableOpacity> */}
         </View>
         <Divider style={{ marginTop: verticalScale(15) }} />
         <View style={{ marginTop: verticalScale(20) }}>
@@ -146,7 +132,6 @@ const CustomSidebarMenu = (props) => {
             onPress={() => {
               navigation.navigate(screenName.bottomNavigation, {
                 screen: screenName.profileRoute,
-             
               });
             }}
             labelStyle={styles.labelStyle}
@@ -173,41 +158,24 @@ const CustomSidebarMenu = (props) => {
           />
         )}
       />
-      {/* <Menu
-        visible={visible}
-        onDismiss={closeMenu}
-        contentStyle={{ backgroundColor: "white" }}
-        anchor={
-          <DrawerItem
-            label="Log out"
-            onPress={() => {
-              openMenu();
-            }}
-            labelStyle={styles.labelStyle}
-            icon={({ color, size, focused }) => (
-              <Image
-                source={images.logoutIcon}
-                style={{ width: scale(15), height: scale(15) }}
-              />
-            )}
-          />
-        }
+      <View
+        style={{
+          marginBottom: verticalScale(5),
+          marginLeft: moderateScale(15),
+        }}
       >
-        <Menu.Item
-          onPress={() => {
-            logout();
-          }}
-          title="Log out"
-        />
-      </Menu> */}
+        <Text style={{ fontFamily: "Montserrat-Medium", color: "#000000" }}>
+          Version 1.0.008
+        </Text>
+      </View>
       <CustomeAlert
         show={visible}
         title={"Log out"}
         msg={"Are you sure you want to logout?"}
-        onDismiss={()=>closeMenu()}
-        onCliCkOk={()=>{
+        onDismiss={() => closeMenu()}
+        onCliCkOk={() => {
           logout();
-          closeMenu()
+          closeMenu();
         }}
       />
     </SafeAreaView>

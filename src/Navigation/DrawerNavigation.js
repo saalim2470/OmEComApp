@@ -16,17 +16,19 @@ import Profile from "../Screens/ProfileTabScreens/Profile";
 import BookmarkScreen from "../Screens/HomeTabScreens/BookmarkScreen";
 import Subscription from "../Screens/DrawerScreen/Subscription";
 import { useRef } from "react";
+import TermsAndCondition from "../Screens/DrawerScreen/TermsAndCondition";
+import AboutUs from "../Screens/DrawerScreen/AboutUs";
 
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigation = () => {
-  const drawerRef = useRef(null); 
+  const drawerRef = useRef(null);
   const closeDrawer = () => {
     drawerRef.current && drawerRef.current.closeDrawer(); // Close Drawer
   };
   return (
     <Drawer.Navigator
-    ref={drawerRef} 
+      ref={drawerRef}
       screenOptions={{
         headerShown: false,
         drawerStyle: { width: scale(280), backgroundColor: "#FFFFFF" },
@@ -38,9 +40,10 @@ const DrawerNavigation = () => {
           fontFamily: "Montserrat-Medium",
         },
       }}
-      initialRouteName={screenName.bottomNavigation} 
-      drawerContent={(props) => <CustomSidebarMenu {...props} closeDrawer={closeDrawer} />}
-    
+      initialRouteName={screenName.bottomNavigation}
+      drawerContent={(props) => (
+        <CustomSidebarMenu {...props} closeDrawer={closeDrawer} />
+      )}
     >
       <Drawer.Screen
         name={screenName.bottomNavigation}
@@ -75,6 +78,34 @@ const DrawerNavigation = () => {
         component={Subscription}
         options={{
           drawerLabel: "Subscription",
+          swipeEnabled: false,
+          drawerIcon: ({ color, size, focused }) => (
+            <Image
+              source={images.bookmarkIcon}
+              style={{ width: scale(15), height: scale(15) }}
+            />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name={screenName.termsAndCondition}
+        component={TermsAndCondition}
+        options={{
+          drawerLabel: "Terms & Condition",
+          swipeEnabled: false,
+          drawerIcon: ({ color, size, focused }) => (
+            <Image
+              source={images.bookmarkIcon}
+              style={{ width: scale(15), height: scale(15) }}
+            />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name={screenName.aboutUs}
+        component={AboutUs}
+        options={{
+          drawerLabel: "About us",
           swipeEnabled: false,
           drawerIcon: ({ color, size, focused }) => (
             <Image

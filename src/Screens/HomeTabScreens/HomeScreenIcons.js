@@ -1,5 +1,5 @@
-import { ScrollView, StyleSheet } from "react-native";
-import React, { useEffect } from "react";
+import { FlatList, RefreshControl, ScrollView, StyleSheet } from "react-native";
+import React, { useCallback, useEffect } from "react";
 import commonStyle from "../../Constants/commonStyle";
 import MainHeader from "../../Components/MainHeader";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,21 +19,35 @@ const HomeScreenIcons = () => {
   const categoryData = useSelector((state) => state.category.categoryData);
   const categoryStatusCode = useSelector((state) => state.category.statusCode);
   const [category, setCategory] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
-    dispatch(getCategoryData(1, 50));
+    getCategory();
   }, []);
   useEffect(() => {
     if (categoryData?.Success) {
       setCategory(categoryData?.Data?.items);
+      setRefreshing(false);
     }
   }, [categoryData]);
+  const getCategory = () => {
+    dispatch(getCategoryData(1, 70));
+  };
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    getCategory();
+  }, []);
   return (
     <SafeAreaView style={commonStyle.container}>
       <MainHeader navigation={navigation} />
-      {categoryLoading ? (
+      {!refreshing && categoryLoading ? (
         <Loading />
       ) : (
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
           {!categoryLoading && categoryStatusCode != null ? (
             <ServerError statusCode={categoryStatusCode} />
           ) : category.length <= 0 ? (

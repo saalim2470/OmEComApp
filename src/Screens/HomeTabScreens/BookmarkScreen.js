@@ -1,4 +1,4 @@
-import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import commonStyle from "../../Constants/commonStyle";
 import Header from "../../Components/Header";
@@ -9,18 +9,18 @@ import { verticalScale } from "react-native-size-matters";
 import images from "../../Constants/images";
 import FeedCard from "../../Components/ProductComponent/FeedCard";
 import { useSelector } from "react-redux";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const BookmarkScreen = ({ navigation }) => {
   const contentDataRes = useSelector(
     (state) => state.getAddContentByCategory.contentData
   );
-  const [contentData,setContentData]=useState([])
+  const [contentData, setContentData] = useState([]);
   // useEffect(() => {
   //   const data=contentDataRes?.filter((item,index)=>item?.isCurrentUserSaved)
   //   setContentData(data)
   // }, [contentDataRes])
-  
-  
+
   return (
     <SafeAreaView style={commonStyle.container}>
       <CustomeHeader isBackBtn={true} title={"Saved Items"} />

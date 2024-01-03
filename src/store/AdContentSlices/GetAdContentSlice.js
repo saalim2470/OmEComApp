@@ -10,14 +10,30 @@ const GetAdContentSlice = createSlice({
     statusCode: null,
     isSuccess: false,
     isReachedEnd: false,
+    isMoreLoading: false,
   },
   reducers: {
     setAdContent: (state, action) => {
-      state.isSuccess = true;
-      state.contentData = action.payload;
+      state.isSuccess = action.payload?.Success;
+      if (state.contentData != null) {
+        state.contentData = [
+          ...state.contentData,
+          ...action.payload?.Data?.items,
+        ];
+      } else {
+        state.contentData = action.payload?.Data?.items;
+      }
+      if (action.payload?.Data?.items?.length === 0) {
+        state.isReachedEnd = true;
+      }
     },
     setLoading: (state, action) => {
-      state.isLoading = action.payload;
+      if (state.contentData != null) {
+        state.isMoreLoading = action.payload;
+        state.isLoading = false;
+      } else {
+        state.isLoading = action.payload;
+      }
     },
     setReachedEnd: (state, action) => {
       state.isReachedEnd = action.payload;
@@ -30,6 +46,10 @@ const GetAdContentSlice = createSlice({
       state.error = null;
       state.statusCode = null;
       state.isSuccess = false;
+      state.isReachedEnd = false;
+    },
+    resetAdContent: (state, action) => {
+      state.contentData = null;
     },
   },
 });
@@ -40,6 +60,7 @@ export const {
   setError,
   resetAdContentData,
   setReachedEnd,
+  resetAdContent,
 } = GetAdContentSlice.actions;
 
 export const getAdContentByCategory =
@@ -62,21 +83,18 @@ export const getAdContentByCategory =
       dispatch(setError(error.response));
     }
   };
-  export const getAllContentApi =
-  ( pageNumber, pageSize) => async (dispatch) => {
-    try {
-      dispatch(resetAdContentData());
-      dispatch(setLoading(true));
-      const responce = await AdContentServices.getAllContent(
-        pageNumber,
-        pageSize
-      );
-      dispatch(setAdContent(responce.data));
-      dispatch(setLoading(false));
-    } catch (error) {
-      dispatch(setLoading(false));
-      dispatch(setError(error.response));
-    }
-  };
-
-
+export const getAllContentApi = (pageNumber, pageSize) => async (dispatch) => {
+  try {
+    dispatch(resetAdContentData());
+    dispatch(setLoading(true));
+    const responce = await AdContentServices.getAllContent(
+      pageNumber,
+      pageSize
+    );
+    dispatch(setAdContent(responce.data));
+    dispatch(setLoading(false));
+  } catch (error) {
+    dispatch(setLoading(false));
+    dispatch(setError(error.response));
+  }
+};
