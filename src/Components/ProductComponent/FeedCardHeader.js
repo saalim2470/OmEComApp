@@ -19,7 +19,7 @@ const FeedCardHeader = ({ itemData }) => {
     <Pressable
       onPress={() => {
         navigation.navigate(screenName.otherUserProfile);
-        dispatch(getOtherUserInfoApi(itemData?.user?.id.toString()));
+        dispatch(getOtherUserInfoApi(itemData?.user?.id));
       }}
     >
       <View style={styles.cardHeaderView}>

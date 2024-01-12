@@ -1,4 +1,10 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  KeyboardAvoidingView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import commonStyle from "../../Constants/commonStyle";
@@ -130,7 +136,6 @@ const PostData = ({ navigation, route }) => {
       // aspect: [4, 3],
       quality: 1,
     });
-
     if (!result.canceled) {
       setImage([...image, result.assets[0].uri]);
     }

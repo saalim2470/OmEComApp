@@ -9,6 +9,7 @@ import React from "react";
 import GridView from "../GridView";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import { Entypo } from "@expo/vector-icons";
+import { KeyboardAvoidingScrollView } from "react-native-keyboard-avoiding-scroll-view";
 
 const PostScreenTextView = ({
   onChange = () => {},
@@ -18,7 +19,7 @@ const PostScreenTextView = ({
   removeImage = () => {},
 }) => {
   return (
-    <View style={styles.txtInputView}>
+    <KeyboardAvoidingScrollView style={styles.txtInputView}>
       <TextInput
         placeholder="About Something"
         multiline={true}
@@ -55,7 +56,7 @@ const PostScreenTextView = ({
           }}
         />
       </View>
-    </View>
+    </KeyboardAvoidingScrollView>
   );
 };
 

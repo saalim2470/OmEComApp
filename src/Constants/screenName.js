@@ -48,6 +48,10 @@ const screenName = {
   otherUserProfile: "OtherUserProfile",
   termsAndCondition: "TermsAndCondition",
   aboutUs: "AboutUs",
+  homeScreen: "HomeScreen",
+  referToFriend: "ReferToFriend",
+  playStoreRating: "PlayStoreRating",
+  privacyPolicy: "PrivacyPolicy",
 };
 
 export default screenName;

@@ -16,21 +16,15 @@ import {
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import images from "../Constants/images";
 import { Divider, Menu } from "react-native-paper";
-import { TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  accessToken,
-  baseURL,
-  defaultProfileImg,
-  serverImagePath,
-  userDetail,
-} from "../Constants/defaults";
+import { accessToken } from "../Constants/defaults";
 import { useDispatch, useSelector } from "react-redux";
 import { logOut } from "../store/authSlices/LoginSlice";
-import { StackActions, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import screenName from "../Constants/screenName";
 import { resetUserAdContent } from "../store/profileSlices/GetUserContentSlice";
 import CustomeAlert from "./CustomeAlert";
+import NavigationProfile from "./NavigationComponents/NavigationProfile";
 
 const CustomSidebarMenu = (props) => {
   const navigation = useNavigation();
@@ -50,42 +44,7 @@ const CustomSidebarMenu = (props) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <DrawerContentScrollView {...props}>
-        <View style={styles.topProfileView}>
-          <View style={styles.sideMenuProfileIcon}>
-            {userDetail?.profilePicture != null ||
-            userDetail?.profilePicture != "" ? (
-              <Image
-                source={{
-                  uri: `${baseURL}${serverImagePath}/${userDetail?.profilePicture}`,
-                }}
-                resizeMode="contain"
-                style={{ width: "100%", height: "100%" }}
-              />
-            ) : (
-              <Image
-                source={{
-                  uri: defaultProfileImg,
-                }}
-                resizeMode="contain"
-                style={{ width: "100%", height: "100%" }}
-              />
-            )}
-          </View>
-          <Text
-            style={styles.boldTxt}
-          >{`${userDetail?.firstName} ${userDetail?.lastName}`}</Text>
-          <Text style={[styles.txt, { marginVertical: verticalScale(5) }]}>
-            {userDetail?.email}
-          </Text>
-          <View style={styles.topViewFollowingView}>
-            <Text style={[styles.txt, { marginRight: moderateScale(20) }]}>
-              <Text style={styles.boldTxt}>00</Text> followers
-            </Text>
-            <Text style={styles.txt}>
-              <Text style={styles.boldTxt}>00</Text> following
-            </Text>
-          </View>
-        </View>
+        <NavigationProfile />
         <Divider style={{ marginTop: verticalScale(15) }} />
         <View style={{ marginTop: verticalScale(20) }}>
           <DrawerItemList {...props} />
@@ -103,7 +62,7 @@ const CustomSidebarMenu = (props) => {
             labelStyle={styles.labelStyle}
             icon={({ color, size, focused }) => (
               <Image
-                source={images.homeIcon}
+                source={images.categories}
                 style={{ width: scale(15), height: scale(15) }}
               />
             )}

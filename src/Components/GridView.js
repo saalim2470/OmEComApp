@@ -11,9 +11,9 @@ import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
 const GridView = ({ data, col = 2, addCloseBtn = () => {} }) => {
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      nestedScrollEnabled={true}
+    <View
+      // showsVerticalScrollIndicator={false}
+      // nestedScrollEnabled={true}
       style={styles.container}
     >
       {data?.map((item, index) => {
@@ -32,14 +32,18 @@ const GridView = ({ data, col = 2, addCloseBtn = () => {} }) => {
           </View>
         );
       })}
-    </ScrollView>
+    </View>
   );
 };
 
 export default GridView;
 
 const styles = StyleSheet.create({
-  container: { width: "100%", flexDirection: "row", flexWrap: "wrap" },
+  container: {
+    width: "100%",
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
   image1: {
     height: verticalScale(130),
     borderRadius: scale(5),

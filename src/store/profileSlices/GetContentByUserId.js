@@ -20,8 +20,8 @@ const GetContentByUserId = createSlice({
       state.isLoading = action.payload;
     },
     setError: (state, action) => {
-      state.error = action.payload.data;
-      state.statusCode = action.payload.status;
+      state.error = action.payload?.data;
+      state.statusCode = action.payload?.status;
     },
     setOtherUserDetail: (state, action) => {
       state.otherUserDetail = action.payload;
@@ -51,16 +51,14 @@ export const getContentByUserIdApi =
     }
   };
 export const getOtherUserInfoApi = (userId) => async (dispatch) => {
-  console.log("---other uaer id-=-=-=", userId);
   try {
+    dispatch(setOtherUserContent(null));
     dispatch(setError(null));
     dispatch(setLoading(true));
     const responce = await ProfileServices.getOtherUserInfo(userId);
-    console.log("---other uaer id-=-=-=", responce.data);
     dispatch(setOtherUserDetail(responce.data));
   } catch (error) {
     dispatch(setLoading(false));
     dispatch(setError(error.response));
-    console.log("-=-=-get user info error-=-=-", error);
   }
 };

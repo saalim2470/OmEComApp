@@ -8,10 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getContentByUserIdApi } from "../../store/profileSlices/GetContentByUserId";
 import { Divider } from "react-native-paper";
-import ProfileFeedCard from "../../Components/ProfileScreenComponent/ProfileFeedCard";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import Loading from "../../Components/Loading";
-import ServerError from "../../Components/ErrorScreens/ServerError";
 import FriendlyMsg from "../../Components/ErrorScreens/FriendlyMsg";
 import FeedCard from "../../Components/ProductComponent/FeedCard";
 import screenName from "../../Constants/screenName";
@@ -29,8 +27,6 @@ const OtherUserProfile = ({ navigation }) => {
     isLoading: contentLoading,
     statusCode: statusCode,
   } = useSelector((state) => state.getContentByUserId);
-  const a = useSelector((state) => state.getContentByUserId);
-  console.log("-=-=-=other user-=-=-=-", a);
   const {
     error: likeError,
     statusCode: likeErrorCode,
@@ -54,7 +50,7 @@ const OtherUserProfile = ({ navigation }) => {
     }
   }, [userDetail]);
   useEffect(() => {
-    if (contentData != null && contentData.Success) {
+    if (contentData != null && contentData?.Success) {
       setPostData(contentData?.Data?.items);
     }
   }, [contentData]);

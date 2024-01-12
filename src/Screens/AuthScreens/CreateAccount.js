@@ -24,8 +24,6 @@ import { Image } from "react-native";
 import colors from "../../Constants/colors";
 import { StackActions, useNavigation } from "@react-navigation/native";
 import screenName from "../../Constants/screenName";
-import images from "../../Constants/images";
-import DropDown from "../../Components/DropDown";
 import { useDispatch, useSelector } from "react-redux";
 import { getStateData } from "../../store/contrySlices/GetStateSlice";
 import { getCityData } from "../../store/contrySlices/GetCitySlice";
@@ -47,8 +45,6 @@ const CreateAccount = () => {
   const cityDataResLoading = useSelector((state) => state.getCity.isLoading);
   const authLoading = useSelector((state) => state.createAccount.isLoading);
   const authSuccess = useSelector((state) => state.createAccount.isLoggedIn);
-  const a = useSelector((state) => state.createAccount);
-  console.log("-=-=-create acc-=-=", a);
   const navigation = useNavigation();
   const formData = new FormData();
   const [firstName, setFirstName] = useState("");
@@ -113,8 +109,8 @@ const CreateAccount = () => {
         name: `image_.${fileType}`,
         type: `image/${fileType}`,
       });
-    }else{
-      formData.append("ProfilePicture",'')
+    } else {
+      formData.append("ProfilePicture", "");
     }
 
     console.log(formData);

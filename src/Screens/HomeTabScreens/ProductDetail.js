@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
-import { SafeAreaView } from "react-native";
 import commonStyle from "../../Constants/commonStyle";
 import CustomeHeader from "../../Components/CustomeHeader";
 import { Divider } from "react-native-paper";
@@ -11,6 +10,7 @@ import { useEffect } from "react";
 import { setError } from "../../store/AdContentSlices/GetAdContentSlice";
 import FeedCard from "../../Components/ProductComponent/FeedCard";
 import Loading from "../../Components/Loading";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const ProductDetail = ({ route }) => {
   const dispatch = useDispatch();

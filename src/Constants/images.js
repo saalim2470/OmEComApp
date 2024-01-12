@@ -55,7 +55,13 @@ const images = {
   error500: require("../utils/assets/images/error500.jpg"),
   error: require("../utils/assets/images/error.jpg"),
   noData: require("../utils/assets/images/noData.jpg"),
-
- };
+  categories: require("../utils/assets/images/categories.png"),
+  terms: require("../utils/assets/images/terms.png"),
+  aboutIcon: require("../utils/assets/images/aboutIcon.png"),
+  subscription: require("../utils/assets/images/subscription.png"),
+  playstore: require("../utils/assets/images/playstore.png"),
+  refer: require("../utils/assets/images/refer.png"),
+  privacy: require("../utils/assets/images/privacy.png"),
+};
 
 export default images;

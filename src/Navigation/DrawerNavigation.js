@@ -18,6 +18,10 @@ import Subscription from "../Screens/DrawerScreen/Subscription";
 import { useRef } from "react";
 import TermsAndCondition from "../Screens/DrawerScreen/TermsAndCondition";
 import AboutUs from "../Screens/DrawerScreen/AboutUs";
+import HomeScreen from "../Screens/DrawerScreen/HomeScreen";
+import ReferToFriend from "../Screens/DrawerScreen/ReferToFriend";
+import PlayStoreRating from "../Screens/DrawerScreen/PlayStoreRating";
+import PrivacyPolicy from "../Screens/DrawerScreen/PrivacyPolicy";
 
 const Drawer = createDrawerNavigator();
 
@@ -45,9 +49,27 @@ const DrawerNavigation = () => {
         <CustomSidebarMenu {...props} closeDrawer={closeDrawer} />
       )}
     >
+      {/* <Drawer.Screen
+        name={screenName.homeScreen}
+        component={HomeScreen}
+        options={{
+          drawerLabel: "Home",
+          drawerIcon: ({ color, size, focused }) => (
+            <Image
+              source={images.homeIcon}
+              style={{ width: scale(15), height: scale(15) }}
+            />
+          ),
+        }}
+      /> */}
       <Drawer.Screen
         name={screenName.bottomNavigation}
         component={BottomNavigation}
+        // options={{
+        //   drawerLabel: () => null,
+        //   title: null,
+        //   drawerIcon: () => null,
+        // }}
         options={{
           drawerLabel: "Home",
           drawerIcon: ({ color, size, focused }) => (
@@ -81,7 +103,7 @@ const DrawerNavigation = () => {
           swipeEnabled: false,
           drawerIcon: ({ color, size, focused }) => (
             <Image
-              source={images.bookmarkIcon}
+              source={images.subscription}
               style={{ width: scale(15), height: scale(15) }}
             />
           ),
@@ -95,7 +117,7 @@ const DrawerNavigation = () => {
           swipeEnabled: false,
           drawerIcon: ({ color, size, focused }) => (
             <Image
-              source={images.bookmarkIcon}
+              source={images.terms}
               style={{ width: scale(15), height: scale(15) }}
             />
           ),
@@ -109,7 +131,49 @@ const DrawerNavigation = () => {
           swipeEnabled: false,
           drawerIcon: ({ color, size, focused }) => (
             <Image
-              source={images.bookmarkIcon}
+              source={images.aboutIcon}
+              style={{ width: scale(15), height: scale(15) }}
+            />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name={screenName.referToFriend}
+        component={ReferToFriend}
+        options={{
+          drawerLabel: "Refer to friend",
+          swipeEnabled: false,
+          drawerIcon: ({ color, size, focused }) => (
+            <Image
+              source={images.refer}
+              style={{ width: scale(15), height: scale(15) }}
+            />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name={screenName.playStoreRating}
+        component={PlayStoreRating}
+        options={{
+          drawerLabel: "PlayStore Rating",
+          swipeEnabled: false,
+          drawerIcon: ({ color, size, focused }) => (
+            <Image
+              source={images.playstore}
+              style={{ width: scale(15), height: scale(15) }}
+            />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name={screenName.privacyPolicy}
+        component={PrivacyPolicy}
+        options={{
+          drawerLabel: "Privacy Policy",
+          swipeEnabled: false,
+          drawerIcon: ({ color, size, focused }) => (
+            <Image
+              source={images.privacy}
               style={{ width: scale(15), height: scale(15) }}
             />
           ),

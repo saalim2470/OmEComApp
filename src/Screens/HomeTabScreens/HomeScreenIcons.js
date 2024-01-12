@@ -1,4 +1,4 @@
-import { FlatList, RefreshControl, ScrollView, StyleSheet } from "react-native";
+import { RefreshControl, ScrollView, StyleSheet } from "react-native";
 import React, { useCallback, useEffect } from "react";
 import commonStyle from "../../Constants/commonStyle";
 import MainHeader from "../../Components/MainHeader";
@@ -8,7 +8,7 @@ import Loading from "../../Components/Loading";
 import CategoryView from "../../Components/HomeScreenComponent/CategoryView";
 import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import ServerError from "../../Components/ErrorScreens/ServerError";
 import FriendlyMsg from "../../Components/ErrorScreens/FriendlyMsg";
 
@@ -18,6 +18,7 @@ const HomeScreenIcons = () => {
   const categoryLoading = useSelector((state) => state.category.isLoading);
   const categoryData = useSelector((state) => state.category.categoryData);
   const categoryStatusCode = useSelector((state) => state.category.statusCode);
+  const categoryError = useSelector((state) => state.category.error);
   const [category, setCategory] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
@@ -29,6 +30,12 @@ const HomeScreenIcons = () => {
       setRefreshing(false);
     }
   }, [categoryData]);
+  useEffect(() => {
+    if (categoryError !== null && categoryStatusCode !== null) {
+      setRefreshing(false);
+    }
+  }, [categoryError, categoryStatusCode]);
+
   const getCategory = () => {
     dispatch(getCategoryData(1, 70));
   };

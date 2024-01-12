@@ -1,6 +1,7 @@
 import {
   FlatList,
   Image,
+  Keyboard,
   StyleSheet,
   Text,
   TextInput,
@@ -72,6 +73,7 @@ const CommentView = ({
     });
   };
   const onClickPost = () => {
+    Keyboard.dismiss();
     const data = {
       title: "string",
       description: commentTxt.trim(),
@@ -103,7 +105,11 @@ const CommentView = ({
         ) : !isLoading && error != null ? (
           <ServerError msg={error?.ErrorMessage} statusCode={errorCode} />
         ) : !isLoading && commentData?.length <= 0 ? (
-          <FriendlyMsg />
+          <View
+            style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
+          >
+            <Text>No Comment Yet</Text>
+          </View>
         ) : (
           <>
             <FlatList

@@ -15,25 +15,27 @@ const GetAdContentSlice = createSlice({
   reducers: {
     setAdContent: (state, action) => {
       state.isSuccess = action.payload?.Success;
-      if (state.contentData != null) {
-        state.contentData = [
-          ...state.contentData,
-          ...action.payload?.Data?.items,
-        ];
-      } else {
-        state.contentData = action.payload?.Data?.items;
-      }
+      // if (state.contentData != null) {
+      //   state.contentData = [
+      //     ...state.contentData,
+      //     ...action.payload?.Data?.items,
+      //   ];
+      // } else {
+      //   state.contentData = action.payload?.Data?.items;
+      // }
       if (action.payload?.Data?.items?.length === 0) {
         state.isReachedEnd = true;
       }
+      state.contentData = action.payload?.Data?.items;
     },
     setLoading: (state, action) => {
-      if (state.contentData != null) {
-        state.isMoreLoading = action.payload;
-        state.isLoading = false;
-      } else {
-        state.isLoading = action.payload;
-      }
+      // if (state.contentData != null) {
+      //   state.isMoreLoading = action.payload;
+      //   state.isLoading = false;
+      // } else {
+      //   state.isLoading = action.payload;
+      // }
+      state.isLoading = action.payload;
     },
     setReachedEnd: (state, action) => {
       state.isReachedEnd = action.payload;

@@ -18,8 +18,6 @@ const FeedCard = ({
   profile,
 }) => {
   const [files, setFiles] = useState([]);
-  const [isShowTxtBtn, setIsShowTxtBtn] = useState(false);
-  const txtLength = 100;
   useEffect(() => {
     setFiles(imageurl(itemData?.imagesData));
   }, [itemData]);
@@ -30,27 +28,6 @@ const FeedCard = ({
       ) : (
         <FeedCardHeader itemData={itemData} />
       )}
-      {/* <Pressable
-        onPress={() => {
-          onClickMoreBtn();
-        }}
-        disabled={disable}
-        style={styles.topView}
-      >
-        <Text
-          style={styles.descTxt}
-          disabled={itemData?.description?.length < txtLength}
-          onPress={() => {
-            setIsShowTxtBtn(!isShowTxtBtn);
-          }}
-        >
-          {!showFullDesc
-            ? itemData?.description?.length > txtLength
-              ? `${itemData?.description?.substring(0, txtLength)} ...more`
-              : `${itemData?.description?.substring(0, txtLength)}`
-            : itemData?.description}
-        </Text>
-      </Pressable> */}
       <FeedCardTopView
         itemData={itemData}
         disable={disable}
