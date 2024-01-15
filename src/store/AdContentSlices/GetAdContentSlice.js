@@ -5,37 +5,43 @@ const GetAdContentSlice = createSlice({
   name: "getAddContentByCategory",
   initialState: {
     isLoading: false,
-    contentData: null,
+    contentData: [],
     error: null,
     statusCode: null,
     isSuccess: false,
     isReachedEnd: false,
     isMoreLoading: false,
+    page: 1,
+    pageSize: 10,
+    totalCount: null,
   },
   reducers: {
     setAdContent: (state, action) => {
+      console.log("=-=-=-ad content 3-=-=");
       state.isSuccess = action.payload?.Success;
-      // if (state.contentData != null) {
-      //   state.contentData = [
-      //     ...state.contentData,
-      //     ...action.payload?.Data?.items,
-      //   ];
-      // } else {
-      //   state.contentData = action.payload?.Data?.items;
-      // }
-      if (action.payload?.Data?.items?.length === 0) {
+      state.totalCount = action.payload?.Data?.totalCount;
+      if (state.page !== 1) {
+        state.contentData = [
+          ...state.contentData,
+          ...action.payload?.Data?.items,
+        ];
+      } else {
+        state.contentData = action.payload?.Data?.items;
+      }
+
+      if (state.totalCount === state.contentData.length) {
+        console.log("-=-=reached end-=-=2");
         state.isReachedEnd = true;
       }
-      state.contentData = action.payload?.Data?.items;
     },
+
     setLoading: (state, action) => {
-      // if (state.contentData != null) {
-      //   state.isMoreLoading = action.payload;
-      //   state.isLoading = false;
-      // } else {
-      //   state.isLoading = action.payload;
-      // }
-      state.isLoading = action.payload;
+      if (state.page !== 1) {
+        state.isMoreLoading = action.payload;
+        state.isLoading = false;
+      } else {
+        state.isLoading = action.payload;
+      }
     },
     setReachedEnd: (state, action) => {
       state.isReachedEnd = action.payload;
@@ -48,11 +54,19 @@ const GetAdContentSlice = createSlice({
       state.error = null;
       state.statusCode = null;
       state.isSuccess = false;
-      state.isReachedEnd = false;
     },
     resetAdContent: (state, action) => {
-      state.contentData = null;
+      state.contentData = [];
+      state.isReachedEnd = false;
+      state.page = 1;
+      state.totalCount = null;
     },
+    resetPage:(state,action)=>{
+      state.page=1
+    },
+    setGetAdContentPage:(state,action)=>{
+      state.page=action.payload
+    }
   },
 });
 export default GetAdContentSlice.reducer;
@@ -63,11 +77,12 @@ export const {
   resetAdContentData,
   setReachedEnd,
   resetAdContent,
+  resetPage,
+  setGetAdContentPage
 } = GetAdContentSlice.actions;
 
 export const getAdContentByCategory =
   (categoryId, pageNumber, pageSize) => async (dispatch) => {
-    console.log("-=-=data in api-==--=", categoryId, pageNumber);
     try {
       dispatch(resetAdContentData());
       dispatch(setLoading(true));
@@ -76,8 +91,6 @@ export const getAdContentByCategory =
         pageNumber,
         pageSize
       );
-      // console.log("-=-=-res outer-=-=", responce.data);
-      // dispatch(setReachedEnd(false));
       dispatch(setAdContent(responce.data));
       dispatch(setLoading(false));
     } catch (error) {
@@ -93,10 +106,12 @@ export const getAllContentApi = (pageNumber, pageSize) => async (dispatch) => {
       pageNumber,
       pageSize
     );
+    console.log("---==get data 1");
     dispatch(setAdContent(responce.data));
     dispatch(setLoading(false));
   } catch (error) {
     dispatch(setLoading(false));
     dispatch(setError(error.response));
+    console.log("-=-=error in content =-=-=", error);
   }
 };

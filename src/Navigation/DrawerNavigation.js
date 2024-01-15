@@ -65,11 +65,6 @@ const DrawerNavigation = () => {
       <Drawer.Screen
         name={screenName.bottomNavigation}
         component={BottomNavigation}
-        // options={{
-        //   drawerLabel: () => null,
-        //   title: null,
-        //   drawerIcon: () => null,
-        // }}
         options={{
           drawerLabel: "Home",
           drawerIcon: ({ color, size, focused }) => (

@@ -23,7 +23,9 @@ import {
   getAllContentApi,
   resetAdContent,
   resetAdContentData,
+  resetPage,
   setError,
+  setGetAdContentPage,
 } from "../../store/AdContentSlices/GetAdContentSlice";
 import colors from "../../Constants/colors";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
@@ -36,7 +38,6 @@ import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 const MainHome = ({ route }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const pageSize = 100;
   const categoryId = useSelector((state) => state.storeData.categoryId);
   const {
     contentData: contentDataRes,
@@ -46,7 +47,11 @@ const MainHome = ({ route }) => {
     statusCode: statusCode,
     isMoreLoading: contentMoreLoading,
     isReachedEnd: contentReachedEnd,
+    page: contentDataPage,
+    pageSize: contentDataPageSize,
   } = useSelector((state) => state.getAddContentByCategory);
+  const a = useSelector((state) => state.getAddContentByCategory);
+  console.log("-=-=-=content data-=---", a);
 
   const {
     error: likeError,
@@ -58,9 +63,7 @@ const MainHome = ({ route }) => {
     statusCode: saveErrorCode,
     saveData: saveDataRes,
   } = useSelector((state) => state.saveContent);
-  const [pageNumber, setPageNumber] = useState(1);
   const [postData, setPostData] = useState([]);
-  const [isReachedEnd, setIsReachedEnd] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [showAlert, setShowAlert] = useState({
     show: false,
@@ -70,9 +73,9 @@ const MainHome = ({ route }) => {
   });
   useFocusEffect(
     useCallback(() => {
-      setPageNumber(1);
+      dispatch(setGetAdContentPage(1))
       getContentDataByCategory(categoryId);
-    }, [categoryId])
+    }, [])
   );
   useEffect(() => {
     if (
@@ -91,10 +94,8 @@ const MainHome = ({ route }) => {
   }, [contentDataError]);
   useEffect(() => {
     if (contentDataRes != null && contentDataSuccess) {
-      // setPostData(contentDataRes?.Data?.items);
       setPostData(contentDataRes);
       setRefreshing(false);
-      // setPageNumber((prev) => prev + 1);
     }
   }, [contentDataRes, contentDataSuccess]);
   useEffect(() => {
@@ -124,7 +125,7 @@ const MainHome = ({ route }) => {
   }, [likeError, likeErrorCode, saveError, saveErrorCode]);
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    setPageNumber(1);
+    dispatch(setGetAdContentPage(1))
     getContentDataByCategory(categoryId);
   }, []);
 
@@ -156,13 +157,14 @@ const MainHome = ({ route }) => {
     });
   };
   const getContentDataByCategory = (categoryID) => {
-    console.log("-=-=page numbet in fun-=-=", categoryId, pageNumber);
     if (categoryID === 0) {
-      dispatch(getAllContentApi(pageNumber, pageSize));
+      dispatch(getAllContentApi(contentDataPage, contentDataPageSize));
     } else {
-      dispatch(getAdContentByCategory(categoryID, pageNumber, pageSize));
+      console.log('-=-=-data caaling 4-=',contentDataPage,contentDataPageSize);
+      dispatch(
+        getAdContentByCategory(categoryID, contentDataPage, contentDataPageSize)
+      );
     }
-    // setPageNumber((prev) => prev + 1);
   };
   const onClickModalBtn = () => {
     dispatch(setError(null));
@@ -184,7 +186,7 @@ const MainHome = ({ route }) => {
     return (
       contentMoreLoading && (
         <ActivityIndicator
-          style={{ marginVertical: verticalScale(20) }}
+          style={{ paddingVertical: verticalScale(20)}}
           size={"large"}
           color={colors.themeColor}
         />
@@ -193,15 +195,15 @@ const MainHome = ({ route }) => {
   };
   const onReachedEnd = () => {
     if (!contentReachedEnd) {
+      dispatch(setGetAdContentPage(contentDataPage+1))
       getContentDataByCategory(categoryId);
     }
   };
   const onClickCategory = (id) => {
-    dispatch(resetAdContent());
-    dispatch(resetAdContentData());
-    setPageNumber(1);
+    // dispatch(resetAdContent());
+    // dispatch(resetAdContentData());
+    dispatch(setGetAdContentPage(1))
     getContentDataByCategory(id);
-    setIsReachedEnd(false);
   };
   return (
     <SafeAreaView style={commonStyle.container}>
@@ -227,12 +229,12 @@ const MainHome = ({ route }) => {
           showsVerticalScrollIndicator={false}
           onEndReachedThreshold={1}
           onEndReached={() => {
-            // onReachedEnd();
+            onReachedEnd();
           }}
           ItemSeparatorComponent={
             <Divider style={{ marginBottom: verticalScale(8) }} />
           }
-          // ListFooterComponent={listFooterComponent}
+          ListFooterComponent={listFooterComponent}
           renderItem={renderItem}
           initialNumToRender={10}
           maxToRenderPerBatch={10}

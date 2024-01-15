@@ -5,18 +5,39 @@ const GetUserContentSlice = createSlice({
   name: "getUSerContent",
   initialState: {
     isLoading: false,
-    userContentData: null,
+    userContentData: [],
     error: null,
     isSuccess: false,
+    page: 1,
+    pageSize: 10,
+    totalCount: null,
+    isReachedEnd: false,
+    isMoreLoading: false,
   },
   reducers: {
     setUserContent: (state, action) => {
-        state.userContentData = action.payload?.data
+      state.isSuccess = action.payload?.Success;
+      state.totalCount = action.payload?.Data?.totalCount;
+      if (state.page !== 1) {
+        state.userContentData = [
+          ...state.userContentData,
+          ...action.payload?.Data?.items,
+        ];
+      } else {
+        state.userContentData = action.payload?.Data?.items;
+      }
 
-      state.isSuccess = action.payload?.data?.Success;
+      if (state.totalCount === state.userContentData.length) {
+        state.isReachedEnd = true;
+      }
     },
     setLoading: (state, action) => {
-      state.isLoading = action.payload;
+      if (state.page !== 1) {
+        state.isMoreLoading = action.payload;
+        state.isLoading = false;
+      } else {
+        state.isLoading = action.payload;
+      }
     },
     setError: (state, action) => {
       state.error = action.payload;
@@ -25,23 +46,30 @@ const GetUserContentSlice = createSlice({
       state.error = null;
       state.isLoading = false;
       state.isSuccess = false;
-      state.userContentData = null;
+    },
+    setUserContentPage: (state, action) => {
+      state.page = action.payload;
     },
   },
 });
 export default GetUserContentSlice.reducer;
-export const { setUserContent, setLoading, setError, resetUserAdContent } =
-  GetUserContentSlice.actions;
+export const {
+  setUserContent,
+  setLoading,
+  setError,
+  resetUserAdContent,
+  setUserContentPage,
+} = GetUserContentSlice.actions;
 
 export const getUserContentApi = (pageNumber, pageSize) => async (dispatch) => {
   try {
-    dispatch(setError(null));
+    dispatch(resetUserAdContent());
     dispatch(setLoading(true));
     const responce = await ProfileServices.getUserAdContent(
       pageNumber,
       pageSize
     );
-    dispatch(setUserContent({ data: responce?.data, pageNumber: pageNumber }));
+    dispatch(setUserContent(responce?.data));
     dispatch(setLoading(false));
   } catch (error) {
     dispatch(setLoading(false));

@@ -1,12 +1,28 @@
-import { FlatList, RefreshControl, StyleSheet, Text, View } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useState,
+} from "react";
 import commonStyle from "../../Constants/commonStyle";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import ProfileScreenTopView from "../../Components/ProfileScreenComponent/ProfileScreenTopView";
 import { Divider, Menu } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserContentApi } from "../../store/profileSlices/GetUserContentSlice";
+import {
+  getUserContentApi,
+  resetUserPage,
+  setUserContentPage,
+} from "../../store/profileSlices/GetUserContentSlice";
 import Loading from "../../Components/Loading";
 import ServerError from "../../Components/ErrorScreens/ServerError";
 import FriendlyMsg from "../../Components/ErrorScreens/FriendlyMsg";
@@ -18,6 +34,7 @@ import screenName from "../../Constants/screenName";
 import { resetDeleteAdContentData } from "../../store/AdContentSlices/DeleteAdContent";
 import { useIsFocused } from "@react-navigation/native";
 import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
+import colors from "../../Constants/colors";
 
 const Profile = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -27,6 +44,10 @@ const Profile = ({ navigation, route }) => {
     error: userContentError,
     isLoading: userContentLoading,
     isSuccess: userContentSuccess,
+    page: userContentPage,
+    pageSize: userContentPageSize,
+    isReachedEnd: userContentReachedEnd,
+    isMoreLoading: userContentMoreLoading,
   } = useSelector((state) => state.getUSerContent);
   const userDetail = useSelector((state) => state.login?.userDetail);
   const {
@@ -47,8 +68,6 @@ const Profile = ({ navigation, route }) => {
   } = useSelector((state) => state.deleteAdContent);
   const [postData, setPostData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const [pageSize, setPageSize] = useState(70);
-  const [pageNumber, setPageNumber] = useState(1);
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -57,10 +76,10 @@ const Profile = ({ navigation, route }) => {
   });
   useEffect(() => {
     getUserContent();
-  }, [isFocused, deleteDataRes?.Success]);
+  }, [isFocused, deleteDataRes?.Success, userContentPage]);
   useEffect(() => {
-    if (userContentRes != null && userContentRes?.Success) {
-      setPostData(userContentRes?.Data?.items);
+    if (userContentRes != null && userContentSuccess) {
+      setPostData(userContentRes);
       setRefreshing(false);
     }
   }, [userContentRes]);
@@ -108,7 +127,7 @@ const Profile = ({ navigation, route }) => {
   }, [userContentError]);
 
   const getUserContent = () => {
-    dispatch(getUserContentApi(pageNumber, pageSize));
+    dispatch(getUserContentApi(userContentPage, userContentPageSize));
   };
   const updateData = (data, actionType) => {
     const updatedData = postData.map((item) => {
@@ -158,10 +177,27 @@ const Profile = ({ navigation, route }) => {
     );
   };
   const onRefresh = useCallback(() => {
+    dispatch(setUserContentPage(1));
     setRefreshing(true);
-    setPageNumber(1);
     getUserContent();
   }, []);
+  const listFooterComponent = () => {
+    return (
+      userContentMoreLoading && (
+        <ActivityIndicator
+          style={{ paddingVertical: verticalScale(20) }}
+          size={"large"}
+          color={colors.themeColor}
+        />
+      )
+    );
+  };
+  const onReachedEnd = () => {
+    if (!userContentReachedEnd) {
+      dispatch(setUserContentPage(userContentPage + 1));
+      getUserContent()
+    }
+  };
   return (
     <SafeAreaView style={commonStyle.container}>
       <ProfileScreenTopView profileData={userDetail} isEditBtn={true} />
@@ -182,6 +218,9 @@ const Profile = ({ navigation, route }) => {
             <Divider style={{ marginBottom: verticalScale(8) }} />
           }
           initialNumToRender={10}
+          ListFooterComponent={listFooterComponent}
+          onEndReached={onReachedEnd}
+          onEndReachedThreshold={1}
           maxToRenderPerBatch={10}
           windowSize={10}
           renderItem={renderItem}

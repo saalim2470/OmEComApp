@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { setCategoryId } from "../../store/StoreDataSlice";
@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import HomeScreenCategory from "./HomeScreenCategory";
 import { defaultCategoryImg } from "../../Constants/defaults";
 import { allCategorie } from "../../Constants/Constant";
+import colors from "../../Constants/colors";
 
 const RoundCategoryView = ({ onClickCategory = () => {} }) => {
   const dispatch = useDispatch();
@@ -13,8 +14,18 @@ const RoundCategoryView = ({ onClickCategory = () => {} }) => {
   const categoryId = useSelector((state) => state.storeData.categoryId);
   const [categoryData, setCategoryData] = useState(null);
   useEffect(() => {
-    setCategoryData(categoryDataRes?.Data?.items);
+    setCategoryData(categoryDataRes);
   }, [categoryDataRes]);
+  const listFooterComponent = () => {
+    return (
+        <ActivityIndicator
+          // style={{ paddingVertical: verticalScale(20)}}
+          size={"large"}
+          color={colors.themeColor}
+        />
+ 
+    );
+  };
   const renderCategory = ({ item, index }) => {
   
     return (
@@ -46,7 +57,9 @@ const RoundCategoryView = ({ onClickCategory = () => {} }) => {
         keyExtractor={(item, index) => `category${item.id}_${index}`}
         showsHorizontalScrollIndicator={false}
         horizontal
+        onEndReachedThreshold={1}
         renderItem={renderCategory}
+        // ListFooterComponent={listFooterComponent}
         initialNumToRender={10}
         maxToRenderPerBatch={10}
         windowSize={10}

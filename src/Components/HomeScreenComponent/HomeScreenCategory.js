@@ -50,11 +50,12 @@ const HomeScreenCategory = ({
           <SvgUri
             width={scale(43)}
             height={scale(43)}
-            uri={
-              item?.svgImagesPath != null
-                ? `${baseURL}${serverImagePath}/${item?.svgImagesPath}`
-                : defaultCategoryImg
-            }
+            // uri={
+            //   item?.svgImagesPath != null
+            //     ? `${baseURL}${serverImagePath}/${item?.svgImagesPath}`
+            //     : defaultCategoryImg
+            // }
+            uri={item?.svgImagesPath}
           />
         )}
       </View>

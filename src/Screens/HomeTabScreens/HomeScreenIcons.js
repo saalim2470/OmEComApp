@@ -3,7 +3,7 @@ import React, { useCallback, useEffect } from "react";
 import commonStyle from "../../Constants/commonStyle";
 import MainHeader from "../../Components/MainHeader";
 import { useDispatch, useSelector } from "react-redux";
-import { getCategoryData } from "../../store/categorySlices/CategorySlice";
+import { getCategoryData, setCategoryPage } from "../../store/categorySlices/CategorySlice";
 import Loading from "../../Components/Loading";
 import CategoryView from "../../Components/HomeScreenComponent/CategoryView";
 import { useState } from "react";
@@ -19,17 +19,22 @@ const HomeScreenIcons = () => {
   const categoryData = useSelector((state) => state.category.categoryData);
   const categoryStatusCode = useSelector((state) => state.category.statusCode);
   const categoryError = useSelector((state) => state.category.error);
+  const categoryPage = useSelector((state) => state.category.page);
+  const categoryPageSize = useSelector((state) => state.category.pageSize);
+  const categoryReachedEnd = useSelector((state) => state.category.isReachedEnd);
+  const categoryMoreLoading = useSelector((state) => state.category.isMoreLoading);
+  const categorySuccess = useSelector((state) => state.category.isSuccess);
   const [category, setCategory] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
     getCategory();
   }, []);
   useEffect(() => {
-    if (categoryData?.Success) {
-      setCategory(categoryData?.Data?.items);
+    if (categorySuccess) {
+      setCategory(categoryData);
       setRefreshing(false);
     }
-  }, [categoryData]);
+  }, [categoryData,categorySuccess]);
   useEffect(() => {
     if (categoryError !== null && categoryStatusCode !== null) {
       setRefreshing(false);
@@ -37,9 +42,10 @@ const HomeScreenIcons = () => {
   }, [categoryError, categoryStatusCode]);
 
   const getCategory = () => {
-    dispatch(getCategoryData(1, 70));
+    dispatch(getCategoryData(categoryPage, categoryPageSize));
   };
   const onRefresh = useCallback(() => {
+    dispatch(setCategoryPage(1))
     setRefreshing(true);
     getCategory();
   }, []);
