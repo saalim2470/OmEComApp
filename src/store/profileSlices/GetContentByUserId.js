@@ -6,18 +6,42 @@ const GetContentByUserId = createSlice({
   name: "getContentByUserId",
   initialState: {
     isLoading: false,
-    contentData: null,
+    contentData: [],
     error: null,
     isSuccess: false,
     otherUserDetail: null,
     statusCode: null,
+    isReachedEnd: false,
+    isMoreLoading: false,
+    page: 1,
+    pageSize: 10,
+    totalCount: null,
   },
   reducers: {
     setOtherUserContent: (state, action) => {
-      state.contentData = action.payload;
+      state.isSuccess = action.payload?.Success;
+      state.totalCount = action.payload?.Data?.totalCount;
+      if (state.page !== 1) {
+        state.contentData = [
+          ...state.contentData,
+          ...action.payload?.Data?.items,
+        ];
+      } else {
+        state.contentData = action.payload?.Data?.items;
+      }
+
+      if (state.totalCount === state.contentData.length) {
+        console.log("-=-=reached end-=-=2");
+        state.isReachedEnd = true;
+      }
     },
     setLoading: (state, action) => {
-      state.isLoading = action.payload;
+      if (state.page !== 1) {
+        state.isMoreLoading = action.payload;
+        state.isLoading = false;
+      } else {
+        state.isLoading = action.payload;
+      }
     },
     setError: (state, action) => {
       state.error = action.payload?.data;
@@ -26,16 +50,35 @@ const GetContentByUserId = createSlice({
     setOtherUserDetail: (state, action) => {
       state.otherUserDetail = action.payload;
     },
+    resetOtherUserContent: (state, action) => {
+      state.error = null;
+      state.statusCode = null;
+      state.isSuccess = false;
+    },
+    setUserContentPage: (state, action) => {
+      state.page = action.payload;
+    },
+    resetpageAndUserContent: (state, action) => {
+      state.contentData = [];
+      state.page = 1;
+    },
   },
 });
 export default GetContentByUserId.reducer;
-export const { setLoading, setError, setOtherUserDetail, setOtherUserContent } =
-  GetContentByUserId.actions;
+export const {
+  setLoading,
+  setError,
+  setOtherUserDetail,
+  setOtherUserContent,
+  resetOtherUserContent,
+  setUserContentPage,
+  resetpageAndUserContent
+} = GetContentByUserId.actions;
 
 export const getContentByUserIdApi =
   (userId, pageNumber, pageSize) => async (dispatch) => {
     try {
-      dispatch(setError(null));
+      dispatch(resetOtherUserContent());
       dispatch(setLoading(true));
       const contentResponce = await AdContentServices.getAdContentByUserId(
         userId,
@@ -52,8 +95,8 @@ export const getContentByUserIdApi =
   };
 export const getOtherUserInfoApi = (userId) => async (dispatch) => {
   try {
-    dispatch(setOtherUserContent(null));
-    dispatch(setError(null));
+    dispatch(resetpageAndUserContent());
+    dispatch(resetOtherUserContent());
     dispatch(setLoading(true));
     const responce = await ProfileServices.getOtherUserInfo(userId);
     dispatch(setOtherUserDetail(responce.data));
