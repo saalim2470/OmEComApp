@@ -73,7 +73,7 @@ const MainHome = ({ route }) => {
   });
   useFocusEffect(
     useCallback(() => {
-      dispatch(setGetAdContentPage(1))
+      dispatch(setGetAdContentPage(1));
       getContentDataByCategory(categoryId);
     }, [])
   );
@@ -125,11 +125,12 @@ const MainHome = ({ route }) => {
   }, [likeError, likeErrorCode, saveError, saveErrorCode]);
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    dispatch(setGetAdContentPage(1))
+    dispatch(setGetAdContentPage(1));
     getContentDataByCategory(categoryId);
   }, []);
 
   const updateData = (data, actionType) => {
+
     const updatedData = postData.map((item) => {
       if (actionType === "like" && item.id === data.contentId) {
         return {
@@ -160,7 +161,11 @@ const MainHome = ({ route }) => {
     if (categoryID === 0) {
       dispatch(getAllContentApi(contentDataPage, contentDataPageSize));
     } else {
-      console.log('-=-=-data caaling 4-=',contentDataPage,contentDataPageSize);
+      console.log(
+        "-=-=-data caaling 4-=",
+        contentDataPage,
+        contentDataPageSize
+      );
       dispatch(
         getAdContentByCategory(categoryID, contentDataPage, contentDataPageSize)
       );
@@ -186,7 +191,7 @@ const MainHome = ({ route }) => {
     return (
       contentMoreLoading && (
         <ActivityIndicator
-          style={{ paddingVertical: verticalScale(20)}}
+          style={{ paddingVertical: verticalScale(20) }}
           size={"large"}
           color={colors.themeColor}
         />
@@ -195,14 +200,14 @@ const MainHome = ({ route }) => {
   };
   const onReachedEnd = () => {
     if (!contentReachedEnd) {
-      dispatch(setGetAdContentPage(contentDataPage+1))
+      dispatch(setGetAdContentPage(contentDataPage + 1));
       getContentDataByCategory(categoryId);
     }
   };
   const onClickCategory = (id) => {
     // dispatch(resetAdContent());
     // dispatch(resetAdContentData());
-    dispatch(setGetAdContentPage(1))
+    dispatch(setGetAdContentPage(1));
     getContentDataByCategory(id);
   };
   return (

@@ -123,8 +123,14 @@ const CustomSidebarMenu = (props) => {
           marginLeft: moderateScale(15),
         }}
       >
-        <Text style={{ fontFamily: "Montserrat-Medium", color: "#000000" }}>
-          Version 1.0.008
+        <Text
+          style={{
+            fontFamily: "Montserrat-Medium",
+            color: "#000000",
+            fontSize: scale(10),
+          }}
+        >
+          Version 1.0.011
         </Text>
       </View>
       <CustomeAlert

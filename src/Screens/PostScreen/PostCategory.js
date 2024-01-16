@@ -62,7 +62,7 @@ const PostCategory = ({ navigation, route }) => {
           data={categoryData}
           showsVerticalScrollIndicator={false}
           style={{ marginTop: verticalScale(10) }}
-          keyExtractor={(item) => {
+          keyExtractor={(item,index) => {
             return `category_${item.id}_${index}`;
           }}
           renderItem={renderItem}

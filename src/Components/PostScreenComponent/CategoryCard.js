@@ -25,11 +25,12 @@ const CategoryCard = ({ item, onClick = () => {}, status }) => {
         <SvgUri
           width={scale(40)}
           height={verticalScale(40)}
-          uri={
-            item?.svgImagesPath != null
-              ? `${baseURL}${serverImagePath}/${item?.svgImagesPath}`
-              : defaultCategoryImg
-          }
+          // uri={
+          //   item?.svgImagesPath != null
+          //     ? `${baseURL}${serverImagePath}/${item?.svgImagesPath}`
+          //     : defaultCategoryImg
+          // }
+          uri={item?.svgImagesPath}
         />
         <Text style={styles.categoryTxt}>{item.categoryName}</Text>
       </View>
