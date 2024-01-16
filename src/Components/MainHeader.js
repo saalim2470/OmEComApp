@@ -14,6 +14,7 @@ const MainHeader = ({ navigation }) => {
         activeOpacity={0.7}
         onPress={() => {
           // navigation.openDrawer();
+          console.log('-=-=drawer open=-=');
           navigation.dispatch(DrawerActions.openDrawer());
         }}
       >

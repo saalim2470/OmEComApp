@@ -59,11 +59,11 @@ const PostCategory = ({ navigation, route }) => {
         <Text style={commonStyle.headingTxt}>Category</Text>
         <Text style={styles.SmallHading}>Select relavant category</Text>
         <FlatList
-          data={categoryData?.Data?.items}
+          data={categoryData}
           showsVerticalScrollIndicator={false}
           style={{ marginTop: verticalScale(10) }}
           keyExtractor={(item) => {
-            item.id;
+            return `category_${item.id}_${index}`;
           }}
           renderItem={renderItem}
         />
