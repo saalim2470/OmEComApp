@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getCommentByContentIdApi,
   resetCommentData,
+  setCommentPage,
 } from "../../store/commentSlices/GetCommentByContentIdSlice";
 import { resetLikeData } from "../../store/AdContentSlices/LikeSlice";
 import FeedCardBottomLeftView from "./FeedCardBottomLeftView";
@@ -20,6 +21,8 @@ const FeedCardBottomView = ({ itemData }) => {
     isLoading: commentLoading,
     error: commentError,
     errorCode: commentErrorCode,
+    page: commentPage,
+    pageSize: commentPageSize,
   } = useSelector((state) => state.getCommentByContentId);
 
   const [showAlert, setShowAlert] = useState({
@@ -53,7 +56,14 @@ const FeedCardBottomView = ({ itemData }) => {
 
   const onClickComment = () => {
     setIsShowBottomSheet(true);
-    dispatch(getCommentByContentIdApi(itemData?.id, 1, 30));
+    dispatch(setCommentPage(1));
+    getCommentData();
+  };
+  const getCommentData = () => {
+    console.log("=-=-=-comment page-=-=", commentPage);
+    dispatch(
+      getCommentByContentIdApi(itemData?.id, commentPage, commentPageSize)
+    );
   };
   const onClickModalBtn = () => {
     dispatch(resetCommentData());
@@ -84,13 +94,9 @@ const FeedCardBottomView = ({ itemData }) => {
       <CommentView
         postDetail={itemData}
         isVisible={isShowBottomSheet}
-        isLoading={commentLoading}
-        error={commentError}
-        errorCode={commentErrorCode}
         onBackDropPress={() => {
           setIsShowBottomSheet(false);
         }}
-        commentData={commentDataRes?.Data?.items}
       />
       <CustomeAlertModal
         isVisible={showAlert.show}

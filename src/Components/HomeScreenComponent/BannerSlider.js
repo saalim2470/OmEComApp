@@ -15,12 +15,14 @@ const BannerSlider = ({ data, onClick, disable }) => {
     <View style={styles.cardImgView} onLayout={onLayout}>
       <SliderBox
         images={data}
+        autoplay={true}
         sliderBoxHeight={"100%"}
         dotColor={colors.themeColor}
         inactiveDotColor={"#F7F7F7"}
         disableOnPress={disable}
         imageLoadingColor={colors.themeColor}
         dotStyle={styles.dotStyle}
+        circleLoop={true}
         parentWidth={layout.width}
         onCurrentImagePressed={() => {
           onClick();

@@ -18,3 +18,9 @@ export const allCategorie = {
   files: null,
   filesUrls: null,
 };
+
+export const subcriptionType = {
+  0: "Inner Ads",
+  1: "Home page/Front page Ad",
+  2: "Pin Post",
+};

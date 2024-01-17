@@ -130,7 +130,6 @@ const MainHome = ({ route }) => {
   }, []);
 
   const updateData = (data, actionType) => {
-
     const updatedData = postData.map((item) => {
       if (actionType === "like" && item.id === data.contentId) {
         return {

@@ -31,6 +31,11 @@ class AdContentServices {
       `/AdContent/GetAdContentsByUserId?userId=${userId}&pageNumber=${pageNumber}&pageSize=${pageSize}`
     );
   }
+  getSavedContent(pageNumber, pageSize) {
+    return http.get(
+      `/UserSavedAdContent?pageNumber=${pageNumber}&pageSize=${pageSize}`
+    );
+  }
 }
 
 export default new AdContentServices();

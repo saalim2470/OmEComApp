@@ -22,11 +22,13 @@ const GetContentByUserId = createSlice({
       state.isSuccess = action.payload?.Success;
       state.totalCount = action.payload?.Data?.totalCount;
       if (state.page !== 1) {
+        console.log("-=-=-in greterb than page 1");
         state.contentData = [
           ...state.contentData,
           ...action.payload?.Data?.items,
         ];
       } else {
+        console.log("-=-=-=-in page 1", action.payload);
         state.contentData = action.payload?.Data?.items;
       }
 
@@ -72,11 +74,14 @@ export const {
   setOtherUserContent,
   resetOtherUserContent,
   setUserContentPage,
-  resetpageAndUserContent
+  resetpageAndUserContent,
 } = GetContentByUserId.actions;
 
 export const getContentByUserIdApi =
   (userId, pageNumber, pageSize) => async (dispatch) => {
+    console.log(
+      `userId${userId} pageNumber ${pageNumber} pageSize ${pageSize}`
+    );
     try {
       dispatch(resetOtherUserContent());
       dispatch(setLoading(true));
@@ -100,6 +105,8 @@ export const getOtherUserInfoApi = (userId) => async (dispatch) => {
     dispatch(setLoading(true));
     const responce = await ProfileServices.getOtherUserInfo(userId);
     dispatch(setOtherUserDetail(responce.data));
+    dispatch(getContentByUserIdApi(responce.data?.Data?.userId, 1, 10));
+    dispatch(setLoading(false));
   } catch (error) {
     dispatch(setLoading(false));
     dispatch(setError(error.response));

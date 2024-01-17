@@ -3,7 +3,10 @@ import React, { useCallback, useEffect } from "react";
 import commonStyle from "../../Constants/commonStyle";
 import MainHeader from "../../Components/MainHeader";
 import { useDispatch, useSelector } from "react-redux";
-import { getCategoryData, setCategoryPage } from "../../store/categorySlices/CategorySlice";
+import {
+  getCategoryData,
+  setCategoryPage,
+} from "../../store/categorySlices/CategorySlice";
 import Loading from "../../Components/Loading";
 import CategoryView from "../../Components/HomeScreenComponent/CategoryView";
 import { useState } from "react";
@@ -21,8 +24,12 @@ const HomeScreenIcons = () => {
   const categoryError = useSelector((state) => state.category.error);
   const categoryPage = useSelector((state) => state.category.page);
   const categoryPageSize = useSelector((state) => state.category.pageSize);
-  const categoryReachedEnd = useSelector((state) => state.category.isReachedEnd);
-  const categoryMoreLoading = useSelector((state) => state.category.isMoreLoading);
+  const categoryReachedEnd = useSelector(
+    (state) => state.category.isReachedEnd
+  );
+  const categoryMoreLoading = useSelector(
+    (state) => state.category.isMoreLoading
+  );
   const categorySuccess = useSelector((state) => state.category.isSuccess);
   const [category, setCategory] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -34,7 +41,7 @@ const HomeScreenIcons = () => {
       setCategory(categoryData);
       setRefreshing(false);
     }
-  }, [categoryData,categorySuccess]);
+  }, [categoryData, categorySuccess]);
   useEffect(() => {
     if (categoryError !== null && categoryStatusCode !== null) {
       setRefreshing(false);
@@ -45,7 +52,7 @@ const HomeScreenIcons = () => {
     dispatch(getCategoryData(categoryPage, categoryPageSize));
   };
   const onRefresh = useCallback(() => {
-    dispatch(setCategoryPage(1))
+    dispatch(setCategoryPage(1));
     setRefreshing(true);
     getCategory();
   }, []);

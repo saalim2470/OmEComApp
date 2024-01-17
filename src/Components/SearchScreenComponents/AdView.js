@@ -4,14 +4,15 @@ import { TouchableOpacity } from "react-native";
 import { Image } from "react-native";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 
-const AdView = ({ onClickAd = () => {} }) => {
+const AdView = ({ onClickAd = () => {}, disabled }) => {
   return (
     <TouchableOpacity
       onPress={() => {
         onClickAd();
       }}
       activeOpacity={0.9}
-      style={{ height: verticalScale(200), flex: 1 }}
+      style={{ height: verticalScale(200) }}
+      disabled={disabled}
     >
       <Image
         source={{

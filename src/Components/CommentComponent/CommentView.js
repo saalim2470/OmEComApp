@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   Keyboard,
@@ -22,20 +23,31 @@ import {
   postCommentApi,
   resetPostCommentData,
 } from "../../store/commentSlices/PostCommentSlice";
-import { getCommentByContentIdApi } from "../../store/commentSlices/GetCommentByContentIdSlice";
+import {
+  getCommentByContentIdApi,
+  setCommentPage,
+} from "../../store/commentSlices/GetCommentByContentIdSlice";
 import CustomeAlertModal from "../CustomeAlertModal";
+import colors from "../../Constants/colors";
 
-const CommentView = ({
-  isVisible,
-  commentData,
-  isLoading,
-  error,
-  errorCode,
-  postDetail,
-  onBackDropPress = () => {},
-}) => {
+const CommentView = ({ isVisible, postDetail, onBackDropPress = () => {} }) => {
   const dispatch = useDispatch();
   const userDetail = useSelector((state) => state.login?.userDetail);
+  const {
+    commentData: commentDataRes,
+    isLoading: commentLoading,
+    error: commentError,
+    errorCode: commentErrorCode,
+    page: commentPage,
+    pageSize: commentPageSize,
+    isSuccess: getCommentSuccesss,
+    isMoreLoading: getCommentMoreLoading,
+    isReachedEnd: getCommentReachedEnd,
+  } = useSelector((state) => state.getCommentByContentId);
+  console.log(
+    "-=-=-comment data-=-=",
+    useSelector((state) => state.getCommentByContentId)
+  );
   const {
     postComment: postCommentRes,
     isLoading: postCommentLoading,
@@ -43,12 +55,20 @@ const CommentView = ({
     errorCode: postCommentErrorCode,
   } = useSelector((state) => state.postComment);
   const [commentTxt, setCommentTxt] = useState("");
+  const [commentData, setCommentData] = useState([]);
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
     msg: null,
     type: null,
   });
+
+  useEffect(() => {
+    if (commentDataRes && getCommentSuccesss) {
+      setCommentData(commentDataRes);
+    }
+  }, [commentDataRes, getCommentSuccesss]);
+
   useEffect(() => {
     const handleErrorCode = (code) => {
       if (code === 401) {
@@ -73,20 +93,43 @@ const CommentView = ({
     });
   };
   const onClickPost = () => {
-    Keyboard.dismiss();
     const data = {
       title: "string",
       description: commentTxt.trim(),
       userId: userDetail?.userId,
       adContentId: postDetail?.id,
     };
+    Keyboard.dismiss();
     dispatch(postCommentApi(data)).then((res) => {
       setCommentTxt("");
-      dispatch(getCommentByContentIdApi(postDetail?.id, 1, 30));
+      dispatch(setCommentPage(1));
+      getCommentData();
     });
   };
   const renderItem = ({ item, index }) => {
     return <CommentItem item={item} />;
+  };
+  const getCommentData = () => {
+    dispatch(
+      getCommentByContentIdApi(postDetail?.id, commentPage, commentPageSize)
+    );
+  };
+  const listFooterComponent = () => {
+    return (
+      getCommentMoreLoading && (
+        <ActivityIndicator
+          style={{ paddingVertical: verticalScale(20) }}
+          size={"large"}
+          color={colors.themeColor}
+        />
+      )
+    );
+  };
+  const onReachedEnd = () => {
+    if (!getCommentReachedEnd) {
+      dispatch(setCommentPage(commentPage + 1));
+      getCommentData();
+    }
   };
   return (
     <Modal
@@ -100,11 +143,14 @@ const CommentView = ({
     >
       <View style={styles.modalView}>
         <Text style={{ alignSelf: "center" }}>Comments</Text>
-        {isLoading ? (
+        {commentLoading ? (
           <Loading />
-        ) : !isLoading && error != null ? (
-          <ServerError msg={error?.ErrorMessage} statusCode={errorCode} />
-        ) : !isLoading && commentData?.length <= 0 ? (
+        ) : !commentLoading && commentError != null ? (
+          <ServerError
+            msg={commentError?.ErrorMessage}
+            statusCode={commentErrorCode}
+          />
+        ) : !commentLoading && commentData?.length <= 0 ? (
           <View
             style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
           >
@@ -117,6 +163,9 @@ const CommentView = ({
               keyExtractor={(item) => item.id.toString()}
               renderItem={renderItem}
               showsVerticalScrollIndicator={false}
+              ListFooterComponent={listFooterComponent}
+              onEndReached={onReachedEnd}
+              onEndReachedThreshold={0.1}
             />
           </>
         )}

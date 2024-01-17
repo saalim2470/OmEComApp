@@ -1,35 +1,33 @@
 import { createSlice } from "@reduxjs/toolkit";
-import CommentServices from "../../services/CommentServices";
+import AdContentServices from "../../services/AdContentServices";
 
-const GetCommentByContentIdSlice = createSlice({
-  name: "getCommentByContentId",
+const GetSavedContent = createSlice({
+  name: "getSavedContent",
   initialState: {
     isLoading: false,
-    commentData: [],
+    savedContent: [],
     error: null,
     isSuccess: false,
-    errorCode: null,
-    isReachedEnd: false,
-    isMoreLoading: false,
     page: 1,
     pageSize: 10,
     totalCount: null,
+    isReachedEnd: false,
+    isMoreLoading: false,
   },
   reducers: {
-    setCommentData: (state, action) => {
+    setSavedContent: (state, action) => {
       state.isSuccess = action.payload?.Success;
       state.totalCount = action.payload?.Data?.totalCount;
       if (state.page !== 1) {
-        state.commentData = [
-          ...state.commentData,
+        state.savedContent = [
+          ...state.savedContent,
           ...action.payload?.Data?.items,
         ];
       } else {
-        state.commentData = action.payload?.Data?.items;
+        state.savedContent = action.payload?.Data?.items;
       }
 
-      if (state.totalCount === state.commentData.length) {
-        console.log("-=-=reached end-=-=2");
+      if (state.totalCount === state.savedContent.length) {
         state.isReachedEnd = true;
       }
     },
@@ -44,45 +42,39 @@ const GetCommentByContentIdSlice = createSlice({
     setError: (state, action) => {
       state.error = action.payload;
     },
-    setErrorCode: (state, action) => {
-      state.errorCode = action.payload;
-    },
-    resetCommentData: (state, action) => {
+    resetSavedAdContent: (state, action) => {
       state.error = null;
-      state.errorCode = null;
+      state.isLoading = false;
       state.isSuccess = false;
     },
-    setCommentPage: (state, action) => {
+    setSavedContentPage: (state, action) => {
       state.page = action.payload;
     },
   },
 });
-export default GetCommentByContentIdSlice.reducer;
+export default GetSavedContent.reducer;
 export const {
-  setCommentData,
+  setSavedContent,
   setLoading,
   setError,
-  setErrorCode,
-  resetCommentData,
-  setCommentPage,
-} = GetCommentByContentIdSlice.actions;
+  resetSavedAdContent,
+  setSavedContentPage,
+} = GetSavedContent.actions;
 
-export const getCommentByContentIdApi =
-  (contentId, pageNumber, pageSize) => async (dispatch) => {
+export const getSavedContentApi =
+  (pageNumber, pageSize) => async (dispatch) => {
     try {
-      dispatch(resetCommentData());
+      dispatch(resetSavedAdContent());
       dispatch(setLoading(true));
-      const responce = await CommentServices.getCommentByContentId(
-        contentId,
+      const responce = await AdContentServices.getSavedContent(
         pageNumber,
         pageSize
       );
-      dispatch(setCommentData(responce?.data));
+      dispatch(setSavedContent(responce?.data));
       dispatch(setLoading(false));
     } catch (error) {
       dispatch(setLoading(false));
       dispatch(setError(error.response.data));
-      dispatch(setErrorCode(error.response.status));
       console.log(error.response.data);
     }
   };

@@ -3,7 +3,7 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import commonStyle from "../../Constants/commonStyle";
 import MainHeader from "../../Components/MainHeader";
-import { Feather ,Ionicons} from "@expo/vector-icons";
+import { Feather, Ionicons } from "@expo/vector-icons";
 import images from "../../Constants/images";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import screenName from "../../Constants/screenName";
@@ -22,9 +22,13 @@ import {
   reseAdPosttData,
 } from "../../store/AdContentSlices/AddAdContent";
 import CustomeAlertModal from "../../Components/CustomeAlertModal";
-import { resetData, setPostDataDraft } from "../../store/addAdContentSlices/AddPostData";
+import {
+  resetData,
+  setPostDataDraft,
+} from "../../store/addAdContentSlices/AddPostData";
 import { useState } from "react";
 import SubscriptionStripe from "../../Components/SubscriptionComponents/SubscriptionStripe";
+import { subcriptionType } from "../../Constants/Constant";
 
 const Subscription = ({ route }) => {
   const dispatch = useDispatch();
@@ -58,7 +62,7 @@ const Subscription = ({ route }) => {
     type: null,
   });
   useEffect(() => {
-    dispatch(getSubscriptionPlan(1, 10));
+    dispatch(getSubscriptionPlan(1, 70));
   }, []);
   useEffect(() => {
     if (getSubscriptionData && getSubscriptionData?.Success) {
@@ -116,84 +120,42 @@ const Subscription = ({ route }) => {
     dispatch(reseAdPosttData());
     dispatch(setPostDataDraft(null));
     showAlert.type == "success" &&
-    navigation.navigate(screenName.drawerNavigation, {
-      screen: screenName.bottomNavigation,
-      params: {
-        screen: screenName.bottomNavigationHomeRoute,
+      navigation.navigate(screenName.drawerNavigation, {
+        screen: screenName.bottomNavigation,
         params: {
-          screen: screenName.mainHome,
+          screen: screenName.bottomNavigationHomeRoute,
+          params: {
+            screen: screenName.mainHome,
+          },
         },
-      },
-    });
+      });
   };
   return (
     <SafeAreaView style={commonStyle.container}>
-      <MainHeader
-        navigation={navigation}
-      />
+      <MainHeader navigation={navigation} />
       {subscriptionPlanLoading || getSubscriptionLoading ? (
         <Loading />
       ) : (
         <>
-          <View style={styles.headingView}>
-            <Text style={styles.headingTxt}>Inner Ads</Text>
-            <TouchableOpacity activeOpacity={0.6}>
-              <Text style={styles.headingBtnTxt}>Read More...</Text>
-            </TouchableOpacity>
-          </View>
           {subscriptionPlanData?.Data?.items?.map((item, index) => {
-            if (item?.subscriptionType == 0) {
-              {
-                return (
-                  <SubscriptionStripe
-                    item={item}
-                    onClick={() => {
-                      dispatch(getSubscriptionPlanId(item?.id));
-                    }}
-                  />
-                );
-              }
-            }
-          })}
-          <View style={styles.headingView}>
-            <Text style={styles.headingTxt}>Home page/Front page Ad</Text>
-            <TouchableOpacity activeOpacity={0.6}>
-              <Text style={styles.headingBtnTxt}>Read More...</Text>
-            </TouchableOpacity>
-          </View>
-          {subscriptionPlanData?.Data?.items?.map((item, index) => {
-            if (item?.subscriptionType == 1) {
-              {
-                return (
-                  <SubscriptionStripe
-                    item={item}
-                    onClick={() => {
-                      dispatch(getSubscriptionPlanId(item?.id));
-                    }}
-                  />
-                );
-              }
-            }
-          })}
-          <View style={styles.headingView}>
-            <Text style={styles.headingTxt}>Pin Post</Text>
-            <TouchableOpacity activeOpacity={0.6}>
-              <Text style={styles.headingBtnTxt}>Read More...</Text>
-            </TouchableOpacity>
-          </View>
-          {subscriptionPlanData?.Data?.items?.map((item, index) => {
-            if (item?.subscriptionType == 2) {
-              {
-                return (
-                  <SubscriptionStripe
-                    item={item}
-                    onClick={() => {
-                      dispatch(getSubscriptionPlanId(item?.id));
-                    }}
-                  />
-                );
-              }
-            }
+            return (
+              <>
+                <View style={styles.headingView}>
+                  <Text style={styles.headingTxt}>
+                    {subcriptionType[item?.subscriptionType]}
+                  </Text>
+                  <TouchableOpacity activeOpacity={0.6}>
+                    <Text style={styles.headingBtnTxt}>Read More...</Text>
+                  </TouchableOpacity>
+                </View>
+                <SubscriptionStripe
+                  item={item}
+                  onClick={() => {
+                    dispatch(getSubscriptionPlanId(item?.id));
+                  }}
+                />
+              </>
+            );
           })}
           {/* <SubscriptionBottomSheet /> */}
         </>

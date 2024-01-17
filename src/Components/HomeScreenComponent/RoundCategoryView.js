@@ -1,4 +1,10 @@
-import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { setCategoryId } from "../../store/StoreDataSlice";
@@ -7,27 +13,53 @@ import HomeScreenCategory from "./HomeScreenCategory";
 import { defaultCategoryImg } from "../../Constants/defaults";
 import { allCategorie } from "../../Constants/Constant";
 import colors from "../../Constants/colors";
+import {
+  getCategoryData,
+  setCategoryPage,
+} from "../../store/categorySlices/CategorySlice";
 
 const RoundCategoryView = ({ onClickCategory = () => {} }) => {
   const dispatch = useDispatch();
   const categoryDataRes = useSelector((state) => state.category.categoryData);
   const categoryId = useSelector((state) => state.storeData.categoryId);
+  const categoryPage = useSelector((state) => state.category.page);
+  const categoryPageSize = useSelector((state) => state.category.pageSize);
+  const categorySuccess = useSelector((state) => state.category.isSuccess);
+  const categoryMoreLoading = useSelector(
+    (state) => state.category.isMoreLoading
+  );
+  const categoryReachedEnd = useSelector(
+    (state) => state.category.isReachedEnd
+  );
   const [categoryData, setCategoryData] = useState(null);
+
   useEffect(() => {
-    setCategoryData(categoryDataRes);
-  }, [categoryDataRes]);
+    getCategory();
+  }, []);
+
+  useEffect(() => {
+    if (categoryDataRes && categorySuccess) {
+      setCategoryData(categoryDataRes);
+    }
+  }, [categoryDataRes, categorySuccess]);
+
+  const getCategory = () => {
+    dispatch(getCategoryData(categoryPage, categoryPageSize));
+  };
   const listFooterComponent = () => {
     return (
-        <ActivityIndicator
-          // style={{ paddingVertical: verticalScale(20)}}
-          size={"large"}
-          color={colors.themeColor}
-        />
- 
+      categoryMoreLoading && (
+        <ActivityIndicator size={"large"} color={colors.themeColor} />
+      )
     );
   };
+  const onReachedEnd = () => {
+    if (!categoryReachedEnd) {
+      dispatch(setCategoryPage(categoryPage + 1));
+      getCategory();
+    }
+  };
   const renderCategory = ({ item, index }) => {
-  
     return (
       <HomeScreenCategory
         item={item}
@@ -43,7 +75,7 @@ const RoundCategoryView = ({ onClickCategory = () => {} }) => {
   };
   return (
     <View style={styles.storyView}>
-       <HomeScreenCategory
+      <HomeScreenCategory
         item={allCategorie}
         single={true}
         selectedCategory={categoryId}
@@ -57,9 +89,10 @@ const RoundCategoryView = ({ onClickCategory = () => {} }) => {
         keyExtractor={(item, index) => `category${item.id}_${index}`}
         showsHorizontalScrollIndicator={false}
         horizontal
-        onEndReachedThreshold={1}
+        onEndReachedThreshold={0.1}
         renderItem={renderCategory}
-        // ListFooterComponent={listFooterComponent}
+        ListFooterComponent={listFooterComponent}
+        onEndReached={onReachedEnd}
         initialNumToRender={10}
         maxToRenderPerBatch={10}
         windowSize={10}

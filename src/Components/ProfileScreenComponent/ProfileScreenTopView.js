@@ -1,16 +1,37 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import React, { useState } from "react";
 import { Avatar, Divider } from "react-native-paper";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import colors from "../../Constants/colors";
 import images from "../../Constants/images";
 import { useSelector } from "react-redux";
-import { baseURL, serverImagePath } from "../../Constants/defaults";
+import {
+  baseURL,
+  defaultProfileImg,
+  serverImagePath,
+} from "../../Constants/defaults";
 import screenName from "../../Constants/screenName";
 import { useNavigation } from "@react-navigation/native";
+import ImageViewer from "../ImageViewer";
 
 const ProfileScreenTopView = ({ profileData, isEditBtn }) => {
   const navigation = useNavigation();
+  const [openImageViewer, setImageViewer] = useState(false);
+  const imgViewerData = [
+    {
+      uri:
+        profileData?.profilePicture != null || profileData?.profilePicture != ""
+          ? `${baseURL}${serverImagePath}/${profileData?.profilePicture}`
+          : defaultProfileImg,
+    },
+  ];
   return (
     <>
       <View
@@ -19,53 +40,24 @@ const ProfileScreenTopView = ({ profileData, isEditBtn }) => {
           marginTop: verticalScale(10),
         }}
       >
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <Avatar.Image
-            size={scale(60)}
-            style={{ marginRight: moderateScale(8) }}
-            source={{
-              uri: `${baseURL}${serverImagePath}/${profileData?.profilePicture}`,
-            }}
-          />
+        <View style={styles.row}>
+          <Pressable onPress={() => setImageViewer(true)}>
+            <Avatar.Image
+              size={scale(60)}
+              style={{ marginRight: moderateScale(8) }}
+              source={{
+                uri: `${baseURL}${serverImagePath}/${profileData?.profilePicture}`,
+              }}
+            />
+          </Pressable>
           <View>
             <Text
               style={styles.titleTxt}
             >{`${profileData?.firstName} ${profileData?.lastName}`}</Text>
             <Text style={styles.lightTxt}>{profileData?.email}</Text>
-            {/* <Text style={styles.lightTxt}>Other</Text> */}
           </View>
         </View>
-        <View
-          style={[
-            {
-              marginTop: verticalScale(15),
-              flexDirection: "row",
-              alignItems: "center",
-            },
-          ]}
-        >
-          {/* <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginRight: moderateScale(20),
-            }}
-          >
-            <Image
-              source={images.reviewStar}
-              style={{
-                width: scale(15),
-                height: scale(15),
-                marginRight: moderateScale(7),
-              }}
-            />
-            <Text style={styles.lightTxt}>4.8 (20 Reviews)</Text>
-          </View> */}
+        <View style={styles.followView}>
           <Text style={[styles.txt, { marginRight: moderateScale(20) }]}>
             <Text style={styles.boldTxt}>00</Text> followers
           </Text>
@@ -102,20 +94,27 @@ const ProfileScreenTopView = ({ profileData, isEditBtn }) => {
                 Edit
               </Text>
             </TouchableOpacity>
-          ) : null}
-          <View
-            style={[
-              styles.btn,
-              {
-                backgroundColor: "#f5f5f5",
-              },
-            ]}
-          >
-            <Text style={[styles.btnTxt]}>40 Listings</Text>
-          </View>
+          ) : (
+            <TouchableOpacity
+              activeOpacity={0.6}
+              style={[
+                styles.btn,
+                {
+                  backgroundColor: "#f5f5f5",
+                },
+              ]}
+            >
+              <Text style={[styles.btnTxt]}>Follow</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
       <Divider style={{ marginVertical: verticalScale(15) }} />
+      <ImageViewer
+        visible={openImageViewer}
+        setIsVisible={setImageViewer}
+        imgData={imgViewerData}
+      />
     </>
   );
 };
@@ -154,5 +153,14 @@ const styles = StyleSheet.create({
   btnTxt: {
     fontFamily: "Montserrat-Bold",
     fontSize: moderateScale(10),
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  followView: {
+    marginTop: verticalScale(15),
+    flexDirection: "row",
+    alignItems: "center",
   },
 });

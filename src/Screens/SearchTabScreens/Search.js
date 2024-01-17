@@ -1,75 +1,47 @@
-import {
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native";
 import commonStyle from "../../Constants/commonStyle";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
-import images from "../../Constants/images";
-import SearchScreenCard from "../../Components/SearchScreenCard";
-import colors from "../../Constants/colors";
-import CategorieCircle from "../../Components/CategorieCircle";
 import { ScrollView } from "react-native";
-import screenName from "../../Constants/screenName";
 import CustomeBottomSheet from "../../Components/CustomeBottomSheet";
 import AdView from "../../Components/SearchScreenComponents/AdView";
-import { StackActions } from "@react-navigation/native";
-import { useSelector } from "react-redux";
+import BannerSlider from "../../Components/HomeScreenComponent/BannerSlider";
+import SearchScreenTopView from "../../Components/SearchScreenComponents/SearchScreenTopView";
+import SliderCard from "../../Components/HomeScreenComponent/SliderCard";
 
 const Search = ({ navigation }) => {
-  const categoryData = useSelector((state) => state.category.categoryData);
-  const cardData = [
-    {
-      id: 0,
-      heading: "Elenar Pena Jacket",
-      subTxt: "124 New items found",
-      isFollow: true,
-    },
-    {
-      id: 1,
-      heading: "Elenar Pena Jacket",
-      subTxt: "124 New items found",
-      isFollow: false,
-    },
+  const img = [
+    "https://images.unsplash.com/photo-1682687220363-35e4621ed990?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxfHx8ZW58MHx8fHx8",
+    "https://images.unsplash.com/photo-1704928341414-5ae341023539?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw1fHx8ZW58MHx8fHx8",
+    "https://images.unsplash.com/photo-1704981524675-d795f35805d4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHx8",
   ];
-  const data = [
-    {
-      id: 0,
-      icon: images.mobileIcon,
-      isStory: true,
-    },
+  const sliderData = [
     {
       id: 1,
-      icon: images.clothesIcon,
-      isStory: false,
+      title: "One Plus Nord ce3",
+      uri: "https://image01-in.oneplus.net/india-oneplus-statics-file/epb/202306/26/9FxksqX4fQDqvJpU.png",
     },
     {
       id: 2,
-      icon: images.electronicIcon,
-      isStory: false,
+      title: "Redmi Note 12",
+      uri: "https://lh3.googleusercontent.com/spp/AE_ITi2lpH45J6FY7DuhQ0zaPVlZ9OD9S673-u6fmPAHzpTyd4GZ4rpPe7a_CD1vuudgtZvVGgtRC6kSq1IQs2lgX8wVV0PQdW4-oQEG4K3IrhQVGF0Qeuk4WQxQoJ-sv4EUCwm1wQKpoI5DaVG8q_FYNOJwOto9A9ugG5h3S2Ljqv6A7JWXfWmlTFkAYQ3lN_M0pbENvv8RSw=s512-rw-pd-pc0x00ffffff",
     },
     {
       id: 3,
-      icon: images.groceryIcon,
-      isStory: false,
+      title: "Galaxy Z fold5",
+      uri: "https://images.samsung.com/is/image/samsung/assets/in/smartphones/galaxy-z-fold5/buy/Fold5_1440x450.jpg?$ORIGIN_JPG$",
     },
     {
       id: 4,
-      icon: images.homeAppliancesIcon,
-      isStory: false,
-    },
-    {
-      id: 5,
-      icon: images.toyIcon,
-      isStory: false,
+      title: "LG 11 Kg Front Fully Automatic Washing Machine, FHP1411Z9B",
+      uri: "https://lh3.googleusercontent.com/spp/AE_ITi1zdAWLn64mQnxXO2jBkbeVF8nmwttUO6J1bQDzWs9VfI5JerD9l_82yMg39L3Ct3n5MK7xT_FGruyqJimsivHYog3TqKfcVsaylXVjZBoJFLxc4ZV8RFJ15xFk-LLFZH9iQkpXsEB6zafgsfSub5rYhA-6dVaSafYayE2V2EA3ZRgwMYY8sSAL-rpwhBqO_IpsRR37Qw=s512-rw-pd-pc0x00ffffff",
     },
   ];
-  const [isShowBottomSheet, setIsShowBottomSheet] = useState(-1);
+  const renderCard = ({ item, index }) => {
+    return <SliderCard item={item} />;
+  };
+  const [isShowBottomSheet, setIsShowBottomSheet] = useState(false);
   return (
     <SafeAreaView style={commonStyle.container}>
       <ScrollView
@@ -77,29 +49,7 @@ const Search = ({ navigation }) => {
         style={{ marginTop: verticalScale(22) }}
       >
         {/* search view */}
-        <View
-          style={[commonStyle.row, { paddingHorizontal: moderateScale(15) }]}
-        >
-          <TouchableOpacity
-            activeOpacity={0.6}
-            style={styles.txtBoxView}
-            onPress={() => {
-              navigation.navigate(screenName.searchResultScreen);
-              // navigation.dispatch(
-              //   StackActions.replace(screenName.searchResultScreen)
-              // );
-            }}
-          >
-            <Image source={images.searchIcon} style={styles.serachIconStyle} />
-            <Text style={styles.txtBoxPlaceholder}>Search something</Text>
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.5} onPress={() => {}}>
-            <Image
-              source={images.filterIcon}
-              style={{ width: scale(20), height: scale(20) }}
-            />
-          </TouchableOpacity>
-        </View>
+        <SearchScreenTopView />
         <Text
           style={[
             commonStyle.headingTxt,
@@ -120,49 +70,22 @@ const Search = ({ navigation }) => {
           Based on your recent activity
         </Text>
         {/* banner View */}
-        <View>
+        <BannerSlider data={img} onClick={() => {}} />
+        <View
+          style={{
+            marginTop: verticalScale(15),
+          }}
+        >
           <FlatList
-            data={cardData}
+            data={sliderData}
             horizontal
             showsHorizontalScrollIndicator={false}
-            keyExtractor={(item) => {
-              item.id;
+            keyExtractor={(item, index) => {
+              return `card_${item.id}_${index}`;
             }}
-            renderItem={({ item, index }) => {
-              return (
-                <SearchScreenCard
-                  data={item}
-                  style={{
-                    marginLeft: index === 0 ? moderateScale(15) : null,
-                    marginRight:
-                      index === cardData.length - 1
-                        ? moderateScale(15)
-                        : moderateScale(15),
-                  }}
-                />
-              );
-            }}
+            renderItem={renderCard}
           />
         </View>
-        <View
-          style={[
-            commonStyle.row,
-            {
-              paddingHorizontal: moderateScale(15),
-              marginTop: verticalScale(6),
-              marginBottom: verticalScale(5),
-            },
-          ]}
-        >
-          <Text style={[commonStyle.headingTxt, { fontSize: scale(12) }]}>
-            Suggested sellers
-          </Text>
-          <TouchableOpacity activeOpacity={0.5}>
-            <Text style={styles.btnTxt}>+24 New</Text>
-          </TouchableOpacity>
-        </View>
-        {/* categorie View */}
-        <CategorieCircle data={categoryData?.Data} disabled={true} />
         {/* ad view */}
         <Text
           style={[
@@ -178,15 +101,13 @@ const Search = ({ navigation }) => {
         </Text>
         <AdView
           onClickAd={() => {
-            setIsShowBottomSheet(0);
+            setIsShowBottomSheet(true);
           }}
         />
       </ScrollView>
       <CustomeBottomSheet
-        isShow={isShowBottomSheet}
-        onChange={(value) => {
-          setIsShowBottomSheet(value);
-        }}
+        isOpen={isShowBottomSheet}
+        setIsOpen={setIsShowBottomSheet}
       />
     </SafeAreaView>
   );
@@ -199,29 +120,5 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat-Light",
     fontSize: scale(10),
     marginBottom: verticalScale(12),
-  },
-  btnTxt: {
-    fontFamily: "Montserrat-Medium",
-    color: colors.themeColor,
-    fontSize: scale(11),
-  },
-  txtBoxView: {
-    borderWidth: 1,
-    width: scale(280),
-    flexDirection: "row",
-    height: verticalScale(38),
-    alignItems: "center",
-    marginTop: verticalScale(10),
-    paddingLeft: moderateScale(12),
-    borderColor: "#cacaca",
-  },
-  txtBoxPlaceholder: {
-    fontFamily: "Montserrat-Regular",
-    fontSize: scale(12),
-  },
-  serachIconStyle: {
-    width: scale(15),
-    height: scale(15),
-    marginRight: moderateScale(10),
   },
 });

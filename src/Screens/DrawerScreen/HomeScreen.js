@@ -9,6 +9,7 @@ import { Divider } from "react-native-paper";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import BannerSlider from "../../Components/HomeScreenComponent/BannerSlider";
 import SliderCard from "../../Components/HomeScreenComponent/SliderCard";
+import screenName from "../../Constants/screenName";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -45,7 +46,11 @@ const HomeScreen = () => {
   return (
     <SafeAreaView style={commonStyle.container}>
       <MainHeader navigation={navigation} />
-      <RoundCategoryView onClickCategory={(id) => {}} />
+      <RoundCategoryView
+        onClickCategory={(id) => {
+          navigation.navigate(screenName.mainHome);
+        }}
+      />
       <Divider style={{ marginVertical: verticalScale(8) }} />
       <BannerSlider data={img} onClick={() => {}} />
       <View

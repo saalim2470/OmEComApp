@@ -1,4 +1,11 @@
-import { ActivityIndicator, FlatList, RefreshControl, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React, { useCallback, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import commonStyle from "../../Constants/commonStyle";
@@ -36,8 +43,8 @@ const OtherUserProfile = ({ navigation }) => {
     isReachedEnd: userContentReachedEnd,
     isSuccess: userContentSuccess,
   } = useSelector((state) => state.getContentByUserId);
-  const a=useSelector((state) => state.getContentByUserId);
-  console.log('-=-=-user content-=-=-=-',a);
+  const a = useSelector((state) => state.getContentByUserId);
+  console.log("-=-=-user content-=-=-=-", a);
   const {
     error: likeError,
     statusCode: likeErrorCode,
@@ -57,16 +64,11 @@ const OtherUserProfile = ({ navigation }) => {
     type: null,
   });
   useEffect(() => {
-    if (userDetail != null && userDetail?.Success) {
-      getContent();
-    }
-  }, [userDetail]);
-  useEffect(() => {
     if (contentData != null && userContentSuccess) {
       setPostData(contentData);
       setRefreshing(false);
     }
-  }, [contentData]);
+  }, [contentData, userContentSuccess]);
   useEffect(() => {
     if (likeDataRes != null && likeDataRes.Success) {
       updateData(likeDataRes?.Data, "like");
@@ -94,7 +96,6 @@ const OtherUserProfile = ({ navigation }) => {
   }, [likeError, likeErrorCode, saveError, saveErrorCode]);
 
   const getContent = () => {
-    console.log('-=--in get content==-==-',userContentPage);
     dispatch(
       getContentByUserIdApi(
         userDetail?.Data?.userId,

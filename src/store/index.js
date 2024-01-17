@@ -22,6 +22,7 @@ import GetContentByUserId from "./profileSlices/GetContentByUserId";
 import LikeSlice from "./AdContentSlices/LikeSlice";
 import SaveContentSlice from "./AdContentSlices/SaveContentSlice";
 import DeleteAdContent from "./AdContentSlices/DeleteAdContent";
+import GetSavedContent from "./AdContentSlices/GetSavedContent";
 
 const store = configureStore({
   reducer: {
@@ -47,6 +48,7 @@ const store = configureStore({
     like: LikeSlice,
     saveContent: SaveContentSlice,
     deleteAdContent: DeleteAdContent,
+    getSavedContent: GetSavedContent,
   },
   middleware: [thunk],
 });
