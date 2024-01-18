@@ -45,7 +45,10 @@ const CustomSidebarMenu = (props) => {
     <SafeAreaView style={{ flex: 1 }}>
       <DrawerContentScrollView {...props}>
         <NavigationProfile />
-        <Divider style={{ marginTop: verticalScale(15) }} />
+        <Divider
+          bold={true}
+          style={{ backgroundColor: "black", marginTop: verticalScale(15) }}
+        />
         <View style={{ marginTop: verticalScale(20) }}>
           <DrawerItemList {...props} />
 
@@ -63,7 +66,8 @@ const CustomSidebarMenu = (props) => {
             icon={({ color, size, focused }) => (
               <Image
                 source={images.categories}
-                style={{ width: scale(15), height: scale(15) }}
+                style={{ width: scale(28), height: scale(28) }}
+                resizeMode="contain"
               />
             )}
           />
@@ -82,7 +86,8 @@ const CustomSidebarMenu = (props) => {
             icon={({ color, size, focused }) => (
               <Image
                 source={images.announcmentIcon}
-                style={{ width: scale(15), height: scale(15) }}
+                style={{ width: scale(30), height: scale(30) }}
+                resizeMode="contain"
               />
             )}
           />
@@ -96,14 +101,16 @@ const CustomSidebarMenu = (props) => {
             labelStyle={styles.labelStyle}
             icon={({ color, size, focused }) => (
               <Image
-                source={images.userIcon}
-                style={{ width: scale(15), height: scale(15) }}
+                source={images.userFillIcon}
+                tintColor={"#527853"}
+                style={{ width: scale(30), height: scale(30) }}
+                resizeMode="contain"
               />
             )}
           />
         </View>
       </DrawerContentScrollView>
-      <Divider />
+      <Divider bold={true} style={{ backgroundColor: "black" }} />
       <DrawerItem
         label="Log out"
         onPress={() => {
@@ -113,7 +120,8 @@ const CustomSidebarMenu = (props) => {
         icon={({ color, size, focused }) => (
           <Image
             source={images.logoutIcon}
-            style={{ width: scale(15), height: scale(15) }}
+            style={{ width: scale(30), height: scale(30) }}
+            resizeMode="contain"
           />
         )}
       />
@@ -125,9 +133,10 @@ const CustomSidebarMenu = (props) => {
       >
         <Text
           style={{
-            fontFamily: "Montserrat-Medium",
+            fontFamily: "Montserrat-Bold",
             color: "#000000",
-            fontSize: scale(10),
+            fontSize: scale(13),
+            textAlign: "center",
           }}
         >
           Version 1.0.011
@@ -184,7 +193,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   labelStyle: {
-    fontFamily: "Montserrat-Medium",
+    fontFamily: "Montserrat-Bold",
+    fontSize: scale(13),
     color: "#000000",
     marginLeft: moderateScale(-15),
   },

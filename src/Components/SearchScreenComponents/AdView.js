@@ -4,7 +4,7 @@ import { TouchableOpacity } from "react-native";
 import { Image } from "react-native";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 
-const AdView = ({ onClickAd = () => {}, disabled }) => {
+const AdView = ({ onClickAd = () => {}, disabled, data }) => {
   return (
     <TouchableOpacity
       onPress={() => {
@@ -16,7 +16,7 @@ const AdView = ({ onClickAd = () => {}, disabled }) => {
     >
       <Image
         source={{
-          uri: "https://i.gadgets360cdn.com/large/redmi_note_9_open_sale_india_1601455222179.jpg",
+          uri: data,
         }}
         resizeMode="contain"
         style={{ height: "100%" }}

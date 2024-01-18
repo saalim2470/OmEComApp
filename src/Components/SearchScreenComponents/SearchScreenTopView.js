@@ -1,30 +1,47 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import commonStyle from "../../Constants/commonStyle";
 import screenName from "../../Constants/screenName";
 import images from "../../Constants/images";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
+import { useNavigation } from "@react-navigation/native";
+import RbBottomSheet from "../BottomSheet/RbBottomSheet";
+import Filters from "./Filters";
 
 const SearchScreenTopView = () => {
+  const navigation = useNavigation();
+  const [openSheet, setOpenSheet] = useState(false);
   return (
-    <View style={[commonStyle.row, { paddingHorizontal: moderateScale(15) }]}>
-      <TouchableOpacity
-        activeOpacity={0.6}
-        style={styles.txtBoxView}
-        onPress={() => {
-          navigation.navigate(screenName.searchResultScreen);
-        }}
-      >
-        <Image source={images.searchIcon} style={styles.serachIconStyle} />
-        <Text style={styles.txtBoxPlaceholder}>Search something</Text>
-      </TouchableOpacity>
-      <TouchableOpacity activeOpacity={0.5} onPress={() => {}}>
-        <Image
-          source={images.filterIcon}
-          style={{ width: scale(20), height: scale(20) }}
-        />
-      </TouchableOpacity>
-    </View>
+    <>
+      <View style={[commonStyle.row, { paddingHorizontal: moderateScale(15) }]}>
+        <TouchableOpacity
+          activeOpacity={0.6}
+          style={styles.txtBoxView}
+          onPress={() => {
+            navigation.navigate(screenName.searchResultScreen);
+          }}
+        >
+          <Image source={images.searchIcon} style={styles.serachIconStyle} />
+          <Text style={styles.txtBoxPlaceholder}>Search something</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={() => {
+            setOpenSheet(true);
+          }}
+        >
+          <Image
+            source={images.filterIcon}
+            style={{ width: scale(20), height: scale(20) }}
+          />
+        </TouchableOpacity>
+      </View>
+      <RbBottomSheet
+        isOpen={openSheet}
+        setIsOpen={setOpenSheet}
+        children={<Filters />}
+      />
+    </>
   );
 };
 

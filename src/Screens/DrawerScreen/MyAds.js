@@ -36,6 +36,7 @@ import { useIsFocused } from "@react-navigation/native";
 import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 import colors from "../../Constants/colors";
 import MainHeader from "../../Components/MainHeader";
+import CustomeHeader from "../../Components/CustomeHeader";
 
 const MyAds = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -84,12 +85,12 @@ const MyAds = ({ navigation, route }) => {
     }
   }, [userContentRes]);
   useEffect(() => {
-    if (likeDataRes != null && likeDataRes.Success) {
+    if (likeDataRes != null && likeDataRes?.Success) {
       updateData(likeDataRes?.Data, "like");
     }
   }, [likeDataRes]);
   useEffect(() => {
-    if (saveDataRes != null && saveDataRes.Success) {
+    if (saveDataRes != null && saveDataRes?.Success) {
       updateData(saveDataRes?.Data, "save");
     }
   }, [saveDataRes]);
@@ -195,12 +196,12 @@ const MyAds = ({ navigation, route }) => {
   const onReachedEnd = () => {
     if (!userContentReachedEnd) {
       dispatch(setUserContentPage(userContentPage + 1));
-      getUserContent()
+      getUserContent();
     }
   };
   return (
     <SafeAreaView style={commonStyle.container}>
-        <MainHeader navigation={navigation}/>
+      <CustomeHeader isBackBtn={true} title={"My Ads"} />
       {(!refreshing && userContentLoading) || deleteLoading ? (
         <Loading />
       ) : userContentError != null && !userContentError.Success ? (

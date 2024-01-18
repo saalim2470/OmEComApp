@@ -41,7 +41,8 @@ const DrawerNavigation = () => {
         drawerLabelStyle: {
           color: "#000000",
           marginLeft: moderateScale(-15),
-          fontFamily: "Montserrat-Medium",
+          fontFamily: "Montserrat-Bold",
+          fontSize: scale(13),
         },
       }}
       initialRouteName={screenName.bottomNavigation}
@@ -69,8 +70,9 @@ const DrawerNavigation = () => {
           drawerLabel: "Home",
           drawerIcon: ({ color, size, focused }) => (
             <Image
-              source={images.homeIcon}
-              style={{ width: scale(15), height: scale(15) }}
+              source={images.drawerHome}
+              style={{ width: scale(30), height: scale(30) }}
+              resizeMode="contain"
             />
           ),
         }}
@@ -84,8 +86,9 @@ const DrawerNavigation = () => {
           swipeEnabled: false,
           drawerIcon: ({ color, size, focused }) => (
             <Image
-              source={images.bookmarkIcon}
-              style={{ width: scale(15), height: scale(15) }}
+              source={images.savedIcon}
+              style={{ width: scale(30), height: scale(30) }}
+              resizeMode="contain"
             />
           ),
         }}
@@ -99,7 +102,8 @@ const DrawerNavigation = () => {
           drawerIcon: ({ color, size, focused }) => (
             <Image
               source={images.subscription}
-              style={{ width: scale(15), height: scale(15) }}
+              style={{ width: scale(30), height: scale(30) }}
+              resizeMode="contain"
             />
           ),
         }}
@@ -113,7 +117,8 @@ const DrawerNavigation = () => {
           drawerIcon: ({ color, size, focused }) => (
             <Image
               source={images.terms}
-              style={{ width: scale(15), height: scale(15) }}
+              style={{ width: scale(30), height: scale(30) }}
+              resizeMode="contain"
             />
           ),
         }}
@@ -127,7 +132,8 @@ const DrawerNavigation = () => {
           drawerIcon: ({ color, size, focused }) => (
             <Image
               source={images.aboutIcon}
-              style={{ width: scale(15), height: scale(15) }}
+              style={{ width: scale(30), height: scale(30) }}
+              resizeMode="contain"
             />
           ),
         }}
@@ -141,7 +147,8 @@ const DrawerNavigation = () => {
           drawerIcon: ({ color, size, focused }) => (
             <Image
               source={images.refer}
-              style={{ width: scale(15), height: scale(15) }}
+              style={{ width: scale(30), height: scale(30) }}
+              resizeMode="contain"
             />
           ),
         }}
@@ -155,7 +162,8 @@ const DrawerNavigation = () => {
           drawerIcon: ({ color, size, focused }) => (
             <Image
               source={images.playstore}
-              style={{ width: scale(15), height: scale(15) }}
+              style={{ width: scale(30), height: scale(30) }}
+              resizeMode="contain"
             />
           ),
         }}
@@ -169,7 +177,8 @@ const DrawerNavigation = () => {
           drawerIcon: ({ color, size, focused }) => (
             <Image
               source={images.privacy}
-              style={{ width: scale(15), height: scale(15) }}
+              style={{ width: scale(30), height: scale(30) }}
+              resizeMode="contain"
             />
           ),
         }}

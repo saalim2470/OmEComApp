@@ -62,6 +62,8 @@ const images = {
   playstore: require("../utils/assets/images/playstore.png"),
   refer: require("../utils/assets/images/refer.png"),
   privacy: require("../utils/assets/images/privacy.png"),
+  drawerHome: require("../utils/assets/images/home.png"),
+  savedIcon: require("../utils/assets/images/savedIcon.png"),
 };
 
 export default images;

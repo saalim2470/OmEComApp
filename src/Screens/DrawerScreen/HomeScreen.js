@@ -1,5 +1,5 @@
 import { FlatList, Image, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import commonStyle from "../../Constants/commonStyle";
 import MainHeader from "../../Components/MainHeader";
@@ -10,6 +10,7 @@ import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import BannerSlider from "../../Components/HomeScreenComponent/BannerSlider";
 import SliderCard from "../../Components/HomeScreenComponent/SliderCard";
 import screenName from "../../Constants/screenName";
+import CustomeBottomSheet from "../../Components/CustomeBottomSheet";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -40,6 +41,8 @@ const HomeScreen = () => {
       uri: "https://lh3.googleusercontent.com/spp/AE_ITi1zdAWLn64mQnxXO2jBkbeVF8nmwttUO6J1bQDzWs9VfI5JerD9l_82yMg39L3Ct3n5MK7xT_FGruyqJimsivHYog3TqKfcVsaylXVjZBoJFLxc4ZV8RFJ15xFk-LLFZH9iQkpXsEB6zafgsfSub5rYhA-6dVaSafYayE2V2EA3ZRgwMYY8sSAL-rpwhBqO_IpsRR37Qw=s512-rw-pd-pc0x00ffffff",
     },
   ];
+  const [isShowBottomSheet, setIsShowBottomSheet] = useState(false);
+  const [adImg, setAdImg] = useState();
   const renderCard = ({ item, index }) => {
     return <SliderCard item={item} />;
   };
@@ -52,7 +55,13 @@ const HomeScreen = () => {
         }}
       />
       <Divider style={{ marginVertical: verticalScale(8) }} />
-      <BannerSlider data={img} onClick={() => {}} />
+      <BannerSlider
+        data={img}
+        onClick={(index) => {
+          setAdImg(img[index]);
+          setIsShowBottomSheet(true);
+        }}
+      />
       <View
         style={{
           marginTop: verticalScale(10),
@@ -69,6 +78,11 @@ const HomeScreen = () => {
           renderItem={renderCard}
         />
       </View>
+      <CustomeBottomSheet
+        isOpen={isShowBottomSheet}
+        setIsOpen={setIsShowBottomSheet}
+        data={adImg}
+      />
     </SafeAreaView>
   );
 };

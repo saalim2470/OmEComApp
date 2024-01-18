@@ -1,17 +1,46 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import CustomeHeader from "../../Components/CustomeHeader";
 import commonStyle from "../../Constants/commonStyle";
+import CustomeHeader from "../../Components/CustomeHeader";
 import { WebView } from "react-native-webview";
+import { moderateScale, scale, verticalScale } from "react-native-size-matters";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { getLegalDataApi } from "../../store/legalData/GetLegalData";
+import Loading from "../../Components/Loading";
+import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
+import FriendlyMsg from "../../Components/ErrorScreens/FriendlyMsg";
 
 const TermsAndCondition = () => {
+  const dispatch = useDispatch();
+  const {
+    legalData: data,
+    isLoading: loading,
+    error: error,
+  } = useSelector((state) => state.getLegalData);
+  useEffect(() => {
+    dispatch(getLegalDataApi());
+  }, []);
+  if (loading) {
+    return <Loading />;
+  }
+  if (error !== null && !error?.Success) {
+    return <ErrorMsg />;
+  }
+  if (!loading && error === null && data === null) {
+    return <FriendlyMsg msg={"Terms & Condition not availaible"} />;
+  }
   return (
     <SafeAreaView style={commonStyle.container}>
-      <CustomeHeader isBackBtn={true} title={"Terms & Conditions"} />
+      <CustomeHeader isBackBtn={true} title={"Terms & Condition"} />
       <WebView
-        //   style={styles.container}
-        source={{ uri: "https://www.google.com/" }}
+        source={{ html: data?.Data?.termsAndConditionContent }}
+        minimumFontSize={40}
+        containerStyle={{
+          marginHorizontal: moderateScale(20),
+          paddingBottom: verticalScale(5),
+        }}
       />
     </SafeAreaView>
   );

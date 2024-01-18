@@ -23,6 +23,7 @@ import LikeSlice from "./AdContentSlices/LikeSlice";
 import SaveContentSlice from "./AdContentSlices/SaveContentSlice";
 import DeleteAdContent from "./AdContentSlices/DeleteAdContent";
 import GetSavedContent from "./AdContentSlices/GetSavedContent";
+import GetLegalData from "./legalData/GetLegalData";
 
 const store = configureStore({
   reducer: {
@@ -49,6 +50,7 @@ const store = configureStore({
     saveContent: SaveContentSlice,
     deleteAdContent: DeleteAdContent,
     getSavedContent: GetSavedContent,
+    getLegalData: GetLegalData,
   },
   middleware: [thunk],
 });

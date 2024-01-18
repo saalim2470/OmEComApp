@@ -15,7 +15,7 @@ import commonStyle from "../Constants/commonStyle";
 
 const screenHeight = Dimensions.get("screen").height;
 
-const CustomeBottomSheet = ({ isOpen, setIsOpen }) => {
+const CustomeBottomSheet = ({ isOpen, setIsOpen, data }) => {
   const refRBSheet = useRef();
   useEffect(() => {
     if (isOpen) {
@@ -32,6 +32,7 @@ const CustomeBottomSheet = ({ isOpen, setIsOpen }) => {
       height={screenHeight - 100}
       onClose={() => setIsOpen(false)}
       minClosingHeight={10}
+      openDuration={700}
       customStyles={{
         draggableIcon: {
           backgroundColor: "#000",
@@ -54,7 +55,7 @@ const CustomeBottomSheet = ({ isOpen, setIsOpen }) => {
       >
         Sponserd Ads
       </Text>
-      <AdView disabled={true} />
+      <AdView disabled={true} data={data} />
       <Text
         style={[
           commonStyle.headingTxt,

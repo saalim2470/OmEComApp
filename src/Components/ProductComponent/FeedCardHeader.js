@@ -9,17 +9,23 @@ import {
 } from "../../Constants/defaults";
 import { useNavigation } from "@react-navigation/native";
 import screenName from "../../Constants/screenName";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getOtherUserInfoApi } from "../../store/profileSlices/GetContentByUserId";
 
 const FeedCardHeader = ({ itemData }) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const userDetail = useSelector((state) => state.login?.userDetail);
+  const onClickHeader = () => {
+    navigation.navigate(screenName.otherUserProfile);
+    dispatch(getOtherUserInfoApi(itemData?.user?.id));
+  };
   return (
     <Pressable
       onPress={() => {
-        navigation.navigate(screenName.otherUserProfile);
-        dispatch(getOtherUserInfoApi(itemData?.user?.id));
+        itemData?.user?.id === userDetail?.userId
+          ? navigation.navigate(screenName.profile)
+          : onClickHeader();
       }}
     >
       <View style={styles.cardHeaderView}>

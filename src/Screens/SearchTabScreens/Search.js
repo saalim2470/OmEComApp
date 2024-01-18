@@ -42,6 +42,7 @@ const Search = ({ navigation }) => {
     return <SliderCard item={item} />;
   };
   const [isShowBottomSheet, setIsShowBottomSheet] = useState(false);
+  const [adImg, setAdImg] = useState();
   return (
     <SafeAreaView style={commonStyle.container}>
       <ScrollView
@@ -70,7 +71,13 @@ const Search = ({ navigation }) => {
           Based on your recent activity
         </Text>
         {/* banner View */}
-        <BannerSlider data={img} onClick={() => {}} />
+        <BannerSlider
+          data={img}
+          onClick={(index) => {
+            setAdImg(img[index]);
+            setIsShowBottomSheet(true);
+          }}
+        />
         <View
           style={{
             marginTop: verticalScale(15),
@@ -86,28 +93,11 @@ const Search = ({ navigation }) => {
             renderItem={renderCard}
           />
         </View>
-        {/* ad view */}
-        <Text
-          style={[
-            commonStyle.headingTxt,
-            {
-              fontSize: scale(12),
-              paddingHorizontal: moderateScale(15),
-              marginTop: verticalScale(15),
-            },
-          ]}
-        >
-          Sponserd Ads
-        </Text>
-        <AdView
-          onClickAd={() => {
-            setIsShowBottomSheet(true);
-          }}
-        />
       </ScrollView>
       <CustomeBottomSheet
         isOpen={isShowBottomSheet}
         setIsOpen={setIsShowBottomSheet}
+        data={adImg}
       />
     </SafeAreaView>
   );

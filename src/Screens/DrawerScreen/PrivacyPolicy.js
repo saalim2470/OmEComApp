@@ -4,12 +4,44 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import commonStyle from "../../Constants/commonStyle";
 import CustomeHeader from "../../Components/CustomeHeader";
 import { WebView } from "react-native-webview";
+import { moderateScale, scale, verticalScale } from "react-native-size-matters";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { getLegalDataApi } from "../../store/legalData/GetLegalData";
+import Loading from "../../Components/Loading";
+import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
+import FriendlyMsg from "../../Components/ErrorScreens/FriendlyMsg";
 
 const PrivacyPolicy = () => {
+  const dispatch = useDispatch();
+  const {
+    legalData: data,
+    isLoading: loading,
+    error: error,
+  } = useSelector((state) => state.getLegalData);
+  useEffect(() => {
+    dispatch(getLegalDataApi());
+  }, []);
+  if (loading) {
+    return <Loading />;
+  }
+  if (error !== null && !error?.Success) {
+    return <ErrorMsg />;
+  }
+  if (!loading && error === null && data === null) {
+    return <FriendlyMsg msg={"Privacy Policy not availaible"} />;
+  }
   return (
     <SafeAreaView style={commonStyle.container}>
       <CustomeHeader isBackBtn={true} title={"Privacy Policy"} />
-      <WebView style={{}} source={{ uri: "https://www.google.com/" }} />
+      <WebView
+        source={{ html: data?.Data?.privacyPolicyContent }}
+        minimumFontSize={40}
+        containerStyle={{
+          marginHorizontal: moderateScale(20),
+          paddingBottom: verticalScale(5),
+        }}
+      />
     </SafeAreaView>
   );
 };

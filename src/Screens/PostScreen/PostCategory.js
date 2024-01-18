@@ -1,29 +1,50 @@
-import { StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native";
 import commonStyle from "../../Constants/commonStyle";
-import Header from "../../Components/Header";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import CategoryCard from "../../Components/PostScreenComponent/CategoryCard";
 import { FlatList } from "react-native";
 import CustomeButton from "../../Components/CustomeButton";
 import { useState } from "react";
-import images from "../../Constants/images";
 import screenName from "../../Constants/screenName";
 import { useDispatch, useSelector } from "react-redux";
 import CustomeAlert from "../../Components/CustomeAlert";
 import { useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setCategory } from "../../store/addAdContentSlices/AddPostData";
 import { setCategoryId } from "../../store/StoreDataSlice";
+import {
+  getCategoryData,
+  setCategoryPage,
+} from "../../store/categorySlices/CategorySlice";
 
 const PostCategory = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const postData = useSelector((state) => state.addPost);
   const categoryData = useSelector((state) => state.category.categoryData);
+  const categoryPage = useSelector((state) => state.category.page);
+  const categoryPageSize = useSelector((state) => state.category.pageSize);
+  const categorySuccess = useSelector((state) => state.category.isSuccess);
+  const categoryMoreLoading = useSelector(
+    (state) => state.category.isMoreLoading
+  );
+  const categoryReachedEnd = useSelector(
+    (state) => state.category.isReachedEnd
+  );
   const [checked, setChecked] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
-  // set data when go back to edit
+  const [categories, setCategories] = useState([]);
+  useEffect(() => {
+    if (!categoryData) {
+      dispatch(setCategoryPage(1));
+      getCategory();
+    }
+  }, []);
+  useEffect(() => {
+    if (categoryData && categorySuccess) {
+      setCategories(categoryData);
+    }
+  }, [categoryData, categorySuccess]);
   useEffect(() => {
     if (postData?.category) {
       setChecked(postData?.category);
@@ -50,29 +71,54 @@ const PostCategory = ({ navigation, route }) => {
       />
     );
   };
+  const getCategory = () => {
+    dispatch(getCategoryData(categoryPage, categoryPageSize));
+  };
+  const listFooterComponent = () => {
+    return (
+      categoryMoreLoading && (
+        <ActivityIndicator size={"large"} color={colors.themeColor} />
+      )
+    );
+  };
+  const onReachedEnd = () => {
+    if (!categoryReachedEnd) {
+      dispatch(setCategoryPage(categoryPage + 1));
+      getCategory();
+    }
+  };
   return (
     <SafeAreaView style={commonStyle.container}>
       {/* <Header /> */}
       <View
         style={[commonStyle.innerContainer, { marginTop: verticalScale(30) }]}
       >
-        <Text style={commonStyle.headingTxt}>Category</Text>
-        <Text style={styles.SmallHading}>Select relavant category</Text>
+        <View style={commonStyle.row}>
+          <View>
+            <Text style={commonStyle.headingTxt}>Category</Text>
+            <Text style={styles.SmallHading}>Select relavant category</Text>
+          </View>
+          <CustomeButton
+            title={"Next"}
+            style={{
+              paddingVertical: verticalScale(8),
+              paddingHorizontal: moderateScale(12),
+            }}
+            onClick={() => {
+              onClickNext();
+            }}
+          />
+        </View>
         <FlatList
-          data={categoryData}
+          data={categories}
           showsVerticalScrollIndicator={false}
           style={{ marginTop: verticalScale(10) }}
-          keyExtractor={(item,index) => {
+          keyExtractor={(item, index) => {
             return `category_${item.id}_${index}`;
           }}
           renderItem={renderItem}
-        />
-        <CustomeButton
-          title={"Next"}
-          style={{ paddingVertical: moderateScale(13) }}
-          onClick={() => {
-            onClickNext();
-          }}
+          ListFooterComponent={listFooterComponent}
+          onEndReached={onReachedEnd}
         />
       </View>
       <CustomeAlert
@@ -80,6 +126,9 @@ const PostCategory = ({ navigation, route }) => {
         title={"Alert"}
         msg={"Please Select category"}
         onDismiss={() => {
+          setShowAlert(false);
+        }}
+        onCliCkOk={() => {
           setShowAlert(false);
         }}
       />

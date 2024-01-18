@@ -24,8 +24,8 @@ const BannerSlider = ({ data, onClick, disable }) => {
         dotStyle={styles.dotStyle}
         circleLoop={true}
         parentWidth={layout.width}
-        onCurrentImagePressed={() => {
-          onClick();
+        onCurrentImagePressed={(index) => {
+          onClick(index);
         }}
       />
     </View>

@@ -63,10 +63,27 @@ const NavigationProfile = () => {
           {userDetail?.email}
         </Text>
         <View style={styles.topViewFollowingView}>
-          <Text style={[styles.txt, { marginRight: moderateScale(20) }]}>
+          <Text
+            style={[
+              styles.txt,
+              {
+                marginRight: moderateScale(20),
+                fontSize: scale(13),
+                fontFamily: "Montserrat-Bold",
+              },
+            ]}
+          >
             <Text style={styles.boldTxt}>00</Text> followers
           </Text>
-          <Text style={styles.txt}>
+          <Text
+            style={[
+              styles.txt,
+              {
+                fontSize: scale(13),
+                fontFamily: "Montserrat-Bold",
+              },
+            ]}
+          >
             <Text style={styles.boldTxt}>00</Text> following
           </Text>
         </View>
@@ -100,6 +117,7 @@ const styles = StyleSheet.create({
   boldTxt: {
     fontSize: moderateScale(15),
     fontFamily: "Montserrat-Bold",
+    color: "black",
   },
   topViewFollowingView: {
     marginRight: moderateScale(30),
