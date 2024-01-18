@@ -49,12 +49,11 @@ const CategoryView = ({ data }) => {
             <SvgUri
               width={scale(35)}
               height={verticalScale(40)}
-              // uri={
-              //   item?.svgImagesPath != null
-              //     ? `${baseURL}${serverImagePath}/${item?.svgImagesPath}`
-              //     : defaultCategoryImg
-              // }
-              uri={item?.svgImagesPath}
+              uri={
+                item?.svgImagesPath != null
+                  ? `${baseURL}${serverImagePath}/${item?.svgImagesPath}`
+                  : defaultCategoryImg
+              }
             />
             <Text style={styles.categoryTxt}>{item?.categoryName}</Text>
           </TouchableOpacity>
