@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import images from "../Constants/images";
@@ -10,16 +10,14 @@ import { DrawerActions } from "@react-navigation/native";
 const MainHeader = ({ navigation }) => {
   return (
     <View style={styles.headerStyle}>
-      <TouchableOpacity
-        activeOpacity={0.7}
+      <Pressable
         onPress={() => {
           // navigation.openDrawer();
-          console.log('-=-=drawer open=-=');
           navigation.dispatch(DrawerActions.openDrawer());
         }}
       >
         <Feather name="menu" size={scale(30)} color="black" />
-      </TouchableOpacity>
+      </Pressable>
       <Image
         source={images.omLogo}
         style={{

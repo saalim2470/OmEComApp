@@ -71,16 +71,16 @@ const MainHome = ({ route }) => {
     msg: null,
     type: null,
   });
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     dispatch(setGetAdContentPage(1));
-  //     getContentDataByCategory(categoryId);
-  //   }, [])
-  // );
-  useEffect(() => {
-    // dispatch(setGetAdContentPage(1));
-    getContentDataByCategory(categoryId);
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(setGetAdContentPage(1));
+      getContentDataByCategory(categoryId);
+    }, [])
+  );
+  // useEffect(() => {
+  //   // dispatch(setGetAdContentPage(1));
+  //   getContentDataByCategory(categoryId);
+  // }, []);
 
   useEffect(() => {
     if (
