@@ -75,7 +75,7 @@ const MainHome = ({ route }) => {
     useCallback(() => {
       dispatch(setGetAdContentPage(1));
       getContentDataByCategory(categoryId);
-    }, [])
+    }, [categoryId])
   );
   // useEffect(() => {
   //   // dispatch(setGetAdContentPage(1));
@@ -162,6 +162,11 @@ const MainHome = ({ route }) => {
     });
   };
   const getContentDataByCategory = (categoryID) => {
+    console.log(
+      "-=-=-data caaling main home-=",
+      contentDataPage,
+      contentDataPageSize
+    );
     if (categoryID === 0) {
       dispatch(getAllContentApi(contentDataPage, contentDataPageSize));
     } else {

@@ -8,40 +8,40 @@ const Filters = () => {
   return (
     <View style={{ marginHorizontal: moderateScale(10) }}>
       <Text style={styles.heading}>Filter</Text>
-      <TouchableOpacity
-        style={[
-          styles.btn,
-          { backgroundColor: selectFilter === 0 ? colors.themeColor : null },
-        ]}
-        activeOpacity={0.6}
-        onPress={() => setSelectFilter(0)}
-      >
-        <Text
+        <TouchableOpacity
           style={[
-            styles.btnTxt,
-            { color: selectFilter === 0 ? "white" : null },
+            styles.btn,
+            { backgroundColor: selectFilter === 0 ? colors.themeColor : null },
           ]}
+          activeOpacity={0.6}
+          onPress={() => setSelectFilter(0)}
         >
-          Search By Content
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[
-          styles.btn,
-          { backgroundColor: selectFilter === 1 ? colors.themeColor : null },
-        ]}
-        activeOpacity={0.6}
-        onPress={() => setSelectFilter(1)}
-      >
-        <Text
+          <Text
+            style={[
+              styles.btnTxt,
+              { color: selectFilter === 0 ? "white" : null },
+            ]}
+          >
+            Search By Content
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
           style={[
-            styles.btnTxt,
-            { color: selectFilter === 1 ? "white" : null },
+            styles.btn,
+            { backgroundColor: selectFilter === 1 ? colors.themeColor : null },
           ]}
+          activeOpacity={0.6}
+          onPress={() => setSelectFilter(1)}
         >
-          Search By user
-        </Text>
-      </TouchableOpacity>
+          <Text
+            style={[
+              styles.btnTxt,
+              { color: selectFilter === 1 ? "white" : null },
+            ]}
+          >
+            Search By user
+          </Text>
+        </TouchableOpacity>
     </View>
   );
 };
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.8,
     marginVertical: verticalScale(8),
     padding: moderateScale(5),
-    borderColor: colors.themeColor,
+    // borderColor: colors.themeColor,
   },
   btnTxt: {
     fontFamily: "Montserrat-Medium",

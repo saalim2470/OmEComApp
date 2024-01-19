@@ -34,6 +34,7 @@ const BottomNavigation = () => {
         headerShown: false,
         tabBarHideOnKeyboard: true,
       }}
+      initialRouteName={screenName.bottomNavigationHomeRoute}
     >
       <Tab.Screen
         name={screenName.bottomNavigationHomeRoute}

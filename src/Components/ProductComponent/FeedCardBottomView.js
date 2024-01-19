@@ -13,6 +13,8 @@ import {
 import { resetLikeData } from "../../store/AdContentSlices/LikeSlice";
 import FeedCardBottomLeftView from "./FeedCardBottomLeftView";
 import FeedCardBottomRightView from "./FeedCardBottomRightView";
+import RbBottomSheet from "../BottomSheet/RbBottomSheet";
+import CommentSection from "../CommentComponent/CommentSection";
 
 const FeedCardBottomView = ({ itemData }) => {
   const dispatch = useDispatch();
@@ -91,13 +93,19 @@ const FeedCardBottomView = ({ itemData }) => {
           style={styles.commentTxt}
         >{`View all ${itemData?.totalComments} comments`}</Text>
       </TouchableOpacity>
-      <CommentView
+      <RbBottomSheet
+        isOpen={isShowBottomSheet}
+        setIsOpen={setIsShowBottomSheet}
+        children={<CommentSection postDetail={itemData}/>}
+        height={400}
+      />
+      {/* <CommentView
         postDetail={itemData}
         isVisible={isShowBottomSheet}
         onBackDropPress={() => {
           setIsShowBottomSheet(false);
         }}
-      />
+      /> */}
       <CustomeAlertModal
         isVisible={showAlert.show}
         title={showAlert.title}

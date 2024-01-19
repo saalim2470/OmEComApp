@@ -30,7 +30,11 @@ import {
 import CustomeAlertModal from "../CustomeAlertModal";
 import colors from "../../Constants/colors";
 
-const CommentView = ({ isVisible, postDetail, onBackDropPress = () => {} }) => {
+const CommentSection = ({
+  isVisible,
+  postDetail,
+  onBackDropPress = () => {},
+}) => {
   const dispatch = useDispatch();
   const userDetail = useSelector((state) => state.login?.userDetail);
   const {
@@ -139,25 +143,25 @@ const CommentView = ({ isVisible, postDetail, onBackDropPress = () => {} }) => {
       />
     );
   }
-  if (!commentLoading && commentError === null && commentData?.length <= 0) {
-    return (
-      <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
-        <Text>No Comment Yet</Text>
-      </View>
-    );
-  }
   return (
-    <Modal
-      isVisible={isVisible}
-      backdropOpacity={0.3}
-      style={{ margin: 0 }}
-      coverScreen={true}
-      onBackdropPress={() => {
-        onBackDropPress();
-      }}
-    >
+    <>
       <View style={styles.modalView}>
         <Text style={{ alignSelf: "center" }}>Comments</Text>
+        {!commentLoading &&
+        commentError === null &&
+        commentData?.length <= 0 ? (
+          <View
+            style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
+          >
+            <Text>No Comment Yet</Text>
+          </View>
+        ) : (
+          <View
+            style={{
+              marginBottom: verticalScale(5),
+              height: verticalScale(250),
+            }}
+          >
             <FlatList
               data={commentData}
               keyExtractor={(item) => item.id.toString()}
@@ -166,7 +170,10 @@ const CommentView = ({ isVisible, postDetail, onBackDropPress = () => {} }) => {
               ListFooterComponent={listFooterComponent}
               onEndReached={onReachedEnd}
               onEndReachedThreshold={0.1}
+              nestedScrollEnabled={true}
             />
+          </View>
+        )}
         <View style={styles.txtInputView}>
           <Avatar.Image
             source={{
@@ -212,25 +219,17 @@ const CommentView = ({ isVisible, postDetail, onBackDropPress = () => {} }) => {
           });
         }}
       />
-    </Modal>
+    </>
   );
 };
 
-export default CommentView;
+export default CommentSection;
 
 const styles = StyleSheet.create({
   modalView: {
-    backgroundColor: "white",
-    borderTopLeftRadius: scale(13),
-    borderTopRightRadius: scale(13),
-    paddingVertical: verticalScale(15),
-    // paddingHorizontal: moderateScale(15),
-    position: "absolute",
-    bottom: 0,
-    width: "100%",
-    height: verticalScale(300),
     paddingRight: moderateScale(15),
     paddingLeft: moderateScale(15),
+    flex: 1,
   },
   cardHeaderView: {
     flexDirection: "row",
@@ -258,5 +257,6 @@ const styles = StyleSheet.create({
     bottom: verticalScale(5),
     alignSelf: "center",
     width: "100%",
+    marginTop: verticalScale(7),
   },
 });

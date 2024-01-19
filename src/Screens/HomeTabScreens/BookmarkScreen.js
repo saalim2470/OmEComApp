@@ -3,28 +3,21 @@ import {
   FlatList,
   RefreshControl,
   StyleSheet,
-  Text,
-  View,
 } from "react-native";
 import React, {
   useCallback,
   useEffect,
-  useLayoutEffect,
   useState,
 } from "react";
 import commonStyle from "../../Constants/commonStyle";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
-import ProfileScreenTopView from "../../Components/ProfileScreenComponent/ProfileScreenTopView";
 import { Divider, Menu } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getUserContentApi,
-  resetUserPage,
   setUserContentPage,
 } from "../../store/profileSlices/GetUserContentSlice";
 import Loading from "../../Components/Loading";
-import ServerError from "../../Components/ErrorScreens/ServerError";
 import FriendlyMsg from "../../Components/ErrorScreens/FriendlyMsg";
 import CustomeAlertModal from "../../Components/CustomeAlertModal";
 import { resetLikeData } from "../../store/AdContentSlices/LikeSlice";
@@ -35,11 +28,11 @@ import { resetDeleteAdContentData } from "../../store/AdContentSlices/DeleteAdCo
 import { useIsFocused } from "@react-navigation/native";
 import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 import colors from "../../Constants/colors";
-import MainHeader from "../../Components/MainHeader";
 import {
   getSavedContentApi,
   setSavedContentPage,
 } from "../../store/AdContentSlices/GetSavedContent";
+import CustomeHeader from "../../Components/CustomeHeader";
 
 const BookmarkScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -80,21 +73,22 @@ const BookmarkScreen = ({ navigation, route }) => {
   });
   useEffect(() => {
     getSavedContent();
-  }, [isFocused, deleteDataRes?.Success, userContentPage]);
+  }, [isFocused, deleteDataRes?.Success]);
   useEffect(() => {
     if (userContentRes != null && userContentSuccess) {
       setPostData(userContentRes);
       setRefreshing(false);
     }
-  }, [userContentRes]);
+  }, [userContentRes,userContentSuccess]);
   useEffect(() => {
     if (likeDataRes != null && likeDataRes.Success) {
-      updateData(likeDataRes?.Data, "like");
+      updateData(likeDataRes?.Data);
     }
   }, [likeDataRes]);
   useEffect(() => {
     if (saveDataRes != null && saveDataRes.Success) {
-      updateData(saveDataRes?.Data, "save");
+      const updatedData=postData.filter((item)=>item?.adContent?.id!==saveDataRes?.Data?.adContentID)
+      setPostData(updatedData)
     }
   }, [saveDataRes]);
   useEffect(() => {
@@ -133,19 +127,17 @@ const BookmarkScreen = ({ navigation, route }) => {
   const getSavedContent = () => {
     dispatch(getSavedContentApi(userContentPage, userContentPageSize));
   };
-  const updateData = (data, actionType) => {
+  const updateData = (data) => {
     const updatedData = postData.map((item) => {
-      if (actionType === "like" && item.id === data.contentId) {
+      if (item?.adContent?.id === data.contentId) {
         return {
           ...item,
-          isCurrentUserLiked: data.isLiked,
-          totalLikes: data.totalLikes,
-        };
-      }
-      if (actionType === "save" && item.id === data.adContentID) {
-        return {
-          ...item,
-          isCurrentUserSaved: data.isSaved,
+          adContent:{
+            ...item.adContent,
+            isCurrentUserLiked: data.isLiked,
+            totalLikes: data.totalLikes,
+          },
+       
         };
       }
       return item;
@@ -173,9 +165,8 @@ const BookmarkScreen = ({ navigation, route }) => {
     return (
       <FeedCard
         itemData={item?.adContent}
-        profile={true}
         onClickMoreBtn={() => {
-          navigation.navigate(screenName.productDetail, { data: item });
+          navigation.navigate(screenName.productDetail, { data: item?.adContent });
         }}
       />
     );
@@ -204,7 +195,7 @@ const BookmarkScreen = ({ navigation, route }) => {
   };
   return (
     <SafeAreaView style={commonStyle.container}>
-      <MainHeader navigation={navigation} />
+      <CustomeHeader isBackBtn={true} title={"Saved Items"} />
       {(!refreshing && userContentLoading) || deleteLoading ? (
         <Loading />
       ) : userContentError != null && !userContentError.Success ? (

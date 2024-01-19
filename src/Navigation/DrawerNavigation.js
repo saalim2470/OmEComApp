@@ -37,7 +37,7 @@ const DrawerNavigation = () => {
         headerShown: false,
         drawerStyle: { width: scale(280), backgroundColor: "#FFFFFF" },
         drawerItemStyle: { backgroundColor: "#FFFFFF" },
-        swipeEnabled: false,
+        // swipeEnabled: false,
         drawerLabelStyle: {
           color: "#000000",
           marginLeft: moderateScale(-15),
@@ -45,34 +45,34 @@ const DrawerNavigation = () => {
           fontSize: scale(13),
         },
       }}
-      initialRouteName={screenName.bottomNavigation}
+      // initialRouteName={screenName.homeScreen}
       drawerContent={(props) => (
         <CustomSidebarMenu {...props} closeDrawer={closeDrawer} />
       )}
     >
-      {/* <Drawer.Screen
+      <Drawer.Screen
         name={screenName.homeScreen}
         component={HomeScreen}
         options={{
           drawerLabel: "Home",
           drawerIcon: ({ color, size, focused }) => (
             <Image
-              source={images.homeIcon}
-              style={{ width: scale(15), height: scale(15) }}
+              source={images.drawerHome}
+              style={{ width: scale(30), height: scale(30) }}
             />
           ),
         }}
-      /> */}
+      />
       <Drawer.Screen
         name={screenName.bottomNavigation}
         component={BottomNavigation}
         options={{
-          drawerLabel: "Home",
+          drawerLabel: "Categories",
           drawerIcon: ({ color, size, focused }) => (
             <Image
-              source={images.drawerHome}
-              style={{ width: scale(30), height: scale(30) }}
-              resizeMode="contain"
+             source={images.categories}
+                style={{ width: scale(28), height: scale(28) }}
+                resizeMode="contain"
             />
           ),
         }}

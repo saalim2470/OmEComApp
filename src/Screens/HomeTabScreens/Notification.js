@@ -1,8 +1,9 @@
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import commonStyle from "../../Constants/commonStyle";
 import CustomeHeader from "../../Components/CustomeHeader";
 import NotificationCard from "../../Components/NotificationCard";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Notification = () => {
   return (

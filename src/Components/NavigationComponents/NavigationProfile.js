@@ -102,6 +102,7 @@ export default NavigationProfile;
 const styles = StyleSheet.create({
   topProfileView: {
     paddingLeft: moderateScale(15),
+    marginTop:verticalScale(5)
   },
   sideMenuProfileIcon: {
     width: scale(70),

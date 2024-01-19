@@ -51,7 +51,12 @@ const HomeScreen = () => {
       <MainHeader navigation={navigation} />
       <RoundCategoryView
         onClickCategory={(id) => {
-          navigation.navigate(screenName.mainHome);
+          navigation.navigate(screenName.bottomNavigation, {
+            screen: screenName.bottomNavigationHomeRoute,
+            params: {
+              screen: screenName.mainHome,
+            },
+          });
         }}
       />
       <Divider style={{ marginVertical: verticalScale(8) }} />

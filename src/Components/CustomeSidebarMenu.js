@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  SafeAreaView,
   View,
   StyleSheet,
   Image,
@@ -25,6 +24,7 @@ import screenName from "../Constants/screenName";
 import { resetUserAdContent } from "../store/profileSlices/GetUserContentSlice";
 import CustomeAlert from "./CustomeAlert";
 import NavigationProfile from "./NavigationComponents/NavigationProfile";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const CustomSidebarMenu = (props) => {
   const navigation = useNavigation();
@@ -43,16 +43,16 @@ const CustomSidebarMenu = (props) => {
   };
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <DrawerContentScrollView {...props}>
         <NavigationProfile />
         <Divider
           bold={true}
           style={{ backgroundColor: "black", marginTop: verticalScale(15) }}
         />
-        <View style={{ marginTop: verticalScale(20) }}>
+      <DrawerContentScrollView {...props}>
+        <View style={{ marginTop: verticalScale(-20) }}>
           <DrawerItemList {...props} />
 
-          <DrawerItem
+          {/* <DrawerItem
             label="Categories"
             onPress={() => {
               navigation.navigate(screenName.bottomNavigation, {
@@ -70,7 +70,7 @@ const CustomSidebarMenu = (props) => {
                 resizeMode="contain"
               />
             )}
-          />
+          /> */}
 
           <DrawerItem
             label="My Ads"
