@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import {  StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import Routes from "./src/Navigation/Routes";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -32,5 +32,4 @@ export default function App() {
     </SafeAreaProvider>
   );
 }
-
 const styles = StyleSheet.create({});
