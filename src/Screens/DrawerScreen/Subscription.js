@@ -28,7 +28,10 @@ import {
 } from "../../store/addAdContentSlices/AddPostData";
 import { useState } from "react";
 import SubscriptionStripe from "../../Components/SubscriptionComponents/SubscriptionStripe";
-import { subcriptionType } from "../../Constants/Constant";
+import { groupBy, subcriptionType } from "../../Constants/Constant";
+import SubscriptionHeading from "../../Components/SubscriptionComponents/SubscriptionHeading";
+import RbBottomSheet from "../../Components/BottomSheet/RbBottomSheet";
+import SubscriptionDesc from "../../Components/SubscriptionComponents/SubscriptionDesc";
 
 const Subscription = ({ route }) => {
   const dispatch = useDispatch();
@@ -55,6 +58,8 @@ const Subscription = ({ route }) => {
     error: getSubscriptionPlanError,
     errorCode: getSubscriptionPlanErrorCode,
   } = useSelector((state) => state.getSubscriptionPlan);
+  const [openSheet, setOpenSheet] = useState(false);
+  const [subsType, setSubsType] = useState();
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -64,6 +69,7 @@ const Subscription = ({ route }) => {
   useEffect(() => {
     dispatch(getSubscriptionPlan(1, 70));
   }, []);
+
   useEffect(() => {
     if (getSubscriptionData && getSubscriptionData?.Success) {
       console.log("-=-=-postd data-=-=", postData?.postDataDraft);
@@ -137,27 +143,66 @@ const Subscription = ({ route }) => {
         <Loading />
       ) : (
         <>
+          <SubscriptionHeading
+            subcriptionType={subcriptionType[0]}
+            onClickRead={() => {
+              setSubsType(0);
+              setOpenSheet(true);
+            }}
+          />
           {subscriptionPlanData?.Data?.items?.map((item, index) => {
-            return (
-              <>
-                <View style={styles.headingView}>
-                  <Text style={styles.headingTxt}>
-                    {subcriptionType[item?.subscriptionType]}
-                  </Text>
-                  <TouchableOpacity activeOpacity={0.6}>
-                    <Text style={styles.headingBtnTxt}>Read More...</Text>
-                  </TouchableOpacity>
-                </View>
-                <SubscriptionStripe
-                  item={item}
-                  onClick={() => {
-                    dispatch(getSubscriptionPlanId(item?.id));
-                  }}
-                />
-              </>
-            );
+            if (item?.subscriptionType === 0)
+              return (
+                <>
+                  <SubscriptionStripe
+                    item={item}
+                    onClick={() => {
+                      dispatch(getSubscriptionPlanId(item?.id));
+                    }}
+                  />
+                </>
+              );
           })}
-          {/* <SubscriptionBottomSheet /> */}
+          <SubscriptionHeading
+            subcriptionType={subcriptionType[1]}
+            onClickRead={() => {
+              setSubsType(1);
+              setOpenSheet(true);
+            }}
+          />
+          {subscriptionPlanData?.Data?.items?.map((item, index) => {
+            if (item?.subscriptionType === 1)
+              return (
+                <>
+                  <SubscriptionStripe
+                    item={item}
+                    onClick={() => {
+                      dispatch(getSubscriptionPlanId(item?.id));
+                    }}
+                  />
+                </>
+              );
+          })}
+          <SubscriptionHeading
+            subcriptionType={subcriptionType[2]}
+            onClickRead={() => {
+              setSubsType(2);
+              setOpenSheet(true);
+            }}
+          />
+          {subscriptionPlanData?.Data?.items?.map((item, index) => {
+            if (item?.subscriptionType === 2)
+              return (
+                <>
+                  <SubscriptionStripe
+                    item={item}
+                    onClick={() => {
+                      dispatch(getSubscriptionPlanId(item?.id));
+                    }}
+                  />
+                </>
+              );
+          })}
         </>
       )}
       <CustomeAlertModal
@@ -169,45 +214,16 @@ const Subscription = ({ route }) => {
           onClickModalBtn();
         }}
       />
+      <RbBottomSheet
+        isOpen={openSheet}
+        setIsOpen={setOpenSheet}
+        children={<SubscriptionDesc subsType={subsType} />}
+        height={verticalScale(300)}
+      />
     </SafeAreaView>
   );
 };
 
 export default Subscription;
 
-const styles = StyleSheet.create({
-  headingView: {
-    //   borderWidth: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: scale(7),
-    backgroundColor: colors.greyColor,
-  },
-  headingTxt: {
-    fontFamily: "Montserrat-Bold",
-    fontSize: scale(14),
-  },
-  headingBtnTxt: {
-    fontFamily: "Montserrat-Medium",
-    fontSize: scale(11),
-  },
-  stripeWrapper: {
-    // borderWidth: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: scale(15),
-    marginVertical: verticalScale(5),
-  },
-  stripeTxt: {
-    fontFamily: "Montserrat-Medium",
-    fontSize: scale(14),
-  },
-  striprBtn: {
-    padding: scale(8),
-    marginLeft: moderateScale(10),
-    backgroundColor: colors.themeColor,
-    borderRadius: scale(2),
-  },
-});
+const styles = StyleSheet.create({});

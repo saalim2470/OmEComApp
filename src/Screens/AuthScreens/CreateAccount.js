@@ -409,7 +409,7 @@ const CreateAccount = () => {
             setItems={setCountryData}
             style={[
               styles.ddStyle,
-              { borderColor: errors.country ? "red" : "#cacaca" },
+              { borderColor: errors.country ? "red" : '#7C757E' },
             ]}
             zIndex={3000}
             zIndexInverse={1000}
@@ -446,7 +446,7 @@ const CreateAccount = () => {
             setItems={setStateData}
             style={[
               styles.ddStyle,
-              { borderColor: errors.state ? "red" : "#cacaca" },
+              { borderColor: errors.state ? "red" : "#7C757E" },
             ]}
             zIndex={2000}
             // zIndexInverse={2000}
@@ -483,7 +483,7 @@ const CreateAccount = () => {
             setItems={setCityData}
             style={[
               styles.ddStyle,
-              { borderColor: errors.city ? "red" : "#cacaca" },
+              { borderColor: errors.city ? "red" : "#7C757E" },
             ]}
             zIndex={1000}
             zIndexInverse={3000}

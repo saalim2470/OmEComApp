@@ -24,3 +24,19 @@ export const subcriptionType = {
   1: "Home page/Front page Ad",
   2: "Pin Post",
 };
+
+export function groupBy(items, callbackFn) {
+  return items.reduce((result, item) => {
+    const key = callbackFn(item);
+
+    // Check if the key group already exists, if not, create it
+    if (!result[key]) {
+      result[key] = [];
+    }
+
+    // Push the current item into the corresponding key group
+    result[key].push(item);
+
+    return result;
+  }, {});
+}

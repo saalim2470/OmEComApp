@@ -29,6 +29,8 @@ import {
   setAccessToken,
   setuserDetail,
 } from "../store/authSlices/LoginSlice";
+import AuthServices from "../services/AuthServices";
+import ContactUs from "../Screens/DrawerScreen/ContactUs";
 
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
@@ -51,12 +53,15 @@ const Routes = () => {
         } else {
           dispatch(setAccessToken(token));
           console.log(token);
-          await getUserInfo();
+          const userResponce = await AuthServices.getUserInfo();
+          dispatch(setuserDetail(userResponce?.data?.Data));
+          // await getUserInfo();
           setIsToken(true);
         }
         await new Promise((resolve) => setTimeout(resolve, 2000));
       } catch (e) {
         console.warn(e);
+        await AsyncStorage.removeItem("accessToken");
       } finally {
         setAppIsReady(true);
       }
@@ -65,7 +70,11 @@ const Routes = () => {
     prepare();
   }, []);
   (async function () {
-    if (appIsReady && countryData != null && countryData?.Success) {
+    if (
+      appIsReady &&
+      countryData != null &&
+      countryData?.Success 
+    ) {
       await SplashScreen.hideAsync();
     }
   })();
@@ -96,6 +105,10 @@ const Routes = () => {
           <Stack.Screen
             name={screenName.drawerNavigation}
             component={DrawerNavigation}
+          />
+           <Stack.Screen
+            name={screenName.contactUs}
+            component={ContactUs}
           />
           <Stack.Screen
             name={screenName.productDetail}

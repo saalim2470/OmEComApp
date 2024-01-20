@@ -52,6 +52,7 @@ const screenName = {
   referToFriend: "ReferToFriend",
   playStoreRating: "PlayStoreRating",
   privacyPolicy: "PrivacyPolicy",
+  contactUs:'ContactUs'
 };
 
 export default screenName;

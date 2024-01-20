@@ -108,6 +108,20 @@ const CustomSidebarMenu = (props) => {
               />
             )}
           />
+            <DrawerItem
+            label="Contact Us"
+            onPress={() => {
+              navigation.navigate(screenName.contactUs);
+            }}
+            labelStyle={styles.labelStyle}
+            icon={({ color, size, focused }) => (
+              <Image
+                source={images.contact_us}
+                style={{ width: scale(30), height: scale(30) }}
+                resizeMode="contain"
+              />
+            )}
+          />
         </View>
       </DrawerContentScrollView>
       <Divider bold={true} style={{ backgroundColor: "black" }} />

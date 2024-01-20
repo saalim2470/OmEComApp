@@ -19,6 +19,7 @@
     "@react-navigation/native-stack": "^6.9.13",
     "@reduxjs/toolkit": "^1.9.7",
     "axios": "^1.6.0",
+    "babel-plugin-transform-remove-console": "^6.9.4",
     "expo": "^50.0.2",
     "expo-font": "^11.10.2",
     "expo-image-picker": "~14.7.1",

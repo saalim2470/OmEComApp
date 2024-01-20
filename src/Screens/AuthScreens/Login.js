@@ -79,7 +79,7 @@ const Login = ({ navigation }) => {
       <View style={{ flex: 0.8 }}>
         <Image
           source={images.loginImg2}
-          style={{ flex: 1 }}
+          style={{ width:'100%',height:'100%', }}
           resizeMode="cover"
         />
       </View>

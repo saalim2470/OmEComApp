@@ -10,7 +10,7 @@ const images = {
   facebookIcon: require("../utils/assets/images/facebook.png"),
   appleIcon: require("../utils/assets/images/apple.png"),
   googleIcon: require("../utils/assets/images/google.png"),
-  loginImg2: require("../utils/assets/images/loginImg2.png"),
+  loginImg2: require("../utils/assets/images/loginImg2.jpg"),
   homeFillIcon: require("../utils/assets/images/homeFillIcon.png"),
   homeIcon: require("../utils/assets/images/homeIcon.png"),
   searchIcon: require("../utils/assets/images/searchIcon.png"),
@@ -64,6 +64,7 @@ const images = {
   privacy: require("../utils/assets/images/privacy.png"),
   drawerHome: require("../utils/assets/images/home.png"),
   savedIcon: require("../utils/assets/images/savedIcon.png"),
+  contact_us: require("../utils/assets/images/contact_us.png"),
 };
 
 export default images;

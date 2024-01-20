@@ -31,7 +31,7 @@ const TextBox = ({
       <TextInput
         label={label}
         mode="outlined"
-        outlineColor="#cacaca"
+        // outlineColor="#cacaca"
         value={value}
         error={error}
         secureTextEntry={secureTextEntry}

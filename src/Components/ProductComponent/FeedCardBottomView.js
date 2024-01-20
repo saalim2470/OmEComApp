@@ -97,7 +97,7 @@ const FeedCardBottomView = ({ itemData }) => {
         isOpen={isShowBottomSheet}
         setIsOpen={setIsShowBottomSheet}
         children={<CommentSection postDetail={itemData}/>}
-        height={400}
+        height={verticalScale(350)}
       />
       {/* <CommentView
         postDetail={itemData}

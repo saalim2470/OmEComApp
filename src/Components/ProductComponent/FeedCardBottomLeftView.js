@@ -60,8 +60,8 @@ const FeedCardBottomLeftView = ({ itemData }) => {
         <Ionicons
           name={
             itemData?.isCurrentUserSaved
-              ? "ios-bookmark"
-              : "ios-bookmark-outline"
+              ? "bookmark"
+              : "bookmark-outline"
           }
           size={scale(24)}
           color="black"
