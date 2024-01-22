@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     marginLeft: moderateScale(6),
     height: verticalScale(150),
+    marginVertical:verticalScale(5)
   },
   cardImgContainer: {
     height: verticalScale(120),

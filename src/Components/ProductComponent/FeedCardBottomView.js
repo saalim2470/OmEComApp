@@ -26,7 +26,6 @@ const FeedCardBottomView = ({ itemData }) => {
     page: commentPage,
     pageSize: commentPageSize,
   } = useSelector((state) => state.getCommentByContentId);
-
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -96,7 +95,7 @@ const FeedCardBottomView = ({ itemData }) => {
       <RbBottomSheet
         isOpen={isShowBottomSheet}
         setIsOpen={setIsShowBottomSheet}
-        children={<CommentSection postDetail={itemData}/>}
+        children={<CommentSection postDetail={itemData} />}
         height={verticalScale(350)}
       />
       {/* <CommentView

@@ -1,4 +1,11 @@
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  ImageBackground,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import React, { useState } from "react";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { useSelector } from "react-redux";
@@ -10,6 +17,9 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import screenName from "../../Constants/screenName";
 import ImageViewer from "../ImageViewer";
+import images from "../../Constants/images";
+import colors from "../../Constants/colors";
+import { StatusBar } from "expo-status-bar";
 
 const NavigationProfile = () => {
   const userDetail = useSelector((state) => state.login?.userDetail);
@@ -24,7 +34,17 @@ const NavigationProfile = () => {
   ];
   const [openImageViewer, setImageViewer] = useState(false);
   return (
-    <>
+    <ImageBackground
+      style={{ backgroundColor: "#96EFFF" }}
+      // style={{ backgroundColor: "#B4D4FF" }}
+      source={images.omLogo}
+      resizeMode="contain"
+    >
+      {/* <StatusBar
+        backgroundColor="#B4D4FF"
+        translucent
+        barStyle="dark-content"
+      /> */}
       <Pressable
         onPress={() => {
           navigation.navigate(screenName.bottomNavigation, {
@@ -93,7 +113,7 @@ const NavigationProfile = () => {
         setIsVisible={setImageViewer}
         imgData={imgViewerData}
       />
-    </>
+    </ImageBackground>
   );
 };
 
@@ -102,7 +122,8 @@ export default NavigationProfile;
 const styles = StyleSheet.create({
   topProfileView: {
     paddingLeft: moderateScale(15),
-    marginTop:verticalScale(5)
+    marginTop: verticalScale(5),
+    paddingBottom: verticalScale(10),
   },
   sideMenuProfileIcon: {
     width: scale(70),

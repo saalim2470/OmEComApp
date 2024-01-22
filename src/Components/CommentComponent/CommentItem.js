@@ -16,14 +16,14 @@ const CommentItem = ({ item }) => {
           source={{
             uri: `${baseURL}${serverImagePath}/${item?.user?.profilePicturePath}`,
           }}
-          size={scale(30)}
+          size={scale(25)}
         />
       ) : (
         <Avatar.Image
           source={{
             uri: defaultProfileImg,
           }}
-          size={scale(30)}
+          size={scale(25)}
         />
       )}
       <View
@@ -46,7 +46,7 @@ export default CommentItem;
 const styles = StyleSheet.create({
   headingTxt: {
     fontFamily: "Montserrat-Medium",
-    fontSize: moderateScale(11),
+    fontSize: moderateScale(10),
   },
   onlyRowStyle: {
     flexDirection: "row",
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
   },
   commentTxt: {
     fontFamily: "Montserrat-Medium",
-    fontSize: scale(12),
+    fontSize: scale(11),
     marginBottom: verticalScale(8),
   },
 });

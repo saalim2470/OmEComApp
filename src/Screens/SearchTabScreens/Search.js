@@ -12,9 +12,9 @@ import SliderCard from "../../Components/HomeScreenComponent/SliderCard";
 
 const Search = ({ navigation }) => {
   const img = [
-    "https://images.unsplash.com/photo-1682687220363-35e4621ed990?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxfHx8ZW58MHx8fHx8",
-    "https://images.unsplash.com/photo-1704928341414-5ae341023539?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw1fHx8ZW58MHx8fHx8",
-    "https://images.unsplash.com/photo-1704981524675-d795f35805d4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHx8",
+    "https://img.global.news.samsung.com/in/wp-content/uploads/2023/05/15872_SBS-PR-Banner_3000X2000-e1683884137336.jpg",
+    "https://i.pinimg.com/736x/b7/45/a7/b745a78bece41d7ff78420a11641970a.jpg",
+    "https://cdn.dribbble.com/users/5799567/screenshots/14095208/media/f3fa8ff3516ebb164b659431af01a40b.jpg?resize=400x300&vertical=center",
   ];
   const sliderData = [
     {
@@ -24,18 +24,18 @@ const Search = ({ navigation }) => {
     },
     {
       id: 2,
-      title: "Redmi Note 12",
-      uri: "https://lh3.googleusercontent.com/spp/AE_ITi2lpH45J6FY7DuhQ0zaPVlZ9OD9S673-u6fmPAHzpTyd4GZ4rpPe7a_CD1vuudgtZvVGgtRC6kSq1IQs2lgX8wVV0PQdW4-oQEG4K3IrhQVGF0Qeuk4WQxQoJ-sv4EUCwm1wQKpoI5DaVG8q_FYNOJwOto9A9ugG5h3S2Ljqv6A7JWXfWmlTFkAYQ3lN_M0pbENvv8RSw=s512-rw-pd-pc0x00ffffff",
+      title: "Amazing food",
+      uri: "https://i.pinimg.com/736x/ec/8d/50/ec8d5001b929a1b643d1bd1932eba4d9.jpg",
     },
     {
       id: 3,
-      title: "Galaxy Z fold5",
-      uri: "https://images.samsung.com/is/image/samsung/assets/in/smartphones/galaxy-z-fold5/buy/Fold5_1440x450.jpg?$ORIGIN_JPG$",
+      title: "Service provider",
+      uri: "https://mir-s3-cdn-cf.behance.net/projects/404/2ee493102979329.Y3JvcCwxOTk5LDE1NjQsMCwyMTc.png",
     },
     {
       id: 4,
-      title: "LG 11 Kg Front Fully Automatic Washing Machine, FHP1411Z9B",
-      uri: "https://lh3.googleusercontent.com/spp/AE_ITi1zdAWLn64mQnxXO2jBkbeVF8nmwttUO6J1bQDzWs9VfI5JerD9l_82yMg39L3Ct3n5MK7xT_FGruyqJimsivHYog3TqKfcVsaylXVjZBoJFLxc4ZV8RFJ15xFk-LLFZH9iQkpXsEB6zafgsfSub5rYhA-6dVaSafYayE2V2EA3ZRgwMYY8sSAL-rpwhBqO_IpsRR37Qw=s512-rw-pd-pc0x00ffffff",
+      title: "World tour",
+      uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQg9nAV0o49dha2PwwuhdhmcoVtHIzPiXNEKH1CYjXgCFB0i6Z4FJYilH55oLqxYNDBNFs&usqp=CAU",
     },
   ];
   const renderCard = ({ item, index }) => {

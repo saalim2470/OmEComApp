@@ -14,14 +14,14 @@ const BottomComponent = ({
   return (
     <View style={styles.boxView}>
       <IconButton
-        name={"ios-images"}
+        name={"images"}
         color={"green"}
         onclick={() => {
           onClickGallery();
         }}
       />
       <IconButton
-        name={"ios-camera"}
+        name={"camera"}
         color={"#ed840c"}
         onclick={() => {
           onClickCamera();
@@ -35,7 +35,7 @@ const BottomComponent = ({
         <Entypo name="emoji-happy" size={scale(23)} color="#e3bf3d" />
       </Pressable>
       <IconButton
-        name={"ios-location-sharp"}
+        name={"location-sharp"}
         color={"#ed480c"}
         onclick={() => {
           onClickLocation();

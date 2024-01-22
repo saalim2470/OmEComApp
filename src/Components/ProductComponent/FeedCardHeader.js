@@ -20,11 +20,19 @@ const FeedCardHeader = ({ itemData }) => {
     navigation.navigate(screenName.otherUserProfile);
     dispatch(getOtherUserInfoApi(itemData?.user?.id));
   };
+  const onClickCurrentUser = () => {
+    navigation.navigate(screenName.bottomNavigation, {
+      screen: screenName.profileRoute,
+      params: {
+        screen: screenName.profile,
+      },
+    });
+  };
   return (
     <Pressable
       onPress={() => {
         itemData?.user?.id === userDetail?.userId
-          ? navigation.navigate(screenName.profile)
+          ? onClickCurrentUser()
           : onClickHeader();
       }}
     >

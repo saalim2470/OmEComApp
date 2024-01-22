@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  Image,
-  Text,
-  Linking,
-} from "react-native";
+import { View, StyleSheet, Image, Text, Linking } from "react-native";
 
 import {
   DrawerContentScrollView,
@@ -25,6 +19,7 @@ import { resetUserAdContent } from "../store/profileSlices/GetUserContentSlice";
 import CustomeAlert from "./CustomeAlert";
 import NavigationProfile from "./NavigationComponents/NavigationProfile";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { onShare } from "../Constants/Constant";
 
 const CustomSidebarMenu = (props) => {
   const navigation = useNavigation();
@@ -43,11 +38,11 @@ const CustomSidebarMenu = (props) => {
   };
   return (
     <SafeAreaView style={{ flex: 1 }}>
-        <NavigationProfile />
-        <Divider
-          bold={true}
-          style={{ backgroundColor: "black", marginTop: verticalScale(15) }}
-        />
+      <NavigationProfile />
+      {/* <Divider
+        bold={true}
+        style={{ backgroundColor: "black", marginTop: verticalScale(15) }}
+      /> */}
       <DrawerContentScrollView {...props}>
         <View style={{ marginTop: verticalScale(-20) }}>
           <DrawerItemList {...props} />
@@ -71,6 +66,21 @@ const CustomSidebarMenu = (props) => {
               />
             )}
           /> */}
+
+          <DrawerItem
+            label="Refer to friend"
+            onPress={() => {
+              onShare();
+            }}
+            labelStyle={styles.labelStyle}
+            icon={({ color, size, focused }) => (
+              <Image
+                source={images.refer}
+                style={{ width: scale(30), height: scale(30) }}
+                resizeMode="contain"
+              />
+            )}
+          />
 
           <DrawerItem
             label="My Ads"
@@ -108,7 +118,7 @@ const CustomSidebarMenu = (props) => {
               />
             )}
           />
-            <DrawerItem
+          <DrawerItem
             label="Contact Us"
             onPress={() => {
               navigation.navigate(screenName.contactUs);

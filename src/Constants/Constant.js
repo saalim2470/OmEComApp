@@ -1,3 +1,4 @@
+import { Alert, Share } from "react-native";
 import { defaultCategoryImg } from "./defaults";
 
 export const validateEmail = (email) => {
@@ -40,3 +41,23 @@ export function groupBy(items, callbackFn) {
     return result;
   }, {});
 }
+
+export const onShare = async () => {
+  try {
+    const result = await Share.share({
+      message: "Om Classified Download to this link: https://www.google.com/",
+      url: "https://www.google.com/",
+    });
+    if (result.action === Share.sharedAction) {
+      if (result.activityType) {
+        // shared with activity type of result.activityType
+      } else {
+        // shared
+      }
+    } else if (result.action === Share.dismissedAction) {
+      // dismissed
+    }
+  } catch (error) {
+    Alert.alert(error.message);
+  }
+};

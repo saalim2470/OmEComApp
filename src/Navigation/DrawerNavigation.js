@@ -139,21 +139,6 @@ const DrawerNavigation = () => {
         }}
       />
       <Drawer.Screen
-        name={screenName.referToFriend}
-        component={ReferToFriend}
-        options={{
-          drawerLabel: "Refer to friend",
-          swipeEnabled: false,
-          drawerIcon: ({ color, size, focused }) => (
-            <Image
-              source={images.refer}
-              style={{ width: scale(30), height: scale(30) }}
-              resizeMode="contain"
-            />
-          ),
-        }}
-      />
-      <Drawer.Screen
         name={screenName.playStoreRating}
         component={PlayStoreRating}
         options={{

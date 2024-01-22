@@ -10,7 +10,7 @@ const images = {
   facebookIcon: require("../utils/assets/images/facebook.png"),
   appleIcon: require("../utils/assets/images/apple.png"),
   googleIcon: require("../utils/assets/images/google.png"),
-  loginImg2: require("../utils/assets/images/loginImg2.jpg"),
+  loginImg2: require("../utils/assets/images/loginImg2.png"),
   homeFillIcon: require("../utils/assets/images/homeFillIcon.png"),
   homeIcon: require("../utils/assets/images/homeIcon.png"),
   searchIcon: require("../utils/assets/images/searchIcon.png"),
