@@ -3,12 +3,12 @@ import React from "react";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import colors from "../../Constants/colors";
 
-const SubscriptionHeading = ({subcriptionType,onClickRead=()=>{}}) => {
+const SubscriptionHeading = ({btnTxt='Read More...',subcriptionType,onClickRead=()=>{}}) => {
   return (
     <View style={styles.headingView}>
       <Text style={styles.headingTxt}>{subcriptionType}</Text>
       <TouchableOpacity activeOpacity={0.6} onPress={()=>onClickRead()}>
-        <Text style={styles.headingBtnTxt}>Read More...</Text>
+        <Text style={styles.headingBtnTxt}>{btnTxt}</Text>
       </TouchableOpacity>
     </View>
   );

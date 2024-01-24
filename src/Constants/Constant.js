@@ -1,5 +1,6 @@
 import { Alert, Share } from "react-native";
 import { defaultCategoryImg } from "./defaults";
+import moment from 'moment-timezone';
 
 export const validateEmail = (email) => {
   return String(email)
@@ -29,13 +30,9 @@ export const subcriptionType = {
 export function groupBy(items, callbackFn) {
   return items.reduce((result, item) => {
     const key = callbackFn(item);
-
-    // Check if the key group already exists, if not, create it
     if (!result[key]) {
       result[key] = [];
     }
-
-    // Push the current item into the corresponding key group
     result[key].push(item);
 
     return result;
@@ -68,3 +65,11 @@ export const subscriptionDuration = {
   2: "SixMonths",
   3: "TwelveMonths",
 };
+
+export const timeFormat=(time)=>{
+  const localTimeZone = 'Asia/Taipei';
+  const localMoment = moment.tz(time, localTimeZone);
+  const utcMoment = localMoment.utc();
+  console.log('-=-=-tume utc-=-=',utcMoment);
+  return utcMoment
+}

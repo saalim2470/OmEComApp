@@ -11,9 +11,18 @@ import { useNavigation } from "@react-navigation/native";
 import screenName from "../../Constants/screenName";
 import { useDispatch, useSelector } from "react-redux";
 import { getOtherUserInfoApi } from "../../store/profileSlices/GetContentByUserId";
-import moment from "moment";
+// import moment from "moment";
+import { timeFormat } from "../../Constants/Constant";
+import moment from 'moment-timezone';
 
 const FeedCardHeader = ({ itemData }) => {
+  const timeFormat=(time)=>{
+    const localTimeZone = 'Asia/Taipei';
+    const localMoment = moment.tz(time, localTimeZone);
+    const utcMoment = localMoment.utc();
+    console.log('-=-=-tume utc-=-=',utcMoment);
+    return utcMoment
+  }
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const userDetail = useSelector((state) => state.login?.userDetail);
@@ -60,7 +69,8 @@ const FeedCardHeader = ({ itemData }) => {
               style={styles.headingTxt}
             >{`${itemData?.user?.firstname} ${itemData?.user?.lastname}`}</Text>
             <Text style={styles.subTxt}>
-              {moment(itemData?.createdDate).startOf("hour").fromNow()}
+              {moment(itemData?.createdDate).startOf('hour').fromNow()}
+              {/* {timeFormat(itemData?.createdDate)} */}
             </Text>
           </View>
         </View>

@@ -55,6 +55,7 @@ const screenName = {
   contactUs: "ContactUs",
   homeBottomNavigation: "HomeBottomNavigation",
   categoryBottomNavigation: "CategoryBottomNavigation",
+  promotion:'Promotion'
 };
 
 export default screenName;

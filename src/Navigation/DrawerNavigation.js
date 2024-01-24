@@ -24,6 +24,7 @@ import PlayStoreRating from "../Screens/DrawerScreen/PlayStoreRating";
 import PrivacyPolicy from "../Screens/DrawerScreen/PrivacyPolicy";
 import HomeBottomNavigation from "./HomeBottomNavigation";
 import CategoryBottomNavigation from "./CategoryBottomNavigation";
+import Promotion from "../Screens/DrawerScreen/Promotion";
 
 const Drawer = createDrawerNavigator();
 
@@ -164,6 +165,21 @@ const DrawerNavigation = () => {
           drawerIcon: ({ color, size, focused }) => (
             <Image
               source={images.privacy}
+              style={{ width: scale(30), height: scale(30) }}
+              resizeMode="contain"
+            />
+          ),
+        }}
+      />
+       <Drawer.Screen
+        name={screenName.promotion}
+        component={Promotion}
+        options={{
+          drawerLabel: "Promotion",
+          swipeEnabled: false,
+          drawerIcon: ({ color, size, focused }) => (
+            <Image
+              source={images.promotion}
               style={{ width: scale(30), height: scale(30) }}
               resizeMode="contain"
             />

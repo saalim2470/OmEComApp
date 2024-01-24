@@ -65,6 +65,7 @@ const images = {
   drawerHome: require("../utils/assets/images/home.png"),
   savedIcon: require("../utils/assets/images/savedIcon.png"),
   contact_us: require("../utils/assets/images/contact_us.png"),
+  promotion: require("../utils/assets/images/promotion.png"),
 };
 
 export default images;

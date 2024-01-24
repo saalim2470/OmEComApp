@@ -13,6 +13,7 @@ import { useNavigation } from "@react-navigation/native";
 import CustomeAlert from "../CustomeAlert";
 import { useDispatch } from "react-redux";
 import { deleteAdContentApi } from "../../store/AdContentSlices/DeleteAdContent";
+import moment from "moment";
 
 const ProfileFeedCardHeader = ({ itemData }) => {
   const navigation = useNavigation();
@@ -44,11 +45,10 @@ const ProfileFeedCardHeader = ({ itemData }) => {
           <Text
             style={styles.headingTxt}
           >{`${itemData?.user?.firstname} ${itemData?.user?.lastname}`}</Text>
-          {/* <Text style={styles.subTxt}>
-          {itemData?.location?.length > 50
-            ? `${itemData?.location?.substring(0, 50)}.....`
-            : itemData?.location}
-        </Text> */}
+         <Text style={styles.subTxt}>
+              {moment(itemData?.createdDate).startOf("hour").fromNow()}
+          
+            </Text>
         </View>
       </View>
       <Menu
@@ -119,5 +119,9 @@ const styles = StyleSheet.create({
   onlyRowStyle: {
     flexDirection: "row",
     alignItems: "center",
+  },
+  subTxt: {
+    fontSize: scale(9.5),
+    fontFamily: "Montserrat-Light",
   },
 });
