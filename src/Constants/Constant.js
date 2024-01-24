@@ -61,3 +61,10 @@ export const onShare = async () => {
     Alert.alert(error.message);
   }
 };
+
+export const subscriptionDuration = {
+  0: "OneMonth",
+  1: "ThreeMonths",
+  2: "SixMonths",
+  3: "TwelveMonths",
+};

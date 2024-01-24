@@ -3,12 +3,15 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import colors from "../../Constants/colors";
+import { subscriptionDuration } from "../../Constants/Constant";
 
 const SubscriptionStripe = ({ item, onClick = () => {} }) => {
   const dispatch = useDispatch();
   return (
     <View style={styles.stripeWrapper}>
-      <Text style={styles.stripeTxt}>{item?.name}</Text>
+      <Text style={styles.stripeTxt}>
+        {subscriptionDuration[item?.duration]}
+      </Text>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={styles.stripeTxt}>&#8377; {item?.price}</Text>
         <TouchableOpacity

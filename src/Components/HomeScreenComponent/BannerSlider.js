@@ -1,5 +1,5 @@
-import { StyleSheet, View } from "react-native";
-import React, { useState } from "react";
+import { Dimensions, Image, StyleSheet, View } from "react-native";
+import React, { useRef, useState } from "react";
 import colors from "../../Constants/colors";
 import { SliderBox } from "react-native-image-slider-box";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
@@ -15,15 +15,18 @@ const BannerSlider = ({ data, onClick, disable }) => {
     <View style={styles.cardImgView} onLayout={onLayout}>
       <SliderBox
         images={data}
-        autoplay={true}
+        autoplay
         sliderBoxHeight={"100%"}
         dotColor={colors.themeColor}
         inactiveDotColor={"#F7F7F7"}
         disableOnPress={disable}
         imageLoadingColor={colors.themeColor}
         dotStyle={styles.dotStyle}
-        circleLoop={true}
+        circleLoop
+        autoplayInterval={3000}
         parentWidth={layout.width}
+        resizeMethod={"resize"}
+        resizeMode={"cover"}
         onCurrentImagePressed={(index) => {
           onClick(index);
         }}
@@ -38,7 +41,6 @@ const styles = StyleSheet.create({
   cardImgView: {
     // height: verticalScale(300),
     // paddingVertical: verticalScale(3),
-    // borderWidth: 1,
     marginHorizontal: moderateScale(10),
     borderRadius: moderateScale(20),
     overflow: "hidden",

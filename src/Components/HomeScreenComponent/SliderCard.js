@@ -1,10 +1,16 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 
-const SliderCard = ({ item }) => {
+const SliderCard = ({ item, onClickCard = () => {} }) => {
   return (
-    <View style={styles.cardContainer}>
+    <TouchableOpacity
+      activeOpacity={0.6}
+      onPress={() => {
+        onClickCard();
+      }}
+      style={styles.cardContainer}
+    >
       <Text
         numberOfLines={2}
         style={{ fontFamily: "Montserrat-Medium", fontSize: scale(11) }}
@@ -20,7 +26,7 @@ const SliderCard = ({ item }) => {
           style={{ width: "100%", height: "100%" }}
         />
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -41,7 +47,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     marginLeft: moderateScale(6),
     height: verticalScale(150),
-    marginVertical:verticalScale(5)
+    marginVertical: verticalScale(5),
   },
   cardImgContainer: {
     height: verticalScale(120),

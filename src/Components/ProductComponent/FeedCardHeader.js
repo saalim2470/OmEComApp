@@ -11,6 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import screenName from "../../Constants/screenName";
 import { useDispatch, useSelector } from "react-redux";
 import { getOtherUserInfoApi } from "../../store/profileSlices/GetContentByUserId";
+import moment from "moment";
 
 const FeedCardHeader = ({ itemData }) => {
   const dispatch = useDispatch();
@@ -58,11 +59,9 @@ const FeedCardHeader = ({ itemData }) => {
             <Text
               style={styles.headingTxt}
             >{`${itemData?.user?.firstname} ${itemData?.user?.lastname}`}</Text>
-            {/* <Text style={styles.subTxt}>
-          {itemData?.location?.length > 50
-            ? `${itemData?.location?.substring(0, 50)}.....`
-            : itemData?.location}
-        </Text> */}
+            <Text style={styles.subTxt}>
+              {moment(itemData?.createdDate).startOf("hour").fromNow()}
+            </Text>
           </View>
         </View>
       </View>
@@ -87,5 +86,9 @@ const styles = StyleSheet.create({
   onlyRowStyle: {
     flexDirection: "row",
     alignItems: "center",
+  },
+  subTxt: {
+    fontSize: scale(9.5),
+    fontFamily: "Montserrat-Light",
   },
 });

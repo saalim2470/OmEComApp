@@ -39,7 +39,15 @@ const Search = ({ navigation }) => {
     },
   ];
   const renderCard = ({ item, index }) => {
-    return <SliderCard item={item} />;
+    return (
+      <SliderCard
+        item={item}
+        onClickCard={() => {
+          setAdImg(item?.uri);
+          setIsShowBottomSheet(true);
+        }}
+      />
+    );
   };
   const [isShowBottomSheet, setIsShowBottomSheet] = useState(false);
   const [adImg, setAdImg] = useState();

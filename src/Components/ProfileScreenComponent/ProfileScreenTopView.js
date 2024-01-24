@@ -9,9 +9,6 @@ import {
 import React, { useState } from "react";
 import { Avatar, Divider } from "react-native-paper";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
-import colors from "../../Constants/colors";
-import images from "../../Constants/images";
-import { useSelector } from "react-redux";
 import {
   baseURL,
   defaultProfileImg,
@@ -20,6 +17,7 @@ import {
 import screenName from "../../Constants/screenName";
 import { useNavigation } from "@react-navigation/native";
 import ImageViewer from "../ImageViewer";
+import { onShare } from "../../Constants/Constant";
 
 const ProfileScreenTopView = ({ profileData, isEditBtn }) => {
   const navigation = useNavigation();
@@ -59,54 +57,40 @@ const ProfileScreenTopView = ({ profileData, isEditBtn }) => {
         </View>
         <View style={styles.followView}>
           <Text style={[styles.txt, { marginRight: moderateScale(20) }]}>
+            <Text style={styles.boldTxt}>00</Text> posts
+          </Text>
+          <Text style={[styles.txt, { marginRight: moderateScale(20) }]}>
             <Text style={styles.boldTxt}>00</Text> followers
           </Text>
           <Text style={styles.txt}>
             <Text style={styles.boldTxt}>00</Text> following
           </Text>
         </View>
-        <View style={{ flexDirection: "row", marginTop: verticalScale(15) }}>
+        <View style={styles.btnWrapper}>
           {isEditBtn ? (
             <TouchableOpacity
+              style={styles.editBtn}
               activeOpacity={0.6}
               onPress={() => {
                 navigation.navigate(screenName.editProfile);
               }}
-              style={[
-                styles.btn,
-                {
-                  flexDirection: "row",
-                  backgroundColor: colors.selectedColor,
-                  alignItems: "center",
-                  marginRight: moderateScale(10),
-                },
-              ]}
             >
-              <Image source={images.editIcon} style={styles.editIcon} />
-              <Text
-                style={[
-                  styles.btnTxt,
-                  {
-                    color: "#FFFFFF",
-                  },
-                ]}
-              >
-                Edit
-              </Text>
+              <Text style={styles.editBtnTxt}>Edit Profile</Text>
             </TouchableOpacity>
           ) : (
-            <TouchableOpacity
-              activeOpacity={0.6}
-              style={[
-                styles.btn,
-                {
-                  backgroundColor: "#f5f5f5",
-                },
-              ]}
-            >
-              <Text style={[styles.btnTxt]}>Follow</Text>
+            <TouchableOpacity style={styles.editBtn} activeOpacity={0.6}>
+              <Text style={styles.editBtnTxt}>Follow</Text>
             </TouchableOpacity>
           )}
+          <TouchableOpacity
+            style={styles.editBtn}
+            activeOpacity={0.6}
+            onPress={() => {
+              onShare();
+            }}
+          >
+            <Text style={styles.editBtnTxt}>Share Profile</Text>
+          </TouchableOpacity>
         </View>
       </View>
       <Divider style={{ marginVertical: verticalScale(15) }} />
@@ -133,26 +117,27 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   txt: {
-    fontFamily: "Montserrat-Light",
-    fontSize: scale(11),
+    fontFamily: "Montserrat-Regular",
+    fontSize: scale(14),
   },
   boldTxt: {
     fontSize: moderateScale(15),
     fontFamily: "Montserrat-Bold",
   },
   editIcon: {
-    width: scale(15),
-    height: scale(15),
-    tintColor: "#FFFFFF",
+    width: scale(18),
+    height: scale(18),
+    // tintColor: "#FFFFFF",
     marginRight: moderateScale(5),
   },
   btn: {
     paddingHorizontal: moderateScale(10),
-    paddingVertical: verticalScale(3),
+    paddingVertical: verticalScale(8),
+    borderRadius: moderateScale(5),
   },
   btnTxt: {
     fontFamily: "Montserrat-Bold",
-    fontSize: moderateScale(10),
+    fontSize: moderateScale(12),
   },
   row: {
     flexDirection: "row",
@@ -162,5 +147,23 @@ const styles = StyleSheet.create({
     marginTop: verticalScale(15),
     flexDirection: "row",
     alignItems: "center",
+    alignSelf: "center",
+  },
+  editBtn: {
+    flex: 1,
+    alignItems: "center",
+    backgroundColor: "lightgrey",
+    padding: moderateScale(8),
+    borderRadius: moderateScale(3),
+  },
+  btnWrapper: {
+    flexDirection: "row",
+    marginTop: verticalScale(15),
+    alignItems: "center",
+    gap: moderateScale(30),
+  },
+  editBtnTxt: {
+    fontSize: scale(12),
+    fontWeight: "600",
   },
 });

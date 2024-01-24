@@ -22,6 +22,8 @@ import HomeScreen from "../Screens/DrawerScreen/HomeScreen";
 import ReferToFriend from "../Screens/DrawerScreen/ReferToFriend";
 import PlayStoreRating from "../Screens/DrawerScreen/PlayStoreRating";
 import PrivacyPolicy from "../Screens/DrawerScreen/PrivacyPolicy";
+import HomeBottomNavigation from "./HomeBottomNavigation";
+import CategoryBottomNavigation from "./CategoryBottomNavigation";
 
 const Drawer = createDrawerNavigator();
 
@@ -51,8 +53,8 @@ const DrawerNavigation = () => {
       )}
     >
       <Drawer.Screen
-        name={screenName.homeScreen}
-        component={HomeScreen}
+        name={screenName.homeBottomNavigation}
+        component={HomeBottomNavigation}
         options={{
           drawerLabel: "Home",
           drawerIcon: ({ color, size, focused }) => (
@@ -70,9 +72,9 @@ const DrawerNavigation = () => {
           drawerLabel: "Categories",
           drawerIcon: ({ color, size, focused }) => (
             <Image
-             source={images.categories}
-                style={{ width: scale(28), height: scale(28) }}
-                resizeMode="contain"
+              source={images.categories}
+              style={{ width: scale(28), height: scale(28) }}
+              resizeMode="contain"
             />
           ),
         }}

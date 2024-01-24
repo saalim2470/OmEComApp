@@ -78,9 +78,9 @@ const Login = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <View style={{ flex: 0.8 }}>
         <Image
-          source={images.loginImg2}
-          style={{ width:'100%',height:'100%', }}
-          resizeMode="cover"
+          source={images.omLogo}
+          style={{ width: "100%", height: "100%" }}
+          resizeMode="contain"
         />
       </View>
       <View style={commonStyle.innerContainer}>
@@ -220,7 +220,7 @@ const Login = ({ navigation }) => {
         data={showError}
         onClickDismiss={() => {
           setShowError({ isError: false, msg: null });
-          dispatch(setError(null))
+          dispatch(setError(null));
         }}
       />
     </SafeAreaView>

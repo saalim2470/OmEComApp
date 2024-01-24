@@ -10,7 +10,10 @@ import HomeScreen from "../Screens/DrawerScreen/HomeScreen";
 const Stack = createNativeStackNavigator();
 const BottomNavigationHomeRoute = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName={screenName.homeScreenIcons}>
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName={screenName.homeScreenIcons}
+    >
       {/* <Stack.Screen name={screenName.homeScreen} component={HomeScreen} /> */}
       <Stack.Screen
         name={screenName.homeScreenIcons}

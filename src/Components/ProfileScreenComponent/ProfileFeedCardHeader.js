@@ -54,7 +54,7 @@ const ProfileFeedCardHeader = ({ itemData }) => {
       <Menu
         visible={visible}
         onDismiss={closeMenu}
-        contentStyle={{ backgroundColor: "white" }}
+        // contentStyle={{ backgroundColor: "white" }}
         anchor={
           <TouchableOpacity
             activeOpacity={0.5}

@@ -42,7 +42,7 @@ const TextBox = ({
           activeOutlineColor ? activeOutlineColor : colors.themeColor
         }
         theme={{
-          colors: { primary: outlineColor ? outlineColor : "#cacaca" },
+          // colors: { primary: outlineColor ? outlineColor : "#cacaca" },
           fonts: {
             bodyLarge: {
               ...theme.fonts.bodyLarge,

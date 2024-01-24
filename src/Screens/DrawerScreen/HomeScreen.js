@@ -44,7 +44,15 @@ const HomeScreen = () => {
   const [isShowBottomSheet, setIsShowBottomSheet] = useState(false);
   const [adImg, setAdImg] = useState();
   const renderCard = ({ item, index }) => {
-    return <SliderCard item={item} />;
+    return (
+      <SliderCard
+        item={item}
+        onClickCard={() => {
+          setAdImg(item?.uri);
+          setIsShowBottomSheet(true);
+        }}
+      />
+    );
   };
   return (
     <SafeAreaView style={commonStyle.container}>
