@@ -19,7 +19,7 @@ import { useNavigation } from "@react-navigation/native";
 import ImageViewer from "../ImageViewer";
 import { onShare } from "../../Constants/Constant";
 
-const ProfileScreenTopView = ({ profileData, isEditBtn }) => {
+const ProfileScreenTopView = ({ profileData, isEditBtn,totalPost }) => {
   const navigation = useNavigation();
   const [openImageViewer, setImageViewer] = useState(false);
   const imgViewerData = [
@@ -57,7 +57,7 @@ const ProfileScreenTopView = ({ profileData, isEditBtn }) => {
         </View>
         <View style={styles.followView}>
           <Text style={[styles.txt, { marginRight: moderateScale(20) }]}>
-            <Text style={styles.boldTxt}>00</Text> posts
+            <Text style={styles.boldTxt}>{totalPost}</Text> posts
           </Text>
           <Text style={[styles.txt, { marginRight: moderateScale(20) }]}>
             <Text style={styles.boldTxt}>00</Text> followers

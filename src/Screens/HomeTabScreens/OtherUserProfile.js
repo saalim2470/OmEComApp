@@ -42,6 +42,7 @@ const OtherUserProfile = ({ navigation }) => {
     isMoreLoading: userContentMoreLoading,
     isReachedEnd: userContentReachedEnd,
     isSuccess: userContentSuccess,
+    totalCount: userTotalContent,
   } = useSelector((state) => state.getContentByUserId);
   const a = useSelector((state) => state.getContentByUserId);
   console.log("-=-=-user content-=-=-=-", a);
@@ -186,7 +187,11 @@ const OtherUserProfile = ({ navigation }) => {
       <HeaderWithMiddleName
         title={`${userDetail?.Data?.firstName} ${userDetail?.Data?.lastName}`}
       />
-      <ProfileScreenTopView isEditBtn={false} profileData={userDetail?.Data} />
+      <ProfileScreenTopView
+        isEditBtn={false}
+        profileData={userDetail?.Data}
+        totalPost={userTotalContent}
+      />
       {contentData != null && contentData?.length <= 0 ? (
         <FriendlyMsg />
       ) : (

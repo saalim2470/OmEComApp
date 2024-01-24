@@ -163,7 +163,7 @@ const CustomSidebarMenu = (props) => {
             textAlign: "center",
           }}
         >
-          Version 1.0.012
+          Version 1.0.015
         </Text>
       </View>
       <CustomeAlert

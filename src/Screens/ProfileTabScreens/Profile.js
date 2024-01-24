@@ -48,6 +48,7 @@ const Profile = ({ navigation, route }) => {
     pageSize: userContentPageSize,
     isReachedEnd: userContentReachedEnd,
     isMoreLoading: userContentMoreLoading,
+    totalCount:userTotalContent
   } = useSelector((state) => state.getUSerContent);
   const userDetail = useSelector((state) => state.login?.userDetail);
   const {
@@ -200,7 +201,7 @@ const Profile = ({ navigation, route }) => {
   };
   return (
     <SafeAreaView style={commonStyle.container}>
-      <ProfileScreenTopView profileData={userDetail} isEditBtn={true} />
+      <ProfileScreenTopView profileData={userDetail} isEditBtn={true} totalPost={userTotalContent} />
       {(!refreshing && userContentLoading) || deleteLoading ? (
         <Loading />
       ) : userContentError != null && !userContentError.Success ? (
