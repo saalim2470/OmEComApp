@@ -233,7 +233,7 @@ const PostData = ({ navigation, route }) => {
           btnTxt={btnTxt}
           screenTitle={screenTitle}
           loading={addPostData?.isLoading || updatePostData?.isLoading}
-          disabled={!description ? true : false}
+          disabled={!description || image.length === 0 ? true : false}
           onClick={() => {
             route?.params != null ? onClickUpdate() : onClickBtn();
           }}

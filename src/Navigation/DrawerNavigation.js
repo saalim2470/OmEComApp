@@ -55,6 +55,7 @@ const DrawerNavigation = () => {
     >
       <Drawer.Screen
         name={screenName.homeBottomNavigation}
+        // component={HomeBottomNavigation}
         component={HomeBottomNavigation}
         options={{
           drawerLabel: "Home",
@@ -66,6 +67,7 @@ const DrawerNavigation = () => {
           ),
         }}
       />
+
       <Drawer.Screen
         name={screenName.bottomNavigation}
         component={BottomNavigation}
@@ -171,7 +173,7 @@ const DrawerNavigation = () => {
           ),
         }}
       />
-       <Drawer.Screen
+      <Drawer.Screen
         name={screenName.promotion}
         component={Promotion}
         options={{

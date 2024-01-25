@@ -20,6 +20,7 @@ const RbBottomSheet = ({ isOpen, setIsOpen, height, children }) => {
       onClose={() => setIsOpen(false)}
       minClosingHeight={10}
       openDuration={700}
+      dragFromTopOnly={true}
       customStyles={{
         draggableIcon: {
           backgroundColor: "#000",

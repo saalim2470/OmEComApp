@@ -34,6 +34,7 @@ import { resetSaveData } from "../../store/AdContentSlices/SaveContentSlice";
 import { resetLikeData } from "../../store/AdContentSlices/LikeSlice";
 import RoundCategoryView from "../../Components/HomeScreenComponent/RoundCategoryView";
 import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
+import { setCategoryId } from "../../store/StoreDataSlice";
 
 const MainHome = ({ route }) => {
   const navigation = useNavigation();
@@ -216,6 +217,7 @@ const MainHome = ({ route }) => {
   const onClickCategory = (id) => {
     // dispatch(resetAdContent());
     // dispatch(resetAdContentData());
+    dispatch(setCategoryId(id));
     dispatch(setGetAdContentPage(1));
     getContentDataByCategory(id);
   };

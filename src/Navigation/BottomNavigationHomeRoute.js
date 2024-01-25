@@ -14,7 +14,7 @@ const BottomNavigationHomeRoute = () => {
       screenOptions={{ headerShown: false }}
       initialRouteName={screenName.homeScreenIcons}
     >
-      {/* <Stack.Screen name={screenName.homeScreen} component={HomeScreen} /> */}
+      <Stack.Screen name={screenName.homeScreen} component={HomeScreen} />
       <Stack.Screen
         name={screenName.homeScreenIcons}
         component={HomeScreenIcons}

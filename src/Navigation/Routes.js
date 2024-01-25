@@ -70,11 +70,7 @@ const Routes = () => {
     prepare();
   }, []);
   (async function () {
-    if (
-      appIsReady &&
-      countryData != null &&
-      countryData?.Success 
-    ) {
+    if (appIsReady && countryData != null && countryData?.Success) {
       await SplashScreen.hideAsync();
     }
   })();
@@ -88,28 +84,19 @@ const Routes = () => {
     }
   };
   return (
-    <Stack.Navigator
-      screenOptions={{ headerShown: false }}
-      // initialRouteName="Location"
-    >
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
       {/* <Stack.Screen name={screenName.splash} component={Splash} /> */}
       {accessToken == null ? (
         <>
-          {/* <Stack.Screen name={screenName.introduction} component={Introduction} /> */}
-
           <Stack.Screen name={screenName.authRoute} component={AuthRoute} />
         </>
       ) : (
         <>
-          {/* <Stack.Screen name={"Location"} component={Location} /> */}
           <Stack.Screen
             name={screenName.drawerNavigation}
             component={DrawerNavigation}
           />
-           <Stack.Screen
-            name={screenName.contactUs}
-            component={ContactUs}
-          />
+          <Stack.Screen name={screenName.contactUs} component={ContactUs} />
           <Stack.Screen
             name={screenName.productDetail}
             component={ProductDetail}

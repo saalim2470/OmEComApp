@@ -158,8 +158,7 @@ const CommentSection = ({
         ) : (
           <View
             style={{
-              marginBottom: verticalScale(5),
-              height: verticalScale(250),
+              height: verticalScale(260),
             }}
           >
             <FlatList

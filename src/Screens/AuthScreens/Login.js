@@ -1,4 +1,12 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
@@ -17,6 +25,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getLoginUser, setError } from "../../store/authSlices/LoginSlice";
 import { useEffect } from "react";
 import { getCountryData } from "../../store/contrySlices/GetCountrySlice";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const Login = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -75,154 +84,156 @@ const Login = ({ navigation }) => {
     );
   };
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={{ flex: 0.8 }}>
-        <Image
-          source={images.omLogo}
-          style={{ width: "100%", height: "100%" }}
-          resizeMode="contain"
-        />
-      </View>
-      <View style={commonStyle.innerContainer}>
-        <Text style={[styles.txt]}>Login</Text>
-        <KeyboardAvoidingView behavior="padding">
-          <TextBox
-            placeholderTextColor={"#cacaca"}
-            containerStyle={{ marginBottom: verticalScale(8) }}
-            error={emailError}
-            errorMsg={"Email address is invalid!"}
-            value={email}
-            label={"Email"}
-            left={<TextInput.Icon icon={"email-outline"} tintColor="grey" />}
-            onchange={(txt) => {
-              setEmail(txt);
-              // setEmailError(!emailValidate(txt));
+    <SafeAreaView style={commonStyle.container}>
+      <ScrollView>
+        <View style={{ height: verticalScale(300) }}>
+          <Image
+            source={images.omLogo}
+            style={{ width: "100%", height: "100%" }}
+            resizeMode="contain"
+          />
+        </View>
+        <View style={commonStyle.innerContainer}>
+          <Text style={[styles.txt]}>Login</Text>
+          <KeyboardAvoidingView behavior="padding">
+            <TextBox
+              placeholderTextColor={"#cacaca"}
+              containerStyle={{ marginBottom: verticalScale(8) }}
+              error={emailError}
+              errorMsg={"Email address is invalid!"}
+              value={email}
+              label={"Email"}
+              left={<TextInput.Icon icon={"email-outline"} tintColor="grey" />}
+              onchange={(txt) => {
+                setEmail(txt);
+                // setEmailError(!emailValidate(txt));
+              }}
+            />
+            <TextBox
+              label={"Password"}
+              secureTextEntry={!passwordVisible}
+              error={passwordError}
+              errorMsg={"password must be at least 8 characters"}
+              value={password}
+              onchange={(txt) => {
+                setPassword(txt);
+                // setPasswordError(!passwordValidate(txt));
+              }}
+              left={<TextInput.Icon icon={"lock-outline"} tintColor="grey" />}
+              right={
+                <TextInput.Icon
+                  icon={passwordVisible ? "eye-outline" : "eye-off-outline"}
+                  tintColor="grey"
+                  onPress={() => {
+                    setPasswordVisible(!passwordVisible);
+                  }}
+                />
+              }
+            />
+          </KeyboardAvoidingView>
+          <View style={commonStyle.row}>
+            <TouchableOpacity
+              style={{
+                marginTop: moderateScale(3),
+              }}
+              onPress={() => {
+                navigation.navigate(screenName.mPin);
+              }}
+              activeOpacity={0.5}
+            >
+              <Text
+                style={[
+                  styles.commonTxt,
+                  {
+                    fontFamily: "Montserrat-Medium",
+                    fontSize: scale(12),
+                  },
+                ]}
+              >
+                Login with Mpin
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                alignSelf: "flex-end",
+                marginTop: moderateScale(3),
+              }}
+              onPress={() => {
+                navigation.navigate(screenName.forgotPassword);
+              }}
+              activeOpacity={0.5}
+            >
+              <Text
+                style={[
+                  styles.commonTxt,
+                  {
+                    fontFamily: "Montserrat-Medium",
+                    fontSize: scale(12),
+                  },
+                ]}
+              >
+                Forgot Password?
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <CustomeButton
+            title={"Login"}
+            isLoading={loginLoading}
+            disabled={loginLoading}
+            onClick={() => {
+              onClickLogin();
             }}
           />
-          <TextBox
-            label={"Password"}
-            secureTextEntry={!passwordVisible}
-            error={passwordError}
-            errorMsg={"password must be at least 8 characters"}
-            value={password}
-            onchange={(txt) => {
-              setPassword(txt);
-              // setPasswordError(!passwordValidate(txt));
-            }}
-            left={<TextInput.Icon icon={"lock-outline"} tintColor="grey" />}
-            right={
-              <TextInput.Icon
-                icon={passwordVisible ? "eye-outline" : "eye-off-outline"}
-                tintColor="grey"
-                onPress={() => {
-                  setPasswordVisible(!passwordVisible);
-                }}
-              />
-            }
-          />
-        </KeyboardAvoidingView>
-        <View style={commonStyle.row}>
-          <TouchableOpacity
+          <View style={styles.bottomLineView}>
+            <View style={styles.lineStyle}></View>
+            <Text style={styles.commonTxt}>Or With</Text>
+            <View style={styles.lineStyle}></View>
+          </View>
+          <View
             style={{
-              marginTop: moderateScale(3),
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginVertical: moderateScale(12),
             }}
-            onPress={() => {
-              navigation.navigate(screenName.mPin);
-            }}
-            activeOpacity={0.5}
           >
-            <Text
-              style={[
-                styles.commonTxt,
-                {
-                  fontFamily: "Montserrat-Medium",
-                  fontSize: scale(12),
-                },
-              ]}
-            >
-              Login with Mpin
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{
-              alignSelf: "flex-end",
-              marginTop: moderateScale(3),
-            }}
-            onPress={() => {
-              navigation.navigate(screenName.forgotPassword);
-            }}
-            activeOpacity={0.5}
-          >
-            <Text
-              style={[
-                styles.commonTxt,
-                {
-                  fontFamily: "Montserrat-Medium",
-                  fontSize: scale(12),
-                },
-              ]}
-            >
-              Forgot Password?
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <CustomeButton
-          title={"Login"}
-          isLoading={loginLoading}
-          disabled={loginLoading}
-          onClick={() => {
-            onClickLogin();
-          }}
-        />
-        <View style={styles.bottomLineView}>
-          <View style={styles.lineStyle}></View>
-          <Text style={styles.commonTxt}>Or With</Text>
-          <View style={styles.lineStyle}></View>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginVertical: moderateScale(12),
-          }}
-        >
-          {loginBtns(images.facebookIcon, "Facebook", "#ebf3ff", "#8e9dae")}
-          {loginBtns(images.googleIcon, "Google", "#fbf1f0")}
-          {loginBtns(images.appleIcon, "Apple", "#f2f2f2")}
-        </View>
+            {loginBtns(images.facebookIcon, "Facebook", "#ebf3ff", "#8e9dae")}
+            {loginBtns(images.googleIcon, "Google", "#fbf1f0")}
+            {loginBtns(images.appleIcon, "Apple", "#f2f2f2")}
+          </View>
 
-        <Text
-          style={[
-            styles.commonTxt,
-            {
-              alignSelf: "center",
-              marginTop: moderateScale(20),
-            },
-          ]}
-        >
-          Don't have an account?
           <Text
-            style={{
-              color: colors.themeColor,
-              fontFamily: "Montserrat-Medium",
-            }}
-            onPress={() => {
-              dispatch(getCountryData(1, 10));
-              navigation.navigate(screenName.createAccount);
-            }}
+            style={[
+              styles.commonTxt,
+              {
+                alignSelf: "center",
+                marginTop: moderateScale(20),
+              },
+            ]}
           >
-            Sign Up
+            Don't have an account?
+            <Text
+              style={{
+                color: colors.themeColor,
+                fontFamily: "Montserrat-Medium",
+              }}
+              onPress={() => {
+                dispatch(getCountryData(1, 10));
+                navigation.navigate(screenName.createAccount);
+              }}
+            >
+              Sign Up
+            </Text>
           </Text>
-        </Text>
-      </View>
-      <CustomeSnackbar
-        data={showError}
-        onClickDismiss={() => {
-          setShowError({ isError: false, msg: null });
-          dispatch(setError(null));
-        }}
-      />
+        </View>
+        <CustomeSnackbar
+          data={showError}
+          onClickDismiss={() => {
+            setShowError({ isError: false, msg: null });
+            dispatch(setError(null));
+          }}
+        />
+      </ScrollView>
     </SafeAreaView>
   );
 };
