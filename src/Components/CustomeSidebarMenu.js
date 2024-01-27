@@ -45,9 +45,29 @@ const CustomSidebarMenu = (props) => {
       /> */}
       <DrawerContentScrollView {...props}>
         <View style={{ marginTop: verticalScale(-20) }}>
-          <DrawerItemList {...props} />
+          {/* <DrawerItemList {...props} /> */}
 
-          {/* <DrawerItem
+          <DrawerItem
+            label="Home"
+            onPress={() => {
+              navigation.navigate(screenName.bottomNavigation, {
+                screen: screenName.bottomNavigationHomeRoute,
+                params: {
+                  screen: screenName.homeScreen,
+                },
+              });
+            }}
+            labelStyle={styles.labelStyle}
+            icon={({ color, size, focused }) => (
+              <Image
+                source={images.drawerHome}
+                style={{ width: scale(30), height: scale(30) }}
+                resizeMode="contain"
+              />
+            )}
+          />
+
+          <DrawerItem
             label="Categories"
             onPress={() => {
               navigation.navigate(screenName.bottomNavigation, {
@@ -61,11 +81,110 @@ const CustomSidebarMenu = (props) => {
             icon={({ color, size, focused }) => (
               <Image
                 source={images.categories}
-                style={{ width: scale(28), height: scale(28) }}
+                style={{ width: scale(30), height: scale(30) }}
                 resizeMode="contain"
               />
             )}
-          /> */}
+          />
+
+          <DrawerItem
+            label="Saved Item"
+            onPress={() => {
+              navigation.navigate(screenName.bookmarkScreen);
+            }}
+            labelStyle={styles.labelStyle}
+            icon={({ color, size, focused }) => (
+              <Image
+                source={images.savedIcon}
+                style={{ width: scale(30), height: scale(30) }}
+                resizeMode="contain"
+              />
+            )}
+          />
+          <DrawerItem
+            label="Subscription"
+            onPress={() => {
+              navigation.navigate(screenName.subscription);
+            }}
+            labelStyle={styles.labelStyle}
+            icon={({ color, size, focused }) => (
+              <Image
+                source={images.subscription}
+                style={{ width: scale(30), height: scale(30) }}
+                resizeMode="contain"
+              />
+            )}
+          />
+          <DrawerItem
+            label="Terms & Condition"
+            onPress={() => {
+              navigation.navigate(screenName.termsAndCondition);
+            }}
+            labelStyle={styles.labelStyle}
+            icon={({ color, size, focused }) => (
+              <Image
+                source={images.terms}
+                style={{ width: scale(30), height: scale(30) }}
+                resizeMode="contain"
+              />
+            )}
+          />
+          <DrawerItem
+            label="About us"
+            onPress={() => {
+              navigation.navigate(screenName.aboutUs);
+            }}
+            labelStyle={styles.labelStyle}
+            icon={({ color, size, focused }) => (
+              <Image
+                source={images.aboutIcon}
+                style={{ width: scale(30), height: scale(30) }}
+                resizeMode="contain"
+              />
+            )}
+          />
+          <DrawerItem
+            label="PlayStore Rating"
+            onPress={() => {
+              navigation.navigate(screenName.playStoreRating);
+            }}
+            labelStyle={styles.labelStyle}
+            icon={({ color, size, focused }) => (
+              <Image
+                source={images.playstore}
+                style={{ width: scale(30), height: scale(30) }}
+                resizeMode="contain"
+              />
+            )}
+          />
+          <DrawerItem
+            label="Privacy Policy"
+            onPress={() => {
+              navigation.navigate(screenName.privacyPolicy);
+            }}
+            labelStyle={styles.labelStyle}
+            icon={({ color, size, focused }) => (
+              <Image
+                source={images.privacy}
+                style={{ width: scale(30), height: scale(30) }}
+                resizeMode="contain"
+              />
+            )}
+          />
+          <DrawerItem
+            label="Promotion"
+            onPress={() => {
+              navigation.navigate(screenName.promotion);
+            }}
+            labelStyle={styles.labelStyle}
+            icon={({ color, size, focused }) => (
+              <Image
+                source={images.promotion}
+                style={{ width: scale(30), height: scale(30) }}
+                resizeMode="contain"
+              />
+            )}
+          />
 
           <DrawerItem
             label="Refer to friend"
@@ -85,12 +204,7 @@ const CustomSidebarMenu = (props) => {
           <DrawerItem
             label="My Ads"
             onPress={() => {
-              navigation.navigate(screenName.bottomNavigation, {
-                screen: screenName.bottomNavigationHomeRoute,
-                params: {
-                  screen: screenName.myAds,
-                },
-              });
+              navigation.navigate(screenName.myAds);
             }}
             labelStyle={styles.labelStyle}
             icon={({ color, size, focused }) => (

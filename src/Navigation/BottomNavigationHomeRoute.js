@@ -12,7 +12,7 @@ const BottomNavigationHomeRoute = () => {
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName={screenName.homeScreenIcons}
+      initialRouteName={screenName.homeScreen}
     >
       <Stack.Screen name={screenName.homeScreen} component={HomeScreen} />
       <Stack.Screen
@@ -20,7 +20,6 @@ const BottomNavigationHomeRoute = () => {
         component={HomeScreenIcons}
       />
       <Stack.Screen name={screenName.mainHome} component={MainHome} />
-      <Stack.Screen name={screenName.myAds} component={MyAds} />
       <Stack.Screen
         name={screenName.otherUserProfile}
         component={OtherUserProfile}

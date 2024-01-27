@@ -25,6 +25,7 @@ import PrivacyPolicy from "../Screens/DrawerScreen/PrivacyPolicy";
 import HomeBottomNavigation from "./HomeBottomNavigation";
 import CategoryBottomNavigation from "./CategoryBottomNavigation";
 import Promotion from "../Screens/DrawerScreen/Promotion";
+import MyAds from "../Screens/DrawerScreen/MyAds";
 
 const Drawer = createDrawerNavigator();
 
@@ -48,14 +49,12 @@ const DrawerNavigation = () => {
           fontSize: scale(13),
         },
       }}
-      // initialRouteName={screenName.homeScreen}
       drawerContent={(props) => (
         <CustomSidebarMenu {...props} closeDrawer={closeDrawer} />
       )}
     >
       <Drawer.Screen
         name={screenName.homeBottomNavigation}
-        // component={HomeBottomNavigation}
         component={HomeBottomNavigation}
         options={{
           drawerLabel: "Home",
@@ -67,7 +66,6 @@ const DrawerNavigation = () => {
           ),
         }}
       />
-
       <Drawer.Screen
         name={screenName.bottomNavigation}
         component={BottomNavigation}
@@ -173,7 +171,7 @@ const DrawerNavigation = () => {
           ),
         }}
       />
-      <Drawer.Screen
+       <Drawer.Screen
         name={screenName.promotion}
         component={Promotion}
         options={{
@@ -182,6 +180,21 @@ const DrawerNavigation = () => {
           drawerIcon: ({ color, size, focused }) => (
             <Image
               source={images.promotion}
+              style={{ width: scale(30), height: scale(30) }}
+              resizeMode="contain"
+            />
+          ),
+        }}
+      />
+        <Drawer.Screen
+        name={screenName.myAds}
+        component={MyAds}
+        options={{
+          drawerLabel: "My Ads",
+          swipeEnabled: false,
+          drawerIcon: ({ color, size, focused }) => (
+            <Image
+              source={images.announcmentIcon}
               style={{ width: scale(30), height: scale(30) }}
               resizeMode="contain"
             />

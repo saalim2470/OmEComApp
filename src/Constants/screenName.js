@@ -12,7 +12,7 @@ const screenName = {
   tellUsAboutTags: "TellUsAboutTags",
   tellUsAboutSize: "TellUsAboutSize",
   suggestStore: "SuggestStore",
-  drawerNavigation: "drawerNavigation",
+  drawerNavigation: "DrawerNavigation",
   searchResultScreen: "SearchResultScreen",
   mPin: "Mpin",
   messageChatScreen: "MessageChatScreen",
@@ -28,8 +28,8 @@ const screenName = {
   messagesHome: "MessagesHome",
   notification: "Notification",
   // bottom Tab Screens
-  bottomNavigationHomeRoute: "bottomNavigationHomeRoute",
-  bottomNavigationSearchRoute: "bottomNavigationSearchRoute",
+  bottomNavigationHomeRoute: "BottomNavigationHomeRoute",
+  bottomNavigationSearchRoute: "BottomNavigationSearchRoute",
   search: "Search",
   postItem: "PostItem",
   message: "Message",
@@ -39,7 +39,7 @@ const screenName = {
   explore: "Explore",
   feed: "Feed",
   // drawerScreen
-  bottomNavigation: "bottonNavigation",
+  bottomNavigation: "BottonNavigation",
   subscription: "Subscription",
   authRoute: "AuthRoute",
   profileRoute: "ProfileRoute",
