@@ -19,7 +19,7 @@ import { useNavigation } from "@react-navigation/native";
 import ImageViewer from "../ImageViewer";
 import { onShare } from "../../Constants/Constant";
 
-const ProfileScreenTopView = ({ profileData, isEditBtn,totalPost }) => {
+const ProfileScreenTopView = ({ profileData, isEditBtn, totalPost }) => {
   const navigation = useNavigation();
   const [openImageViewer, setImageViewer] = useState(false);
   const imgViewerData = [
@@ -66,8 +66,8 @@ const ProfileScreenTopView = ({ profileData, isEditBtn,totalPost }) => {
             <Text style={styles.boldTxt}>00</Text> following
           </Text>
         </View>
-        <View style={styles.btnWrapper}>
-          {isEditBtn ? (
+        {isEditBtn ? (
+          <View style={styles.btnWrapper}>
             <TouchableOpacity
               style={styles.editBtn}
               activeOpacity={0.6}
@@ -77,21 +77,30 @@ const ProfileScreenTopView = ({ profileData, isEditBtn,totalPost }) => {
             >
               <Text style={styles.editBtnTxt}>Edit Profile</Text>
             </TouchableOpacity>
-          ) : (
+            <TouchableOpacity
+              style={styles.editBtn}
+              activeOpacity={0.6}
+              onPress={() => {
+                onShare();
+              }}
+            >
+              <Text style={styles.editBtnTxt}>Share Profile</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View style={styles.btnWrapper}>
             <TouchableOpacity style={styles.editBtn} activeOpacity={0.6}>
               <Text style={styles.editBtnTxt}>Follow</Text>
             </TouchableOpacity>
-          )}
-          <TouchableOpacity
-            style={styles.editBtn}
-            activeOpacity={0.6}
-            onPress={() => {
-              onShare();
-            }}
-          >
-            <Text style={styles.editBtnTxt}>Share Profile</Text>
-          </TouchableOpacity>
-        </View>
+            <TouchableOpacity
+              style={styles.editBtn}
+              activeOpacity={0.6}
+              onPress={() => {}}
+            >
+              <Text style={styles.editBtnTxt}>Message</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
       <Divider style={{ marginVertical: verticalScale(15) }} />
       <ImageViewer

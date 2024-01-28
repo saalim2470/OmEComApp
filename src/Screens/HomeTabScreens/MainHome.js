@@ -52,7 +52,7 @@ const MainHome = ({ route }) => {
     pageSize: contentDataPageSize,
   } = useSelector((state) => state.getAddContentByCategory);
   const a = useSelector((state) => state.getAddContentByCategory);
-  // console.log("-=-=-=content data-=---", a);
+  console.log("-=-=-=content data-=---", a);
 
   const {
     error: likeError,
@@ -79,9 +79,9 @@ const MainHome = ({ route }) => {
   //   }, [categoryId])
   // );
   useEffect(() => {
-    dispatch(setGetAdContentPage(1));
+    // dispatch(setGetAdContentPage(1));
     getContentDataByCategory(categoryId);
-  }, [categoryId, refreshing]);
+  }, [categoryId, refreshing,contentDataPage]);
 
   useEffect(() => {
     if (
@@ -164,6 +164,7 @@ const MainHome = ({ route }) => {
     });
   };
   const getContentDataByCategory = (categoryID) => {
+    console.log('=-=-page-=-',contentDataPage);
     if (categoryId === 0) {
       dispatch(getAllContentApi(contentDataPage, contentDataPageSize));
     } else {
@@ -202,7 +203,7 @@ const MainHome = ({ route }) => {
   const onReachedEnd = () => {
     if (!contentReachedEnd) {
       dispatch(setGetAdContentPage(contentDataPage + 1));
-      getContentDataByCategory(categoryId);
+      // getContentDataByCategory(categoryId);
     }
   };
   const onClickCategory = (id) => {
@@ -211,6 +212,7 @@ const MainHome = ({ route }) => {
     // dispatch(setCategoryId(id));
     // dispatch(setGetAdContentPage(1));
     // getContentDataByCategory(id);
+    dispatch(setGetAdContentPage(1));
   };
   return (
     <SafeAreaView style={commonStyle.container}>
