@@ -110,7 +110,7 @@ const CreateAccount = () => {
         type: `image/${fileType}`,
       });
     } else {
-      formData.append("ProfilePicture", "");
+      formData.append("ProfilePicture", null);
     }
 
     console.log(formData);
@@ -409,7 +409,7 @@ const CreateAccount = () => {
             setItems={setCountryData}
             style={[
               styles.ddStyle,
-              { borderColor: errors.country ? "red" : '#7C757E' },
+              { borderColor: errors.country ? "red" : "#7C757E" },
             ]}
             zIndex={3000}
             zIndexInverse={1000}

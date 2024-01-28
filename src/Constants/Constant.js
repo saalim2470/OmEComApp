@@ -1,6 +1,6 @@
 import { Alert, Share } from "react-native";
 import { defaultCategoryImg } from "./defaults";
-import moment from 'moment-timezone';
+import momentz from "moment-timezone";
 
 export const validateEmail = (email) => {
   return String(email)
@@ -66,10 +66,13 @@ export const subscriptionDuration = {
   3: "TwelveMonths",
 };
 
-export const timeFormat=(time)=>{
-  const localTimeZone = 'Asia/Taipei';
-  const localMoment = moment.tz(time, localTimeZone);
-  const utcMoment = localMoment.utc();
-  console.log('-=-=-tume utc-=-=',utcMoment);
-  return utcMoment
-}
+export const getUserUploadTime = (uploadTime) => {
+  // Assuming itemData.createdDate is a UTC date string
+  const utcDate = momentz.utc(uploadTime);
+
+  // Set the desired timezone (Indian Standard Time)
+  const indianDate = utcDate.tz("Asia/Kolkata");
+
+  // Format the date and time or use it as needed
+  return indianDate.format("YYYY-MM-DD HH:mm:ss");
+};

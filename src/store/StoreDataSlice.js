@@ -7,6 +7,7 @@ const StoreDataSlice = createSlice({
   },
   reducers: {
     setCategoryId: (state, action) => {
+      console.log("--=-=category id in redux-=-=-", action.payload);
       state.categoryId = action.payload;
     },
   },

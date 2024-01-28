@@ -96,7 +96,7 @@ const Routes = () => {
             name={screenName.drawerNavigation}
             component={DrawerNavigation}
           />
-          <Stack.Screen name={screenName.contactUs} component={ContactUs} />
+          {/* <Stack.Screen name={screenName.contactUs} component={ContactUs} /> */}
           <Stack.Screen
             name={screenName.productDetail}
             component={ProductDetail}

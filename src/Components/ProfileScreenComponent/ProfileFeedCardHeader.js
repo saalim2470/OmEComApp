@@ -14,6 +14,7 @@ import CustomeAlert from "../CustomeAlert";
 import { useDispatch } from "react-redux";
 import { deleteAdContentApi } from "../../store/AdContentSlices/DeleteAdContent";
 import moment from "moment";
+import { getUserUploadTime } from "../../Constants/Constant";
 
 const ProfileFeedCardHeader = ({ itemData }) => {
   const navigation = useNavigation();
@@ -22,6 +23,7 @@ const ProfileFeedCardHeader = ({ itemData }) => {
   const [alertVisible, setAlertVisible] = useState(false);
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
+
   return (
     <View style={styles.cardHeaderView}>
       <View style={styles.onlyRowStyle}>
@@ -45,10 +47,11 @@ const ProfileFeedCardHeader = ({ itemData }) => {
           <Text
             style={styles.headingTxt}
           >{`${itemData?.user?.firstname} ${itemData?.user?.lastname}`}</Text>
-         <Text style={styles.subTxt}>
-              {moment(itemData?.createdDate).startOf("hour").fromNow()}
-          
-            </Text>
+          <Text style={styles.subTxt}>
+            {moment(getUserUploadTime(itemData?.createdDate))
+              .startOf("seconds")
+              .fromNow()}
+          </Text>
         </View>
       </View>
       <Menu

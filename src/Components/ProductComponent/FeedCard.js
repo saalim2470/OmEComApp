@@ -33,7 +33,9 @@ const FeedCard = ({
         disable={disable}
         showFullDesc={showFullDesc}
       />
-      <Slider data={files} onClick={onClickMoreBtn} disable={disable} />
+      {itemData?.imagesData !== "[]" ? (
+        <Slider data={files} onClick={onClickMoreBtn} disable={disable} />
+      ) : null}
       <View style={[styles.bottomView]}>
         <FeedCardBottomView itemData={itemData} />
       </View>

@@ -12,6 +12,7 @@ import screenName from "../../Constants/screenName";
 import { useDispatch, useSelector } from "react-redux";
 import { getOtherUserInfoApi } from "../../store/profileSlices/GetContentByUserId";
 import moment from "moment";
+import { getUserUploadTime } from "../../Constants/Constant";
 
 const FeedCardHeader = ({ itemData }) => {
   const dispatch = useDispatch();
@@ -60,7 +61,9 @@ const FeedCardHeader = ({ itemData }) => {
               style={styles.headingTxt}
             >{`${itemData?.user?.firstname} ${itemData?.user?.lastname}`}</Text>
             <Text style={styles.subTxt}>
-              {moment(itemData?.createdDate).startOf("hour").fromNow()}
+              {moment(getUserUploadTime(itemData?.createdDate))
+                .startOf("seconds")
+                .fromNow()}
             </Text>
           </View>
         </View>

@@ -11,9 +11,12 @@ import BannerSlider from "../../Components/HomeScreenComponent/BannerSlider";
 import SliderCard from "../../Components/HomeScreenComponent/SliderCard";
 import screenName from "../../Constants/screenName";
 import CustomeBottomSheet from "../../Components/CustomeBottomSheet";
+import { setCategoryId } from "../../store/StoreDataSlice";
+import { useDispatch } from "react-redux";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const img = [
     "https://img.global.news.samsung.com/in/wp-content/uploads/2023/05/15872_SBS-PR-Banner_3000X2000-e1683884137336.jpg",
     "https://i.pinimg.com/736x/b7/45/a7/b745a78bece41d7ff78420a11641970a.jpg",

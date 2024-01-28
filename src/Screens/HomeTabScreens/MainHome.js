@@ -52,7 +52,7 @@ const MainHome = ({ route }) => {
     pageSize: contentDataPageSize,
   } = useSelector((state) => state.getAddContentByCategory);
   const a = useSelector((state) => state.getAddContentByCategory);
-  console.log("-=-=-=content data-=---", a);
+  // console.log("-=-=-=content data-=---", a);
 
   const {
     error: likeError,
@@ -81,7 +81,7 @@ const MainHome = ({ route }) => {
   useEffect(() => {
     dispatch(setGetAdContentPage(1));
     getContentDataByCategory(categoryId);
-  }, []);
+  }, [categoryId, refreshing]);
 
   useEffect(() => {
     if (
@@ -132,7 +132,8 @@ const MainHome = ({ route }) => {
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     dispatch(setGetAdContentPage(1));
-    getContentDataByCategory(categoryId);
+    // dispatch(setCategoryId(categoryId));
+    // getContentDataByCategory(categoryId);
   }, []);
 
   const updateData = (data, actionType) => {
@@ -163,21 +164,11 @@ const MainHome = ({ route }) => {
     });
   };
   const getContentDataByCategory = (categoryID) => {
-    console.log(
-      "-=-=-data caaling main home-=",
-      contentDataPage,
-      contentDataPageSize
-    );
-    if (categoryID === 0) {
+    if (categoryId === 0) {
       dispatch(getAllContentApi(contentDataPage, contentDataPageSize));
     } else {
-      console.log(
-        "-=-=-data caaling 4-=",
-        contentDataPage,
-        contentDataPageSize
-      );
       dispatch(
-        getAdContentByCategory(categoryID, contentDataPage, contentDataPageSize)
+        getAdContentByCategory(categoryId, contentDataPage, contentDataPageSize)
       );
     }
   };
@@ -217,9 +208,9 @@ const MainHome = ({ route }) => {
   const onClickCategory = (id) => {
     // dispatch(resetAdContent());
     // dispatch(resetAdContentData());
-    dispatch(setCategoryId(id));
-    dispatch(setGetAdContentPage(1));
-    getContentDataByCategory(id);
+    // dispatch(setCategoryId(id));
+    // dispatch(setGetAdContentPage(1));
+    // getContentDataByCategory(id);
   };
   return (
     <SafeAreaView style={commonStyle.container}>

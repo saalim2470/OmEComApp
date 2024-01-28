@@ -26,6 +26,7 @@ import HomeBottomNavigation from "./HomeBottomNavigation";
 import CategoryBottomNavigation from "./CategoryBottomNavigation";
 import Promotion from "../Screens/DrawerScreen/Promotion";
 import MyAds from "../Screens/DrawerScreen/MyAds";
+import ContactUs from "../Screens/DrawerScreen/ContactUs";
 
 const Drawer = createDrawerNavigator();
 
@@ -171,7 +172,7 @@ const DrawerNavigation = () => {
           ),
         }}
       />
-       <Drawer.Screen
+      <Drawer.Screen
         name={screenName.promotion}
         component={Promotion}
         options={{
@@ -186,7 +187,7 @@ const DrawerNavigation = () => {
           ),
         }}
       />
-        <Drawer.Screen
+      <Drawer.Screen
         name={screenName.myAds}
         component={MyAds}
         options={{
@@ -195,6 +196,21 @@ const DrawerNavigation = () => {
           drawerIcon: ({ color, size, focused }) => (
             <Image
               source={images.announcmentIcon}
+              style={{ width: scale(30), height: scale(30) }}
+              resizeMode="contain"
+            />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name={screenName.contactUs}
+        component={ContactUs}
+        options={{
+          drawerLabel: "Contact Us",
+          swipeEnabled: false,
+          drawerIcon: ({ color, size, focused }) => (
+            <Image
+              source={images.contact_us}
               style={{ width: scale(30), height: scale(30) }}
               resizeMode="contain"
             />

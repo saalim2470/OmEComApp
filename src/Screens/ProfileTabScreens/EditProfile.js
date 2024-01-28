@@ -86,7 +86,7 @@ const EditProfile = () => {
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
   const [cameraStatus, requestCameraPermission] =
     ImagePicker.useCameraPermissions();
-console.log('=-=-user detail-=-=-',userDetail);
+  console.log("=-=-user detail-=-=-", userDetail);
   useEffect(() => {
     dispatch(getStateData(userDetail?.stateId, 1, 10));
     dispatch(getCityData(userDetail?.cityId, 1, 10));
@@ -95,9 +95,12 @@ console.log('=-=-user detail-=-=-',userDetail);
     setEmail(userDetail?.email);
     setMobileNo(userDetail?.phoneNumber);
     setProfileImage(
-      `${baseURL}${serverImagePath}/${userDetail?.profilePicture}`
+      userDetail?.profilePicture !== null
+        ? `${baseURL}${serverImagePath}/${userDetail?.profilePicture}`
+        : null
     );
   }, [userDetail]);
+  console.log(profileImage);
 
   useEffect(() => {
     if (countryDataRes != null && countryDataRes?.Success) {
@@ -262,7 +265,7 @@ console.log('=-=-user detail-=-=-',userDetail);
   const onClickModalBtn = () => {
     setShowAlert({ ...showAlert, show: false });
     dispatch(setError(null));
-    dispatch(resetEditProfileData())
+    dispatch(resetEditProfileData());
     showAlert.type == "success" && navigation.goBack();
   };
   return (
@@ -291,7 +294,7 @@ console.log('=-=-user detail-=-=-',userDetail);
                   <FontAwesome name="remove" size={scale(13)} color="white" />
                 )}
               </TouchableOpacity>
-              {profileImage ? (
+              {profileImage !== null ? (
                 <Image
                   source={{
                     uri: profileImage,
