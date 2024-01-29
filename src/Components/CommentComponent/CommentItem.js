@@ -7,6 +7,8 @@ import {
   defaultProfileImg,
   serverImagePath,
 } from "../../Constants/defaults";
+import moment from "moment";
+import { getUserUploadTime } from "../../Constants/Constant";
 
 const CommentItem = ({ item }) => {
   return (
@@ -35,6 +37,11 @@ const CommentItem = ({ item }) => {
         <Text
           style={styles.headingTxt}
         >{`${item?.user?.firstname} ${item?.user?.lastname}`}</Text>
+        <Text style={styles.subTxt}>
+          {moment(getUserUploadTime(item?.createdDate))
+            .startOf("seconds")
+            .fromNow()}
+        </Text>
         <Text style={styles.commentTxt}>{item?.description}</Text>
       </View>
     </View>
@@ -56,5 +63,9 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat-Medium",
     fontSize: scale(11),
     marginBottom: verticalScale(8),
+  },
+  subTxt: {
+    fontSize: scale(7.5),
+    fontFamily: "Montserrat-Light",
   },
 });

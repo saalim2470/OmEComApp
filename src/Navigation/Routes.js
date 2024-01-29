@@ -31,6 +31,7 @@ import {
 } from "../store/authSlices/LoginSlice";
 import AuthServices from "../services/AuthServices";
 import ContactUs from "../Screens/DrawerScreen/ContactUs";
+import Location from "../Screens/Location";
 
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
@@ -92,6 +93,7 @@ const Routes = () => {
         </>
       ) : (
         <>
+          {/* <Stack.Screen name={"location"} component={Location} /> */}
           <Stack.Screen
             name={screenName.drawerNavigation}
             component={DrawerNavigation}

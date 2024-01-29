@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getCommentByContentIdApi,
   resetCommentData,
+  resetCommentPage,
   setCommentPage,
 } from "../../store/commentSlices/GetCommentByContentIdSlice";
 import { resetLikeData } from "../../store/AdContentSlices/LikeSlice";
@@ -56,9 +57,8 @@ const FeedCardBottomView = ({ itemData }) => {
   }, [commentError, commentErrorCode]);
 
   const onClickComment = () => {
+    dispatch(resetCommentPage());
     setIsShowBottomSheet(true);
-    dispatch(setCommentPage(1));
-    getCommentData();
   };
   const getCommentData = () => {
     console.log("=-=-=-comment page-=-=", commentPage);

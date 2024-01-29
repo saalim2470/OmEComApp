@@ -8,40 +8,57 @@ const Filters = () => {
   return (
     <View style={{ marginHorizontal: moderateScale(10) }}>
       <Text style={styles.heading}>Filter</Text>
-        <TouchableOpacity
+      <TouchableOpacity
+        style={[
+          styles.btn,
+          { backgroundColor: selectFilter === 0 ? colors.themeColor : null },
+        ]}
+        activeOpacity={0.6}
+        onPress={() => setSelectFilter(0)}
+      >
+        <Text
           style={[
-            styles.btn,
-            { backgroundColor: selectFilter === 0 ? colors.themeColor : null },
+            styles.btnTxt,
+            { color: selectFilter === 0 ? "white" : null },
           ]}
-          activeOpacity={0.6}
-          onPress={() => setSelectFilter(0)}
         >
-          <Text
-            style={[
-              styles.btnTxt,
-              { color: selectFilter === 0 ? "white" : null },
-            ]}
-          >
-            Search By Content
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
+          Search By Content
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[
+          styles.btn,
+          { backgroundColor: selectFilter === 1 ? colors.themeColor : null },
+        ]}
+        activeOpacity={0.6}
+        onPress={() => setSelectFilter(1)}
+      >
+        <Text
           style={[
-            styles.btn,
-            { backgroundColor: selectFilter === 1 ? colors.themeColor : null },
+            styles.btnTxt,
+            { color: selectFilter === 1 ? "white" : null },
           ]}
-          activeOpacity={0.6}
-          onPress={() => setSelectFilter(1)}
         >
-          <Text
-            style={[
-              styles.btnTxt,
-              { color: selectFilter === 1 ? "white" : null },
-            ]}
-          >
-            Search By user
-          </Text>
-        </TouchableOpacity>
+          Search By user
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[
+          styles.btn,
+          { backgroundColor: selectFilter === 2 ? colors.themeColor : null },
+        ]}
+        activeOpacity={0.6}
+        onPress={() => setSelectFilter(2)}
+      >
+        <Text
+          style={[
+            styles.btnTxt,
+            { color: selectFilter === 2 ? "white" : null },
+          ]}
+        >
+          Search By Category
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };

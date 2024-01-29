@@ -36,10 +36,9 @@ const PostCategory = ({ navigation, route }) => {
   const [categories, setCategories] = useState([]);
   useEffect(() => {
     if (!categoryData) {
-      dispatch(setCategoryPage(1));
       getCategory();
     }
-  }, []);
+  }, [categoryPage]);
   useEffect(() => {
     if (categoryData && categorySuccess) {
       setCategories(categoryData);
@@ -66,6 +65,7 @@ const PostCategory = ({ navigation, route }) => {
         onClick={() => {
           setChecked(item.id);
           dispatch(setCategoryId(item?.id));
+          onClickNext();
         }}
         status={checked}
       />
@@ -84,7 +84,7 @@ const PostCategory = ({ navigation, route }) => {
   const onReachedEnd = () => {
     if (!categoryReachedEnd) {
       dispatch(setCategoryPage(categoryPage + 1));
-      getCategory();
+      // getCategory();
     }
   };
   return (
@@ -98,7 +98,7 @@ const PostCategory = ({ navigation, route }) => {
             <Text style={commonStyle.headingTxt}>Category</Text>
             <Text style={styles.SmallHading}>Select relavant category</Text>
           </View>
-          <CustomeButton
+          {/* <CustomeButton
             title={"Next"}
             style={{
               paddingVertical: verticalScale(8),
@@ -107,7 +107,7 @@ const PostCategory = ({ navigation, route }) => {
             onClick={() => {
               onClickNext();
             }}
-          />
+          /> */}
         </View>
         <FlatList
           data={categories}

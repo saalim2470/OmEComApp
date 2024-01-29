@@ -55,6 +55,11 @@ const GetCommentByContentIdSlice = createSlice({
     setCommentPage: (state, action) => {
       state.page = action.payload;
     },
+    resetCommentPage: (state, action) => {
+      state.page = 1;
+      state.isReachedEnd = false;
+      state.totalCount = null;
+    },
   },
 });
 export default GetCommentByContentIdSlice.reducer;
@@ -65,6 +70,7 @@ export const {
   setErrorCode,
   resetCommentData,
   setCommentPage,
+  resetCommentPage,
 } = GetCommentByContentIdSlice.actions;
 
 export const getCommentByContentIdApi =

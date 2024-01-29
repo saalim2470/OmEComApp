@@ -42,7 +42,7 @@ const DrawerNavigation = () => {
         headerShown: false,
         drawerStyle: { width: scale(280), backgroundColor: "#FFFFFF" },
         drawerItemStyle: { backgroundColor: "#FFFFFF" },
-        // swipeEnabled: false,
+        swipeEdgeWidth: 10,
         drawerLabelStyle: {
           color: "#000000",
           marginLeft: moderateScale(-15),

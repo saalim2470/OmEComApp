@@ -57,6 +57,11 @@ const CategorySlice = createSlice({
     setCategoryPage: (state, action) => {
       state.page = action.payload;
     },
+    resetcategoryPage: (state, action) => {
+      state.page = 1;
+      state.isReachedEnd = false;
+      state.totalCount = null;
+    },
   },
 });
 export default CategorySlice.reducer;
@@ -67,6 +72,7 @@ export const {
   setStatusCode,
   resetCategoryData,
   setCategoryPage,
+  resetcategoryPage,
 } = CategorySlice.actions;
 
 export const getCategoryData = (pageNumber, pageSize) => async (dispatch) => {

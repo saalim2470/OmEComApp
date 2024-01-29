@@ -40,6 +40,12 @@ import {
 } from "../../store/AdContentSlices/UpdateAdContent";
 import { setCategoryId } from "../../store/StoreDataSlice";
 import PostScreenHeader from "../../Components/PostScreenComponent/PostScreenHeader";
+import EmojiPicker from "rn-emoji-keyboard";
+import { EmojiKeyboard } from "rn-emoji-keyboard";
+import RbBottomSheet from "../../Components/BottomSheet/RbBottomSheet";
+import axios from "axios";
+import * as Location from "expo-location";
+import GpsSearch from "../../Components/GpsSearch";
 
 const PostData = ({ navigation, route }) => {
   console.log("-=-=route-=-", route);
@@ -52,6 +58,7 @@ const PostData = ({ navigation, route }) => {
   const [image, setImage] = useState([]);
   const [description, setDescription] = useState("");
   const [showEmoji, setShowEmoji] = useState(false);
+  const [emojiData, setEmojiData] = useState("");
   const [btnTxt, setBtnTxt] = useState("Post");
   const [screenTitle, setScreenTitle] = useState("Create post");
   const [showAlert, setShowAlert] = useState({
@@ -60,9 +67,12 @@ const PostData = ({ navigation, route }) => {
     msg: null,
     type: null,
   });
+  const [openSheet, setOpenSheet] = useState(false);
+  const [location, setLocation] = useState(null);
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
   const [cameraStatus, requestCameraPermission] =
     ImagePicker.useCameraPermissions();
+  const [searchResult, setSearchResult] = useState([]);
 
   useEffect(() => {
     if (route?.params != null) {
@@ -226,6 +236,13 @@ const PostData = ({ navigation, route }) => {
         },
       });
   };
+  useEffect(() => {
+    if (emojiData !== "") setDescription(`${description} ${emojiData}`);
+  }, [emojiData]);
+
+  const handlePick = (emojiObject) => {
+    setEmojiData(emojiObject?.emoji);
+  };
   return (
     <SafeAreaProvider style={commonStyle.container}>
       <View style={{ flex: 1 }}>
@@ -262,9 +279,47 @@ const PostData = ({ navigation, route }) => {
         onClickEmoji={() => {
           setShowEmoji(true);
         }}
-        onClickLocation={() => {}}
+        onClickLocation={() => {
+          (async () => {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== "granted") {
+              // setErrorMsg("Permission to access location was denied");
+              return;
+            }
+
+            let location = await Location.getCurrentPositionAsync({});
+            setLocation(location);
+            console.log(location);
+
+            axios
+              .get(
+                `https://api.mapbox.com/geocoding/v5/mapbox.places/${location.coords.longitude},${location.coords.latitude}.json?access_token=pk.eyJ1IjoiYWZ6YWxwYXRlbDA5IiwiYSI6ImNscnl6YTRwYTFvNncya3RlMm43a3l4aXYifQ.zvQ0bjs4RBZp4jHf64d3ug`
+              )
+              .then(function (response) {
+                // handle success
+                console.log(
+                  "suggested places" + JSON.stringify(response.data.features)
+                );
+                setSearchResult(response?.data?.features);
+                setOpenSheet(true);
+              })
+              .catch(function (error) {
+                // handle error
+                console.log(error);
+              })
+              .finally(function () {
+                // always executed
+              });
+          })();
+        }}
       />
-      <EmojiComponent
+      <EmojiPicker
+        onEmojiSelected={handlePick}
+        open={showEmoji}
+        onClose={() => setShowEmoji(false)}
+        expandable={false}
+      />
+      {/* <EmojiComponent
         show={showEmoji}
         onBackdropPress={() => {
           setShowEmoji(false);
@@ -273,6 +328,12 @@ const PostData = ({ navigation, route }) => {
           setDescription(`${description} ${emoji}`);
           // setShowEmoji(false);
         }}
+      /> */}
+      <RbBottomSheet
+        isOpen={openSheet}
+        height={verticalScale(600)}
+        setIsOpen={setOpenSheet}
+        children={<GpsSearch data={searchResult} />}
       />
       <CustomeAlertModal
         isVisible={showAlert.show}

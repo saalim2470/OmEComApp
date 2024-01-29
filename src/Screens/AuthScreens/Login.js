@@ -97,7 +97,7 @@ const Login = ({ navigation }) => {
           <Text style={[styles.txt]}>Login</Text>
           <KeyboardAvoidingView behavior="padding">
             <TextBox
-              placeholderTextColor={"#cacaca"}
+              // placeholderTextColor={"#cacaca"}
               containerStyle={{ marginBottom: verticalScale(8) }}
               error={emailError}
               errorMsg={"Email address is invalid!"}

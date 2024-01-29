@@ -34,12 +34,12 @@ const RoundCategoryView = ({ onClickCategory = () => {} }) => {
   const [categoryData, setCategoryData] = useState(null);
 
   useEffect(() => {
-    getCategory();
-  }, []);
+    if (!categoryData) getCategory();
+  }, [categoryPage]);
 
   useEffect(() => {
     if (categoryDataRes && categorySuccess) {
-      setCategoryData(categoryDataRes);
+      setCategoryData([allCategorie, ...categoryDataRes]);
     }
   }, [categoryDataRes, categorySuccess]);
 
@@ -56,7 +56,7 @@ const RoundCategoryView = ({ onClickCategory = () => {} }) => {
   const onReachedEnd = () => {
     if (!categoryReachedEnd) {
       dispatch(setCategoryPage(categoryPage + 1));
-      getCategory();
+      // getCategory();
     }
   };
   const renderCategory = ({ item, index }) => {
@@ -65,6 +65,7 @@ const RoundCategoryView = ({ onClickCategory = () => {} }) => {
         item={item}
         data={categoryData}
         index={index}
+        single={item?.id === 0 ? true : false}
         selectedCategory={categoryId}
         onClick={() => {
           dispatch(setCategoryId(item?.id));
@@ -75,19 +76,11 @@ const RoundCategoryView = ({ onClickCategory = () => {} }) => {
   };
   return (
     <View style={styles.storyView}>
-      <HomeScreenCategory
-        item={allCategorie}
-        single={true}
-        selectedCategory={categoryId}
-        onClick={() => {
-          dispatch(setCategoryId(allCategorie?.id));
-          onClickCategory(allCategorie.id);
-        }}
-      />
       <FlatList
         data={categoryData}
         keyExtractor={(item, index) => `category${item.id}_${index}`}
         showsHorizontalScrollIndicator={false}
+        nestedScrollEnabled={true}
         horizontal
         onEndReachedThreshold={0.1}
         renderItem={renderCategory}

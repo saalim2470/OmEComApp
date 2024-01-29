@@ -53,7 +53,8 @@ const TextBox = ({
         style={[
           style,
           {
-            backgroundColor: "#FFFFFF",
+            // backgroundColor: "#FFFFFF",
+            backgroundColor: "transparent",
             // marginVertical: moderateVerticalScale(5),
             fontSize: scale(13),
           },

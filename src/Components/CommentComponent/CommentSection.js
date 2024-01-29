@@ -25,6 +25,7 @@ import {
 } from "../../store/commentSlices/PostCommentSlice";
 import {
   getCommentByContentIdApi,
+  resetCommentPage,
   setCommentPage,
 } from "../../store/commentSlices/GetCommentByContentIdSlice";
 import CustomeAlertModal from "../CustomeAlertModal";
@@ -62,13 +63,14 @@ const CommentSection = ({
     msg: null,
     type: null,
   });
-
+  useEffect(() => {
+    getCommentData();
+  }, [commentPage, postCommentRes?.Success]);
   useEffect(() => {
     if (commentDataRes && getCommentSuccesss) {
       setCommentData(commentDataRes);
     }
   }, [commentDataRes, getCommentSuccesss]);
-
   useEffect(() => {
     const handleErrorCode = (code) => {
       if (code === 401) {
@@ -101,9 +103,8 @@ const CommentSection = ({
     };
 
     dispatch(postCommentApi(data)).then((res) => {
+      dispatch(resetCommentPage());
       setCommentTxt("");
-      dispatch(setCommentPage(1));
-      getCommentData();
     });
     Keyboard.dismiss();
   };
@@ -129,7 +130,7 @@ const CommentSection = ({
   const onReachedEnd = () => {
     if (!getCommentReachedEnd) {
       dispatch(setCommentPage(commentPage + 1));
-      getCommentData();
+      // getCommentData();
     }
   };
   if (commentLoading) {

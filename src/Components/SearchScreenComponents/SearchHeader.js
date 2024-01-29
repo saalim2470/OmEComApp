@@ -37,8 +37,11 @@ const SearchHeader = () => {
         placeholder={"Search something"}
         containerStyle={{ flex: 1 }}
         value={searchTxt}
-        activeOutlineColor={"lightgray"}
         autoFocus={true}
+        returnKeyType={"search"}
+        onSubmitEditing={() => {
+          onClickSearch();
+        }}
         onchange={(value) => {
           setSearchTxt(value);
         }}

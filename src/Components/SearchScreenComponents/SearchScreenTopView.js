@@ -38,6 +38,7 @@ const SearchScreenTopView = () => {
       </View>
       <RbBottomSheet
         isOpen={openSheet}
+        height={verticalScale(500)}
         setIsOpen={setOpenSheet}
         children={<Filters />}
       />

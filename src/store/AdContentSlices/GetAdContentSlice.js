@@ -61,12 +61,14 @@ const GetAdContentSlice = createSlice({
       state.page = 1;
       state.totalCount = null;
     },
-    resetPage:(state,action)=>{
-      state.page=1
+    resetPage: (state, action) => {
+      state.page = 1;
+      state.totalCount = null;
+      state.isReachedEnd = false;
     },
-    setGetAdContentPage:(state,action)=>{
-      state.page=action.payload
-    }
+    setGetAdContentPage: (state, action) => {
+      state.page = action.payload;
+    },
   },
 });
 export default GetAdContentSlice.reducer;
@@ -78,7 +80,7 @@ export const {
   setReachedEnd,
   resetAdContent,
   resetPage,
-  setGetAdContentPage
+  setGetAdContentPage,
 } = GetAdContentSlice.actions;
 
 export const getAdContentByCategory =

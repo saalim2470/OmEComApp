@@ -50,6 +50,11 @@ const GetUserContentSlice = createSlice({
     setUserContentPage: (state, action) => {
       state.page = action.payload;
     },
+    resetUserContentPage: (state, action) => {
+      state.page = 1;
+      state.isReachedEnd = false;
+      state.totalCount = null;
+    },
   },
 });
 export default GetUserContentSlice.reducer;
@@ -59,6 +64,7 @@ export const {
   setError,
   resetUserAdContent,
   setUserContentPage,
+  resetUserContentPage,
 } = GetUserContentSlice.actions;
 
 export const getUserContentApi = (pageNumber, pageSize) => async (dispatch) => {

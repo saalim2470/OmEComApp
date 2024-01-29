@@ -81,7 +81,7 @@ const MainHome = ({ route }) => {
   useEffect(() => {
     // dispatch(setGetAdContentPage(1));
     getContentDataByCategory(categoryId);
-  }, [categoryId, refreshing,contentDataPage]);
+  }, [categoryId, contentDataPage]);
 
   useEffect(() => {
     if (
@@ -130,8 +130,8 @@ const MainHome = ({ route }) => {
     handleErrorCode(likeErrorCode || saveErrorCode);
   }, [likeError, likeErrorCode, saveError, saveErrorCode]);
   const onRefresh = useCallback(() => {
+    dispatch(resetPage());
     setRefreshing(true);
-    dispatch(setGetAdContentPage(1));
     // dispatch(setCategoryId(categoryId));
     // getContentDataByCategory(categoryId);
   }, []);
@@ -164,7 +164,6 @@ const MainHome = ({ route }) => {
     });
   };
   const getContentDataByCategory = (categoryID) => {
-    console.log('=-=-page-=-',contentDataPage);
     if (categoryId === 0) {
       dispatch(getAllContentApi(contentDataPage, contentDataPageSize));
     } else {
@@ -212,7 +211,7 @@ const MainHome = ({ route }) => {
     // dispatch(setCategoryId(id));
     // dispatch(setGetAdContentPage(1));
     // getContentDataByCategory(id);
-    dispatch(setGetAdContentPage(1));
+    dispatch(resetPage());
   };
   return (
     <SafeAreaView style={commonStyle.container}>

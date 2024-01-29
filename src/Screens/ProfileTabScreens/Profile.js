@@ -20,6 +20,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getUserContentApi,
+  resetUserContentPage,
   resetUserPage,
   setUserContentPage,
 } from "../../store/profileSlices/GetUserContentSlice";
@@ -48,7 +49,7 @@ const Profile = ({ navigation, route }) => {
     pageSize: userContentPageSize,
     isReachedEnd: userContentReachedEnd,
     isMoreLoading: userContentMoreLoading,
-    totalCount:userTotalContent
+    totalCount: userTotalContent,
   } = useSelector((state) => state.getUSerContent);
   const userDetail = useSelector((state) => state.login?.userDetail);
   const {
@@ -77,7 +78,7 @@ const Profile = ({ navigation, route }) => {
   });
   useEffect(() => {
     getUserContent();
-  }, [isFocused, deleteDataRes?.Success, userContentPage]);
+  }, [isFocused, deleteDataRes?.Success, userContentPage, refreshing]);
   useEffect(() => {
     if (userContentRes != null && userContentSuccess) {
       setPostData(userContentRes);
@@ -178,9 +179,8 @@ const Profile = ({ navigation, route }) => {
     );
   };
   const onRefresh = useCallback(() => {
-    dispatch(setUserContentPage(1));
+    dispatch(resetUserContentPage());
     setRefreshing(true);
-    getUserContent();
   }, []);
   const listFooterComponent = () => {
     return (
@@ -196,12 +196,15 @@ const Profile = ({ navigation, route }) => {
   const onReachedEnd = () => {
     if (!userContentReachedEnd) {
       dispatch(setUserContentPage(userContentPage + 1));
-      getUserContent()
     }
   };
   return (
     <SafeAreaView style={commonStyle.container}>
-      <ProfileScreenTopView profileData={userDetail} isEditBtn={true} totalPost={userTotalContent} />
+      <ProfileScreenTopView
+        profileData={userDetail}
+        isEditBtn={true}
+        totalPost={userTotalContent}
+      />
       {(!refreshing && userContentLoading) || deleteLoading ? (
         <Loading />
       ) : userContentError != null && !userContentError.Success ? (
