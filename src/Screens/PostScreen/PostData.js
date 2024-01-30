@@ -41,20 +41,17 @@ import {
 import { setCategoryId } from "../../store/StoreDataSlice";
 import PostScreenHeader from "../../Components/PostScreenComponent/PostScreenHeader";
 import EmojiPicker from "rn-emoji-keyboard";
-import { EmojiKeyboard } from "rn-emoji-keyboard";
 import RbBottomSheet from "../../Components/BottomSheet/RbBottomSheet";
 import axios from "axios";
 import * as Location from "expo-location";
 import GpsSearch from "../../Components/GpsSearch";
 
 const PostData = ({ navigation, route }) => {
-  console.log("-=-=route-=-", route);
   const dispatch = useDispatch();
   const formData = new FormData();
   const categoryId = useSelector((state) => state.storeData.categoryId);
   const addPostData = useSelector((state) => state.addAdContentData);
   const updatePostData = useSelector((state) => state.updateAdContentData);
-  console.log("-=-=-=update Data-=-=", updatePostData);
   const [image, setImage] = useState([]);
   const [description, setDescription] = useState("");
   const [showEmoji, setShowEmoji] = useState(false);
@@ -69,6 +66,7 @@ const PostData = ({ navigation, route }) => {
   });
   const [openSheet, setOpenSheet] = useState(false);
   const [location, setLocation] = useState(null);
+  const [selectLocation, setSelectLocation] = useState({});
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
   const [cameraStatus, requestCameraPermission] =
     ImagePicker.useCameraPermissions();
@@ -185,6 +183,31 @@ const PostData = ({ navigation, route }) => {
       openCamera();
     }
   };
+  const checkLocationPermission = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      return;
+    }
+    getLocation();
+  };
+  const getLocation = async () => {
+    let location = await Location.getCurrentPositionAsync({});
+    setLocation(location);
+    axios
+      .get(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${location?.coords?.longitude},${location?.coords?.latitude}.json?access_token=pk.eyJ1IjoiYWZ6YWxwYXRlbDA5IiwiYSI6ImNscnl6YTRwYTFvNncya3RlMm43a3l4aXYifQ.zvQ0bjs4RBZp4jHf64d3ug`
+      )
+      .then(function (response) {
+        setSearchResult(response?.data?.features);
+        setOpenSheet(true);
+      })
+      .catch(function (error) {
+        console.log(error);
+      })
+      .finally(function () {
+        // always executed
+      });
+  };
   const onClickBtn = () => {
     image.forEach((element, index) => {
       const uriParts = element.split(".");
@@ -197,6 +220,9 @@ const PostData = ({ navigation, route }) => {
     });
     formData.append("description", description);
     formData.append("categoryId", categoryId);
+    formData.append("Lat", parseInt(selectLocation?.center[0]));
+    formData.append("Lon", parseInt(selectLocation?.center[1]));
+    formData.append("PlaceName", selectLocation?.text);
     dispatch(setPostDataDraft(formData));
     dispatch(addAdContentApi(formData));
     // navigation.navigate(screenName.drawerNavigation, {
@@ -256,7 +282,7 @@ const PostData = ({ navigation, route }) => {
           }}
         />
         <Divider bold />
-        <UserHeader />
+        <UserHeader userLocation={selectLocation} />
         <PostScreenTextView
           imageData={image}
           disabled={addPostData?.isLoading || updatePostData?.isLoading}
@@ -280,37 +306,7 @@ const PostData = ({ navigation, route }) => {
           setShowEmoji(true);
         }}
         onClickLocation={() => {
-          (async () => {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== "granted") {
-              // setErrorMsg("Permission to access location was denied");
-              return;
-            }
-
-            let location = await Location.getCurrentPositionAsync({});
-            setLocation(location);
-            console.log(location);
-
-            axios
-              .get(
-                `https://api.mapbox.com/geocoding/v5/mapbox.places/${location.coords.longitude},${location.coords.latitude}.json?access_token=pk.eyJ1IjoiYWZ6YWxwYXRlbDA5IiwiYSI6ImNscnl6YTRwYTFvNncya3RlMm43a3l4aXYifQ.zvQ0bjs4RBZp4jHf64d3ug`
-              )
-              .then(function (response) {
-                // handle success
-                console.log(
-                  "suggested places" + JSON.stringify(response.data.features)
-                );
-                setSearchResult(response?.data?.features);
-                setOpenSheet(true);
-              })
-              .catch(function (error) {
-                // handle error
-                console.log(error);
-              })
-              .finally(function () {
-                // always executed
-              });
-          })();
+          checkLocationPermission();
         }}
       />
       <EmojiPicker
@@ -333,7 +329,15 @@ const PostData = ({ navigation, route }) => {
         isOpen={openSheet}
         height={verticalScale(600)}
         setIsOpen={setOpenSheet}
-        children={<GpsSearch data={searchResult} />}
+        children={
+          <GpsSearch
+            data={searchResult}
+            onClickLocationResult={(data) => {
+              setSelectLocation(data);
+              setOpenSheet(false);
+            }}
+          />
+        }
       />
       <CustomeAlertModal
         isVisible={showAlert.show}

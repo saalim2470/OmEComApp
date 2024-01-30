@@ -56,10 +56,12 @@ const FeedCardHeader = ({ itemData }) => {
               size={scale(35)}
             />
           )}
-          <View style={{ marginLeft: moderateScale(5) }}>
-            <Text
-              style={styles.headingTxt}
-            >{`${itemData?.user?.firstname} ${itemData?.user?.lastname}`}</Text>
+          <View style={{ marginLeft: moderateScale(5), flex: 1 }}>
+            <Text style={styles.headingTxt}>
+              {itemData?.placeName !== null
+                ? `${itemData?.user?.firstname} ${itemData?.user?.lastname} - ${itemData?.placeName}`
+                : `${itemData?.user?.firstname} ${itemData?.user?.lastname}`}
+            </Text>
             <Text style={styles.subTxt}>
               {moment(getUserUploadTime(itemData?.createdDate))
                 .startOf("seconds")
