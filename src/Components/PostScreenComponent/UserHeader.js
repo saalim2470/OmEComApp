@@ -10,7 +10,6 @@ import {
 } from "../../Constants/defaults";
 
 const UserHeader = ({ userLocation }) => {
-  console.log("-=-=select location in header-=--", userLocation);
   const userDetail = useSelector((state) => state.login?.userDetail);
   return (
     <View style={styles.userView}>
@@ -34,7 +33,7 @@ const UserHeader = ({ userLocation }) => {
         <Text style={styles.headingTxt}>
           {!userLocation
             ? `${userDetail?.firstName} ${userDetail?.lastName}`
-            : `${userDetail?.firstName} ${userDetail?.lastName} - in ${userLocation?.text}`}
+            : `${userDetail?.firstName} ${userDetail?.lastName} - at ${userLocation?.text}`}
         </Text>
       </View>
     </View>

@@ -48,15 +48,10 @@ const PostCategory = ({ navigation, route }) => {
     if (postData?.category) {
       setChecked(postData?.category);
     }
-  }, [postData?.category]);
+  }, [postData?.category, navigation]);
 
   const onClickNext = () => {
-    if (!checked && checked == null) {
-      setShowAlert(true);
-    } else {
-      dispatch(setCategory(checked));
-      navigation.navigate(screenName.postData);
-    }
+    navigation.navigate(screenName.postData);
   };
   const renderItem = ({ item, index }) => {
     return (
@@ -65,6 +60,7 @@ const PostCategory = ({ navigation, route }) => {
         onClick={() => {
           setChecked(item.id);
           dispatch(setCategoryId(item?.id));
+          dispatch(setCategory(item?.id));
           onClickNext();
         }}
         status={checked}

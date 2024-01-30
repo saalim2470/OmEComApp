@@ -8,18 +8,14 @@ import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { getSearchData } from "../../store/searchContentSlices/SearchContentSlice";
 
-const SearchHeader = () => {
+const SearchHeader = ({
+  onChange = () => {},
+  value,
+  onClickClearIcon = () => {},
+  onClickSearch = () => {},
+}) => {
   const navigation = useNavigation();
-  const dispatch = useDispatch();
-  const [searchTxt, setSearchTxt] = useState("");
-  const onClickSearch = () => {
-    if (searchTxt != "") {
-      dispatch(getSearchData(searchTxt, 1, 10));
-    }
-  };
-  const onClickClearIcon = () => {
-    setSearchTxt("");
-  };
+
   return (
     <View style={styles.header}>
       <TouchableOpacity
@@ -36,14 +32,14 @@ const SearchHeader = () => {
       <TextBox
         placeholder={"Search something"}
         containerStyle={{ flex: 1 }}
-        value={searchTxt}
+        value={value}
         autoFocus={true}
         returnKeyType={"search"}
         onSubmitEditing={() => {
           onClickSearch();
         }}
         onchange={(value) => {
-          setSearchTxt(value);
+          onChange(value);
         }}
         left={
           <TextInput.Icon
@@ -56,7 +52,7 @@ const SearchHeader = () => {
           />
         }
         right={
-          searchTxt != "" ? (
+          value != "" ? (
             <TextInput.Icon
               icon={images.closeCircleIcon}
               tintColor="grey"
@@ -83,9 +79,9 @@ const styles = StyleSheet.create({
     height: scale(20),
   },
   header: {
-    marginTop: verticalScale(18),
     flexDirection: "row",
     alignItems: "center",
     gap: scale(10),
+    marginBottom: verticalScale(10),
   },
 });

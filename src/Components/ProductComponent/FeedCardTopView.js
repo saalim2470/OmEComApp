@@ -3,30 +3,10 @@ import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import screenName from "../../Constants/screenName";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
-import ReadMore from "react-native-read-more-text";
+import ReadMore from "@fawazahmed/react-native-read-more";
 
 const FeedCardTopView = ({ itemData, disable }) => {
   const navigation = useNavigation();
-  const renderTruncatedFooter = (handlePress) => {
-    return (
-      <Text
-        style={[styles.descTxt, { marginTop: verticalScale(5), color: "blue" }]}
-        onPress={handlePress}
-      >
-        Read more
-      </Text>
-    );
-  };
-  const renderRevealedFooter = (handlePress) => {
-    return (
-      <Text
-        style={[styles.descTxt, { marginTop: verticalScale(5), color: "blue" }]}
-        onPress={handlePress}
-      >
-        Show less
-      </Text>
-    );
-  };
   return (
     <Pressable
       onPress={() => {
@@ -37,11 +17,11 @@ const FeedCardTopView = ({ itemData, disable }) => {
     >
       <ReadMore
         numberOfLines={3}
-        renderTruncatedFooter={renderTruncatedFooter}
-        renderRevealedFooter={renderRevealedFooter}
-        //   onReady={this._handleTextReady}
+        style={styles.descTxt}
+        seeMoreStyle={{ color: "blue" }}
+        seeLessStyle={{ color: "blue" }}
       >
-        <Text style={styles.descTxt}>{itemData?.description}</Text>
+        {itemData?.description}
       </ReadMore>
     </Pressable>
   );

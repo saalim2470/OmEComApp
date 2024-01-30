@@ -15,27 +15,17 @@ import {
   moderateScale,
   moderateVerticalScale,
 } from "react-native-size-matters";
-import axios from "axios";
 import { Divider } from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux";
+import Loading from "./Loading";
+import { getGpsDataApi } from "../store/gpsSlice/GetGpsData";
 
 const GpsSearch = ({ data, onClickLocationResult = () => {} }) => {
+  const dispatch = useDispatch();
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [searchResult, setSearchResult] = useState(data);
+  const gpsData = useSelector((state) => state.gpsData);
   const onClickSearch = () => {
-    axios
-      .get(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${searchKeyword}.json?access_token=pk.eyJ1IjoiYWZ6YWxwYXRlbDA5IiwiYSI6ImNscnl6YTRwYTFvNncya3RlMm43a3l4aXYifQ.zvQ0bjs4RBZp4jHf64d3ug`
-      )
-      .then(function (response) {
-        setSearchResult(response?.data?.features);
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      })
-      .finally(function () {
-        // always executed
-      });
+    dispatch(getGpsDataApi(searchKeyword));
   };
   const renderItem = ({ item, index }) => {
     return (
@@ -44,7 +34,10 @@ const GpsSearch = ({ data, onClickLocationResult = () => {} }) => {
         onPress={() => {
           onClickLocationResult(item);
         }}
-        style={{ marginVertical: verticalScale(5) }}
+        style={{
+          marginVertical: verticalScale(5),
+          padding: moderateScale(5),
+        }}
       >
         <Text style={{ fontFamily: "Montserrat-Bold" }}>{item?.text}</Text>
         <Text style={styles.placeNameTxt}>{item?.place_name}</Text>
@@ -67,14 +60,18 @@ const GpsSearch = ({ data, onClickLocationResult = () => {} }) => {
           }}
         />
       </View>
-      <FlatList
-        data={searchResult}
-        keyExtractor={(item, index) => {
-          return `search_${item.id}_${index}`;
-        }}
-        renderItem={renderItem}
-        ItemSeparatorComponent={<Divider bold />}
-      />
+      {gpsData?.isLoading ? (
+        <Loading />
+      ) : (
+        <FlatList
+          data={gpsData?.gpsData}
+          keyExtractor={(item, index) => {
+            return `search_${item.id}_${index}`;
+          }}
+          renderItem={renderItem}
+          ItemSeparatorComponent={<Divider bold />}
+        />
+      )}
     </View>
   );
 };

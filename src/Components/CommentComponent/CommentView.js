@@ -101,7 +101,6 @@ const CommentView = ({ isVisible, postDetail, onBackDropPress = () => {} }) => {
       dispatch(setCommentPage(1));
       getCommentData();
     });
-    Keyboard.dismiss();
   };
   const renderItem = ({ item, index }) => {
     return <CommentItem item={item} />;
@@ -158,15 +157,15 @@ const CommentView = ({ isVisible, postDetail, onBackDropPress = () => {} }) => {
     >
       <View style={styles.modalView}>
         <Text style={{ alignSelf: "center" }}>Comments</Text>
-            <FlatList
-              data={commentData}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={renderItem}
-              showsVerticalScrollIndicator={false}
-              ListFooterComponent={listFooterComponent}
-              onEndReached={onReachedEnd}
-              onEndReachedThreshold={0.1}
-            />
+        <FlatList
+          data={commentData}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={renderItem}
+          showsVerticalScrollIndicator={false}
+          ListFooterComponent={listFooterComponent}
+          onEndReached={onReachedEnd}
+          onEndReachedThreshold={0.1}
+        />
         <View style={styles.txtInputView}>
           <Avatar.Image
             source={{

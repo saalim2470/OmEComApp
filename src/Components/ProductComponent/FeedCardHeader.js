@@ -13,6 +13,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getOtherUserInfoApi } from "../../store/profileSlices/GetContentByUserId";
 import moment from "moment";
 import { getUserUploadTime } from "../../Constants/Constant";
+import { FontAwesome6 } from "@expo/vector-icons";
+import images from "../../Constants/images";
 
 const FeedCardHeader = ({ itemData }) => {
   const dispatch = useDispatch();
@@ -57,11 +59,56 @@ const FeedCardHeader = ({ itemData }) => {
             />
           )}
           <View style={{ marginLeft: moderateScale(5), flex: 1 }}>
-            <Text style={styles.headingTxt}>
-              {itemData?.placeName !== null
-                ? `${itemData?.user?.firstname} ${itemData?.user?.lastname} - ${itemData?.placeName}`
-                : `${itemData?.user?.firstname} ${itemData?.user?.lastname}`}
-            </Text>
+            {itemData?.placeName ? (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  flexWrap: "wrap",
+                }}
+              >
+                <Text style={styles.headingTxt}>
+                  {`${itemData?.user?.firstname} ${itemData?.user?.lastname}`}
+                </Text>
+                <Text
+                  style={[
+                    {
+                      marginRight: moderateScale(5),
+                      fontFamily: "Montserrat-Light",
+                      fontSize: moderateScale(15),
+                    },
+                  ]}
+                >
+                  - is at
+                </Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginTop: verticalScale(5),
+                  }}
+                >
+                  <Image
+                    source={images.location}
+                    resizeMode="contain"
+                    style={{
+                      width: scale(15),
+                      height: scale(13),
+                      marginRight: moderateScale(2),
+                    }}
+                  />
+                  <Text
+                    style={[styles.headingTxt, { fontSize: moderateScale(15) }]}
+                  >
+                    {`${itemData?.placeName}`}
+                  </Text>
+                </View>
+              </View>
+            ) : (
+              <Text style={styles.headingTxt}>
+                {`${itemData?.user?.firstname} ${itemData?.user?.lastname}`}
+              </Text>
+            )}
             <Text style={styles.subTxt}>
               {moment(getUserUploadTime(itemData?.createdDate))
                 .startOf("seconds")
@@ -86,7 +133,7 @@ const styles = StyleSheet.create({
   },
   headingTxt: {
     fontFamily: "Montserrat-Bold",
-    fontSize: moderateScale(11),
+    fontSize: moderateScale(15),
   },
   onlyRowStyle: {
     flexDirection: "row",

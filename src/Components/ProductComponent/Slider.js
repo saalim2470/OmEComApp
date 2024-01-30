@@ -35,7 +35,7 @@ export default Slider;
 const styles = StyleSheet.create({
   cardImgView: {
     height: verticalScale(300),
-    paddingVertical: verticalScale(3),
+    marginVertical: verticalScale(3),
   },
   dotStyle: {
     width: scale(7),

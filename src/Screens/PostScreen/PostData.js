@@ -45,6 +45,7 @@ import RbBottomSheet from "../../Components/BottomSheet/RbBottomSheet";
 import axios from "axios";
 import * as Location from "expo-location";
 import GpsSearch from "../../Components/GpsSearch";
+import { getGpsDataApi } from "../../store/gpsSlice/GetGpsData";
 
 const PostData = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -66,7 +67,7 @@ const PostData = ({ navigation, route }) => {
   });
   const [openSheet, setOpenSheet] = useState(false);
   const [location, setLocation] = useState(null);
-  const [selectLocation, setSelectLocation] = useState({});
+  const [selectLocation, setSelectLocation] = useState(null);
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
   const [cameraStatus, requestCameraPermission] =
     ImagePicker.useCameraPermissions();
@@ -82,23 +83,35 @@ const PostData = ({ navigation, route }) => {
   }, [route?.params]);
 
   useEffect(() => {
-    if (addPostData?.addContentData?.Success) {
-      setShowAlert({
-        show: true,
-        title: "Success",
-        msg: "Ad Content Added Successfully",
-        type: "success",
+    if (
+      addPostData?.addContentData?.Success ||
+      updatePostData?.updateContentData?.Success
+    ) {
+      navigation.navigate(screenName.drawerNavigation, {
+        screen: screenName.bottomNavigation,
+        params: {
+          screen: screenName.bottomNavigationHomeRoute,
+          params: {
+            screen: screenName.mainHome,
+          },
+        },
       });
-      // dispatch(setPostDataDraft(null));
-    }
-    if (updatePostData?.updateContentData?.Success) {
-      setShowAlert({
-        show: true,
-        title: "Success",
-        msg: "Ad Content Updated Successfully",
-        type: "success",
-      });
-      // dispatch(setPostDataDraft(null));
+      //   setShowAlert({
+      //     show: true,
+      //     title: "Success",
+      //     msg: "Ad Content Added Successfully",
+      //     type: "success",
+      //   });
+      //   // dispatch(setPostDataDraft(null));
+      // }
+      // if (updatePostData?.updateContentData?.Success) {
+      //   setShowAlert({
+      //     show: true,
+      //     title: "Success",
+      //     msg: "Ad Content Updated Successfully",
+      //     type: "success",
+      //   });
+      //   // dispatch(setPostDataDraft(null));
     }
   }, [addPostData?.addContentData, updatePostData?.updateContentData]);
 
@@ -193,20 +206,13 @@ const PostData = ({ navigation, route }) => {
   const getLocation = async () => {
     let location = await Location.getCurrentPositionAsync({});
     setLocation(location);
-    axios
-      .get(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${location?.coords?.longitude},${location?.coords?.latitude}.json?access_token=pk.eyJ1IjoiYWZ6YWxwYXRlbDA5IiwiYSI6ImNscnl6YTRwYTFvNncya3RlMm43a3l4aXYifQ.zvQ0bjs4RBZp4jHf64d3ug`
+    dispatch(
+      getGpsDataApi(
+        `${location?.coords?.longitude},${location?.coords?.latitude}`
       )
-      .then(function (response) {
-        setSearchResult(response?.data?.features);
-        setOpenSheet(true);
-      })
-      .catch(function (error) {
-        console.log(error);
-      })
-      .finally(function () {
-        // always executed
-      });
+    );
+
+    setOpenSheet(true);
   };
   const onClickBtn = () => {
     image.forEach((element, index) => {

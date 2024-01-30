@@ -66,6 +66,7 @@ const images = {
   savedIcon: require("../utils/assets/images/savedIcon.png"),
   contact_us: require("../utils/assets/images/contact_us.png"),
   promotion: require("../utils/assets/images/promotion.png"),
+  location: require("../utils/assets/images/location.png"),
 };
 
 export default images;

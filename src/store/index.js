@@ -24,6 +24,7 @@ import SaveContentSlice from "./AdContentSlices/SaveContentSlice";
 import DeleteAdContent from "./AdContentSlices/DeleteAdContent";
 import GetSavedContent from "./AdContentSlices/GetSavedContent";
 import GetLegalData from "./legalData/GetLegalData";
+import GetGpsData from "./gpsSlice/GetGpsData";
 
 const store = configureStore({
   reducer: {
@@ -51,6 +52,7 @@ const store = configureStore({
     deleteAdContent: DeleteAdContent,
     getSavedContent: GetSavedContent,
     getLegalData: GetLegalData,
+    gpsData: GetGpsData,
   },
   middleware: [thunk],
 });

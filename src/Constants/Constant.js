@@ -60,10 +60,10 @@ export const onShare = async () => {
 };
 
 export const subscriptionDuration = {
-  0: "OneMonth",
-  1: "ThreeMonths",
-  2: "SixMonths",
-  3: "TwelveMonths",
+  1: "One Month",
+  2: "Three Months",
+  3: "Six Months",
+  4: "1 Year",
 };
 
 export const getUserUploadTime = (uploadTime) => {

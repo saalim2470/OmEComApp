@@ -81,7 +81,7 @@ const MainHome = ({ route }) => {
   useEffect(() => {
     // dispatch(setGetAdContentPage(1));
     getContentDataByCategory(categoryId);
-  }, [categoryId, contentDataPage]);
+  }, [categoryId, contentDataPage, refreshing]);
 
   useEffect(() => {
     if (
