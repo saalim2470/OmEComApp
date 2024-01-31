@@ -4,9 +4,9 @@ import commonStyle from "../Constants/commonStyle";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import colors from "../Constants/colors";
 
-const HeaderWithButton = ({ title, onClick = () => {} ,style}) => {
+const HeaderWithButton = ({ title, onClick = () => {}, style }) => {
   return (
-    <View style={[styles.headingWrapper,{...style}]}>
+    <View style={[styles.headingWrapper, { ...style }]}>
       <Text style={commonStyle.smallHeading}>{title}</Text>
       <TouchableOpacity
         style={styles.headingBtn}
@@ -40,5 +40,6 @@ const styles = StyleSheet.create({
   headingTxt: {
     fontFamily: "Montserrat-Medium",
     fontSize: scale(10),
+    color: "#FFFFFF",
   },
 });

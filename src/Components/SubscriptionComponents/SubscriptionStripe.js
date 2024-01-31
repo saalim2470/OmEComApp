@@ -5,7 +5,7 @@ import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import colors from "../../Constants/colors";
 import { subscriptionDuration } from "../../Constants/Constant";
 
-const SubscriptionStripe = ({ item, onClick = () => {} }) => {
+const SubscriptionStripe = ({ item, onClick = () => {}, disabled }) => {
   const dispatch = useDispatch();
   return (
     <View style={styles.stripeWrapper}>
@@ -15,10 +15,14 @@ const SubscriptionStripe = ({ item, onClick = () => {} }) => {
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={styles.stripeTxt}>&#8377; {item?.price}</Text>
         <TouchableOpacity
+          disabled={disabled}
           onPress={() => {
             onClick();
           }}
-          style={styles.striprBtn}
+          style={[
+            styles.striprBtn,
+            { backgroundColor: disabled ? "grey" : colors.themeColor },
+          ]}
           activeOpacity={0.6}
         >
           <Text style={[styles.stripeTxt, { color: "white" }]}>Choose</Text>

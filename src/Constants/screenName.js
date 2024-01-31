@@ -55,7 +55,9 @@ const screenName = {
   contactUs: "ContactUs",
   homeBottomNavigation: "HomeBottomNavigation",
   categoryBottomNavigation: "CategoryBottomNavigation",
-  promotion:'Promotion'
+  promotion: "Promotion",
+  uploadPromotionAds: "UploadPromotionAds",
+  promotionRoute: "PromotionRoute",
 };
 
 export default screenName;

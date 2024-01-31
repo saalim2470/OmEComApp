@@ -104,7 +104,9 @@ const CustomSidebarMenu = (props) => {
           <DrawerItem
             label="Subscription"
             onPress={() => {
-              navigation.navigate(screenName.subscription);
+              navigation.navigate(screenName.subscription, {
+                adsType: "all",
+              });
             }}
             labelStyle={styles.labelStyle}
             icon={({ color, size, focused }) => (
@@ -174,7 +176,7 @@ const CustomSidebarMenu = (props) => {
           <DrawerItem
             label="Promotion"
             onPress={() => {
-              navigation.navigate(screenName.promotion);
+              navigation.navigate(screenName.profileRoute);
             }}
             labelStyle={styles.labelStyle}
             icon={({ color, size, focused }) => (

@@ -5,7 +5,7 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import MainHeader from "../../Components/MainHeader";
 import commonStyle from "../../Constants/commonStyle";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
@@ -78,6 +78,10 @@ const MainHome = ({ route }) => {
   //     getContentDataByCategory(categoryId);
   //   }, [categoryId])
   // );
+  const contentDataResMemoized = useMemo(
+    () => contentDataRes,
+    [contentDataRes]
+  );
   useEffect(() => {
     // dispatch(setGetAdContentPage(1));
     getContentDataByCategory(categoryId);
@@ -99,11 +103,11 @@ const MainHome = ({ route }) => {
     }
   }, [contentDataError]);
   useEffect(() => {
-    if (contentDataRes != null && contentDataSuccess) {
-      setPostData(contentDataRes);
+    if (contentDataResMemoized != null && contentDataSuccess) {
+      setPostData(contentDataResMemoized);
       setRefreshing(false);
     }
-  }, [contentDataRes, contentDataSuccess]);
+  }, [contentDataResMemoized, contentDataSuccess]);
   useEffect(() => {
     if (likeDataRes != null && likeDataRes.Success) {
       updateData(likeDataRes?.Data, "like");

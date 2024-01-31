@@ -106,7 +106,6 @@ const CommentSection = ({
       dispatch(resetCommentPage());
       setCommentTxt("");
     });
-    Keyboard.dismiss();
   };
   const renderItem = ({ item, index }) => {
     return <CommentItem item={item} />;
@@ -179,7 +178,7 @@ const CommentSection = ({
             source={{
               uri: `${baseURL}${serverImagePath}/${userDetail?.profilePicture}`,
             }}
-            size={scale(30)}
+            size={scale(25)}
           />
           <TextInput
             style={{ flex: 1, padding: verticalScale(3) }}
@@ -191,7 +190,7 @@ const CommentSection = ({
           />
           {commentTxt != "" ? (
             <TouchableOpacity
-              style={{ paddingHorizontal: moderateScale(5) }}
+              style={{ padding: moderateScale(5) }}
               disabled={postCommentLoading}
               onPress={() => {
                 onClickPost();

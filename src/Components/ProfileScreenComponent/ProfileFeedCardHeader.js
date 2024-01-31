@@ -43,7 +43,7 @@ const ProfileFeedCardHeader = ({ itemData }) => {
             size={scale(35)}
           />
         )}
-        <View style={{ marginLeft: moderateScale(5) }}>
+        <View style={{ marginLeft: moderateScale(5), flex: 1 }}>
           {itemData?.placeName ? (
             <View
               style={{
@@ -101,43 +101,44 @@ const ProfileFeedCardHeader = ({ itemData }) => {
           </Text>
         </View>
       </View>
-      <Menu
-        visible={visible}
-        onDismiss={closeMenu}
-        // contentStyle={{ backgroundColor: "white" }}
-        anchor={
-          <TouchableOpacity
-            activeOpacity={0.5}
-            onPress={() => {
-              openMenu();
-            }}
-          >
-            <Image
-              source={images.optionIcon}
-              style={{
-                width: scale(20),
-                height: scale(20),
-                tintColor: "grey",
+      <View>
+        <Menu
+          visible={visible}
+          onDismiss={closeMenu}
+          anchor={
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => {
+                openMenu();
               }}
-            />
-          </TouchableOpacity>
-        }
-      >
-        <Menu.Item
-          onPress={() => {
-            navigation.navigate(screenName.postData, { editData: itemData });
-            closeMenu();
-          }}
-          title="Edit"
-        />
-        <Menu.Item
-          onPress={() => {
-            setAlertVisible(true);
-            closeMenu();
-          }}
-          title="Delete"
-        />
-      </Menu>
+            >
+              <Image
+                source={images.optionIcon}
+                style={{
+                  width: scale(20),
+                  height: scale(20),
+                  tintColor: "grey",
+                }}
+              />
+            </TouchableOpacity>
+          }
+        >
+          <Menu.Item
+            onPress={() => {
+              navigation.navigate(screenName.postData, { editData: itemData });
+              closeMenu();
+            }}
+            title="Edit"
+          />
+          <Menu.Item
+            onPress={() => {
+              setAlertVisible(true);
+              closeMenu();
+            }}
+            title="Delete"
+          />
+        </Menu>
+      </View>
       <CustomeAlert
         show={alertVisible}
         title={"Delete"}
@@ -157,10 +158,9 @@ export default ProfileFeedCardHeader;
 const styles = StyleSheet.create({
   cardHeaderView: {
     flexDirection: "row",
-    alignItems: "center",
     paddingHorizontal: moderateScale(10),
-    justifyContent: "space-between",
     paddingVertical: verticalScale(5),
+    gap: scale(10),
   },
   headingTxt: {
     fontFamily: "Montserrat-Bold",
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   },
   onlyRowStyle: {
     flexDirection: "row",
-    alignItems: "center",
+    flex: 1,
   },
   subTxt: {
     fontSize: scale(9.5),

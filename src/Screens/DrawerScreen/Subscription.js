@@ -28,12 +28,13 @@ import {
 } from "../../store/addAdContentSlices/AddPostData";
 import { useState } from "react";
 import SubscriptionStripe from "../../Components/SubscriptionComponents/SubscriptionStripe";
-import { groupBy, subcriptionType } from "../../Constants/Constant";
+import { groupBy, subcriptionType, typeOfAds } from "../../Constants/Constant";
 import SubscriptionHeading from "../../Components/SubscriptionComponents/SubscriptionHeading";
 import RbBottomSheet from "../../Components/BottomSheet/RbBottomSheet";
 import SubscriptionDesc from "../../Components/SubscriptionComponents/SubscriptionDesc";
 
 const Subscription = ({ route }) => {
+  const { adsType } = route?.params;
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const postData = useSelector((state) => state.addPost);
@@ -53,7 +54,6 @@ const Subscription = ({ route }) => {
   const getSubscriptionData1 = useSelector(
     (state) => state.getSubscriptionPlan
   );
-  console.log("-=-=-=-subscriptop-=-=-", getSubscriptionData1);
   const {
     error: getSubscriptionPlanError,
     errorCode: getSubscriptionPlanErrorCode,
@@ -87,12 +87,26 @@ const Subscription = ({ route }) => {
   }, [getSubscriptionData]);
   useEffect(() => {
     if (addContentDataRes?.addContentData?.Success) {
-      setShowAlert({
-        show: true,
-        title: "Success",
-        msg: "Ad Content Added Successfully",
-        type: "success",
+      setShowAlert({ ...showAlert, show: false });
+      dispatch(resetData());
+      dispatch(resetGetSubscriptionPlanData());
+      dispatch(reseAdPosttData());
+      dispatch(setPostDataDraft(null));
+      navigation.navigate(screenName.drawerNavigation, {
+        screen: screenName.bottomNavigation,
+        params: {
+          screen: screenName.bottomNavigationHomeRoute,
+          params: {
+            screen: screenName.mainHome,
+          },
+        },
       });
+      // setShowAlert({
+      //   show: true,
+      //   title: "Success",
+      //   msg: "Ad Content Added Successfully",
+      //   type: "success",
+      // });
     }
   }, [addContentDataRes?.addContentData]);
   useEffect(() => {
@@ -156,6 +170,13 @@ const Subscription = ({ route }) => {
                 <>
                   <SubscriptionStripe
                     item={item}
+                    disabled={
+                      adsType === "all"
+                        ? false
+                        : adsType !== "innerPage"
+                        ? true
+                        : false
+                    }
                     onClick={() => {
                       dispatch(getSubscriptionPlanId(item?.id));
                     }}
@@ -176,6 +197,13 @@ const Subscription = ({ route }) => {
                 <>
                   <SubscriptionStripe
                     item={item}
+                    disabled={
+                      adsType === "all"
+                        ? false
+                        : adsType !== "homePage"
+                        ? true
+                        : false
+                    }
                     onClick={() => {
                       dispatch(getSubscriptionPlanId(item?.id));
                     }}
@@ -196,6 +224,13 @@ const Subscription = ({ route }) => {
                 <>
                   <SubscriptionStripe
                     item={item}
+                    disabled={
+                      adsType === "all"
+                        ? false
+                        : adsType !== "searchPage"
+                        ? true
+                        : false
+                    }
                     onClick={() => {
                       dispatch(getSubscriptionPlanId(item?.id));
                     }}

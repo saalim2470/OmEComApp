@@ -23,8 +23,8 @@ export const allCategorie = {
 
 export const subcriptionType = {
   0: "Inner Ads",
-  1: "Home page/Front page Ad",
-  2: "Pin Post",
+  1: "Home page Ads",
+  2: "Search Page Ads",
 };
 
 export function groupBy(items, callbackFn) {
@@ -60,10 +60,10 @@ export const onShare = async () => {
 };
 
 export const subscriptionDuration = {
-  1: "One Month",
-  2: "Three Months",
-  3: "Six Months",
-  4: "1 Year",
+  1: "1 Month",
+  2: "3 Months",
+  3: "6 Months",
+  4: "12 Months",
 };
 
 export const getUserUploadTime = (uploadTime) => {
@@ -75,4 +75,9 @@ export const getUserUploadTime = (uploadTime) => {
 
   // Format the date and time or use it as needed
   return indianDate.format("YYYY-MM-DD HH:mm:ss");
+};
+export const typeOfAds = {
+  1: "homePage",
+  2: "searchPage",
+  3: "innerPage",
 };

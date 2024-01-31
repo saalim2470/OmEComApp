@@ -14,7 +14,6 @@ const FeedCard = ({
   itemData,
   onClickMoreBtn = () => {},
   disable,
-  showFullDesc,
   profile,
 }) => {
   const [files, setFiles] = useState([]);
@@ -28,11 +27,9 @@ const FeedCard = ({
       ) : (
         <FeedCardHeader itemData={itemData} />
       )}
-      <FeedCardTopView
-        itemData={itemData}
-        disable={disable}
-        showFullDesc={showFullDesc}
-      />
+      {itemData?.description !== null ? (
+        <FeedCardTopView itemData={itemData} disable={disable} />
+      ) : null}
       {itemData?.imagesData !== "[]" ? (
         <Slider data={files} onClick={onClickMoreBtn} disable={disable} />
       ) : null}

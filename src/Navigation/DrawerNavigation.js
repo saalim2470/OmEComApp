@@ -27,6 +27,7 @@ import CategoryBottomNavigation from "./CategoryBottomNavigation";
 import Promotion from "../Screens/DrawerScreen/Promotion";
 import MyAds from "../Screens/DrawerScreen/MyAds";
 import ContactUs from "../Screens/DrawerScreen/ContactUs";
+import PromotionRoute from "./PromotionRoute";
 
 const Drawer = createDrawerNavigator();
 
@@ -173,8 +174,8 @@ const DrawerNavigation = () => {
         }}
       />
       <Drawer.Screen
-        name={screenName.promotion}
-        component={Promotion}
+        name={screenName.profileRoute}
+        component={PromotionRoute}
         options={{
           drawerLabel: "Promotion",
           swipeEnabled: false,

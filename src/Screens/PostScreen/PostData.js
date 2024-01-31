@@ -1,23 +1,12 @@
-import {
-  KeyboardAvoidingView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { StyleSheet, View } from "react-native";
 import React from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import commonStyle from "../../Constants/commonStyle";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
-import CustomeButton from "../../Components/CustomeButton";
-import { Ionicons, Entypo, SimpleLineIcons } from "@expo/vector-icons";
-import { Pressable } from "react-native";
 import UserHeader from "../../Components/PostScreenComponent/UserHeader";
-import IconButton from "../../Components/PostScreenComponent/IconButton";
 import * as ImagePicker from "expo-image-picker";
 import { useState } from "react";
 import PostScreenTextView from "../../Components/PostScreenComponent/PostScreenTextView";
-import EmojiComponent from "../../Components/EmojiComponent";
 import { Divider } from "react-native-paper";
 import {
   addAdContentApi,
@@ -32,7 +21,6 @@ import { useEffect } from "react";
 import screenName from "../../Constants/screenName";
 import CustomeAlertModal from "../../Components/CustomeAlertModal";
 import BottomComponent from "../../Components/PostScreenComponent/BottomComponent";
-import { baseURL, serverImagePath } from "../../Constants/defaults";
 import { imageurl } from "../../Constants/functions";
 import {
   resetUpdateAdContent,
@@ -42,7 +30,6 @@ import { setCategoryId } from "../../store/StoreDataSlice";
 import PostScreenHeader from "../../Components/PostScreenComponent/PostScreenHeader";
 import EmojiPicker from "rn-emoji-keyboard";
 import RbBottomSheet from "../../Components/BottomSheet/RbBottomSheet";
-import axios from "axios";
 import * as Location from "expo-location";
 import GpsSearch from "../../Components/GpsSearch";
 import { getGpsDataApi } from "../../store/gpsSlice/GetGpsData";
@@ -87,6 +74,9 @@ const PostData = ({ navigation, route }) => {
       addPostData?.addContentData?.Success ||
       updatePostData?.updateContentData?.Success
     ) {
+      dispatch(resetData());
+      dispatch(reseAdPosttData());
+      dispatch(resetUpdateAdContent());
       navigation.navigate(screenName.drawerNavigation, {
         screen: screenName.bottomNavigation,
         params: {
@@ -226,14 +216,13 @@ const PostData = ({ navigation, route }) => {
     });
     formData.append("description", description);
     formData.append("categoryId", categoryId);
-    formData.append("Lat", parseInt(selectLocation?.center[0]));
-    formData.append("Lon", parseInt(selectLocation?.center[1]));
-    formData.append("PlaceName", selectLocation?.text);
+    if (selectLocation !== null) {
+      formData.append("Lat", parseInt(selectLocation?.center[0]));
+      formData.append("Lon", parseInt(selectLocation?.center[1]));
+      formData.append("PlaceName", selectLocation?.text);
+    }
     dispatch(setPostDataDraft(formData));
     dispatch(addAdContentApi(formData));
-    // navigation.navigate(screenName.drawerNavigation, {
-    //   screen: screenName.subscription,
-    // });
   };
   const onClickUpdate = () => {
     image.forEach((element, index) => {
@@ -282,7 +271,7 @@ const PostData = ({ navigation, route }) => {
           btnTxt={btnTxt}
           screenTitle={screenTitle}
           loading={addPostData?.isLoading || updatePostData?.isLoading}
-          disabled={!description ? true : false}
+          disabled={!description && image.length === 0 ? true : false}
           onClick={() => {
             route?.params != null ? onClickUpdate() : onClickBtn();
           }}
@@ -320,6 +309,7 @@ const PostData = ({ navigation, route }) => {
         open={showEmoji}
         onClose={() => setShowEmoji(false)}
         expandable={false}
+        categoryPosition="top"
       />
       {/* <EmojiComponent
         show={showEmoji}

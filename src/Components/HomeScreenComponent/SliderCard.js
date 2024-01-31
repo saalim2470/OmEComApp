@@ -11,17 +11,15 @@ const SliderCard = ({ item, onClickCard = () => {} }) => {
       }}
       style={styles.cardContainer}
     >
-      <Text
+      {/* <Text
         numberOfLines={2}
         style={{ fontFamily: "Montserrat-Medium", fontSize: scale(11) }}
       >
         {item?.title}
-      </Text>
+      </Text> */}
       <View style={styles.cardImgContainer}>
         <Image
-          source={{
-            uri: item?.uri,
-          }}
+          source={{ uri: item }}
           resizeMode="contain"
           style={{ width: "100%", height: "100%" }}
         />
@@ -45,12 +43,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    marginLeft: moderateScale(6),
+    marginHorizontal: moderateScale(8),
     height: verticalScale(150),
     marginVertical: verticalScale(5),
   },
   cardImgContainer: {
-    height: verticalScale(120),
-    marginTop: verticalScale(2),
+    // height: verticalScale(120),
+    // marginTop: verticalScale(2),
   },
 });
