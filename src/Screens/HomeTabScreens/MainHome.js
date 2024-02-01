@@ -243,6 +243,7 @@ const MainHome = ({ route }) => {
           onEndReached={() => {
             onReachedEnd();
           }}
+          contentContainerStyle={{gap:scale(10)}}
           ItemSeparatorComponent={
             <Divider style={{ marginBottom: verticalScale(8) }} />
           }

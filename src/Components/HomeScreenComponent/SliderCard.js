@@ -2,14 +2,20 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 
-const SliderCard = ({ item, onClickCard = () => {} }) => {
+const SliderCard = ({ item, onClickCard = () => {}, data, index }) => {
   return (
     <TouchableOpacity
       activeOpacity={0.6}
       onPress={() => {
         onClickCard();
       }}
-      style={styles.cardContainer}
+      style={[
+        styles.cardContainer,
+        {
+          marginLeft: index === 0 ? moderateScale(8) : null,
+          marginRight: data?.length - 1 === index ? moderateScale(8) : null,
+        },
+      ]}
     >
       {/* <Text
         numberOfLines={2}
@@ -43,7 +49,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    marginHorizontal: moderateScale(8),
+    // marginHorizontal: moderateScale(8),
     height: verticalScale(150),
     marginVertical: verticalScale(5),
   },

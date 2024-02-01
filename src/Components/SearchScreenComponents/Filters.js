@@ -1,64 +1,56 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useState } from "react";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import colors from "../../Constants/colors";
+import { Divider, RadioButton } from "react-native-paper";
 
-const Filters = () => {
+const Filters = ({onClickFilter=()=>{}}) => {
   const [selectFilter, setSelectFilter] = useState();
+  const filterContent = [
+    {
+      id: 1,
+      title: "Search by category",
+    },
+    {
+      id: 2,
+      title: "Search by content",
+    },
+    {
+      id: 3,
+      title: "Search by users",
+    },
+  ];
   return (
-    <View style={{ marginHorizontal: moderateScale(10) }}>
+    <View style={{ marginHorizontal: moderateScale(10), flex: 1 }}>
       <Text style={styles.heading}>Filter</Text>
-      <TouchableOpacity
-        style={[
-          styles.btn,
-          { backgroundColor: selectFilter === 0 ? colors.themeColor : null },
-        ]}
-        activeOpacity={0.6}
-        onPress={() => setSelectFilter(0)}
+      <Divider />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ marginTop: verticalScale(8) }}
       >
-        <Text
-          style={[
-            styles.btnTxt,
-            { color: selectFilter === 0 ? "white" : null },
-          ]}
-        >
-          Search By Content
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[
-          styles.btn,
-          { backgroundColor: selectFilter === 1 ? colors.themeColor : null },
-        ]}
-        activeOpacity={0.6}
-        onPress={() => setSelectFilter(1)}
-      >
-        <Text
-          style={[
-            styles.btnTxt,
-            { color: selectFilter === 1 ? "white" : null },
-          ]}
-        >
-          Search By user
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[
-          styles.btn,
-          { backgroundColor: selectFilter === 2 ? colors.themeColor : null },
-        ]}
-        activeOpacity={0.6}
-        onPress={() => setSelectFilter(2)}
-      >
-        <Text
-          style={[
-            styles.btnTxt,
-            { color: selectFilter === 2 ? "white" : null },
-          ]}
-        >
-          Search By Category
-        </Text>
-      </TouchableOpacity>
+        {filterContent.map((item, index) => {
+          return (
+            <View style={styles.filterRow}>
+              <Text style={styles.filterTxt}>{item?.title}</Text>
+              <RadioButton
+                value={selectFilter}
+                status={selectFilter === item?.id ? "checked" : "unchecked"}
+                color={colors.selectedColor}
+                onPress={() => {
+                  setSelectFilter(item?.id);
+                  onClickFilter(item?.id)
+                }}
+              />
+            </View>
+          );
+        })}
+      </ScrollView>
     </View>
   );
 };
@@ -66,19 +58,21 @@ const Filters = () => {
 export default Filters;
 
 const styles = StyleSheet.create({
-  btn: {
-    borderWidth: 0.8,
-    marginVertical: verticalScale(8),
-    padding: moderateScale(5),
-    // borderColor: colors.themeColor,
-  },
-  btnTxt: {
-    fontFamily: "Montserrat-Medium",
-    fontSize: scale(13),
-  },
   heading: {
-    fontFamily: "Montserrat-Bold",
-    fontSize: scale(16),
-    marginBottom: verticalScale(5),
+    fontFamily: "Montserrat-Medium",
+    fontSize: scale(18),
+    marginBottom: verticalScale(7),
+    textAlign: "center",
+    marginTop:verticalScale(8)
+  },
+  filterRow: {
+    marginVertical: verticalScale(8),
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  filterTxt: {
+    fontSize: scale(14),
+    fontFamily: "Montserrat-Regular",
   },
 });
