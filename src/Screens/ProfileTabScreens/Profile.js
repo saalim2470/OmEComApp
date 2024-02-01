@@ -36,6 +36,7 @@ import { resetDeleteAdContentData } from "../../store/AdContentSlices/DeleteAdCo
 import { useIsFocused } from "@react-navigation/native";
 import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 import colors from "../../Constants/colors";
+import ShimmerLoading from "../../Components/LoadingComponents/ShimmerLoading";
 
 const Profile = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -78,7 +79,12 @@ const Profile = ({ navigation, route }) => {
   });
   useEffect(() => {
     getUserContent();
-  }, [isFocused, deleteDataRes?.Success, userContentPage, refreshing]);
+  }, [isFocused, userContentPage,deleteDataRes?.Success, refreshing]);
+  useEffect(() => {
+    if (deleteDataRes !== null && deleteDataRes?.Success)
+      dispatch(resetUserContentPage());
+  }, [deleteDataRes?.Success]);
+
   useEffect(() => {
     if (userContentRes != null && userContentSuccess) {
       setPostData(userContentRes);
@@ -205,8 +211,11 @@ const Profile = ({ navigation, route }) => {
         isEditBtn={true}
         totalPost={userTotalContent}
       />
-      {(!refreshing && userContentLoading) || deleteLoading ? (
+      {deleteLoading ? (
         <Loading />
+      ) : !refreshing && userContentLoading ? (
+        // <Loading />
+        <ShimmerLoading/>
       ) : userContentError != null && !userContentError.Success ? (
         <ErrorMsg />
       ) : !userContentLoading && postData.length <= 0 ? (

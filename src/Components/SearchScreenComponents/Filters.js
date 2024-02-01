@@ -36,7 +36,7 @@ const Filters = ({onClickFilter=()=>{}}) => {
       >
         {filterContent.map((item, index) => {
           return (
-            <View style={styles.filterRow}>
+            <View style={styles.filterRow} key={item?.id.toString()}>
               <Text style={styles.filterTxt}>{item?.title}</Text>
               <RadioButton
                 value={selectFilter}
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   filterTxt: {
-    fontSize: scale(14),
+    fontSize: scale(15),
     fontFamily: "Montserrat-Regular",
   },
 });

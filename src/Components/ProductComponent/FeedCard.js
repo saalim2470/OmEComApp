@@ -21,7 +21,7 @@ const FeedCard = ({
     setFiles(imageurl(itemData?.imagesData));
   }, [itemData]);
   return (
-    <View style={{ marginBottom: verticalScale(8) }}>
+    <View style={{ marginBottom: verticalScale(8),backgroundColor:'#FFFFFF' }}>
       {profile ? (
         <ProfileFeedCardHeader itemData={itemData} />
       ) : (
@@ -51,7 +51,7 @@ FeedCard.propTypes = {
   onClickComment: PropTypes.func,
 };
 
-export default FeedCard;
+export default  FeedCard;
 
 const styles = StyleSheet.create({
   cardView: {},

@@ -114,10 +114,10 @@ const ProfileFeedCardHeader = ({ itemData }) => {
             >
               <Image
                 source={images.optionIcon}
+                resizeMode="contain"
                 style={{
                   width: scale(20),
                   height: scale(20),
-                  tintColor: "grey",
                 }}
               />
             </TouchableOpacity>

@@ -12,6 +12,7 @@ import { PaperProvider } from "react-native-paper";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { name as appName } from "./app.json";
 
+
 export default function App() {
   const [fontsLoaded, fontError] = useFonts(fonts);
   if (!fontsLoaded && !fontError) {

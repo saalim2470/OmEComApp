@@ -1,4 +1,12 @@
-import { FlatList, Image, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  useColorScheme,
+} from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import commonStyle from "../../Constants/commonStyle";
@@ -13,6 +21,8 @@ import screenName from "../../Constants/screenName";
 import CustomeBottomSheet from "../../Components/CustomeBottomSheet";
 import { setCategoryId } from "../../store/StoreDataSlice";
 import { useDispatch } from "react-redux";
+import ShimmerLoading from "../../Components/LoadingComponents/ShimmerLoading";
+import CardSlider from "../../Components/HomeScreenComponent/CardSlider";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -30,17 +40,6 @@ const HomeScreen = () => {
   ];
   const [isShowBottomSheet, setIsShowBottomSheet] = useState(false);
   const [adImg, setAdImg] = useState();
-  const renderCard = ({ item, index }) => {
-    return (
-      <SliderCard
-        item={item}
-        onClickCard={() => {
-          setAdImg(item);
-          setIsShowBottomSheet(true);
-        }}
-      />
-    );
-  };
   return (
     <SafeAreaView style={commonStyle.container}>
       <MainHeader navigation={navigation} />
@@ -55,29 +54,31 @@ const HomeScreen = () => {
         }}
       />
       <Divider style={{ marginVertical: verticalScale(8) }} />
-      <BannerSlider
-        data={img}
-        onClick={(index) => {
-          setAdImg(img[index]);
-          setIsShowBottomSheet(true);
-        }}
-      />
-      <View
-        style={{
-          marginTop: verticalScale(10),
-          flex: 1,
-        }}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        nestedScrollEnabled={true}
       >
-        <FlatList
-          data={sliderData}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item, index) => {
-            return `card_${item.id}_${index}`;
+        <BannerSlider
+          data={img}
+          onClick={(index) => {
+            setAdImg(img[index]);
+            setIsShowBottomSheet(true);
           }}
-          renderItem={renderCard}
         />
-      </View>
+        <View
+          style={{
+            marginTop: verticalScale(10),
+          }}
+        >
+          <CardSlider
+            data={sliderData}
+            onClickCard={(item) => {
+              setAdImg(item);
+              setIsShowBottomSheet(true);
+            }}
+          />
+        </View>
+      </ScrollView>
       <CustomeBottomSheet
         isOpen={isShowBottomSheet}
         setIsOpen={setIsShowBottomSheet}

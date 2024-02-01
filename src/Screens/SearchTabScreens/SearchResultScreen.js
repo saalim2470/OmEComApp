@@ -21,6 +21,7 @@ import {
 import { Divider } from "react-native-paper";
 import FeedCard from "../../Components/ProductComponent/FeedCard";
 import colors from "../../Constants/colors";
+import ShimmerLoading from "../../Components/LoadingComponents/ShimmerLoading";
 
 const SearchResultScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -133,30 +134,33 @@ const SearchResultScreen = ({ navigation }) => {
         />
       </View>
       {searchLoading ? (
-        <Loading />
-      ) : !searchLoading && searchResultRes?.length === 0 ? (
-        <Text>Data Not Found</Text>
+        // <Loading />
+        <ShimmerLoading/>
+      ) : !searchLoading && searchSuccess && searchResultRes?.length === 0 ? (
+        <Text style={{ alignSelf: "center" }}>Data Not Found</Text>
       ) : (
-        <FlatList
-          data={searchData}
-          keyExtractor={(item, index) => {
-            return `data_${item.id}_${index}`;
-          }}
-          showsVerticalScrollIndicator={false}
-          onEndReachedThreshold={1}
-          onEndReached={() => {
-            onReachedEnd();
-          }}
-          ItemSeparatorComponent={
-            <Divider style={{ marginBottom: verticalScale(8) }} />
-          }
-          ListFooterComponent={listFooterComponent}
-          renderItem={renderItem}
-          initialNumToRender={10}
-          maxToRenderPerBatch={10}
-          windowSize={10}
-          removeClippedSubviews={true}
-        />
+        <View>
+          <FlatList
+            data={searchData}
+            keyExtractor={(item, index) => {
+              return `data_${item.id}_${index}`;
+            }}
+            showsVerticalScrollIndicator={false}
+            onEndReachedThreshold={1}
+            onEndReached={() => {
+              onReachedEnd();
+            }}
+            ItemSeparatorComponent={
+              <Divider style={{ marginBottom: verticalScale(8) }} />
+            }
+            ListFooterComponent={listFooterComponent}
+            renderItem={renderItem}
+            initialNumToRender={10}
+            maxToRenderPerBatch={10}
+            windowSize={10}
+            removeClippedSubviews={true}
+          />
+        </View>
       )}
     </SafeAreaView>
   );

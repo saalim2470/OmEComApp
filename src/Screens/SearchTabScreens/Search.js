@@ -54,11 +54,11 @@ const Search = ({ navigation }) => {
             setIsShowBottomSheet(true);
           }}
         />
-        <View style={{ marginTop: verticalScale(15) }}>
+        <View style={{ flex:1,marginTop: verticalScale(15), }}>
           <CardSlider
             data={sliderData}
-            onClickCard={(index) => {
-              setAdImg(sliderData[index]);
+            onClickCard={(item) => {
+              setAdImg(item);
               setIsShowBottomSheet(true);
             }}
           />

@@ -35,6 +35,7 @@ import { resetLikeData } from "../../store/AdContentSlices/LikeSlice";
 import RoundCategoryView from "../../Components/HomeScreenComponent/RoundCategoryView";
 import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 import { setCategoryId } from "../../store/StoreDataSlice";
+import ShimmerLoading from "../../Components/LoadingComponents/ShimmerLoading";
 
 const MainHome = ({ route }) => {
   const navigation = useNavigation();
@@ -227,7 +228,8 @@ const MainHome = ({ route }) => {
       />
       <Divider style={{ marginVertical: verticalScale(8) }} />
       {!refreshing && contentDataLoading ? (
-        <Loading />
+        // <Loading />
+        <ShimmerLoading/>
       ) : !contentDataLoading && contentDataError != null ? (
         <ErrorMsg />
       ) : !contentDataLoading && postData?.length <= 0 ? (

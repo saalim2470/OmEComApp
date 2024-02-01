@@ -3,6 +3,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -19,6 +20,10 @@ import { Divider } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "./Loading";
 import { getGpsDataApi } from "../store/gpsSlice/GetGpsData";
+import TextBoxWithLabel from "./TextBoxWithLabel";
+import images from "../Constants/images";
+import colors from "../Constants/colors";
+import { MaterialIcons } from "@expo/vector-icons";
 
 const GpsSearch = ({ data, onClickLocationResult = () => {} }) => {
   const dispatch = useDispatch();
@@ -29,19 +34,21 @@ const GpsSearch = ({ data, onClickLocationResult = () => {} }) => {
   };
   const renderItem = ({ item, index }) => {
     return (
-      <TouchableOpacity
-        activeOpacity={0.6}
-        onPress={() => {
-          onClickLocationResult(item);
-        }}
-        style={{
-          marginVertical: verticalScale(5),
-          padding: moderateScale(5),
-        }}
-      >
-        <Text style={{ fontFamily: "Montserrat-Bold" }}>{item?.text}</Text>
-        <Text style={styles.placeNameTxt}>{item?.place_name}</Text>
-      </TouchableOpacity>
+      <View style={styles.locationView}>
+        <View style={styles.round}>
+          <MaterialIcons name="location-pin" size={scale(25)} color="black" />
+        </View>
+        <TouchableOpacity
+          activeOpacity={0.6}
+          onPress={() => {
+            onClickLocationResult(item);
+          }}
+          style={{ flex: 1 }}
+        >
+          <Text style={{ fontFamily: "Montserrat-Bold" }}>{item?.text}</Text>
+          <Text style={styles.placeNameTxt}>{item?.place_name}</Text>
+        </TouchableOpacity>
+      </View>
     );
   };
   return (
@@ -60,6 +67,9 @@ const GpsSearch = ({ data, onClickLocationResult = () => {} }) => {
           }}
         />
       </View>
+      {!gpsData?.isLoading&&gpsData?.gpsData?.length > 0 ? (
+        <Text style={styles.headingTxt}>Search Results</Text>
+      ) : null}
       {gpsData?.isLoading ? (
         <Loading />
       ) : (
@@ -83,5 +93,25 @@ const styles = StyleSheet.create({
     fontSize: scale(10),
     fontFamily: "Montserrat-Medium",
     paddingTop: verticalScale(3),
+  },
+  round: {
+    width: scale(35),
+    height: scale(35),
+    borderRadius: 50,
+    backgroundColor: colors.greyColor,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  locationView: {
+    flexDirection: "row",
+    gap: scale(10),
+    padding: moderateScale(5),
+    // paddingVertical: verticalScale(10),
+    paddingVertical: verticalScale(10),
+  },
+  headingTxt: {
+    fontSize: scale(16),
+    fontFamily: "Montserrat-Bold",
+    marginVertical: verticalScale(3),
   },
 });

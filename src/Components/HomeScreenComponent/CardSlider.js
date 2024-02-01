@@ -11,7 +11,7 @@ const CardSlider = ({ data, onClickCard = () => {} }) => {
         data={data}
         index={index}
         onClickCard={() => {
-          onClickCard(index);
+          onClickCard(item);
         }}
       />
     );
