@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { Dimensions, FlatList, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import HeaderWithButton from "../../Components/HeaderWithButton";
 import BannerSlider from "../../Components/HomeScreenComponent/BannerSlider";
@@ -9,7 +9,10 @@ import images from "../../Constants/images";
 import { useNavigation } from "@react-navigation/native";
 import SliderCard from "../../Components/HomeScreenComponent/SliderCard";
 import screenName from "../../Constants/screenName";
+import SelectButton from "../../Components/SelectButton";
+import RbBottomSheet from "../../Components/BottomSheet/RbBottomSheet";
 
+const screenHeight = Dimensions.get("screen").height / 2;
 const UploadSliderAds = ({ title }) => {
   const navigation = useNavigation();
   const defaultAdImg = [
@@ -19,6 +22,8 @@ const UploadSliderAds = ({ title }) => {
   ];
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
   const [image, setImage] = useState([]);
+  const [openSheet, setOpenSheet] = useState(false);
+  const [selectAdsBtn, setSelectAdBtn] = useState();
 
   const checkLibrarayPermission = async () => {
     const { status: currentStatus } =
@@ -48,7 +53,7 @@ const UploadSliderAds = ({ title }) => {
       <HeaderWithButton
         title={title}
         onClick={() => {
-          checkLibrarayPermission();
+          setOpenSheet(true);
         }}
         style={{ marginBottom: verticalScale(8) }}
       />
@@ -63,6 +68,7 @@ const UploadSliderAds = ({ title }) => {
       />
       <CustomeButton
         title={"Upload"}
+        disabled={image.length !== 0 ? false : true}
         onClick={() => {
           navigation.navigate(screenName.drawerNavigation, {
             screen: screenName.subscription,
@@ -72,6 +78,34 @@ const UploadSliderAds = ({ title }) => {
           });
         }}
         style={{ marginHorizontal: moderateScale(10) }}
+      />
+      <RbBottomSheet
+        isOpen={openSheet}
+        height={screenHeight}
+        setIsOpen={setOpenSheet}
+        children={
+          <SelectButton
+            btnData={[
+              {
+                id: 1,
+                title: "Home Page",
+              },
+              {
+                id: 2,
+                title: "Search Page",
+              },
+            ]}
+            title={"When you are posted your ad?"}
+            value={selectAdsBtn}
+            onClickBtn={(id) => {
+              setSelectAdBtn(id);
+            }}
+            onClickNextBtn={() => {
+              checkLibrarayPermission();
+              setOpenSheet(false);
+            }}
+          />
+        }
       />
     </View>
   );

@@ -176,7 +176,9 @@ const CustomSidebarMenu = (props) => {
           <DrawerItem
             label="Promotion"
             onPress={() => {
-              navigation.navigate(screenName.profileRoute);
+              navigation.navigate(screenName.promotionRoute, {
+                screen: screenName.promotion,
+              });
             }}
             labelStyle={styles.labelStyle}
             icon={({ color, size, focused }) => (

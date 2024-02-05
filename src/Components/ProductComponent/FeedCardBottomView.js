@@ -1,4 +1,10 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import commonStyle from "../../Constants/commonStyle";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
@@ -17,6 +23,7 @@ import FeedCardBottomRightView from "./FeedCardBottomRightView";
 import RbBottomSheet from "../BottomSheet/RbBottomSheet";
 import CommentSection from "../CommentComponent/CommentSection";
 
+const SHEET_HEIGHT = Dimensions.get("screen").height / 2;
 const FeedCardBottomView = ({ itemData }) => {
   const dispatch = useDispatch();
   const {
@@ -96,7 +103,7 @@ const FeedCardBottomView = ({ itemData }) => {
         isOpen={isShowBottomSheet}
         setIsOpen={setIsShowBottomSheet}
         children={<CommentSection postDetail={itemData} />}
-        height={verticalScale(350)}
+        height={SHEET_HEIGHT}
       />
       {/* <CommentView
         postDetail={itemData}

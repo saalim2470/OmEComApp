@@ -62,7 +62,14 @@ const GetContentByUserId = createSlice({
     },
     resetpageAndUserContent: (state, action) => {
       state.contentData = [];
+      state.isReachedEnd = false;
       state.page = 1;
+      state.totalCount = null;
+    },
+    resetContentByUserIdPage: (state, action) => {
+      state.page = 1;
+      state.totalCount = null;
+      state.isReachedEnd = false;
     },
   },
 });
@@ -75,6 +82,7 @@ export const {
   resetOtherUserContent,
   setUserContentPage,
   resetpageAndUserContent,
+  resetContentByUserIdPage,
 } = GetContentByUserId.actions;
 
 export const getContentByUserIdApi =
@@ -105,7 +113,7 @@ export const getOtherUserInfoApi = (userId) => async (dispatch) => {
     dispatch(setLoading(true));
     const responce = await ProfileServices.getOtherUserInfo(userId);
     dispatch(setOtherUserDetail(responce.data));
-    dispatch(getContentByUserIdApi(responce.data?.Data?.userId, 1, 10));
+    // dispatch(getContentByUserIdApi(responce.data?.Data?.userId, 1, 10));
     dispatch(setLoading(false));
   } catch (error) {
     dispatch(setLoading(false));

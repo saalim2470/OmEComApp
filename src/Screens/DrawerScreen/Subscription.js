@@ -139,16 +139,35 @@ const Subscription = ({ route }) => {
     dispatch(resetGetSubscriptionPlanData());
     dispatch(reseAdPosttData());
     dispatch(setPostDataDraft(null));
-    showAlert.type == "success" &&
-      navigation.navigate(screenName.drawerNavigation, {
-        screen: screenName.bottomNavigation,
-        params: {
-          screen: screenName.bottomNavigationHomeRoute,
+    showAlert.type == "success" && adsType === "homePage"
+      ? navigation.navigate(screenName.drawerNavigation, {
+          screen: screenName.bottomNavigation,
           params: {
-            screen: screenName.mainHome,
+            screen: screenName.bottomNavigationHomeRoute,
+            params: {
+              screen: screenName.homeScreen,
+            },
           },
-        },
-      });
+        })
+      : adsType === "searchPage"
+      ? navigation.navigate(screenName.drawerNavigation, {
+          screen: screenName.bottomNavigation,
+          params: {
+            screen: screenName.bottomNavigationSearchRoute,
+            params: {
+              screen: screenName.search,
+            },
+          },
+        })
+      : navigation.navigate(screenName.drawerNavigation, {
+          screen: screenName.bottomNavigation,
+          params: {
+            screen: screenName.bottomNavigationHomeRoute,
+            params: {
+              screen: screenName.mainHome,
+            },
+          },
+        });
   };
   return (
     <SafeAreaView style={commonStyle.container}>

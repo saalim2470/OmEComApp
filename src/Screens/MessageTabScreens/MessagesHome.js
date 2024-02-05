@@ -10,6 +10,7 @@ import { Divider } from "react-native-paper";
 import MessageStripeCard from "../../Components/MessageScreenComponents.js/MessageStripeCard";
 import screenName from "../../Constants/screenName";
 import TextBoxWithLabel from "../../Components/TextBoxWithLabel";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const MessagesHome = ({ navigation }) => {
   const data = [
@@ -50,9 +51,9 @@ const MessagesHome = ({ navigation }) => {
     },
   ];
   return (
-    <View style={commonStyle.container}>
+    <SafeAreaView style={commonStyle.container}>
       <CustomeHeader isBackBtn={true} title={"Messages"} />
-      <View style={commonStyle.innerContainer}>
+      {/* <View style={commonStyle.innerContainer}>
         <View style={styles.searchBoxStyle}>
           <Image source={images.searchIcon} style={styles.searchIconStyle} />
           <TextInput
@@ -81,8 +82,13 @@ const MessagesHome = ({ navigation }) => {
             );
           }}
         />
-      </View>
-    </View>
+      </View> */}
+      <Image
+        source={images.commingSoon}
+        style={{ width: "100%", height: "100%" }}
+        resizeMode="contain"
+      />
+    </SafeAreaView>
   );
 };
 

@@ -1,4 +1,4 @@
-import { StyleSheet, View } from "react-native";
+import { FlatList, Image, StyleSheet, View } from "react-native";
 import React, { useState } from "react";
 import colors from "../../Constants/colors";
 import { SliderBox } from "react-native-image-slider-box";
@@ -27,6 +27,26 @@ const Slider = ({ data, onClick, disable }) => {
         }}
       />
     </View>
+    // <View style={styles.cardImgView}>
+    //   <FlatList
+    //     data={data}
+    //     keyExtractor={(item, index) => {
+    //       // item.id.toString();
+    //     }}
+    //     horizontal={true}
+    //     pagingEnabled={true}
+    //     renderItem={({ item, index }) => {
+    //       return (
+    //         <View style={{ borderWidth: 1, height: "100%", width: "100%" }}>
+    //           <Image
+    //             source={{ uri: item }}
+    //             style={{ height: "100%", width: "100%" }}
+    //           />
+    //         </View>
+    //       );
+    //     }}
+    //   />
+    // </View>
   );
 };
 
@@ -36,6 +56,8 @@ const styles = StyleSheet.create({
   cardImgView: {
     height: verticalScale(300),
     marginVertical: verticalScale(3),
+    width: "100%",
+    // borderWidth: 1,
   },
   dotStyle: {
     width: scale(7),

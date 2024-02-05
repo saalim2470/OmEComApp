@@ -23,8 +23,8 @@ export const allCategorie = {
 
 export const subcriptionType = {
   0: "Inner Ads",
-  1: "Home page Ads",
-  2: "Search Page Ads",
+  1: "Banner Ad - Home Page",
+  2: "Slider Ad - Home Page",
 };
 
 export function groupBy(items, callbackFn) {
@@ -64,6 +64,10 @@ export const subscriptionDuration = {
   2: "3 Months",
   3: "6 Months",
   4: "12 Months",
+  5: "Week - 1 to 7",
+  6: "Week - 8 to 14",
+  7: "Week - 15 to 21",
+  8: "Week - 22 to 28",
 };
 
 export const getUserUploadTime = (uploadTime) => {

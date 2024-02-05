@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import HeaderWithButton from "../../Components/HeaderWithButton";
 import BannerSlider from "../../Components/HomeScreenComponent/BannerSlider";
@@ -8,7 +8,12 @@ import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import images from "../../Constants/images";
 import { useNavigation } from "@react-navigation/native";
 import { baseURL, serverImagePath } from "../../Constants/defaults";
+import screenName from "../../Constants/screenName";
+import RbBottomSheet from "../../Components/BottomSheet/RbBottomSheet";
+import Filters from "../../Components/SearchScreenComponents/Filters";
+import SelectButton from "../../Components/SelectButton";
 
+const screenHeight = Dimensions.get("screen").height / 2;
 const UploadBannerAds = ({ title }) => {
   const navigation = useNavigation();
   const defaultAdImg = [
@@ -19,6 +24,8 @@ const UploadBannerAds = ({ title }) => {
   // const defaultAdImg = [`${baseURL}${serverImagePath}/Default-banner.png`];
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
   const [image, setImage] = useState([]);
+  const [openSheet, setOpenSheet] = useState(false);
+  const [selectAdsBtn, setSelectAdBtn] = useState();
 
   const checkLibrarayPermission = async () => {
     const { status: currentStatus } =
@@ -45,7 +52,7 @@ const UploadBannerAds = ({ title }) => {
       <HeaderWithButton
         title={title}
         onClick={() => {
-          checkLibrarayPermission();
+          setOpenSheet(true);
         }}
         style={{ marginBottom: verticalScale(8) }}
       />
@@ -55,15 +62,44 @@ const UploadBannerAds = ({ title }) => {
       />
       <CustomeButton
         title={"Upload"}
+        disabled={image.length !== 0 ? false : true}
         onClick={() => {
           navigation.navigate(screenName.drawerNavigation, {
             screen: screenName.subscription,
             params: {
-              adsType: "homePage",
+              adsType: selectAdsBtn === 1 ? "homePage" : "searchPage",
             },
           });
         }}
         style={{ marginHorizontal: moderateScale(10) }}
+      />
+      <RbBottomSheet
+        isOpen={openSheet}
+        height={screenHeight}
+        setIsOpen={setOpenSheet}
+        children={
+          <SelectButton
+            btnData={[
+              {
+                id: 1,
+                title: "Home Page",
+              },
+              {
+                id: 2,
+                title: "Search Page",
+              },
+            ]}
+            title={"When you are posted your ad?"}
+            value={selectAdsBtn}
+            onClickBtn={(id) => {
+              setSelectAdBtn(id);
+            }}
+            onClickNextBtn={() => {
+              checkLibrarayPermission();
+              setOpenSheet(false);
+            }}
+          />
+        }
       />
     </View>
   );

@@ -1,5 +1,6 @@
 import {
   Image,
+  Linking,
   Pressable,
   StyleSheet,
   Text,
@@ -30,6 +31,7 @@ const ProfileScreenTopView = ({ profileData, isEditBtn, totalPost }) => {
           : defaultProfileImg,
     },
   ];
+  const url = `whatsapp://send?phone=${profileData?.phoneNumber}&text=Hello`;
   return (
     <>
       <View
@@ -95,7 +97,9 @@ const ProfileScreenTopView = ({ profileData, isEditBtn, totalPost }) => {
             <TouchableOpacity
               style={styles.editBtn}
               activeOpacity={0.6}
-              onPress={() => {}}
+              onPress={() => {
+                Linking.openURL(url);
+              }}
             >
               <Text style={styles.editBtnTxt}>Message</Text>
             </TouchableOpacity>

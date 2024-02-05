@@ -68,6 +68,7 @@ const images = {
   promotion: require("../utils/assets/images/promotion.png"),
   location: require("../utils/assets/images/location.png"),
   defaultAd: require("../utils/assets/images/DefaultAd.jpg"),
+  commingSoon: require("../utils/assets/images/commingSoon.png"),
 };
 
 export default images;

@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import {
   getContentByUserIdApi,
+  resetContentByUserIdPage,
   setUserContentPage,
 } from "../../store/profileSlices/GetContentByUserId";
 import { Divider } from "react-native-paper";
@@ -64,6 +65,12 @@ const OtherUserProfile = ({ navigation }) => {
     msg: null,
     type: null,
   });
+  useEffect(() => {
+    if (userDetail !== null && userDetail?.Success) {
+      getContent();
+    }
+  }, [userContentPage, refreshing, userDetail]);
+
   useEffect(() => {
     if (contentData != null && userContentSuccess) {
       setPostData(contentData);
@@ -154,13 +161,11 @@ const OtherUserProfile = ({ navigation }) => {
   const onReachedEnd = () => {
     if (!userContentReachedEnd) {
       dispatch(setUserContentPage(userContentPage + 1));
-      getContent();
     }
   };
   const onRefresh = useCallback(() => {
+    dispatch(resetContentByUserIdPage(1));
     setRefreshing(true);
-    dispatch(setUserContentPage(1));
-    getContent();
   }, []);
   if (!refreshing && contentLoading) {
     return <Loading />;

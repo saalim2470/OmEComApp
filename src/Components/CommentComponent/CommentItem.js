@@ -18,30 +18,41 @@ const CommentItem = ({ item }) => {
           source={{
             uri: `${baseURL}${serverImagePath}/${item?.user?.profilePicturePath}`,
           }}
-          size={scale(25)}
+          size={scale(30)}
         />
       ) : (
         <Avatar.Image
           source={{
             uri: defaultProfileImg,
           }}
-          size={scale(25)}
+          size={scale(30)}
         />
       )}
       <View
         style={{
           marginLeft: moderateScale(5),
           marginRight: moderateScale(15),
+          flex: 1,
+          gap: scale(5),
         }}
       >
-        <Text
-          style={styles.headingTxt}
-        >{`${item?.user?.firstname} ${item?.user?.lastname}`}</Text>
-        <Text style={styles.subTxt}>
-          {moment(getUserUploadTime(item?.createdDate))
-            .startOf("seconds")
-            .fromNow()}
-        </Text>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: scale(5),
+          }}
+        >
+          <Text
+            style={styles.headingTxt}
+          >{`${item?.user?.firstname} ${item?.user?.lastname}`}</Text>
+          <Text style={styles.subTxt}>
+            {moment(getUserUploadTime(item?.createdDate))
+              .startOf("seconds")
+              .fromNow()}
+          </Text>
+        </View>
+
         <Text style={styles.commentTxt}>{item?.description}</Text>
       </View>
     </View>
@@ -58,9 +69,11 @@ const styles = StyleSheet.create({
   onlyRowStyle: {
     flexDirection: "row",
     // alignItems: "center",
+    // borderWidth: 1,
+    gap: scale(5),
   },
   commentTxt: {
-    fontFamily: "Montserrat-Medium",
+    fontFamily: "Montserrat-Regular",
     fontSize: scale(11),
     marginBottom: verticalScale(8),
   },

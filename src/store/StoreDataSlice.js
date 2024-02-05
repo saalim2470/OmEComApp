@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const StoreDataSlice = createSlice({
   name: "storeData",
   initialState: {
-    categoryId: null,
+    categoryId: 0,
   },
   reducers: {
     setCategoryId: (state, action) => {

@@ -174,7 +174,7 @@ const DrawerNavigation = () => {
         }}
       />
       <Drawer.Screen
-        name={screenName.profileRoute}
+        name={screenName.promotionRoute}
         component={PromotionRoute}
         options={{
           drawerLabel: "Promotion",

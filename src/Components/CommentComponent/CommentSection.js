@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Dimensions,
   FlatList,
   Image,
   Keyboard,
@@ -7,12 +8,13 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import Modal from "react-native-modal";
-import { Avatar } from "react-native-paper";
+import { Avatar, Divider } from "react-native-paper";
 import CommentItem from "./CommentItem";
 import Loading from "../Loading";
 import ServerError from "../ErrorScreens/ServerError";
@@ -31,6 +33,7 @@ import {
 import CustomeAlertModal from "../CustomeAlertModal";
 import colors from "../../Constants/colors";
 
+const SHEET_HEIGHT = Dimensions.get("screen").height / 2;
 const CommentSection = ({
   isVisible,
   postDetail,
@@ -146,19 +149,24 @@ const CommentSection = ({
   return (
     <>
       <View style={styles.modalView}>
-        <Text style={{ alignSelf: "center" }}>Comments</Text>
+        <Text style={styles.headingTxt}>Comments</Text>
+        <Divider
+          style={{
+            marginTop: verticalScale(10),
+          }}
+        />
         {!commentLoading &&
         commentError === null &&
         commentData?.length <= 0 ? (
-          <View
-            style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
-          >
-            <Text>No Comment Yet</Text>
+          <View style={styles.msgView}>
+            <Text style={styles.msgTxt}>No Comment Yet</Text>
           </View>
         ) : (
           <View
             style={{
-              height: verticalScale(260),
+              // height: verticalScale(260),
+              flex: 1,
+              marginBottom: verticalScale(30),
             }}
           >
             <FlatList
@@ -168,8 +176,9 @@ const CommentSection = ({
               showsVerticalScrollIndicator={false}
               ListFooterComponent={listFooterComponent}
               onEndReached={onReachedEnd}
-              onEndReachedThreshold={0.1}
+              onEndReachedThreshold={1}
               nestedScrollEnabled={true}
+              contentContainerStyle={styles.commentContainerStyle}
             />
           </View>
         )}
@@ -178,7 +187,7 @@ const CommentSection = ({
             source={{
               uri: `${baseURL}${serverImagePath}/${userDetail?.profilePicture}`,
             }}
-            size={scale(25)}
+            size={scale(30)}
           />
           <TextInput
             style={{ flex: 1, padding: verticalScale(3) }}
@@ -189,7 +198,7 @@ const CommentSection = ({
             }}
           />
           {commentTxt != "" ? (
-            <TouchableOpacity
+            <TouchableWithoutFeedback
               style={{ padding: moderateScale(5) }}
               disabled={postCommentLoading}
               onPress={() => {
@@ -201,7 +210,7 @@ const CommentSection = ({
               ) : (
                 <Text style={{ color: "blue" }}>Post</Text>
               )}
-            </TouchableOpacity>
+            </TouchableWithoutFeedback>
           ) : null}
         </View>
       </View>
@@ -226,8 +235,8 @@ export default CommentSection;
 
 const styles = StyleSheet.create({
   modalView: {
-    paddingRight: moderateScale(15),
-    paddingLeft: moderateScale(15),
+    // paddingRight: moderateScale(15),
+    // paddingLeft: moderateScale(15),
     flex: 1,
   },
   cardHeaderView: {
@@ -237,13 +246,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingVertical: verticalScale(5),
   },
-  headingTxt: {
-    fontFamily: "Montserrat-Medium",
-    fontSize: moderateScale(11),
-  },
   onlyRowStyle: {
     flexDirection: "row",
-    // alignItems: "center",
   },
   commentTxt: {
     fontFamily: "Montserrat-Medium",
@@ -255,7 +259,27 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: verticalScale(5),
     alignSelf: "center",
-    width: "100%",
     marginTop: verticalScale(7),
+    marginHorizontal: moderateScale(15),
+    backgroundColor: "#FFFFFF",
+  },
+  headingTxt: {
+    alignSelf: "center",
+    fontFamily: "Montserrat-Medium",
+    marginVertical: verticalScale(5),
+  },
+  commentContainerStyle: {
+    gap: scale(7),
+    marginHorizontal: moderateScale(15),
+    marginTop: verticalScale(5),
+  },
+  msgView: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
+  },
+  msgTxt: {
+    fontFamily: "Montserrat-Bold",
+    fontSize: scale(14),
   },
 });

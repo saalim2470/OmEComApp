@@ -41,7 +41,7 @@ const FeedCardBottomLeftView = ({ itemData }) => {
           color={itemData?.isCurrentUserLiked ? "red" : "black"}
         />
       </TouchableOpacity>
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => {
           navigation.navigate(screenName.message);
         }}
@@ -51,18 +51,14 @@ const FeedCardBottomLeftView = ({ itemData }) => {
           size={scale(24)}
           color="black"
         />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <TouchableOpacity
         onPress={() => {
           onClickBookmarkBtn();
         }}
       >
         <Ionicons
-          name={
-            itemData?.isCurrentUserSaved
-              ? "bookmark"
-              : "bookmark-outline"
-          }
+          name={itemData?.isCurrentUserSaved ? "bookmark" : "bookmark-outline"}
           size={scale(24)}
           color="black"
         />

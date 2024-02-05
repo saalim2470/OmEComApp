@@ -1,22 +1,20 @@
 import {
+  Dimensions,
   FlatList,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import commonStyle from "../../Constants/commonStyle";
 import CustomeHeader from "../../Components/CustomeHeader";
 import BannerSlider from "../../Components/HomeScreenComponent/BannerSlider";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
-import SubscriptionHeading from "../../Components/SubscriptionComponents/SubscriptionHeading";
-import colors from "../../Constants/colors";
 import HeaderWithButton from "../../Components/HeaderWithButton";
-import SliderCard from "../../Components/HomeScreenComponent/SliderCard";
 import screenName from "../../Constants/screenName";
-import images from "../../Constants/images";
+import CardSlider from "../../Components/HomeScreenComponent/CardSlider";
 
 const Promotion = ({ navigation }) => {
   const img = [
@@ -30,9 +28,6 @@ const Promotion = ({ navigation }) => {
     "https://mir-s3-cdn-cf.behance.net/projects/404/2ee493102979329.Y3JvcCwxOTk5LDE1NjQsMCwyMTc.png",
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQg9nAV0o49dha2PwwuhdhmcoVtHIzPiXNEKH1CYjXgCFB0i6Z4FJYilH55oLqxYNDBNFs&usqp=CAU",
   ];
-  const renderCard = ({ item, index }) => {
-    return <SliderCard item={item} onClickCard={() => {}} />;
-  };
   return (
     <SafeAreaView style={commonStyle.container}>
       <CustomeHeader isBackBtn={true} title={"Promotion"} />
@@ -55,43 +50,11 @@ const Promotion = ({ navigation }) => {
         }}
         style={{ marginTop: verticalScale(8) }}
       />
-      <View
-        style={{
-          flex: 1,
-        }}
-      >
-        <FlatList
-          data={sliderData}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item, index) => {
-            return `card_${item.id}_${index}`;
-          }}
-          renderItem={renderCard}
-        />
-      </View>
+      <CardSlider data={sliderData} onClickCard={(item) => {}} />
     </SafeAreaView>
   );
 };
 
 export default Promotion;
 
-const styles = StyleSheet.create({
-  headingWrapper: {
-    //   borderWidth: 1,
-    marginHorizontal: moderateScale(10),
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  headingBtn: {
-    padding: moderateScale(5),
-    borderRadius: moderateScale(5),
-    backgroundColor: colors.themeColor,
-    paddingHorizontal: moderateScale(8),
-  },
-  headingTxt: {
-    fontFamily: "Montserrat-Medium",
-    fontSize: scale(10),
-  },
-});
+const styles = StyleSheet.create({});
