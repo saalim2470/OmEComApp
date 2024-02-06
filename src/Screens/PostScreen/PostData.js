@@ -237,6 +237,11 @@ const PostData = ({ navigation, route }) => {
     formData.append("description", description);
     formData.append("categoryId", route?.params?.editData?.categoryId);
     formData.append("id", route?.params?.editData?.id);
+    if (selectLocation !== null) {
+      formData.append("Lat", parseInt(selectLocation?.center[0]));
+      formData.append("Lon", parseInt(selectLocation?.center[1]));
+      formData.append("PlaceName", selectLocation?.text);
+    }
     dispatch(setPostDataDraft(formData));
     dispatch(setCategoryId(route?.params?.editData?.categoryId));
     dispatch(updateAdContentApi(formData));

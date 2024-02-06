@@ -4,19 +4,12 @@ import {
   RefreshControl,
   StyleSheet,
 } from "react-native";
-import React, {
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import commonStyle from "../../Constants/commonStyle";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { Divider, Menu } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  setUserContentPage,
-} from "../../store/profileSlices/GetUserContentSlice";
 import Loading from "../../Components/Loading";
 import FriendlyMsg from "../../Components/ErrorScreens/FriendlyMsg";
 import CustomeAlertModal from "../../Components/CustomeAlertModal";
@@ -30,9 +23,11 @@ import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 import colors from "../../Constants/colors";
 import {
   getSavedContentApi,
+  resetSavedAdContentPage,
   setSavedContentPage,
 } from "../../store/AdContentSlices/GetSavedContent";
 import CustomeHeader from "../../Components/CustomeHeader";
+import ShimmerLoading from "../../Components/LoadingComponents/ShimmerLoading";
 
 const BookmarkScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -73,13 +68,13 @@ const BookmarkScreen = ({ navigation, route }) => {
   });
   useEffect(() => {
     getSavedContent();
-  }, [isFocused, deleteDataRes?.Success]);
+  }, [refreshing, userContentPage, isFocused]);
   useEffect(() => {
     if (userContentRes != null && userContentSuccess) {
       setPostData(userContentRes);
       setRefreshing(false);
     }
-  }, [userContentRes,userContentSuccess]);
+  }, [userContentRes, userContentSuccess]);
   useEffect(() => {
     if (likeDataRes != null && likeDataRes.Success) {
       updateData(likeDataRes?.Data);
@@ -87,8 +82,10 @@ const BookmarkScreen = ({ navigation, route }) => {
   }, [likeDataRes]);
   useEffect(() => {
     if (saveDataRes != null && saveDataRes.Success) {
-      const updatedData=postData.filter((item)=>item?.adContent?.id!==saveDataRes?.Data?.adContentID)
-      setPostData(updatedData)
+      const updatedData = postData.filter(
+        (item) => item?.adContent?.id !== saveDataRes?.Data?.adContentID
+      );
+      setPostData(updatedData);
     }
   }, [saveDataRes]);
   useEffect(() => {
@@ -132,12 +129,11 @@ const BookmarkScreen = ({ navigation, route }) => {
       if (item?.adContent?.id === data.contentId) {
         return {
           ...item,
-          adContent:{
+          adContent: {
             ...item.adContent,
             isCurrentUserLiked: data.isLiked,
             totalLikes: data.totalLikes,
           },
-       
         };
       }
       return item;
@@ -166,15 +162,16 @@ const BookmarkScreen = ({ navigation, route }) => {
       <FeedCard
         itemData={item?.adContent}
         onClickMoreBtn={() => {
-          navigation.navigate(screenName.productDetail, { data: item?.adContent });
+          navigation.navigate(screenName.productDetail, {
+            data: item?.adContent,
+          });
         }}
       />
     );
   };
   const onRefresh = useCallback(() => {
-    dispatch(setSavedContentPage(1));
+    dispatch(resetSavedAdContentPage());
     setRefreshing(true);
-    getSavedContent();
   }, []);
   const listFooterComponent = () => {
     return (
@@ -189,19 +186,19 @@ const BookmarkScreen = ({ navigation, route }) => {
   };
   const onReachedEnd = () => {
     if (!userContentReachedEnd) {
-      dispatch(setUserContentPage(userContentPage + 1));
-      getSavedContent();
+      dispatch(setSavedContentPage(userContentPage + 1));
     }
   };
   return (
     <SafeAreaView style={commonStyle.container}>
       <CustomeHeader isBackBtn={true} title={"Saved Items"} />
       {(!refreshing && userContentLoading) || deleteLoading ? (
-        <Loading />
+        // <Loading />
+        <ShimmerLoading />
       ) : userContentError != null && !userContentError.Success ? (
         <ErrorMsg />
       ) : !userContentLoading && postData.length <= 0 ? (
-        <FriendlyMsg msg={"Post Your First Ad"} />
+        <FriendlyMsg msg={"No Saved Ads"} />
       ) : (
         <FlatList
           data={postData}
@@ -219,9 +216,8 @@ const BookmarkScreen = ({ navigation, route }) => {
           maxToRenderPerBatch={10}
           windowSize={10}
           renderItem={renderItem}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
+          refreshing={refreshing}
+          onRefresh={onRefresh}
         />
       )}
       <CustomeAlertModal

@@ -1,4 +1,13 @@
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Linking,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useState } from "react";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import { Avatar } from "react-native-paper";
@@ -13,7 +22,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { getOtherUserInfoApi } from "../../store/profileSlices/GetContentByUserId";
 import moment from "moment";
 import { getUserUploadTime } from "../../Constants/Constant";
-import { FontAwesome6 } from "@expo/vector-icons";
 import images from "../../Constants/images";
 
 const FeedCardHeader = ({ itemData }) => {
@@ -30,6 +38,31 @@ const FeedCardHeader = ({ itemData }) => {
       params: {
         screen: screenName.profile,
       },
+    });
+  };
+  const openMap = () => {
+    const latitude = itemData?.lat;
+    const longitude = itemData?.lon;
+    const label = itemData?.placeName;
+
+    const url = Platform.select({
+      ios: "maps:" + latitude + "," + longitude + "?q=" + label,
+      android: "geo:" + latitude + "," + longitude + "?q=" + label,
+    });
+
+    Linking.canOpenURL(url).then((supported) => {
+      if (supported) {
+        return Linking.openURL(url);
+      } else {
+        const browser_url =
+          "https://www.google.de/maps/@" +
+          latitude +
+          "," +
+          longitude +
+          "?q=" +
+          label;
+        return Linking.openURL(browser_url);
+      }
     });
   };
   return (
@@ -81,7 +114,9 @@ const FeedCardHeader = ({ itemData }) => {
                 >
                   - is at
                 </Text>
-                <View
+                <TouchableOpacity
+                  // onPress={() => openMap()}
+                  activeOpacity={0.6}
                   style={{
                     flexDirection: "row",
                     alignItems: "center",
@@ -102,7 +137,7 @@ const FeedCardHeader = ({ itemData }) => {
                   >
                     {`${itemData?.placeName}`}
                   </Text>
-                </View>
+                </TouchableOpacity>
               </View>
             ) : (
               <Text style={styles.headingTxt}>

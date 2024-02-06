@@ -78,14 +78,15 @@ export const {
 } = SearchContentSlice.actions;
 
 export const getSearchData =
-  (keyword, pageNumber, pageSize) => async (dispatch) => {
+  (keyword, pageNumber, pageSize, filterType) => async (dispatch) => {
     try {
       dispatch(resetSearchResultData());
       dispatch(setLoading(true));
       const responce = await SearchServices.getSearchData(
         keyword,
         pageNumber,
-        pageSize
+        pageSize,
+        filterType
       );
       dispatch(setSearchResult(responce.data));
       dispatch(setLoading(false));

@@ -9,9 +9,12 @@ import React, { useState } from "react";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import colors from "../../Constants/colors";
 import { Divider, RadioButton } from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux";
+import { setSearchFilterId } from "../../store/StoreDataSlice";
 
-const Filters = ({onClickFilter=()=>{}}) => {
-  const [selectFilter, setSelectFilter] = useState();
+const Filters = () => {
+  const dispatch = useDispatch();
+  const filterType = useSelector((state) => state.storeData.searchFilterId);
   const filterContent = [
     {
       id: 1,
@@ -19,11 +22,11 @@ const Filters = ({onClickFilter=()=>{}}) => {
     },
     {
       id: 2,
-      title: "Search by content",
+      title: "Search by users",
     },
     {
       id: 3,
-      title: "Search by users",
+      title: "Search by content",
     },
   ];
   return (
@@ -39,12 +42,11 @@ const Filters = ({onClickFilter=()=>{}}) => {
             <View style={styles.filterRow} key={item?.id.toString()}>
               <Text style={styles.filterTxt}>{item?.title}</Text>
               <RadioButton
-                value={selectFilter}
-                status={selectFilter === item?.id ? "checked" : "unchecked"}
+                value={filterType}
+                status={filterType === item?.id ? "checked" : "unchecked"}
                 color={colors.selectedColor}
                 onPress={() => {
-                  setSelectFilter(item?.id);
-                  onClickFilter(item?.id)
+                  dispatch(setSearchFilterId(item?.id));
                 }}
               />
             </View>
@@ -63,7 +65,7 @@ const styles = StyleSheet.create({
     fontSize: scale(18),
     marginBottom: verticalScale(7),
     textAlign: "center",
-    marginTop:verticalScale(8)
+    marginTop: verticalScale(8),
   },
   filterRow: {
     marginVertical: verticalScale(8),

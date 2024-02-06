@@ -25,6 +25,7 @@ import DeleteAdContent from "./AdContentSlices/DeleteAdContent";
 import GetSavedContent from "./AdContentSlices/GetSavedContent";
 import GetLegalData from "./legalData/GetLegalData";
 import GetGpsData from "./gpsSlice/GetGpsData";
+import Follow_UnFollowSlice from "./profileSlices/Follow_UnFollowSlice";
 
 const store = configureStore({
   reducer: {
@@ -53,6 +54,7 @@ const store = configureStore({
     getSavedContent: GetSavedContent,
     getLegalData: GetLegalData,
     gpsData: GetGpsData,
+    follow_UnFollowSlice: Follow_UnFollowSlice,
   },
   middleware: [thunk],
 });

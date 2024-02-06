@@ -19,9 +19,13 @@ import screenName from "../../Constants/screenName";
 import { useNavigation } from "@react-navigation/native";
 import ImageViewer from "../ImageViewer";
 import { onShare } from "../../Constants/Constant";
+import { useDispatch } from "react-redux";
+import { followUserApi } from "../../store/profileSlices/Follow_UnFollowSlice";
+import colors from "../../Constants/colors";
 
 const ProfileScreenTopView = ({ profileData, isEditBtn, totalPost }) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [openImageViewer, setImageViewer] = useState(false);
   const imgViewerData = [
     {
@@ -31,7 +35,16 @@ const ProfileScreenTopView = ({ profileData, isEditBtn, totalPost }) => {
           : defaultProfileImg,
     },
   ];
+
   const url = `whatsapp://send?phone=${profileData?.phoneNumber}&text=Hello`;
+  const handleFollow = () => {
+    dispatch(
+      followUserApi({
+        isFollow: !profileData?.isCurrentUserFollowed,
+        follwingUserId: profileData?.userId,
+      })
+    );
+  };
   return (
     <>
       <View
@@ -62,10 +75,12 @@ const ProfileScreenTopView = ({ profileData, isEditBtn, totalPost }) => {
             <Text style={styles.boldTxt}>{totalPost}</Text> posts
           </Text>
           <Text style={[styles.txt, { marginRight: moderateScale(20) }]}>
-            <Text style={styles.boldTxt}>00</Text> followers
+            <Text style={styles.boldTxt}>{profileData?.totalFollowers}</Text>{" "}
+            followers
           </Text>
           <Text style={styles.txt}>
-            <Text style={styles.boldTxt}>00</Text> following
+            <Text style={styles.boldTxt}>{profileData?.totalFollowing}</Text>{" "}
+            following
           </Text>
         </View>
         {isEditBtn ? (
@@ -91,8 +106,23 @@ const ProfileScreenTopView = ({ profileData, isEditBtn, totalPost }) => {
           </View>
         ) : (
           <View style={styles.btnWrapper}>
-            <TouchableOpacity style={styles.editBtn} activeOpacity={0.6}>
-              <Text style={styles.editBtnTxt}>Follow</Text>
+            <TouchableOpacity
+              style={[
+                styles.editBtn,
+                {
+                  backgroundColor: profileData?.isCurrentUserFollowed
+                    ? "lightgrey"
+                    : colors.themeColor,
+                },
+              ]}
+              activeOpacity={0.6}
+              onPress={() => {
+                handleFollow();
+              }}
+            >
+              <Text style={styles.editBtnTxt}>
+                {profileData?.isCurrentUserFollowed ? "Unfollow" : "Follow"}
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.editBtn}

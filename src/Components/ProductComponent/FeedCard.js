@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import PropTypes from "prop-types";
 import Slider from "./Slider";
@@ -21,7 +21,9 @@ const FeedCard = ({
     setFiles(imageurl(itemData?.imagesData));
   }, [itemData]);
   return (
-    <View style={{ marginBottom: verticalScale(8),backgroundColor:'#FFFFFF' }}>
+    <View
+      style={{ marginBottom: verticalScale(8), backgroundColor: "#FFFFFF" }}
+    >
       {profile ? (
         <ProfileFeedCardHeader itemData={itemData} />
       ) : (
@@ -51,7 +53,7 @@ FeedCard.propTypes = {
   onClickComment: PropTypes.func,
 };
 
-export default  FeedCard;
+export default memo(FeedCard);
 
 const styles = StyleSheet.create({
   cardView: {},

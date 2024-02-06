@@ -50,6 +50,11 @@ const GetSavedContent = createSlice({
     setSavedContentPage: (state, action) => {
       state.page = action.payload;
     },
+    resetSavedAdContentPage: (state, action) => {
+      state.page = 1;
+      state.totalCount = null;
+      state.isReachedEnd = false;
+    },
   },
 });
 export default GetSavedContent.reducer;
@@ -59,6 +64,7 @@ export const {
   setError,
   resetSavedAdContent,
   setSavedContentPage,
+  resetSavedAdContentPage,
 } = GetSavedContent.actions;
 
 export const getSavedContentApi =

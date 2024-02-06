@@ -20,6 +20,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getUserContentApi,
+  resetUserContentPage,
   resetUserPage,
   setUserContentPage,
 } from "../../store/profileSlices/GetUserContentSlice";
@@ -77,7 +78,11 @@ const MyAds = ({ navigation, route }) => {
   });
   useEffect(() => {
     getUserContent();
-  }, [isFocused, deleteDataRes?.Success, userContentPage]);
+  }, [isFocused, userContentPage, refreshing]);
+  useEffect(() => {
+    if (deleteDataRes !== null && deleteDataRes?.Success)
+      dispatch(resetUserContentPage());
+  }, [deleteDataRes?.Success]);
   useEffect(() => {
     if (userContentRes != null && userContentSuccess) {
       setPostData(userContentRes);
@@ -178,9 +183,8 @@ const MyAds = ({ navigation, route }) => {
     );
   };
   const onRefresh = useCallback(() => {
-    dispatch(setUserContentPage(1));
+    dispatch(resetUserContentPage());
     setRefreshing(true);
-    getUserContent();
   }, []);
   const listFooterComponent = () => {
     return (
@@ -196,7 +200,6 @@ const MyAds = ({ navigation, route }) => {
   const onReachedEnd = () => {
     if (!userContentReachedEnd) {
       dispatch(setUserContentPage(userContentPage + 1));
-      getUserContent();
     }
   };
   return (

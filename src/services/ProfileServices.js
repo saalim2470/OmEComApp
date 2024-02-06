@@ -10,5 +10,8 @@ class ProfileServices {
     console.log("--=-get user info call-=-=", userId);
     return http.get(`/Account/GetUserInfoByUserId?userId=${userId}`);
   }
+  followUser(data) {
+    return http.post("/Follower", data);
+  }
 }
 export default new ProfileServices();

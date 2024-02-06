@@ -1,4 +1,11 @@
-import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useState } from "react";
 import commonStyle from "../../Constants/commonStyle";
 import screenName from "../../Constants/screenName";
@@ -7,10 +14,13 @@ import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { useNavigation } from "@react-navigation/native";
 import RbBottomSheet from "../BottomSheet/RbBottomSheet";
 import Filters from "./Filters";
+import { useDispatch } from "react-redux";
+import { setSearchFilterId } from "../../store/StoreDataSlice";
 
-const screenHeight=Dimensions.get('screen').height/2
+const screenHeight = Dimensions.get("screen").height / 2;
 const SearchScreenTopView = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [openSheet, setOpenSheet] = useState(false);
   return (
     <>
@@ -41,13 +51,7 @@ const SearchScreenTopView = () => {
         isOpen={openSheet}
         height={screenHeight}
         setIsOpen={setOpenSheet}
-        children={
-          <Filters
-            onClickFilter={(id) => {
-              console.log(id);
-            }}
-          />
-        }
+        children={<Filters />}
       />
     </>
   );

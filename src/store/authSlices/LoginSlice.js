@@ -74,3 +74,18 @@ export const getLoginUser = (data) => async (dispatch) => {
     console.log("-=-=-login error-=-=-", error.response.data);
   }
 };
+
+export const getLoggedInUSerInfo = () => async (dispatch) => {
+  try {
+    dispatch(setError(null));
+    const userResponce = await AuthServices.getUserInfo();
+    await AsyncStorage.setItem(
+      userDetail,
+      JSON.stringify(userResponce?.data?.Data)
+    );
+    dispatch(setuserDetail(userResponce?.data?.Data));
+  } catch (error) {
+    dispatch(setLoading(false));
+    dispatch(setError(error.response.data));
+  }
+};

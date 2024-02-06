@@ -37,6 +37,7 @@ import { useIsFocused } from "@react-navigation/native";
 import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 import colors from "../../Constants/colors";
 import ShimmerLoading from "../../Components/LoadingComponents/ShimmerLoading";
+import { getLoggedInUSerInfo } from "../../store/authSlices/LoginSlice";
 
 const Profile = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -78,13 +79,14 @@ const Profile = ({ navigation, route }) => {
     type: null,
   });
   useEffect(() => {
+    dispatch(getLoggedInUSerInfo());
     getUserContent();
-  }, [isFocused, userContentPage,deleteDataRes?.Success, refreshing]);
+  }, [isFocused, userContentPage, refreshing]);
+
   useEffect(() => {
     if (deleteDataRes !== null && deleteDataRes?.Success)
       dispatch(resetUserContentPage());
   }, [deleteDataRes?.Success]);
-
   useEffect(() => {
     if (userContentRes != null && userContentSuccess) {
       setPostData(userContentRes);
@@ -215,7 +217,7 @@ const Profile = ({ navigation, route }) => {
         <Loading />
       ) : !refreshing && userContentLoading ? (
         // <Loading />
-        <ShimmerLoading/>
+        <ShimmerLoading />
       ) : userContentError != null && !userContentError.Success ? (
         <ErrorMsg />
       ) : !userContentLoading && postData.length <= 0 ? (

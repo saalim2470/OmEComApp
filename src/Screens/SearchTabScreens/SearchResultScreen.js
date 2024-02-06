@@ -25,6 +25,7 @@ import ShimmerLoading from "../../Components/LoadingComponents/ShimmerLoading";
 
 const SearchResultScreen = ({ navigation }) => {
   const dispatch = useDispatch();
+  const filterType = useSelector((state) => state.storeData.searchFilterId);
   const {
     isLoading: searchLoading,
     searchResult: searchResultRes,
@@ -44,11 +45,12 @@ const SearchResultScreen = ({ navigation }) => {
     statusCode: saveErrorCode,
     saveData: saveDataRes,
   } = useSelector((state) => state.saveContent);
+
   const [searchKeyWord, setSearchKeyWord] = useState("");
   const [searchData, setSearchData] = useState([]);
   useEffect(() => {
     if (searchKeyWord != "")
-      dispatch(getSearchData(searchKeyWord, searchPage, 10));
+      dispatch(getSearchData(searchKeyWord, searchPage, 10, filterType));
   }, [searchPage]);
   useEffect(() => {
     if (searchResultRes != null && searchSuccess) {
@@ -87,7 +89,7 @@ const SearchResultScreen = ({ navigation }) => {
   const onClickSearch = () => {
     if (searchKeyWord != "") {
       dispatch(resetSearchResultPage());
-      dispatch(getSearchData(searchKeyWord, 1, 10));
+      dispatch(getSearchData(searchKeyWord, 1, 10, filterType));
     }
   };
   const listFooterComponent = () => {
@@ -135,7 +137,7 @@ const SearchResultScreen = ({ navigation }) => {
       </View>
       {searchLoading ? (
         // <Loading />
-        <ShimmerLoading/>
+        <ShimmerLoading />
       ) : !searchLoading && searchSuccess && searchResultRes?.length === 0 ? (
         <Text style={{ alignSelf: "center" }}>Data Not Found</Text>
       ) : (

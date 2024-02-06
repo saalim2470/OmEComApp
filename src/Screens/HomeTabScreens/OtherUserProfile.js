@@ -45,8 +45,6 @@ const OtherUserProfile = ({ navigation }) => {
     isSuccess: userContentSuccess,
     totalCount: userTotalContent,
   } = useSelector((state) => state.getContentByUserId);
-  const a = useSelector((state) => state.getContentByUserId);
-  console.log("-=-=-user content-=-=-=-", a);
   const {
     error: likeError,
     statusCode: likeErrorCode,
@@ -57,8 +55,13 @@ const OtherUserProfile = ({ navigation }) => {
     statusCode: saveErrorCode,
     saveData: saveDataRes,
   } = useSelector((state) => state.saveContent);
+  const {
+    followResData: follow_unFollowData,
+    isLoading: follow_UnFollowLoading,
+  } = useSelector((state) => state.follow_UnFollowSlice);
   const [postData, setPostData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [userProfileDetail, setUserProfileDetail] = useState(null);
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -67,9 +70,19 @@ const OtherUserProfile = ({ navigation }) => {
   });
   useEffect(() => {
     if (userDetail !== null && userDetail?.Success) {
+      setUserProfileDetail(userDetail?.Data);
       getContent();
     }
   }, [userContentPage, refreshing, userDetail]);
+  useEffect(() => {
+    if (follow_unFollowData !== null && follow_unFollowData?.Success) {
+      setUserProfileDetail({
+        ...userProfileDetail,
+        isCurrentUserFollowed: follow_unFollowData?.Data?.isFollow,
+        totalFollowers: follow_unFollowData?.Data?.totalFollowers,
+      });
+    }
+  }, [follow_unFollowData]);
 
   useEffect(() => {
     if (contentData != null && userContentSuccess) {
@@ -190,11 +203,11 @@ const OtherUserProfile = ({ navigation }) => {
   return (
     <SafeAreaView style={commonStyle.container}>
       <HeaderWithMiddleName
-        title={`${userDetail?.Data?.firstName} ${userDetail?.Data?.lastName}`}
+        title={`${userProfileDetail?.firstName} ${userProfileDetail?.lastName}`}
       />
       <ProfileScreenTopView
         isEditBtn={false}
-        profileData={userDetail?.Data}
+        profileData={userProfileDetail}
         totalPost={userTotalContent}
       />
       {contentData != null && contentData?.length <= 0 ? (
