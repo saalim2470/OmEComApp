@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setSearchFilterId } from "../../store/StoreDataSlice";
 import { useEffect } from "react";
 
-const Filters = () => {
+const Filters = ({onClickFilter=()=>{}}) => {
   const dispatch = useDispatch();
   const filterType = useSelector((state) => state.storeData.searchFilterId);
   const filterContent = [
@@ -52,6 +52,7 @@ const Filters = () => {
                 color={colors.selectedColor}
                 onPress={() => {
                   dispatch(setSearchFilterId(item?.id));
+                  onClickFilter()
                 }}
               />
             </View>

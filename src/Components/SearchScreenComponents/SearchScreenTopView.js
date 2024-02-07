@@ -51,7 +51,7 @@ const SearchScreenTopView = () => {
         isOpen={openSheet}
         height={screenHeight}
         setIsOpen={setOpenSheet}
-        children={<Filters />}
+        children={<Filters onClickFilter ={()=>{setOpenSheet(false)}}/>}
       />
     </>
   );
