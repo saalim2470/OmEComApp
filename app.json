@@ -1,5 +1,6 @@
 {
   "expo": {
+    "scheme": "dlinking",
     "name": "OmEComApp",
     "slug": "OmEComApp",
     "version": "1.0.0",
@@ -36,7 +37,21 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.om.classified",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "intentFilters": [
+        {
+        "action": "VIEW",
+        "autoVerify": true,
+        "data": [
+            {
+            "scheme": "https",
+            "host": "suryahealthclub.com:8585",
+            "pathPrefix": "/swagger"
+            }
+        ],
+        "category": ["BROWSABLE", "DEFAULT"]
+        }
+    ]
     },
     "web": {
       "favicon": "./assets/favicon.png"

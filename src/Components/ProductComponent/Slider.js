@@ -1,4 +1,4 @@
-import { FlatList, Image, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View } from "react-native";
 import React, { memo, useState } from "react";
 import colors from "../../Constants/colors";
 import { SliderBox } from "react-native-image-slider-box";
@@ -6,6 +6,7 @@ import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
 const Slider = ({ data, onClick, disable }) => {
   const [layout, setLayout] = useState({ width: 0 });
+  console.log('-=-=layout-=-=',layout);
   const onLayout = (e) => {
     setLayout({
       width: e.nativeEvent.layout.width,
