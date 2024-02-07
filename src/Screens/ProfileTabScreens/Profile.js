@@ -10,6 +10,7 @@ import React, {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useState,
 } from "react";
 import commonStyle from "../../Constants/commonStyle";
@@ -78,21 +79,25 @@ const Profile = ({ navigation, route }) => {
     msg: null,
     type: null,
   });
+  const userDataResMemoized = useMemo(() => userContentRes, [userContentRes]);
   useEffect(() => {
     dispatch(getLoggedInUSerInfo());
+  }, [refreshing]);
+
+  useEffect(() => {
     getUserContent();
-  }, [isFocused, userContentPage, refreshing]);
+  }, [userContentPage, refreshing]);
 
   useEffect(() => {
     if (deleteDataRes !== null && deleteDataRes?.Success)
       dispatch(resetUserContentPage());
   }, [deleteDataRes?.Success]);
   useEffect(() => {
-    if (userContentRes != null && userContentSuccess) {
-      setPostData(userContentRes);
+    if (userDataResMemoized != null && userContentSuccess) {
+      setPostData(userDataResMemoized);
       setRefreshing(false);
     }
-  }, [userContentRes]);
+  }, [userDataResMemoized, userContentSuccess]);
   useEffect(() => {
     if (likeDataRes != null && likeDataRes.Success) {
       updateData(likeDataRes?.Data, "like");
@@ -237,6 +242,7 @@ const Profile = ({ navigation, route }) => {
           onEndReached={onReachedEnd}
           onEndReachedThreshold={1}
           maxToRenderPerBatch={10}
+          removeClippedSubviews={true}
           windowSize={10}
           renderItem={renderItem}
           refreshControl={

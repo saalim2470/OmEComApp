@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import { Avatar } from "react-native-paper";
 import {
@@ -156,7 +156,7 @@ const FeedCardHeader = ({ itemData }) => {
   );
 };
 
-export default FeedCardHeader;
+export default memo(FeedCardHeader);
 
 const styles = StyleSheet.create({
   cardHeaderView: {

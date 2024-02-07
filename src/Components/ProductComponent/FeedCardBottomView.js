@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import commonStyle from "../../Constants/commonStyle";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import CustomeAlertModal from "../CustomeAlertModal";
@@ -125,7 +125,7 @@ const FeedCardBottomView = ({ itemData }) => {
   );
 };
 
-export default FeedCardBottomView;
+export default memo(FeedCardBottomView);
 
 const styles = StyleSheet.create({
   iconStyle: {

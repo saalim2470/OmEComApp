@@ -63,7 +63,7 @@ export default SelectButton;
 const styles = StyleSheet.create({
   heading: {
     fontFamily: "Montserrat-Medium",
-    fontSize: scale(18),
+    fontSize: scale(16),
     marginBottom: verticalScale(7),
     textAlign: "center",
     marginTop: verticalScale(8),

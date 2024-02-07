@@ -66,6 +66,10 @@ const PostData = ({ navigation, route }) => {
       setImage(imageurl(route?.params?.editData?.imagesData));
       setBtnTxt("Update");
       setScreenTitle("Update post");
+      setSelectLocation({
+        text: route?.params?.editData?.placeName,
+        center: [route?.params?.editData?.lat, route?.params?.editData?.lon],
+      });
     }
   }, [route?.params]);
 
@@ -77,15 +81,25 @@ const PostData = ({ navigation, route }) => {
       dispatch(resetData());
       dispatch(reseAdPosttData());
       dispatch(resetUpdateAdContent());
-      navigation.navigate(screenName.drawerNavigation, {
-        screen: screenName.bottomNavigation,
-        params: {
-          screen: screenName.bottomNavigationHomeRoute,
-          params: {
-            screen: screenName.mainHome,
-          },
-        },
-      });
+      route?.params?.editData != null
+        ? navigation.navigate(screenName.drawerNavigation, {
+            screen: screenName.bottomNavigation,
+            params: {
+              screen: screenName.profileRoute,
+              params: {
+                screen: screenName.profile,
+              },
+            },
+          })
+        : navigation.navigate(screenName.drawerNavigation, {
+            screen: screenName.bottomNavigation,
+            params: {
+              screen: screenName.bottomNavigationHomeRoute,
+              params: {
+                screen: screenName.mainHome,
+              },
+            },
+          });
       //   setShowAlert({
       //     show: true,
       //     title: "Success",
@@ -244,6 +258,7 @@ const PostData = ({ navigation, route }) => {
     }
     dispatch(setPostDataDraft(formData));
     dispatch(setCategoryId(route?.params?.editData?.categoryId));
+    console.log("=-=-updtae=-", formData);
     dispatch(updateAdContentApi(formData));
   };
   const onClickModalBtn = () => {

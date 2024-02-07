@@ -24,6 +24,7 @@ import TextBoxWithLabel from "./TextBoxWithLabel";
 import images from "../Constants/images";
 import colors from "../Constants/colors";
 import { MaterialIcons } from "@expo/vector-icons";
+import _ from "lodash";
 
 const GpsSearch = ({ data, onClickLocationResult = () => {} }) => {
   const dispatch = useDispatch();
@@ -51,6 +52,34 @@ const GpsSearch = ({ data, onClickLocationResult = () => {} }) => {
       </View>
     );
   };
+
+  // const debounce = (func, delay) => {
+  //   let timeoutId;
+
+  //   return function (...args) {
+  //     clearTimeout(timeoutId);
+  //     timeoutId = setTimeout(() => {
+  //       func.apply(this, args);
+  //     }, delay);
+  //   };
+  // };
+
+  // const debouncedSearch = debounce(onClickSearch, 500);
+
+  // const handleSearch = (text) => {
+  //   setSearchKeyword(text);
+  //   debouncedSearch(text);
+  // };
+  const debouncedSearch = _.debounce((searchKeyword) => {
+    dispatch(getGpsDataApi(searchKeyword));
+    console.log("=-=-new key word:=-=", searchKeyword);
+  }, 500);
+
+  const handleSearch = (text) => {
+    setSearchKeyword(text);
+    debouncedSearch(text);
+  };
+
   return (
     <View style={commonStyle.innerContainer}>
       <View style={{ marginBottom: verticalScale(10) }}>
@@ -62,12 +91,10 @@ const GpsSearch = ({ data, onClickLocationResult = () => {} }) => {
           onSubmitEditing={() => {
             onClickSearch();
           }}
-          onchange={(value) => {
-            setSearchKeyword(value);
-          }}
+          onchange={handleSearch}
         />
       </View>
-      {!gpsData?.isLoading&&gpsData?.gpsData?.length > 0 ? (
+      {!gpsData?.isLoading && gpsData?.gpsData?.length > 0 ? (
         <Text style={styles.headingTxt}>Search Results</Text>
       ) : null}
       {gpsData?.isLoading ? (

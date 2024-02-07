@@ -1,5 +1,5 @@
 import { FlatList, Image, StyleSheet, View } from "react-native";
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import colors from "../../Constants/colors";
 import { SliderBox } from "react-native-image-slider-box";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
@@ -50,7 +50,7 @@ const Slider = ({ data, onClick, disable }) => {
   );
 };
 
-export default Slider;
+export default memo(Slider);
 
 const styles = StyleSheet.create({
   cardImgView: {

@@ -229,7 +229,7 @@ const MainHome = ({ route }) => {
       <Divider style={{ marginVertical: verticalScale(8) }} />
       {!refreshing && contentDataLoading ? (
         // <Loading />
-        <ShimmerLoading/>
+        <ShimmerLoading />
       ) : !contentDataLoading && contentDataError != null ? (
         <ErrorMsg />
       ) : !contentDataLoading && postData?.length <= 0 ? (
@@ -245,7 +245,7 @@ const MainHome = ({ route }) => {
           onEndReached={() => {
             onReachedEnd();
           }}
-          contentContainerStyle={{gap:scale(10)}}
+          contentContainerStyle={{ gap: scale(10) }}
           ItemSeparatorComponent={
             <Divider style={{ marginBottom: verticalScale(8) }} />
           }

@@ -25,6 +25,8 @@ export const subcriptionType = {
   0: "Inner Ads",
   1: "Banner Ad - Home Page",
   2: "Slider Ad - Home Page",
+  3: "Banner Ad - Search Page",
+  4: "Slider Ad - Search Page",
 };
 
 export function groupBy(items, callbackFn) {

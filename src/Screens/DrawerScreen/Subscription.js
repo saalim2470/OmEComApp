@@ -1,4 +1,10 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import commonStyle from "../../Constants/commonStyle";
@@ -132,15 +138,10 @@ const Subscription = ({ route }) => {
       });
     }
   }, [getSubscriptionPlanErrorCode, getSubscriptionPlanError]);
-
-  const onClickModalBtn = () => {
-    setShowAlert({ ...showAlert, show: false });
-    dispatch(resetData());
-    dispatch(resetGetSubscriptionPlanData());
-    dispatch(reseAdPosttData());
-    dispatch(setPostDataDraft(null));
-    showAlert.type == "success" && adsType === "homePage"
-      ? navigation.navigate(screenName.drawerNavigation, {
+  const navigate = () => {
+    switch (adsType) {
+      case subcriptionType[1]:
+        navigation.navigate(screenName.drawerNavigation, {
           screen: screenName.bottomNavigation,
           params: {
             screen: screenName.bottomNavigationHomeRoute,
@@ -148,9 +149,21 @@ const Subscription = ({ route }) => {
               screen: screenName.homeScreen,
             },
           },
-        })
-      : adsType === "searchPage"
-      ? navigation.navigate(screenName.drawerNavigation, {
+        });
+        break;
+      case subcriptionType[2]:
+        navigation.navigate(screenName.drawerNavigation, {
+          screen: screenName.bottomNavigation,
+          params: {
+            screen: screenName.bottomNavigationHomeRoute,
+            params: {
+              screen: screenName.homeScreen,
+            },
+          },
+        });
+        break;
+      case subcriptionType[3]:
+        navigation.navigate(screenName.drawerNavigation, {
           screen: screenName.bottomNavigation,
           params: {
             screen: screenName.bottomNavigationSearchRoute,
@@ -158,8 +171,22 @@ const Subscription = ({ route }) => {
               screen: screenName.search,
             },
           },
-        })
-      : navigation.navigate(screenName.drawerNavigation, {
+        });
+        break;
+      case subcriptionType[4]:
+        navigation.navigate(screenName.drawerNavigation, {
+          screen: screenName.bottomNavigation,
+          params: {
+            screen: screenName.bottomNavigationSearchRoute,
+            params: {
+              screen: screenName.search,
+            },
+          },
+        });
+        break;
+
+      default:
+        navigation.navigate(screenName.drawerNavigation, {
           screen: screenName.bottomNavigation,
           params: {
             screen: screenName.bottomNavigationHomeRoute,
@@ -168,6 +195,18 @@ const Subscription = ({ route }) => {
             },
           },
         });
+        break;
+    }
+  };
+
+  const onClickModalBtn = () => {
+    setShowAlert({ ...showAlert, show: false });
+    dispatch(resetData());
+    dispatch(resetGetSubscriptionPlanData());
+    dispatch(reseAdPosttData());
+    dispatch(setPostDataDraft(null));
+
+    showAlert.type == "success" && navigate();
   };
   return (
     <SafeAreaView style={commonStyle.container}>
@@ -175,7 +214,7 @@ const Subscription = ({ route }) => {
       {subscriptionPlanLoading || getSubscriptionLoading ? (
         <Loading />
       ) : (
-        <>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <SubscriptionHeading
             subcriptionType={subcriptionType[0]}
             onClickRead={() => {
@@ -192,7 +231,7 @@ const Subscription = ({ route }) => {
                     disabled={
                       adsType === "all"
                         ? false
-                        : adsType !== "innerPage"
+                        : adsType !== subcriptionType[0]
                         ? true
                         : false
                     }
@@ -219,7 +258,7 @@ const Subscription = ({ route }) => {
                     disabled={
                       adsType === "all"
                         ? false
-                        : adsType !== "homePage"
+                        : adsType !== subcriptionType[1]
                         ? true
                         : false
                     }
@@ -246,7 +285,7 @@ const Subscription = ({ route }) => {
                     disabled={
                       adsType === "all"
                         ? false
-                        : adsType !== "searchPage"
+                        : adsType !== subcriptionType[2]
                         ? true
                         : false
                     }
@@ -257,7 +296,61 @@ const Subscription = ({ route }) => {
                 </>
               );
           })}
-        </>
+          <SubscriptionHeading
+            subcriptionType={subcriptionType[3]}
+            onClickRead={() => {
+              setSubsType(3);
+              setOpenSheet(true);
+            }}
+          />
+          {subscriptionPlanData?.Data?.items?.map((item, index) => {
+            if (item?.subscriptionType === 6)
+              return (
+                <>
+                  <SubscriptionStripe
+                    item={item}
+                    disabled={
+                      adsType === "all"
+                        ? false
+                        : adsType !== subcriptionType[3]
+                        ? true
+                        : false
+                    }
+                    onClick={() => {
+                      dispatch(getSubscriptionPlanId(item?.id));
+                    }}
+                  />
+                </>
+              );
+          })}
+          <SubscriptionHeading
+            subcriptionType={subcriptionType[4]}
+            onClickRead={() => {
+              setSubsType(4);
+              setOpenSheet(true);
+            }}
+          />
+          {subscriptionPlanData?.Data?.items?.map((item, index) => {
+            if (item?.subscriptionType === 7)
+              return (
+                <>
+                  <SubscriptionStripe
+                    item={item}
+                    disabled={
+                      adsType === "all"
+                        ? false
+                        : adsType !== subcriptionType[4]
+                        ? true
+                        : false
+                    }
+                    onClick={() => {
+                      dispatch(getSubscriptionPlanId(item?.id));
+                    }}
+                  />
+                </>
+              );
+          })}
+        </ScrollView>
       )}
       <CustomeAlertModal
         isVisible={showAlert.show}

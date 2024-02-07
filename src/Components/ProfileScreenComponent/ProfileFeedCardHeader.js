@@ -1,5 +1,5 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import { Avatar, Menu } from "react-native-paper";
 import images from "../../Constants/images";
@@ -153,7 +153,7 @@ const ProfileFeedCardHeader = ({ itemData }) => {
   );
 };
 
-export default ProfileFeedCardHeader;
+export default memo(ProfileFeedCardHeader);
 
 const styles = StyleSheet.create({
   cardHeaderView: {

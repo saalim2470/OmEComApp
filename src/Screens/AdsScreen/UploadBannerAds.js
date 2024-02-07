@@ -5,13 +5,11 @@ import BannerSlider from "../../Components/HomeScreenComponent/BannerSlider";
 import CustomeButton from "../../Components/CustomeButton";
 import * as ImagePicker from "expo-image-picker";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
-import images from "../../Constants/images";
 import { useNavigation } from "@react-navigation/native";
-import { baseURL, serverImagePath } from "../../Constants/defaults";
 import screenName from "../../Constants/screenName";
 import RbBottomSheet from "../../Components/BottomSheet/RbBottomSheet";
-import Filters from "../../Components/SearchScreenComponents/Filters";
 import SelectButton from "../../Components/SelectButton";
+import { subcriptionType } from "../../Constants/Constant";
 
 const screenHeight = Dimensions.get("screen").height / 2;
 const UploadBannerAds = ({ title }) => {
@@ -21,7 +19,6 @@ const UploadBannerAds = ({ title }) => {
     "https://i.pinimg.com/736x/b7/45/a7/b745a78bece41d7ff78420a11641970a.jpg",
     "https://cdn.dribbble.com/users/5799567/screenshots/14095208/media/f3fa8ff3516ebb164b659431af01a40b.jpg?resize=400x300&vertical=center",
   ];
-  // const defaultAdImg = [`${baseURL}${serverImagePath}/Default-banner.png`];
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
   const [image, setImage] = useState([]);
   const [openSheet, setOpenSheet] = useState(false);
@@ -67,7 +64,8 @@ const UploadBannerAds = ({ title }) => {
           navigation.navigate(screenName.drawerNavigation, {
             screen: screenName.subscription,
             params: {
-              adsType: selectAdsBtn === 1 ? "homePage" : "searchPage",
+              adsType:
+                selectAdsBtn === 1 ? subcriptionType[1] : subcriptionType[3],
             },
           });
         }}
@@ -89,14 +87,14 @@ const UploadBannerAds = ({ title }) => {
                 title: "Search Page",
               },
             ]}
-            title={"When you are posted your ad?"}
+            title={"Where you want to post your ads?"}
             value={selectAdsBtn}
             onClickBtn={(id) => {
               setSelectAdBtn(id);
             }}
             onClickNextBtn={() => {
-              checkLibrarayPermission();
               setOpenSheet(false);
+              checkLibrarayPermission();
             }}
           />
         }

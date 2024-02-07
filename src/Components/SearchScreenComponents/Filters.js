@@ -11,6 +11,7 @@ import colors from "../../Constants/colors";
 import { Divider, RadioButton } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { setSearchFilterId } from "../../store/StoreDataSlice";
+import { useEffect } from "react";
 
 const Filters = () => {
   const dispatch = useDispatch();
@@ -29,6 +30,10 @@ const Filters = () => {
       title: "Search by content",
     },
   ];
+  useEffect(() => {
+    dispatch(setSearchFilterId(0));
+  }, []);
+
   return (
     <View style={{ marginHorizontal: moderateScale(10), flex: 1 }}>
       <Text style={styles.heading}>Filter</Text>

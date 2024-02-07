@@ -11,6 +11,7 @@ import SliderCard from "../../Components/HomeScreenComponent/SliderCard";
 import screenName from "../../Constants/screenName";
 import SelectButton from "../../Components/SelectButton";
 import RbBottomSheet from "../../Components/BottomSheet/RbBottomSheet";
+import { subcriptionType } from "../../Constants/Constant";
 
 const screenHeight = Dimensions.get("screen").height / 2;
 const UploadSliderAds = ({ title }) => {
@@ -73,7 +74,8 @@ const UploadSliderAds = ({ title }) => {
           navigation.navigate(screenName.drawerNavigation, {
             screen: screenName.subscription,
             params: {
-              adsType: "searchPage",
+              adsType:
+                selectAdsBtn === 1 ? subcriptionType[2] : subcriptionType[4],
             },
           });
         }}
@@ -95,14 +97,14 @@ const UploadSliderAds = ({ title }) => {
                 title: "Search Page",
               },
             ]}
-            title={"When you are posted your ad?"}
+            title={"Where you want to post your ads?"}
             value={selectAdsBtn}
             onClickBtn={(id) => {
               setSelectAdBtn(id);
             }}
             onClickNextBtn={() => {
-              checkLibrarayPermission();
               setOpenSheet(false);
+              checkLibrarayPermission();
             }}
           />
         }
