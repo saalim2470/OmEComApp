@@ -9,6 +9,7 @@ import FeedCardBottomView from "./FeedCardBottomView";
 import { imageurl } from "../../Constants/functions";
 import ProfileFeedCardHeader from "../ProfileScreenComponent/ProfileFeedCardHeader";
 import FeedCardTopView from "./FeedCardTopView";
+import ImageVideoSlider from "../PostScreenComponent/SliderComponent/ImageVideoSlider";
 
 const FeedCard = ({
   itemData,
@@ -33,7 +34,8 @@ const FeedCard = ({
         <FeedCardTopView itemData={itemData} disable={disable} />
       ) : null}
       {itemData?.imagesData !== "[]" ? (
-        <Slider data={files} onClick={onClickMoreBtn} disable={disable} />
+        // <Slider data={files} onClick={onClickMoreBtn} disable={disable} />
+        <ImageVideoSlider sliderData={files} />
       ) : null}
       <View style={[styles.bottomView]}>
         <FeedCardBottomView itemData={itemData} />

@@ -6,7 +6,6 @@ import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
 const Slider = ({ data, onClick, disable }) => {
   const [layout, setLayout] = useState({ width: 0 });
-  console.log('-=-=layout-=-=',layout);
   const onLayout = (e) => {
     setLayout({
       width: e.nativeEvent.layout.width,
@@ -28,26 +27,6 @@ const Slider = ({ data, onClick, disable }) => {
         }}
       />
     </View>
-    // <View style={styles.cardImgView}>
-    //   <FlatList
-    //     data={data}
-    //     keyExtractor={(item, index) => {
-    //       // item.id.toString();
-    //     }}
-    //     horizontal={true}
-    //     pagingEnabled={true}
-    //     renderItem={({ item, index }) => {
-    //       return (
-    //         <View style={{ borderWidth: 1, height: "100%", width: "100%" }}>
-    //           <Image
-    //             source={{ uri: item }}
-    //             style={{ height: "100%", width: "100%" }}
-    //           />
-    //         </View>
-    //       );
-    //     }}
-    //   />
-    // </View>
   );
 };
 

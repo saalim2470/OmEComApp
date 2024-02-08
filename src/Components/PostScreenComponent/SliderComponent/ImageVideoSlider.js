@@ -1,22 +1,20 @@
-import React, { useRef, useState } from "react";
 import {
-  View,
-  StyleSheet,
-  Button,
-  ActivityIndicator,
-  FlatList,
   Dimensions,
+  FlatList,
   Image,
+  StyleSheet,
   Text,
+  View,
 } from "react-native";
+import React, { useState } from "react";
+import { baseURL, serverImagePath } from "../../../Constants/defaults";
+import VideoViewer from "./VideoViewer";
+import colors from "../../../Constants/colors";
 import { scale, verticalScale } from "react-native-size-matters";
-import colors from "../Constants/colors";
-import { getFileExtension, imageExtensions } from "../Constants/Constant";
-import { baseURL, serverImagePath } from "../Constants/defaults";
-import VideoViewer from "../Components/PostScreenComponent/SliderComponent/VideoViewer";
+import { getFileExtension, imageExtensions } from "../../../Constants/Constant";
 
 const SCREEM_WIDTH = Dimensions.get("window").width;
-export default function Video1() {
+const ImageVideoSlider = ({ sliderData }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const data = [
     "https://img.global.news.samsung.com/in/wp-content/uploads/2023/05/15872_SBS-PR-Banner_3000X2000-e1683884137336.jpg",
@@ -32,36 +30,39 @@ export default function Video1() {
     setCurrentSlide(viewableItems[0].index);
   };
   return (
-    <View style={{ marginTop: verticalScale(40) }}>
-      <View>
-        <FlatList
-          data={data}
-          horizontal={true}
-          snapToInterval={SCREEM_WIDTH}
-          snapToAlignment="center"
-          decelerationRate={"fast"}
-          pagingEnabled
-          onViewableItemsChanged={onViewableItemsChanged}
-          viewabilityConfig={{
-            itemVisiblePercentThreshold: 50,
-          }}
-          scrollEventThrottle={0}
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item, index }) => {
-            return (
-              <View style={styles.sliderImageContainer}>
-                {imageExtensions.includes(getFileExtension(item)) ? (
-                  <Image source={{ uri: item }} style={styles.sliderImage} />
-                ) : (
-                  <VideoViewer item={item} />
-                )}
-              </View>
-            );
-          }}
-        />
+    <View>
+      <FlatList
+        data={sliderData}
+        horizontal={true}
+        snapToInterval={SCREEM_WIDTH}
+        snapToAlignment="center"
+        decelerationRate={"fast"}
+        pagingEnabled
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={{
+          itemVisiblePercentThreshold: 50,
+        }}
+        scrollEventThrottle={0}
+        showsHorizontalScrollIndicator={false}
+        keyExtractor={(item, index) => index.toString()}
+        renderItem={({ item, index }) => {
+          return (
+            <View style={styles.sliderImageContainer}>
+              {imageExtensions.includes(getFileExtension(item)) ? (
+                <Image
+                  source={{ uri: item, cache: "only-if-cached" }}
+                  style={styles.sliderImage}
+                />
+              ) : (
+                <VideoViewer item={item} />
+              )}
+            </View>
+          );
+        }}
+      />
+      {sliderData?.length != 1 && (
         <View style={styles.dotStyleWrapper}>
-          {data.map((item, index) => {
+          {sliderData.map((item, index) => {
             return (
               <View
                 style={[
@@ -75,10 +76,12 @@ export default function Video1() {
             );
           })}
         </View>
-      </View>
+      )}
     </View>
   );
-}
+};
+
+export default ImageVideoSlider;
 
 const styles = StyleSheet.create({
   container: {

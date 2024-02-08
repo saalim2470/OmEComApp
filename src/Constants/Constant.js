@@ -87,3 +87,18 @@ export const typeOfAds = {
   2: "searchPage",
   3: "innerPage",
 };
+
+export const getFileExtension = (fileName) => {
+  return fileName.split(".").pop();
+};
+
+export const imageExtensions = [
+  "jpg",
+  "jpeg",
+  "png",
+  "gif",
+  "bitmap",
+  "bmp",
+  "svg",
+  "webp",
+];
