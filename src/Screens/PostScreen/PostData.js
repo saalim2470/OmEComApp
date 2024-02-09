@@ -33,6 +33,7 @@ import RbBottomSheet from "../../Components/BottomSheet/RbBottomSheet";
 import * as Location from "expo-location";
 import GpsSearch from "../../Components/GpsSearch";
 import { getGpsDataApi } from "../../store/gpsSlice/GetGpsData";
+import { subcriptionType } from "../../Constants/Constant";
 
 const PostData = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -78,9 +79,7 @@ const PostData = ({ navigation, route }) => {
       addPostData?.addContentData?.Success ||
       updatePostData?.updateContentData?.Success
     ) {
-      dispatch(resetData());
-      dispatch(reseAdPosttData());
-      dispatch(resetUpdateAdContent());
+      clearData();
       route?.params?.editData != null
         ? navigation.navigate(screenName.drawerNavigation, {
             screen: screenName.bottomNavigation,
@@ -100,22 +99,6 @@ const PostData = ({ navigation, route }) => {
               },
             },
           });
-      //   setShowAlert({
-      //     show: true,
-      //     title: "Success",
-      //     msg: "Ad Content Added Successfully",
-      //     type: "success",
-      //   });
-      //   // dispatch(setPostDataDraft(null));
-      // }
-      // if (updatePostData?.updateContentData?.Success) {
-      //   setShowAlert({
-      //     show: true,
-      //     title: "Success",
-      //     msg: "Ad Content Updated Successfully",
-      //     type: "success",
-      //   });
-      //   // dispatch(setPostDataDraft(null));
     }
   }, [addPostData?.addContentData, updatePostData?.updateContentData]);
 
@@ -127,7 +110,9 @@ const PostData = ({ navigation, route }) => {
       if (code === 403) {
         navigation.navigate(screenName.drawerNavigation, {
           screen: screenName.subscription,
-          params: { formData },
+          params: {
+            adsType: subcriptionType[0],
+          },
         });
       } else if (code === 401) {
         setShowAlert({
@@ -140,7 +125,9 @@ const PostData = ({ navigation, route }) => {
         setShowAlert({
           show: true,
           title: "Error",
-          msg: "Some Error Occurred",
+          msg:
+            addPostData?.error?.ErrorMessage ||
+            updatePostData?.error?.ErrorMessage,
           type: "error",
         });
       }
@@ -283,6 +270,11 @@ const PostData = ({ navigation, route }) => {
 
   const handlePick = (emojiObject) => {
     setEmojiData(emojiObject?.emoji);
+  };
+  const clearData = () => {
+    dispatch(resetData());
+    dispatch(reseAdPosttData());
+    dispatch(resetUpdateAdContent());
   };
   return (
     <SafeAreaProvider style={commonStyle.container}>

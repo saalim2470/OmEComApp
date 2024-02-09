@@ -38,6 +38,10 @@ import { groupBy, subcriptionType, typeOfAds } from "../../Constants/Constant";
 import SubscriptionHeading from "../../Components/SubscriptionComponents/SubscriptionHeading";
 import RbBottomSheet from "../../Components/BottomSheet/RbBottomSheet";
 import SubscriptionDesc from "../../Components/SubscriptionComponents/SubscriptionDesc";
+import {
+  postBannerOrSliderApi,
+  resetUploadBannerSliderPostData,
+} from "../../store/bannerorSliderAdSlices/PostBannerOrSliderSlice";
 
 const Subscription = ({ route }) => {
   const { adsType } = route?.params;
@@ -64,6 +68,14 @@ const Subscription = ({ route }) => {
     error: getSubscriptionPlanError,
     errorCode: getSubscriptionPlanErrorCode,
   } = useSelector((state) => state.getSubscriptionPlan);
+  const {
+    uploadAdsData: bannerSliderPostAdsRes,
+    error: bannerSliderPostAdsError,
+  } = useSelector((state) => state.postBannerOrSliderSlice);
+  console.log(
+    "-=-banner slider--=-",
+    useSelector((state) => state.postBannerOrSliderSlice)
+  );
   const [openSheet, setOpenSheet] = useState(false);
   const [subsType, setSubsType] = useState();
   const [showAlert, setShowAlert] = useState({
@@ -78,9 +90,10 @@ const Subscription = ({ route }) => {
 
   useEffect(() => {
     if (getSubscriptionData && getSubscriptionData?.Success) {
-      console.log("-=-=-postd data-=-=", postData?.postDataDraft);
       if (postData?.postDataDraft != null) {
-        dispatch(addAdContentApi(postData?.postDataDraft));
+        adsType !== subcriptionType[0]
+          ? dispatch(postBannerOrSliderApi(postData?.postDataDraft))
+          : dispatch(addAdContentApi(postData?.postDataDraft));
       } else {
         setShowAlert({
           show: true,
@@ -92,21 +105,13 @@ const Subscription = ({ route }) => {
     }
   }, [getSubscriptionData]);
   useEffect(() => {
-    if (addContentDataRes?.addContentData?.Success) {
+    if (
+      (addContentDataRes?.addContentData?.Success,
+      bannerSliderPostAdsRes?.Success)
+    ) {
       setShowAlert({ ...showAlert, show: false });
-      dispatch(resetData());
-      dispatch(resetGetSubscriptionPlanData());
-      dispatch(reseAdPosttData());
-      dispatch(setPostDataDraft(null));
-      navigation.navigate(screenName.drawerNavigation, {
-        screen: screenName.bottomNavigation,
-        params: {
-          screen: screenName.bottomNavigationHomeRoute,
-          params: {
-            screen: screenName.mainHome,
-          },
-        },
-      });
+
+      navigate();
       // setShowAlert({
       //   show: true,
       //   title: "Success",
@@ -114,7 +119,7 @@ const Subscription = ({ route }) => {
       //   type: "success",
       // });
     }
-  }, [addContentDataRes?.addContentData]);
+  }, [addContentDataRes?.addContentData, bannerSliderPostAdsRes]);
   useEffect(() => {
     if (
       getSubscriptionPlanErrorCode != null &&
@@ -127,17 +132,24 @@ const Subscription = ({ route }) => {
         type: "warning",
       });
     } else if (
-      getSubscriptionPlanError != null &&
-      !getSubscriptionPlanError?.Success
+      (getSubscriptionPlanError != null &&
+        !getSubscriptionPlanError?.Success) ||
+      (bannerSliderPostAdsError !== null && !bannerSliderPostAdsError?.Success)
     ) {
       setShowAlert({
         show: true,
         title: "Error",
-        msg: getSubscriptionPlanError?.ErrorMessage,
+        msg:
+          getSubscriptionPlanError?.ErrorMessage ||
+          bannerSliderPostAdsError?.ErrorMessage,
         type: "error",
       });
     }
-  }, [getSubscriptionPlanErrorCode, getSubscriptionPlanError]);
+  }, [
+    getSubscriptionPlanErrorCode,
+    getSubscriptionPlanError,
+    bannerSliderPostAdsError,
+  ]);
   const navigate = () => {
     switch (adsType) {
       case subcriptionType[1]:
@@ -201,12 +213,16 @@ const Subscription = ({ route }) => {
 
   const onClickModalBtn = () => {
     setShowAlert({ ...showAlert, show: false });
+    clearData();
+
+    showAlert.type == "success" && navigate();
+  };
+  const clearData = () => {
     dispatch(resetData());
     dispatch(resetGetSubscriptionPlanData());
     dispatch(reseAdPosttData());
+    dispatch(resetUploadBannerSliderPostData());
     dispatch(setPostDataDraft(null));
-
-    showAlert.type == "success" && navigate();
   };
   return (
     <SafeAreaView style={commonStyle.container}>

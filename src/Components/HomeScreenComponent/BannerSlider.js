@@ -4,6 +4,7 @@ import colors from "../../Constants/colors";
 import { SliderBox } from "react-native-image-slider-box";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 
+const SCREEN_WIDTH = Dimensions.get("window").width;
 const BannerSlider = ({ data, onClick, disable }) => {
   const [layout, setLayout] = useState({ width: 0 });
   const onLayout = (e) => {
@@ -26,7 +27,8 @@ const BannerSlider = ({ data, onClick, disable }) => {
         autoplayInterval={3000}
         parentWidth={layout.width}
         resizeMethod={"resize"}
-        resizeMode={"cover"}
+        resizeMode={"contain"}
+        // style={{ aspectRatio: SCREEN_WIDTH / verticalScale(200) }}
         onCurrentImagePressed={(index) => {
           onClick(index);
         }}
@@ -44,9 +46,10 @@ const styles = StyleSheet.create({
     marginHorizontal: moderateScale(10),
     borderRadius: moderateScale(20),
     overflow: "hidden",
-    height: verticalScale(200),
+    height: verticalScale(220),
     alignItems: "center",
     justifyContent: "center",
+    // aspectRatio: SCREEN_WIDTH / verticalScale(200),
   },
   dotStyle: {
     width: scale(7),

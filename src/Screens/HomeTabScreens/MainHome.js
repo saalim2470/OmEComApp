@@ -40,6 +40,7 @@ import ShimmerLoading from "../../Components/LoadingComponents/ShimmerLoading";
 const MainHome = ({ route }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  let maxToRenderPerBatch = 100;
   const categoryId = useSelector((state) => state.storeData.categoryId);
   const {
     contentData: contentDataRes,
@@ -251,10 +252,11 @@ const MainHome = ({ route }) => {
           }
           ListFooterComponent={listFooterComponent}
           renderItem={renderItem}
-          initialNumToRender={10}
-          maxToRenderPerBatch={10}
-          windowSize={10}
+          initialNumToRender={40}
+          maxToRenderPerBatch={100}
+          // windowSize={10}
           removeClippedSubviews={true}
+          updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }

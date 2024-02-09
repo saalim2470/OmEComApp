@@ -26,6 +26,7 @@ import { getLoginUser, setError } from "../../store/authSlices/LoginSlice";
 import { useEffect } from "react";
 import { getCountryData } from "../../store/contrySlices/GetCountrySlice";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Login = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -33,12 +34,12 @@ const Login = ({ navigation }) => {
   const loginLoading = useSelector((state) => state.login.isLoading);
   const loginError = useSelector((state) => state.login.error);
   const logindata = useSelector((state) => state.login);
-  console.log("-=-=-user-=-=", logindata);
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
+  const [expoDeviceToken, setExpoDeviceToken] = useState();
   const [showError, setShowError] = useState({ isError: false, msg: null });
   useEffect(() => {
     if (loginSuccess) {
@@ -51,6 +52,10 @@ const Login = ({ navigation }) => {
       setShowError({ isError: true, msg: errorData?.title });
     }
   }, [loginError]);
+  useEffect(() => {
+    setExpoDeviceToken(getExpoToken());
+    console.log(getExpoToken());
+  }, []);
 
   const onClickLogin = () => {
     if (email != "" && password != "") {
@@ -58,6 +63,7 @@ const Login = ({ navigation }) => {
         getLoginUser({
           username: email,
           password: password,
+          expoPushToken: "ExponentPushToken[mKH2oxKYc9uptdMOzbg48-]",
         })
       );
     } else {
@@ -82,6 +88,11 @@ const Login = ({ navigation }) => {
         </Text>
       </TouchableOpacity>
     );
+  };
+  const getExpoToken = () => {
+    const expoToken = AsyncStorage.getItem("expoPushToken");
+    console.log("-=-in function-=-", expoToken);
+    return expoToken;
   };
   return (
     <SafeAreaView style={commonStyle.container}>

@@ -12,10 +12,14 @@ import screenName from "../../Constants/screenName";
 import SelectButton from "../../Components/SelectButton";
 import RbBottomSheet from "../../Components/BottomSheet/RbBottomSheet";
 import { subcriptionType } from "../../Constants/Constant";
+import { setPostDataDraft } from "../../store/addAdContentSlices/AddPostData";
+import { useDispatch } from "react-redux";
 
 const screenHeight = Dimensions.get("screen").height / 2;
 const UploadSliderAds = ({ title }) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const formData = new FormData();
   const defaultAdImg = [
     "https://img.global.news.samsung.com/in/wp-content/uploads/2023/05/15872_SBS-PR-Banner_3000X2000-e1683884137336.jpg",
     "https://i.pinimg.com/736x/b7/45/a7/b745a78bece41d7ff78420a11641970a.jpg",
@@ -23,6 +27,7 @@ const UploadSliderAds = ({ title }) => {
   ];
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
   const [image, setImage] = useState([]);
+  const [uploadImage, setUploadImage] = useState();
   const [openSheet, setOpenSheet] = useState(false);
   const [selectAdsBtn, setSelectAdBtn] = useState();
 
@@ -49,6 +54,23 @@ const UploadSliderAds = ({ title }) => {
   const renderCard = ({ item, index }) => {
     return <SliderCard item={item} onClickCard={() => {}} />;
   };
+  const onClickUpload = () => {
+    const uriParts = uploadImage.uri.split(".");
+    const fileType = uriParts[uriParts.length - 1];
+    formData.append("PostBannerOrSliderImage", {
+      uri: uploadImage.uri,
+      name: `image_.${fileType}`,
+      type: `image/${fileType}`,
+    });
+    formData.append("SubscriptionType", selectAdsBtn === 1 ? 2 : 7);
+    dispatch(setPostDataDraft(formData));
+    navigation.navigate(screenName.drawerNavigation, {
+      screen: screenName.subscription,
+      params: {
+        adsType: selectAdsBtn === 1 ? subcriptionType[2] : subcriptionType[4],
+      },
+    });
+  };
   return (
     <View>
       <HeaderWithButton
@@ -71,13 +93,7 @@ const UploadSliderAds = ({ title }) => {
         title={"Upload"}
         disabled={image.length !== 0 ? false : true}
         onClick={() => {
-          navigation.navigate(screenName.drawerNavigation, {
-            screen: screenName.subscription,
-            params: {
-              adsType:
-                selectAdsBtn === 1 ? subcriptionType[2] : subcriptionType[4],
-            },
-          });
+          onClickUpload();
         }}
         style={{ marginHorizontal: moderateScale(10) }}
       />

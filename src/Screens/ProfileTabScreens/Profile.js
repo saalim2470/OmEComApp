@@ -43,6 +43,7 @@ import { getLoggedInUSerInfo } from "../../store/authSlices/LoginSlice";
 const Profile = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
+  let maxToRenderPerBatch = 100;
   const {
     userContentData: userContentRes,
     error: userContentError,
@@ -237,13 +238,14 @@ const Profile = ({ navigation, route }) => {
           ItemSeparatorComponent={
             <Divider style={{ marginBottom: verticalScale(8) }} />
           }
-          initialNumToRender={10}
+          initialNumToRender={40}
+          maxToRenderPerBatch={maxToRenderPerBatch}
+          updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
           ListFooterComponent={listFooterComponent}
           onEndReached={onReachedEnd}
           onEndReachedThreshold={1}
-          maxToRenderPerBatch={10}
           removeClippedSubviews={true}
-          windowSize={10}
+          // windowSize={10}
           renderItem={renderItem}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

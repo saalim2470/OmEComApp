@@ -7,35 +7,18 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { ResizeMode, Video } from "expo-av";
-import VideoPlayer from "expo-video-player";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { Entypo } from "@expo/vector-icons";
 
 const SCREEM_WIDTH = Dimensions.get("window").width;
-const VideoViewer = ({ item }) => {
+const VideoViewer = ({ item, shouldPlay }) => {
   const video = React.useRef(null);
   const [status, setStatus] = useState({});
   return (
-    <View style={{ height: verticalScale(300) }}>
-      {/* <VideoPlayer
-        videoProps={{
-          shouldPlay: false,
-          isLooping: true,
-          resizeMode: ResizeMode.CONTAIN,
-          source: {
-            uri: item,
-          },
-          ref: video,
-        }}
-        defaultControlsVisible={true}
-        fullscreen={{
-          visible: false,
-        }}
-        playbackCallback={(status) => setStatus(() => status)}
-        style={styles.videoStyle}
-      /> */}
+    <View style={{ flex: 1 }}>
       <Video
         ref={video}
+        shouldPlay={shouldPlay}
         style={styles.videoStyle}
         source={{
           uri: item,

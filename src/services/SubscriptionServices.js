@@ -7,6 +7,7 @@ class SubscriptionServices {
     );
   }
   getSubscriptionPlan(subscriptionID) {
+    console.log(subscriptionID);
     return http.post(
       `/UserSubscription/Subscribe?subscriptionID=${subscriptionID}`
     );

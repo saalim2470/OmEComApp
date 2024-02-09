@@ -17,10 +17,10 @@ const FeedCard = ({
   disable,
   profile,
 }) => {
-  const [files, setFiles] = useState([]);
-  useEffect(() => {
-    setFiles(imageurl(itemData?.imagesData));
-  }, [itemData]);
+  // const [files, setFiles] = useState([]);
+  // useEffect(() => {
+  //   setFiles(imageurl(itemData?.imagesData));
+  // }, [itemData]);
   return (
     <View
       style={{ marginBottom: verticalScale(8), backgroundColor: "#FFFFFF" }}
@@ -35,7 +35,7 @@ const FeedCard = ({
       ) : null}
       {itemData?.imagesData !== "[]" ? (
         // <Slider data={files} onClick={onClickMoreBtn} disable={disable} />
-        <ImageVideoSlider sliderData={files} />
+        <ImageVideoSlider sliderData={JSON.parse(itemData?.imagesData)} />
       ) : null}
       <View style={[styles.bottomView]}>
         <FeedCardBottomView itemData={itemData} />

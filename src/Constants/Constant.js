@@ -102,3 +102,5 @@ export const imageExtensions = [
   "svg",
   "webp",
 ];
+
+// const serverPathWithDomain=`${baseURL}${serverImagePath}/${item}`

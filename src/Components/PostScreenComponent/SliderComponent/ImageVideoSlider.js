@@ -1,33 +1,55 @@
 import {
+  ActivityIndicator,
   Dimensions,
   FlatList,
-  Image,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { baseURL, serverImagePath } from "../../../Constants/defaults";
 import VideoViewer from "./VideoViewer";
 import colors from "../../../Constants/colors";
 import { scale, verticalScale } from "react-native-size-matters";
 import { getFileExtension, imageExtensions } from "../../../Constants/Constant";
+import { Image } from "expo-image";
 
 const SCREEM_WIDTH = Dimensions.get("window").width;
 const ImageVideoSlider = ({ sliderData }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const data = [
-    "https://img.global.news.samsung.com/in/wp-content/uploads/2023/05/15872_SBS-PR-Banner_3000X2000-e1683884137336.jpg",
-    "https://i.pinimg.com/736x/b7/45/a7/b745a78bece41d7ff78420a11641970a.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Sunflower_from_Silesia2.jpg/1200px-Sunflower_from_Silesia2.jpg",
-    "http://media.w3.org/2010/05/sintel/trailer.mp4",
-    "https://kinsta.com/wp-content/uploads/2020/08/tiger-jpg.jpg",
-    "https://www.w3schools.com/html/movie.mp4",
-    "https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_10mb.mp4",
-    `${baseURL}${serverImagePath}/b4360b3b-4e84-440c-9c01-8d50ce6d4b2fimage_0.jpeg`,
-  ];
   const onViewableItemsChanged = ({ viewableItems, changed }) => {
     setCurrentSlide(viewableItems[0].index);
+  };
+  const blurhash = "L6PZfSi_.AyE_3t7t7R**0o#DgR4";
+  const renderItem = ({ item, index }) => {
+    return (
+      <View style={styles.sliderImageContainer}>
+        {imageExtensions.includes(getFileExtension(item)) ? (
+          <Image
+            source={{
+              uri: `${baseURL}${serverImagePath}/${item}`,
+            }}
+            placeholder={blurhash}
+            placeholderContentFit="cover"
+            contentFit="contain"
+            transition={1000}
+            cachePolicy={"memory"}
+            onLoadStart={() => {}}
+            alt="Loading Image..."
+            onLoad={() => {}}
+            onError={(data) => {
+              console.log("=-=-error=-=-", data);
+            }}
+            style={styles.sliderImage}
+          />
+        ) : (
+          <VideoViewer
+            item={item}
+            shouldPlay={index === currentSlide ? true : false}
+          />
+        )}
+      </View>
+    );
   };
   return (
     <View>
@@ -38,27 +60,19 @@ const ImageVideoSlider = ({ sliderData }) => {
         snapToAlignment="center"
         decelerationRate={"fast"}
         pagingEnabled
+        getItemLayout={(data, index) => ({
+          length: verticalScale(300),
+          offset: verticalScale(300) * index,
+          index,
+        })}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={{
-          itemVisiblePercentThreshold: 50,
+          itemVisiblePercentThreshold: 30,
         }}
         scrollEventThrottle={0}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item, index }) => {
-          return (
-            <View style={styles.sliderImageContainer}>
-              {imageExtensions.includes(getFileExtension(item)) ? (
-                <Image
-                  source={{ uri: item, cache: "only-if-cached" }}
-                  style={styles.sliderImage}
-                />
-              ) : (
-                <VideoViewer item={item} />
-              )}
-            </View>
-          );
-        }}
+        renderItem={renderItem}
       />
       {sliderData?.length != 1 && (
         <View style={styles.dotStyleWrapper}>
@@ -106,7 +120,6 @@ const styles = StyleSheet.create({
   sliderImage: {
     width: "100%",
     height: "100%",
-    resizeMode: "contain",
   },
   videoStyle: {
     width: SCREEM_WIDTH,

@@ -14,6 +14,7 @@ import colors from "../Constants/colors";
 import { getFileExtension, imageExtensions } from "../Constants/Constant";
 import { baseURL, serverImagePath } from "../Constants/defaults";
 import VideoViewer from "../Components/PostScreenComponent/SliderComponent/VideoViewer";
+import ImageVideoSlider from "../Components/PostScreenComponent/SliderComponent/ImageVideoSlider";
 
 const SCREEM_WIDTH = Dimensions.get("window").width;
 export default function Video1() {
@@ -33,7 +34,7 @@ export default function Video1() {
   };
   return (
     <View style={{ marginTop: verticalScale(40) }}>
-      <View>
+      {/* <View>
         <FlatList
           data={data}
           horizontal={true}
@@ -75,7 +76,8 @@ export default function Video1() {
             );
           })}
         </View>
-      </View>
+      </View> */}
+      <ImageVideoSlider sliderData={data} />
     </View>
   );
 }
