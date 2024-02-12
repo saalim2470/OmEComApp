@@ -24,6 +24,7 @@ import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { EXPO_PUSH_TOKEN } from "./src/Constants/Constant";
+import { intersection } from "lodash";
 
 const theme = {
   dark: false,
@@ -130,22 +131,34 @@ export default function App() {
       // saving error
     }
   };
+
   useEffect(() => {
-    // Add event listener to handle deep links
-    const handleDeepLink = (event) => {
-      // Extract the deep link URL
-      const { url } = event;
-      // Do something with the URL, e.g., navigate to a specific screen
-      console.log("Deep link received:", url);
+    // Handle incoming deep links
+    const handleDeepLink = async (url) => {
+      // Your logic to handle the deep link
+      // Example: open a specific screen based on the URL
+      alert(url);
+      Linking.openURL(url);
     };
 
-    // Listen for deep link events
-    Linking.addEventListener("url", handleDeepLink);
-
-    // Clean up the event listener
-    return () => {
-      Linking.removeEventListener("url", handleDeepLink);
+    // Check if the app was opened from a deep link
+    const checkInitialUrl = async () => {
+      const initialUrl = await Linking.getInitialURL();
+      if (initialUrl) {
+        alert(url);
+        handleDeepLink(initialUrl);
+      }
     };
+
+    checkInitialUrl();
+
+    // Listen for incoming deep links while the app is running
+    const deepLinkListener = Linking.addEventListener("url", ({ url }) => {
+      handleDeepLink(url);
+    });
+
+    // Clean up the event listener when the component unmounts
+    return () => deepLinkListener.remove();
   }, []);
 
   if (!fontsLoaded && !fontError) {

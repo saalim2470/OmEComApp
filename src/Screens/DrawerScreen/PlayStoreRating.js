@@ -10,12 +10,9 @@ const PlayStoreRating = () => {
 
   useEffect(() => {
     // Do something with url
-    console.log("-=-=url=-=-", url);
   }, [url]);
   const handleURL = (url) => {
     const { hostname, path, queryParams } = Linking.parse(url);
-    const a = Linking.parse(url);
-    console.log(a);
     if (path === "alert") {
       alert(queryParams.str);
     } else {
@@ -35,7 +32,7 @@ const PlayStoreRating = () => {
       <CustomeHeader isBackBtn={true} title={"PlayStore Rating"} />
       <TouchableOpacity
         onPress={() => {
-          Linking.openURL(url);
+          Linking.openURL("omecomapp://profile");
         }}
       >
         <Text>Show</Text>
