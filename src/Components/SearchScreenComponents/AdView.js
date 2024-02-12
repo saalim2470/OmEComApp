@@ -3,6 +3,7 @@ import React from "react";
 import { TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
+import { baseURL, serverImagePath } from "../../Constants/defaults";
 
 const AdView = ({ onClickAd = () => {}, disabled, data }) => {
   const blurhash = "L6PZfSi_.AyE_3t7t7R**0o#DgR4";
@@ -17,7 +18,7 @@ const AdView = ({ onClickAd = () => {}, disabled, data }) => {
     >
       <Image
         source={{
-          uri: data,
+          uri: `${baseURL}${serverImagePath}/${data}`,
         }}
         cachePolicy={"memory"}
         contentFit="contain"

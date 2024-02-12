@@ -8,9 +8,6 @@ import * as Linking from "expo-linking";
 const PlayStoreRating = () => {
   const url = Linking.useURL();
 
-  useEffect(() => {
-    // Do something with url
-  }, [url]);
   const handleURL = (url) => {
     const { hostname, path, queryParams } = Linking.parse(url);
     if (path === "alert") {

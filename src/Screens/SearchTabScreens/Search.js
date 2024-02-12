@@ -33,9 +33,6 @@ const Search = ({ navigation }) => {
       getPromotedContent();
     }, [])
   );
-  // useEffect(() => {
-  //   getPromotedContent();
-  // }, [isFocused]);
   useEffect(() => {
     if (promotedContentSuccess && promotedContentRes?.length > 0) {
       const bannerAds = promotedContentRes?.filter(
@@ -82,7 +79,7 @@ const Search = ({ navigation }) => {
         <BannerSlider
           data={bannerImageData}
           onClick={(index) => {
-            setAdImg(bannerImageData[index]);
+            setAdImg(bannerImageData[index]?.imagePath);
             setIsShowBottomSheet(true);
           }}
         />
@@ -90,7 +87,7 @@ const Search = ({ navigation }) => {
           <CardSlider
             data={sliderImageData}
             onClickCard={(item) => {
-              setAdImg(item);
+              setAdImg(item?.imagePath);
               setIsShowBottomSheet(true);
             }}
           />

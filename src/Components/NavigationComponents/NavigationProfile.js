@@ -23,6 +23,7 @@ import { StatusBar } from "expo-status-bar";
 
 const NavigationProfile = () => {
   const userDetail = useSelector((state) => state.login?.userDetail);
+  console.log(userDetail);
   const navigation = useNavigation();
   const imgViewerData = [
     {
@@ -36,7 +37,6 @@ const NavigationProfile = () => {
   return (
     <ImageBackground
       style={{ backgroundColor: "#96EFFF" }}
-      // style={{ backgroundColor: "#B4D4FF" }}
       source={images.omLogo}
       resizeMode="contain"
     >
@@ -93,7 +93,8 @@ const NavigationProfile = () => {
               },
             ]}
           >
-            <Text style={styles.boldTxt}>00</Text> followers
+            <Text style={styles.boldTxt}>{userDetail?.totalFollowers}</Text>{" "}
+            followers
           </Text>
           <Text
             style={[
@@ -104,10 +105,12 @@ const NavigationProfile = () => {
               },
             ]}
           >
-            <Text style={styles.boldTxt}>00</Text> following
+            <Text style={styles.boldTxt}>{userDetail?.totalFollowing}</Text>{" "}
+            following
           </Text>
         </View>
       </Pressable>
+      {/* for open image */}
       <ImageViewer
         visible={openImageViewer}
         setIsVisible={setImageViewer}

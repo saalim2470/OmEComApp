@@ -67,13 +67,13 @@ const PostData = ({ navigation, route }) => {
       setImage(imageurl(route?.params?.editData?.imagesData));
       setBtnTxt("Update");
       setScreenTitle("Update post");
-      setSelectLocation({
-        text: route?.params?.editData?.placeName,
-        center: [route?.params?.editData?.lat, route?.params?.editData?.lon],
-      });
+      route?.params?.editData?.placeName !== null &&
+        setSelectLocation({
+          text: route?.params?.editData?.placeName,
+          center: [route?.params?.editData?.lat, route?.params?.editData?.lon],
+        });
     }
   }, [route?.params]);
-
   useEffect(() => {
     if (
       addPostData?.addContentData?.Success ||

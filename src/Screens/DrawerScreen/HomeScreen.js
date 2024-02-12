@@ -53,9 +53,6 @@ const HomeScreen = () => {
       getPromotedContent();
     }, [])
   );
-  // useEffect(() => {
-  //   getPromotedContent();
-  // }, [isFocused]);
   useEffect(() => {
     if (promotedContentSuccess && promotedContentRes?.length > 0) {
       const bannerAds = promotedContentRes?.filter(
@@ -103,7 +100,7 @@ const HomeScreen = () => {
           <BannerSlider
             data={bannerImageData}
             onClick={(index) => {
-              setAdImg(bannerImageData[index]);
+              setAdImg(bannerImageData[index]?.imagePath);
               setIsShowBottomSheet(true);
             }}
           />
@@ -115,7 +112,7 @@ const HomeScreen = () => {
             <CardSlider
               data={sliderImageData}
               onClickCard={(item) => {
-                setAdImg(item);
+                setAdImg(item?.imagePath);
                 setIsShowBottomSheet(true);
               }}
             />
