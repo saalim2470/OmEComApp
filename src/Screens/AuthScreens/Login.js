@@ -55,7 +55,7 @@ const Login = ({ navigation }) => {
   }, [loginError]);
   useEffect(() => {
     getExpoToken();
-  }, []);
+  });
 
   const onClickLogin = () => {
     if (email != "" && password != "") {
@@ -66,6 +66,11 @@ const Login = ({ navigation }) => {
           expoPushToken: expoDeviceToken,
         })
       );
+      console.log({
+        username: email,
+        password: password,
+        expoPushToken: expoDeviceToken,
+      });
     } else {
       setShowError({ isError: true, msg: "Enter email or password" });
     }

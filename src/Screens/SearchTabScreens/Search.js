@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import commonStyle from "../../Constants/commonStyle";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { ScrollView } from "react-native";
@@ -10,7 +10,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import CardSlider from "../../Components/HomeScreenComponent/CardSlider";
 import Loading from "../../Components/Loading";
 import { useDispatch, useSelector } from "react-redux";
-import { useIsFocused } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { getPromotedContentApi } from "../../store/bannerorSliderAdSlices/GetPromotedContentSlice";
 import { baseURL, serverImagePath } from "../../Constants/defaults";
 
@@ -28,20 +28,22 @@ const Search = ({ navigation }) => {
   const [sliderImageData, setSliderImageData] = useState([]);
   const [isShowBottomSheet, setIsShowBottomSheet] = useState(false);
   const [adImg, setAdImg] = useState();
-  useEffect(() => {
-    getPromotedContent();
-  }, [isFocused]);
+  useFocusEffect(
+    useCallback(() => {
+      getPromotedContent();
+    }, [])
+  );
+  // useEffect(() => {
+  //   getPromotedContent();
+  // }, [isFocused]);
   useEffect(() => {
     if (promotedContentSuccess && promotedContentRes?.length > 0) {
-      const bannerAds = [];
-      const sliderAds = [];
-      promotedContentRes?.map((item, index) => {
-        item?.subscriptionType === 6
-          ? bannerAds.push(`${baseURL}${serverImagePath}/${item?.imagePath}`)
-          : item?.subscriptionType === 7
-          ? sliderAds.push(`${baseURL}${serverImagePath}/${item?.imagePath}`)
-          : null;
-      });
+      const bannerAds = promotedContentRes?.filter(
+        (item, index) => item?.subscriptionType === 1
+      );
+      const sliderAds = promotedContentRes?.filter(
+        (item, index) => item?.subscriptionType === 2
+      );
       setBannerImageData(bannerAds);
       setSliderImageData(sliderAds);
     }

@@ -15,7 +15,7 @@ const BannerSlider = ({ data, onClick, disable }) => {
     data?.map((item, index) => {
       imageData.push(`${baseURL}${serverImagePath}/${item?.imagePath}`);
     });
-    setImages(images);
+    setImages(imageData);
   }, [data]);
 
   const onLayout = (e) => {

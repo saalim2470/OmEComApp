@@ -64,14 +64,6 @@ const HomeScreen = () => {
       const sliderAds = promotedContentRes?.filter(
         (item, index) => item?.subscriptionType === 2
       );
-
-      // promotedContentRes?.map((item, index) => {
-      //   item?.subscriptionType === 1
-      //     ? bannerAds.push(`${baseURL}${serverImagePath}/${item?.imagePath}`)
-      //     : item?.subscriptionType === 2
-      //     ? sliderAds.push(`${baseURL}${serverImagePath}/${item?.imagePath}`)
-      //     : null;
-      // });
       setBannerImageData(bannerAds);
       setSliderImageData(sliderAds);
     }
