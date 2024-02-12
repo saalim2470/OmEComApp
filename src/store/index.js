@@ -27,6 +27,7 @@ import GetLegalData from "./legalData/GetLegalData";
 import GetGpsData from "./gpsSlice/GetGpsData";
 import Follow_UnFollowSlice from "./profileSlices/Follow_UnFollowSlice";
 import PostBannerOrSliderSlice from "./bannerorSliderAdSlices/PostBannerOrSliderSlice";
+import GetPromotedContentSlice from "./bannerorSliderAdSlices/GetPromotedContentSlice";
 
 const store = configureStore({
   reducer: {
@@ -57,6 +58,7 @@ const store = configureStore({
     gpsData: GetGpsData,
     follow_UnFollowSlice: Follow_UnFollowSlice,
     postBannerOrSliderSlice: PostBannerOrSliderSlice,
+    getPromotedContentSlice: GetPromotedContentSlice,
   },
   middleware: [thunk],
 });

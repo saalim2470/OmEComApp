@@ -49,6 +49,7 @@ const UploadSliderAds = ({ title }) => {
     });
     if (!result.canceled) {
       setImage([result.assets[0].uri]);
+      setUploadImage(result.assets[0]);
     }
   };
   const renderCard = ({ item, index }) => {
@@ -57,7 +58,7 @@ const UploadSliderAds = ({ title }) => {
   const onClickUpload = () => {
     const uriParts = uploadImage.uri.split(".");
     const fileType = uriParts[uriParts.length - 1];
-    formData.append("PostBannerOrSliderImage", {
+    formData.append("Files", {
       uri: uploadImage.uri,
       name: `image_.${fileType}`,
       type: `image/${fileType}`,

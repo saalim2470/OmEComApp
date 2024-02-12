@@ -1,6 +1,8 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
+import { Image } from "expo-image";
+import { baseURL, serverImagePath } from "../../Constants/defaults";
 
 const SliderCard = ({ item, onClickCard = () => {}, data, index }) => {
   return (
@@ -25,8 +27,8 @@ const SliderCard = ({ item, onClickCard = () => {}, data, index }) => {
       </Text> */}
       <View style={styles.cardImgContainer}>
         <Image
-          source={{ uri: item }}
-          resizeMode="contain"
+          source={{ uri: `${baseURL}${serverImagePath}/${item?.imagePath}` }}
+          contentFit="contain"
           style={{ width: "100%", height: "100%" }}
         />
       </View>

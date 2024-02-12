@@ -13,7 +13,7 @@ const ServerError = ({ statusCode, msg }) => {
       {statusCode == 500 ? (
         <Text>Internal server Error</Text>
       ) : statusCode == 404 ? (
-        <Text>Not Found</Text>
+        <Text>Page Not Found</Text>
       ) : (
         <Text>{msg ? msg : "Some error occured"}</Text>
       )}

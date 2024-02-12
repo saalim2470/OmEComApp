@@ -72,10 +72,6 @@ const Subscription = ({ route }) => {
     uploadAdsData: bannerSliderPostAdsRes,
     error: bannerSliderPostAdsError,
   } = useSelector((state) => state.postBannerOrSliderSlice);
-  console.log(
-    "-=-banner slider--=-",
-    useSelector((state) => state.postBannerOrSliderSlice)
-  );
   const [openSheet, setOpenSheet] = useState(false);
   const [subsType, setSubsType] = useState();
   const [showAlert, setShowAlert] = useState({
@@ -106,18 +102,12 @@ const Subscription = ({ route }) => {
   }, [getSubscriptionData]);
   useEffect(() => {
     if (
-      (addContentDataRes?.addContentData?.Success,
-      bannerSliderPostAdsRes?.Success)
+      addContentDataRes?.addContentData?.Success ||
+      bannerSliderPostAdsRes?.Success
     ) {
       setShowAlert({ ...showAlert, show: false });
-
+      clearData();
       navigate();
-      // setShowAlert({
-      //   show: true,
-      //   title: "Success",
-      //   msg: "Ad Content Added Successfully",
-      //   type: "success",
-      // });
     }
   }, [addContentDataRes?.addContentData, bannerSliderPostAdsRes]);
   useEffect(() => {

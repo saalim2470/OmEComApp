@@ -27,6 +27,7 @@ import { useEffect } from "react";
 import { getCountryData } from "../../store/contrySlices/GetCountrySlice";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { EXPO_PUSH_TOKEN } from "../../Constants/Constant";
 
 const Login = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -53,8 +54,7 @@ const Login = ({ navigation }) => {
     }
   }, [loginError]);
   useEffect(() => {
-    setExpoDeviceToken(getExpoToken());
-    console.log(getExpoToken());
+    getExpoToken();
   }, []);
 
   const onClickLogin = () => {
@@ -63,11 +63,20 @@ const Login = ({ navigation }) => {
         getLoginUser({
           username: email,
           password: password,
-          expoPushToken: "ExponentPushToken[mKH2oxKYc9uptdMOzbg48-]",
+          expoPushToken: expoDeviceToken,
         })
       );
     } else {
       setShowError({ isError: true, msg: "Enter email or password" });
+    }
+  };
+  const getExpoToken = async () => {
+    try {
+      const token = await AsyncStorage.getItem(EXPO_PUSH_TOKEN);
+      setExpoDeviceToken(token);
+    } catch (e) {
+      console.log("error in set device token", e);
+      // read error
     }
   };
   const loginBtns = (icon, name, bkColor, txtColor) => {
@@ -88,11 +97,6 @@ const Login = ({ navigation }) => {
         </Text>
       </TouchableOpacity>
     );
-  };
-  const getExpoToken = () => {
-    const expoToken = AsyncStorage.getItem("expoPushToken");
-    console.log("-=-in function-=-", expoToken);
-    return expoToken;
   };
   return (
     <SafeAreaView style={commonStyle.container}>
@@ -195,7 +199,7 @@ const Login = ({ navigation }) => {
               onClickLogin();
             }}
           />
-          <View style={styles.bottomLineView}>
+          {/* <View style={styles.bottomLineView}>
             <View style={styles.lineStyle}></View>
             <Text style={styles.commonTxt}>Or With</Text>
             <View style={styles.lineStyle}></View>
@@ -211,7 +215,7 @@ const Login = ({ navigation }) => {
             {loginBtns(images.facebookIcon, "Facebook", "#ebf3ff", "#8e9dae")}
             {loginBtns(images.googleIcon, "Google", "#fbf1f0")}
             {loginBtns(images.appleIcon, "Apple", "#f2f2f2")}
-          </View>
+          </View> */}
 
           <Text
             style={[

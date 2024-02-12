@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import commonStyle from "../../Constants/commonStyle";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { ScrollView } from "react-native";
@@ -8,21 +8,51 @@ import BannerSlider from "../../Components/HomeScreenComponent/BannerSlider";
 import SearchScreenTopView from "../../Components/SearchScreenComponents/SearchScreenTopView";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CardSlider from "../../Components/HomeScreenComponent/CardSlider";
+import Loading from "../../Components/Loading";
+import { useDispatch, useSelector } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
+import { getPromotedContentApi } from "../../store/bannerorSliderAdSlices/GetPromotedContentSlice";
+import { baseURL, serverImagePath } from "../../Constants/defaults";
 
 const Search = ({ navigation }) => {
-  const img = [
-    "https://img.global.news.samsung.com/in/wp-content/uploads/2023/05/15872_SBS-PR-Banner_3000X2000-e1683884137336.jpg",
-    "https://i.pinimg.com/736x/b7/45/a7/b745a78bece41d7ff78420a11641970a.jpg",
-    "https://cdn.dribbble.com/users/5799567/screenshots/14095208/media/f3fa8ff3516ebb164b659431af01a40b.jpg?resize=400x300&vertical=center",
-  ];
-  const sliderData = [
-    "https://image01-in.oneplus.net/india-oneplus-statics-file/epb/202306/26/9FxksqX4fQDqvJpU.png",
-    "https://i.pinimg.com/736x/ec/8d/50/ec8d5001b929a1b643d1bd1932eba4d9.jpg",
-    "https://mir-s3-cdn-cf.behance.net/projects/404/2ee493102979329.Y3JvcCwxOTk5LDE1NjQsMCwyMTc.png",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQg9nAV0o49dha2PwwuhdhmcoVtHIzPiXNEKH1CYjXgCFB0i6Z4FJYilH55oLqxYNDBNFs&usqp=CAU",
-  ];
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
+  const {
+    promotedContent: promotedContentRes,
+    isLoading: promotedContentLoading,
+    isSuccess: promotedContentSuccess,
+    statusCode: promotedContentStatusCode,
+    error: promotedContentError,
+  } = useSelector((state) => state.getPromotedContentSlice);
+  const [bannerImageData, setBannerImageData] = useState([]);
+  const [sliderImageData, setSliderImageData] = useState([]);
   const [isShowBottomSheet, setIsShowBottomSheet] = useState(false);
   const [adImg, setAdImg] = useState();
+  useEffect(() => {
+    getPromotedContent();
+  }, [isFocused]);
+  useEffect(() => {
+    if (promotedContentSuccess && promotedContentRes?.length > 0) {
+      const bannerAds = [];
+      const sliderAds = [];
+      promotedContentRes?.map((item, index) => {
+        item?.subscriptionType === 6
+          ? bannerAds.push(`${baseURL}${serverImagePath}/${item?.imagePath}`)
+          : item?.subscriptionType === 7
+          ? sliderAds.push(`${baseURL}${serverImagePath}/${item?.imagePath}`)
+          : null;
+      });
+      setBannerImageData(bannerAds);
+      setSliderImageData(sliderAds);
+    }
+  }, [promotedContentSuccess, promotedContentRes]);
+  const getPromotedContent = () => {
+    dispatch(getPromotedContentApi(1, 10));
+  };
+  if (promotedContentLoading) {
+    return <Loading />;
+  }
+
   return (
     <SafeAreaView style={commonStyle.container}>
       <SearchScreenTopView />
@@ -48,15 +78,15 @@ const Search = ({ navigation }) => {
         </Text>
         {/* banner View */}
         <BannerSlider
-          data={img}
+          data={bannerImageData}
           onClick={(index) => {
-            setAdImg(img[index]);
+            setAdImg(bannerImageData[index]);
             setIsShowBottomSheet(true);
           }}
         />
-        <View style={{ flex:1,marginTop: verticalScale(15), }}>
+        <View style={{ flex: 1, marginTop: verticalScale(15) }}>
           <CardSlider
-            data={sliderData}
+            data={sliderImageData}
             onClickCard={(item) => {
               setAdImg(item);
               setIsShowBottomSheet(true);

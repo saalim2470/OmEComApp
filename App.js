@@ -1,5 +1,12 @@
 import { StatusBar } from "expo-status-bar";
-import { AppRegistry, StyleSheet, Text, View, Platform } from "react-native";
+import {
+  AppRegistry,
+  StyleSheet,
+  Text,
+  View,
+  Platform,
+  Linking,
+} from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import Routes from "./src/Navigation/Routes";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -16,6 +23,7 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { EXPO_PUSH_TOKEN } from "./src/Constants/Constant";
 
 const theme = {
   dark: false,
@@ -91,14 +99,12 @@ export default function App() {
   const notificationListener = useRef();
   const responseListener = useRef();
   const [fontsLoaded, fontError] = useFonts(fonts);
-  useEffect(() => {
-    AsyncStorage.setItem("expoPushToken", JSON.stringify(expoPushToken));
-  }, [expoPushToken]);
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then((token) =>
-      setExpoPushToken(token)
-    );
+    registerForPushNotificationsAsync().then((token) => {
+      setExpoPushToken(token);
+      storeExpoPushToken(token);
+    });
 
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
@@ -109,9 +115,7 @@ export default function App() {
       Notifications.addNotificationResponseReceivedListener((response) => {
         console.log(response);
       });
-    if (!fontsLoaded && !fontError) {
-      return null;
-    }
+
     return () => {
       Notifications.removeNotificationSubscription(
         notificationListener.current
@@ -119,6 +123,34 @@ export default function App() {
       Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
+  const storeExpoPushToken = async (value) => {
+    try {
+      await AsyncStorage.setItem(EXPO_PUSH_TOKEN, value);
+    } catch (e) {
+      // saving error
+    }
+  };
+  useEffect(() => {
+    // Add event listener to handle deep links
+    const handleDeepLink = (event) => {
+      // Extract the deep link URL
+      const { url } = event;
+      // Do something with the URL, e.g., navigate to a specific screen
+      console.log("Deep link received:", url);
+    };
+
+    // Listen for deep link events
+    Linking.addEventListener("url", handleDeepLink);
+
+    // Clean up the event listener
+    return () => {
+      Linking.removeEventListener("url", handleDeepLink);
+    };
+  }, []);
+
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
   return (
     <SafeAreaProvider>
       <StatusBar />

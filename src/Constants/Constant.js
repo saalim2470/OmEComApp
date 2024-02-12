@@ -20,6 +20,7 @@ export const allCategorie = {
   files: null,
   filesUrls: null,
 };
+export const EXPO_PUSH_TOKEN = "expoPushToken";
 
 export const subcriptionType = {
   0: "Inner Ads",
