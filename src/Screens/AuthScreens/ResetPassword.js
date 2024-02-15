@@ -17,8 +17,9 @@ import commonStyle from "../../Constants/commonStyle";
 import TextBox from "../../Components/TextBox";
 import { TextInput } from "react-native-paper";
 import CustomeButton from "../../Components/CustomeButton";
+import screenName from "../../Constants/screenName";
 
-const ResetPassword = () => {
+const ResetPassword = ({ navigation }) => {
   const [newPasswordVisible, setNewPasswordVisible] = useState(false);
   const [cPasswordVisible, setCPasswordVisible] = useState(false);
   const [password, setPassword] = useState("");
@@ -67,7 +68,12 @@ const ResetPassword = () => {
               setCPassword(txt);
             }}
           />
-          <CustomeButton title={"Update"} onClick={() => {}} />
+          <CustomeButton
+            title={"Update"}
+            onClick={() => {
+              // navigation.navigate(screenName.verification);
+            }}
+          />
         </KeyboardAvoidingView>
       </View>
     </SafeAreaView>

@@ -1,4 +1,4 @@
-import { http } from "../../http-common";
+import { http, httpFile } from "../../http-common";
 
 class SubscriptionServices {
   getSubscriptionPlanDetail(pageNumber, pageSize) {
@@ -6,10 +6,11 @@ class SubscriptionServices {
       `/Subscription?pageNumber=${pageNumber}&pageSize=${pageSize}`
     );
   }
-  getSubscriptionPlan(subscriptionID) {
-    console.log(subscriptionID);
-    return http.post(
-      `/UserSubscription/Subscribe?subscriptionID=${subscriptionID}`
+  getSubscriptionPlan(subscriptionID, data) {
+    console.log(subscriptionID, data);
+    return httpFile.post(
+      `/UserSubscription/GetSubscriptionPaymentLink?subscriptionID=${subscriptionID}`,
+      data
     );
   }
 }

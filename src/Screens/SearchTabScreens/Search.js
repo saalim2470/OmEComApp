@@ -13,6 +13,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { getPromotedContentApi } from "../../store/bannerorSliderAdSlices/GetPromotedContentSlice";
 import { baseURL, serverImagePath } from "../../Constants/defaults";
+import ServerError from "../../Components/ErrorScreens/ServerError";
+import FriendlyMsg from "../../Components/ErrorScreens/FriendlyMsg";
 
 const Search = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -36,10 +38,10 @@ const Search = ({ navigation }) => {
   useEffect(() => {
     if (promotedContentSuccess && promotedContentRes?.length > 0) {
       const bannerAds = promotedContentRes?.filter(
-        (item, index) => item?.subscriptionType === 1
+        (item, index) => item?.subscriptionType === 6
       );
       const sliderAds = promotedContentRes?.filter(
-        (item, index) => item?.subscriptionType === 2
+        (item, index) => item?.subscriptionType === 7
       );
       setBannerImageData(bannerAds);
       setSliderImageData(sliderAds);
@@ -55,44 +57,53 @@ const Search = ({ navigation }) => {
   return (
     <SafeAreaView style={commonStyle.container}>
       <SearchScreenTopView />
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <Text
-          style={[
-            commonStyle.headingTxt,
-            { fontSize: scale(12), paddingHorizontal: moderateScale(15) },
-          ]}
-        >
-          Made for you
-        </Text>
-        <Text
-          style={[
-            styles.smallTxt,
-            {
-              marginTop: verticalScale(-5),
-              paddingHorizontal: moderateScale(15),
-            },
-          ]}
-        >
-          Based on your recent activity
-        </Text>
-        {/* banner View */}
-        <BannerSlider
-          data={bannerImageData}
-          onClick={(index) => {
-            setAdImg(bannerImageData[index]?.imagePath);
-            setIsShowBottomSheet(true);
-          }}
+      {promotedContentError !== null && !promotedContentError?.Success ? (
+        <ServerError
+          msg={promotedContentError?.ErrorMessage}
+          statusCode={promotedContentStatusCode}
         />
-        <View style={{ flex: 1, marginTop: verticalScale(15) }}>
-          <CardSlider
-            data={sliderImageData}
-            onClickCard={(item) => {
-              setAdImg(item?.imagePath);
+      ) : bannerImageData?.length === 0 && sliderImageData?.length === 0 ? (
+        <FriendlyMsg msgWithImage={"Ad Not Availaible"} />
+      ) : (
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <Text
+            style={[
+              commonStyle.headingTxt,
+              { fontSize: scale(12), paddingHorizontal: moderateScale(15) },
+            ]}
+          >
+            Made for you
+          </Text>
+          <Text
+            style={[
+              styles.smallTxt,
+              {
+                marginTop: verticalScale(-5),
+                paddingHorizontal: moderateScale(15),
+              },
+            ]}
+          >
+            Based on your recent activity
+          </Text>
+          {/* banner View */}
+          <BannerSlider
+            data={bannerImageData}
+            onClick={(item) => {
+              setAdImg(item);
               setIsShowBottomSheet(true);
             }}
           />
-        </View>
-      </ScrollView>
+          <View style={{ flex: 1, marginTop: verticalScale(15) }}>
+            <CardSlider
+              data={sliderImageData}
+              onClickCard={(item) => {
+                setAdImg(item);
+                setIsShowBottomSheet(true);
+              }}
+            />
+          </View>
+        </ScrollView>
+      )}
       <CustomeBottomSheet
         isOpen={isShowBottomSheet}
         setIsOpen={setIsShowBottomSheet}

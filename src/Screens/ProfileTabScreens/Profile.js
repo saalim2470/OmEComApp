@@ -43,7 +43,7 @@ import { getLoggedInUSerInfo } from "../../store/authSlices/LoginSlice";
 const Profile = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
-  let maxToRenderPerBatch = 100;
+  const maxToRenderPerBatch = 100;
   const {
     userContentData: userContentRes,
     error: userContentError,
@@ -80,7 +80,10 @@ const Profile = ({ navigation, route }) => {
     msg: null,
     type: null,
   });
-  const userDataResMemoized = useMemo(() => userContentRes, [userContentRes]);
+  const userDataResMemoized = useMemo(
+    () => userContentRes,
+    [userContentRes, userContentSuccess]
+  );
   useEffect(() => {
     dispatch(getLoggedInUSerInfo());
   }, [refreshing]);
@@ -247,9 +250,11 @@ const Profile = ({ navigation, route }) => {
           removeClippedSubviews={true}
           // windowSize={10}
           renderItem={renderItem}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          // refreshControl={
+          //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          // }
         />
       )}
       <CustomeAlertModal

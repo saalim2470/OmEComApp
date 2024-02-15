@@ -35,7 +35,11 @@ const FeedCard = ({
       ) : null}
       {itemData?.imagesData !== "[]" ? (
         // <Slider data={files} onClick={onClickMoreBtn} disable={disable} />
-        <ImageVideoSlider sliderData={JSON.parse(itemData?.imagesData)} />
+        <ImageVideoSlider
+          sliderData={JSON.parse(itemData?.imagesData)}
+          onClickImage={onClickMoreBtn}
+          disable={disable}
+        />
       ) : null}
       <View style={[styles.bottomView]}>
         <FeedCardBottomView itemData={itemData} />

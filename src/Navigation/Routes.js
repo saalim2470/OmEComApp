@@ -76,15 +76,6 @@ const Routes = () => {
       await SplashScreen.hideAsync();
     }
   })();
-  const getUserInfo = async () => {
-    try {
-      const data = await AsyncStorage.getItem(userDetail);
-      const data1 = JSON.parse(data);
-      dispatch(setuserDetail(data1));
-    } catch (e) {
-      // error reading value
-    }
-  };
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {/* <Stack.Screen name={screenName.splash} component={Splash} /> */}
@@ -96,6 +87,7 @@ const Routes = () => {
         <>
           {/* <Stack.Screen name={"location"} component={Location} /> */}
           {/* <Stack.Screen name={"Video"} component={Video1} /> */}
+          {/* <Stack.Screen name={"Payment"} component={Payment} /> */}
           <Stack.Screen
             name={screenName.drawerNavigation}
             component={DrawerNavigation}
@@ -127,7 +119,7 @@ const Routes = () => {
             name={screenName.notification}
             component={Notification}
           />
-          <Stack.Screen name={"Payment"} component={Payment} />
+
           <Stack.Screen name={screenName.postData} component={PostData} />
         </>
       )}

@@ -2,6 +2,8 @@ import { Alert, Share } from "react-native";
 import { defaultCategoryImg } from "./defaults";
 import momentz from "moment-timezone";
 
+export const hostUrl = "http://192.168.1.16:9020/api";
+// export const hostUrl='https://suryahealthclub.com:8585/api'
 export const validateEmail = (email) => {
   return String(email)
     .toLowerCase()

@@ -30,7 +30,7 @@ const Header = ({ onClickNavigate, isCloseIcon }) => {
         <TouchableOpacity
           activeOpacity={0.6}
           onPress={() => {
-            navigation.navigate(screenName.resetPassword);
+            navigation.replace(screenName.resetPassword);
           }}
         >
           <Image

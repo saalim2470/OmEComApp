@@ -85,13 +85,13 @@ const HomeScreen = () => {
         }}
       />
       <Divider style={{ marginVertical: verticalScale(8) }} />
-      {promotedContentRes?.length === 0 ? (
-        <FriendlyMsg />
-      ) : promotedContentError !== null && !promotedContentError?.Success ? (
+      {promotedContentError !== null && !promotedContentError?.Success ? (
         <ServerError
           msg={promotedContentError?.ErrorMessage}
           statusCode={promotedContentStatusCode}
         />
+      ) : bannerImageData?.length === 0 && sliderImageData?.length === 0 ? (
+        <FriendlyMsg msg={"Ad Not Availaible"} />
       ) : (
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -99,8 +99,8 @@ const HomeScreen = () => {
         >
           <BannerSlider
             data={bannerImageData}
-            onClick={(index) => {
-              setAdImg(bannerImageData[index]?.imagePath);
+            onClick={(item) => {
+              setAdImg(item);
               setIsShowBottomSheet(true);
             }}
           />
@@ -112,7 +112,7 @@ const HomeScreen = () => {
             <CardSlider
               data={sliderImageData}
               onClickCard={(item) => {
-                setAdImg(item?.imagePath);
+                setAdImg(item);
                 setIsShowBottomSheet(true);
               }}
             />

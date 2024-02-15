@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { SafeAreaView } from "react-native";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import { TextInput } from "react-native-paper";
@@ -18,16 +18,80 @@ import colors from "../../Constants/colors";
 import images from "../../Constants/images";
 import commonStyle from "../../Constants/commonStyle";
 import { KeyboardAvoidingView } from "react-native";
-import { CommonActions, StackActions } from "@react-navigation/native";
-import { emailValidate, passwordValidate } from "../../Constants/functions";
 import CustomeSnackbar from "../../Components/CustomeSnackbar";
 import { useDispatch, useSelector } from "react-redux";
 import { getLoginUser, setError } from "../../store/authSlices/LoginSlice";
 import { useEffect } from "react";
 import { getCountryData } from "../../store/contrySlices/GetCountrySlice";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { EXPO_PUSH_TOKEN } from "../../Constants/Constant";
+import * as Device from "expo-device";
+import * as Notifications from "expo-notifications";
+import Constants from "expo-constants";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
+
+// Can use this function below or use Expo's Push Notification Tool from: https://expo.dev/notifications
+async function sendPushNotification(expoPushToken) {
+  const message = {
+    to: expoPushToken,
+    sound: "default",
+    title: "Original Title",
+    body: "And here is the body!",
+    data: { someData: "goes here" },
+  };
+
+  await fetch("https://exp.host/--/api/v2/push/send", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Accept-encoding": "gzip, deflate",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(message),
+  });
+}
+
+async function registerForPushNotificationsAsync() {
+  let token;
+
+  if (Platform.OS === "android") {
+    Notifications.setNotificationChannelAsync("default", {
+      name: "default",
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: "#FF231F7C",
+    });
+  }
+
+  if (Device.isDevice) {
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== "granted") {
+      alert("Failed to get push token for push notification!");
+      return;
+    }
+    token = await Notifications.getExpoPushTokenAsync({
+      projectId: Constants.expoConfig.extra.eas.projectId,
+    });
+    console.log(token);
+  } else {
+    alert("Must use physical device for Push Notifications");
+  }
+
+  return token.data;
+}
 
 const Login = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -35,6 +99,10 @@ const Login = ({ navigation }) => {
   const loginLoading = useSelector((state) => state.login.isLoading);
   const loginError = useSelector((state) => state.login.error);
   const logindata = useSelector((state) => state.login);
+  const [expoPushToken, setExpoPushToken] = useState("");
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -42,6 +110,29 @@ const Login = ({ navigation }) => {
   const [passwordError, setPasswordError] = useState(false);
   const [expoDeviceToken, setExpoDeviceToken] = useState();
   const [showError, setShowError] = useState({ isError: false, msg: null });
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then((token) => {
+      setExpoPushToken(token);
+    });
+
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification) => {
+        setNotification(notification);
+      });
+
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log(response);
+      });
+
+    return () => {
+      Notifications.removeNotificationSubscription(
+        notificationListener.current
+      );
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }, []);
   useEffect(() => {
     if (loginSuccess) {
       // navigation.dispatch(StackActions.replace(screenName.drawerNavigation));
@@ -53,9 +144,6 @@ const Login = ({ navigation }) => {
       setShowError({ isError: true, msg: errorData?.title });
     }
   }, [loginError]);
-  useEffect(() => {
-    getExpoToken();
-  });
 
   const onClickLogin = () => {
     if (email != "" && password != "") {
@@ -63,25 +151,16 @@ const Login = ({ navigation }) => {
         getLoginUser({
           username: email,
           password: password,
-          expoPushToken: expoDeviceToken,
+          expoPushToken: expoPushToken,
         })
       );
       console.log({
         username: email,
         password: password,
-        expoPushToken: expoDeviceToken,
+        expoPushToken: expoPushToken,
       });
     } else {
       setShowError({ isError: true, msg: "Enter email or password" });
-    }
-  };
-  const getExpoToken = async () => {
-    try {
-      const token = await AsyncStorage.getItem(EXPO_PUSH_TOKEN);
-      setExpoDeviceToken(token);
-    } catch (e) {
-      console.log("error in set device token", e);
-      // read error
     }
   };
   const loginBtns = (icon, name, bkColor, txtColor) => {

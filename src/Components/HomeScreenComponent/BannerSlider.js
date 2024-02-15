@@ -1,15 +1,22 @@
-import { Dimensions, StyleSheet, View } from "react-native";
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import colors from "../../Constants/colors";
-import { SliderBox } from "react-native-image-slider-box";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import { Image } from "expo-image";
 import { baseURL, serverImagePath } from "../../Constants/defaults";
+import Carousel from "react-native-reanimated-carousel";
 
-const SCREEN_WIDTH = Dimensions.get("window").width;
+const width = Dimensions.get("window").width;
 const BannerSlider = ({ data, onClick, disable }) => {
-  const [layout, setLayout] = useState({ width: 0 });
+  const blurhash = "L6PZfSi_.AyE_3t7t7R**0o#DgR4";
   const [images, setImages] = useState([]);
+  const [currentSlide, setCurrentSlide] = useState(0);
   useEffect(() => {
     const imageData = [];
     data?.map((item, index) => {
@@ -17,34 +24,52 @@ const BannerSlider = ({ data, onClick, disable }) => {
     });
     setImages(imageData);
   }, [data]);
-
-  const onLayout = (e) => {
-    setLayout({
-      width: e.nativeEvent.layout.width,
-    });
-  };
   return (
-    <View style={styles.cardImgView} onLayout={onLayout}>
-      <SliderBox
-        ImageComponent={Image}
-        images={images}
-        autoplay
-        sliderBoxHeight={"100%"}
-        dotColor={colors.themeColor}
-        inactiveDotColor={"#F7F7F7"}
-        disableOnPress={disable}
-        imageLoadingColor={colors.themeColor}
-        dotStyle={styles.dotStyle}
-        circleLoop
-        autoplayInterval={3000}
-        parentWidth={layout.width}
-        resizeMethod={"resize"}
-        contentFit="contain"
-        // style={{ aspectRatio: SCREEN_WIDTH / verticalScale(200) }}
-        onCurrentImagePressed={(index) => {
-          onClick(index);
-        }}
+    <View style={styles.cardImgView}>
+      <Carousel
+        loop
+        width={width}
+        height={verticalScale(220)}
+        autoPlay={images.length !== 1 ? true : false}
+        autoPlayInterval={3000}
+        data={data}
+        enabled={images.length !== 1 ? true : false}
+        scrollAnimationDuration={1000}
+        onSnapToItem={(index) => setCurrentSlide(index)}
+        renderItem={({ item, index }) => (
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => {
+              onClick(item);
+            }}
+          >
+            <Image
+              source={{
+                uri: `${baseURL}${serverImagePath}/${item?.imagePath}`,
+              }}
+              style={{ width: "100%", height: "100%" }}
+              contentFit="contain"
+              placeholder={blurhash}
+              cachePolicy={"memory"}
+            />
+          </TouchableOpacity>
+        )}
       />
+      <View style={styles.dotStyleWrapper}>
+        {images.map((item, index) => {
+          return (
+            <View
+              style={[
+                styles.dotStyle,
+                {
+                  backgroundColor:
+                    currentSlide === index ? colors.themeColor : "grey",
+                },
+              ]}
+            ></View>
+          );
+        })}
+      </View>
     </View>
   );
 };
@@ -53,22 +78,34 @@ export default BannerSlider;
 
 const styles = StyleSheet.create({
   cardImgView: {
-    // height: verticalScale(300),
-    // paddingVertical: verticalScale(3),
     marginHorizontal: moderateScale(10),
     borderRadius: moderateScale(20),
     overflow: "hidden",
     height: verticalScale(220),
     alignItems: "center",
     justifyContent: "center",
-    // aspectRatio: SCREEN_WIDTH / verticalScale(200),
+    backgroundColor: "#E5E4E2",
   },
+  // dotStyle: {
+  //   width: scale(7),
+  //   height: scale(7),
+  //   borderRadius: scale(5),
+  //   marginHorizontal: 0,
+  //   padding: 0,
+  //   margin: 0,
+  // },
   dotStyle: {
-    width: scale(7),
-    height: scale(7),
-    borderRadius: scale(5),
-    marginHorizontal: 0,
-    padding: 0,
-    margin: 0,
+    width: scale(8),
+    height: scale(8),
+    borderRadius: 100,
+  },
+  dotStyleWrapper: {
+    flexDirection: "row",
+    gap: scale(8),
+    alignItems: "center",
+    justifyContent: "center",
+    width: width,
+    position: "absolute",
+    bottom: verticalScale(5),
   },
 });

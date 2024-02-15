@@ -4,6 +4,7 @@ import {
   FlatList,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
@@ -15,7 +16,7 @@ import { getFileExtension, imageExtensions } from "../../../Constants/Constant";
 import { Image } from "expo-image";
 
 const SCREEM_WIDTH = Dimensions.get("window").width;
-const ImageVideoSlider = ({ sliderData }) => {
+const ImageVideoSlider = ({ sliderData, onClickImage, disable }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const onViewableItemsChanged = ({ viewableItems, changed }) => {
     setCurrentSlide(viewableItems[0].index);
@@ -23,7 +24,12 @@ const ImageVideoSlider = ({ sliderData }) => {
   const blurhash = "L6PZfSi_.AyE_3t7t7R**0o#DgR4";
   const renderItem = ({ item, index }) => {
     return (
-      <View style={styles.sliderImageContainer}>
+      <TouchableOpacity
+        activeOpacity={0.9}
+        disabled={disable}
+        onPress={() => onClickImage()}
+        style={styles.sliderImageContainer}
+      >
         {imageExtensions.includes(getFileExtension(item)) ? (
           <Image
             source={{
@@ -48,7 +54,7 @@ const ImageVideoSlider = ({ sliderData }) => {
             shouldPlay={index === currentSlide ? true : false}
           />
         )}
-      </View>
+      </TouchableOpacity>
     );
   };
   return (

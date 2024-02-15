@@ -42,6 +42,7 @@ import {
   postBannerOrSliderApi,
   resetUploadBannerSliderPostData,
 } from "../../store/bannerorSliderAdSlices/PostBannerOrSliderSlice";
+import * as WebBrowser from "expo-web-browser";
 
 const Subscription = ({ route }) => {
   const { adsType } = route?.params;
@@ -60,9 +61,6 @@ const Subscription = ({ route }) => {
   );
   const getSubscriptionData = useSelector(
     (state) => state.getSubscriptionPlan.subscriptionPlanData
-  );
-  const getSubscriptionData1 = useSelector(
-    (state) => state.getSubscriptionPlan
   );
   const {
     error: getSubscriptionPlanError,
@@ -86,18 +84,19 @@ const Subscription = ({ route }) => {
 
   useEffect(() => {
     if (getSubscriptionData && getSubscriptionData?.Success) {
-      if (postData?.postDataDraft != null) {
-        adsType !== subcriptionType[0]
-          ? dispatch(postBannerOrSliderApi(postData?.postDataDraft))
-          : dispatch(addAdContentApi(postData?.postDataDraft));
-      } else {
-        setShowAlert({
-          show: true,
-          title: "Success",
-          msg: "Subscription Added",
-          type: "success",
-        });
-      }
+      openRazorpay(getSubscriptionData?.Data?.short_url);
+      // if (postData?.postDataDraft != null) {
+      //   adsType !== subcriptionType[0]
+      //     ? dispatch(postBannerOrSliderApi(postData?.postDataDraft))
+      // : dispatch(addAdContentApi(postData?.postDataDraft));
+      // } else {
+      //   setShowAlert({
+      //     show: true,
+      //     title: "Success",
+      //     msg: "Subscription Added",
+      //     type: "success",
+      //   });
+      // }
     }
   }, [getSubscriptionData]);
   useEffect(() => {
@@ -107,39 +106,35 @@ const Subscription = ({ route }) => {
     ) {
       setShowAlert({ ...showAlert, show: false });
       clearData();
+      dispatch(setPostDataDraft(null));
       navigate();
     }
   }, [addContentDataRes?.addContentData, bannerSliderPostAdsRes]);
   useEffect(() => {
     if (
-      getSubscriptionPlanErrorCode != null &&
-      getSubscriptionPlanErrorCode === 401
-    ) {
-      setShowAlert({
-        show: true,
-        title: "UnAuthorized",
-        msg: "Please login to continue",
-        type: "warning",
-      });
-    } else if (
       (getSubscriptionPlanError != null &&
         !getSubscriptionPlanError?.Success) ||
       (bannerSliderPostAdsError !== null && !bannerSliderPostAdsError?.Success)
     ) {
-      setShowAlert({
-        show: true,
-        title: "Error",
-        msg:
-          getSubscriptionPlanError?.ErrorMessage ||
-          bannerSliderPostAdsError?.ErrorMessage,
-        type: "error",
-      });
+      handleError(
+        getSubscriptionPlanError?.ErrorMessage ||
+          bannerSliderPostAdsError?.ErrorMessage ||
+          "Some Error Occured"
+      );
     }
   }, [
     getSubscriptionPlanErrorCode,
     getSubscriptionPlanError,
     bannerSliderPostAdsError,
   ]);
+  const handleError = (error) => {
+    setShowAlert({
+      show: true,
+      title: "Error",
+      msg: error,
+      type: "error",
+    });
+  };
   const navigate = () => {
     switch (adsType) {
       case subcriptionType[1]:
@@ -212,7 +207,14 @@ const Subscription = ({ route }) => {
     dispatch(resetGetSubscriptionPlanData());
     dispatch(reseAdPosttData());
     dispatch(resetUploadBannerSliderPostData());
-    dispatch(setPostDataDraft(null));
+  };
+  const openRazorpay = async (url) => {
+    try {
+      let result = await WebBrowser.openBrowserAsync(url);
+      console.log(result);
+    } catch (error) {
+      console.error(error);
+    }
   };
   return (
     <SafeAreaView style={commonStyle.container}>
@@ -242,7 +244,9 @@ const Subscription = ({ route }) => {
                         : false
                     }
                     onClick={() => {
-                      dispatch(getSubscriptionPlanId(item?.id));
+                      dispatch(
+                        getSubscriptionPlanId(item?.id, postData?.postDataDraft)
+                      );
                     }}
                   />
                 </>
@@ -269,7 +273,9 @@ const Subscription = ({ route }) => {
                         : false
                     }
                     onClick={() => {
-                      dispatch(getSubscriptionPlanId(item?.id));
+                      dispatch(
+                        getSubscriptionPlanId(item?.id, postData?.postDataDraft)
+                      );
                     }}
                   />
                 </>
@@ -296,7 +302,9 @@ const Subscription = ({ route }) => {
                         : false
                     }
                     onClick={() => {
-                      dispatch(getSubscriptionPlanId(item?.id));
+                      dispatch(
+                        getSubscriptionPlanId(item?.id, postData?.postDataDraft)
+                      );
                     }}
                   />
                 </>
@@ -323,7 +331,9 @@ const Subscription = ({ route }) => {
                         : false
                     }
                     onClick={() => {
-                      dispatch(getSubscriptionPlanId(item?.id));
+                      dispatch(
+                        getSubscriptionPlanId(item?.id, postData?.postDataDraft)
+                      );
                     }}
                   />
                 </>
@@ -350,7 +360,9 @@ const Subscription = ({ route }) => {
                         : false
                     }
                     onClick={() => {
-                      dispatch(getSubscriptionPlanId(item?.id));
+                      dispatch(
+                        getSubscriptionPlanId(item?.id, postData?.postDataDraft)
+                      );
                     }}
                   />
                 </>

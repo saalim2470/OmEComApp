@@ -55,7 +55,7 @@ const CustomeBottomSheet = ({ isOpen, setIsOpen, data }) => {
       >
         Sponserd Ads
       </Text>
-      <AdView disabled={true} data={data} />
+      <AdView disabled={true} data={data?.imagePath} />
       <Text
         style={[
           commonStyle.headingTxt,

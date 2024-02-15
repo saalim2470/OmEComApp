@@ -31,6 +31,7 @@ import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 import colors from "../../Constants/colors";
 
 const OtherUserProfile = ({ navigation }) => {
+  const maxToRenderPerBatch = 100;
   const dispatch = useDispatch();
   const {
     otherUserDetail: userDetail,
@@ -177,7 +178,7 @@ const OtherUserProfile = ({ navigation }) => {
     }
   };
   const onRefresh = useCallback(() => {
-    dispatch(resetContentByUserIdPage(1));
+    dispatch(resetContentByUserIdPage());
     setRefreshing(true);
   }, []);
   if (!refreshing && contentLoading) {
@@ -225,13 +226,16 @@ const OtherUserProfile = ({ navigation }) => {
           ListFooterComponent={listFooterComponent}
           onEndReached={onReachedEnd}
           onEndReachedThreshold={1}
-          initialNumToRender={10}
-          maxToRenderPerBatch={10}
-          windowSize={10}
+          initialNumToRender={40}
+          maxToRenderPerBatch={maxToRenderPerBatch}
+          updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
+          // windowSize={10}
           renderItem={renderItem}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          // refreshControl={
+          //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          // }
         />
       )}
       <CustomeAlertModal

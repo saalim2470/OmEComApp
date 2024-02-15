@@ -38,18 +38,20 @@ export const {
   resetGetSubscriptionPlanData,
 } = GetSubscriptionPlanSlice.actions;
 
-export const getSubscriptionPlanId = (subscriptionId) => async (dispatch) => {
-  try {
-    dispatch(setLoading(true));
-    const responce = await SubscriptionServices.getSubscriptionPlan(
-      subscriptionId
-    );
-    await dispatch(setSubscriptionPlanData(responce.data));
-    dispatch(setLoading(false));
-  } catch (error) {
-    dispatch(setLoading(false));
-    dispatch(setError(error.response.data));
-    dispatch(setErrorCode(error.response.status));
-    console.log(error);
-  }
-};
+export const getSubscriptionPlanId =
+  (subscriptionId, data) => async (dispatch) => {
+    try {
+      dispatch(setLoading(true));
+      const responce = await SubscriptionServices.getSubscriptionPlan(
+        subscriptionId,
+        data
+      );
+      await dispatch(setSubscriptionPlanData(responce.data));
+      dispatch(setLoading(false));
+    } catch (error) {
+      dispatch(setLoading(false));
+      dispatch(setError(error.response.data));
+      dispatch(setErrorCode(error.response.status));
+      console.log(error);
+    }
+  };

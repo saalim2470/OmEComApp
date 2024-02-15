@@ -13,5 +13,11 @@ class AuthServices {
   editProfile(data) {
     return httpFile.put("/Account/Updateuser", data);
   }
+  forgotPassword(data) {
+    return http.post(`/Account/ForgotPassword?email=${data}`);
+  }
+  resetPassword(data) {
+    return http.post(`/Account/ResetPassword`, data);
+  }
 }
 export default new AuthServices();

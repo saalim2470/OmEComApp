@@ -31,6 +31,7 @@ import ShimmerLoading from "../../Components/LoadingComponents/ShimmerLoading";
 
 const BookmarkScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
+  const maxToRenderPerBatch = 100;
   const isFocused = useIsFocused();
   const {
     savedContent: userContentRes,
@@ -198,7 +199,7 @@ const BookmarkScreen = ({ navigation, route }) => {
       ) : userContentError != null && !userContentError.Success ? (
         <ErrorMsg />
       ) : !userContentLoading && postData.length <= 0 ? (
-        <FriendlyMsg msg={"No Saved Ads"} />
+        <FriendlyMsg msgWithImage={"No Saved Ads"} />
       ) : (
         <FlatList
           data={postData}
@@ -209,12 +210,14 @@ const BookmarkScreen = ({ navigation, route }) => {
           ItemSeparatorComponent={
             <Divider style={{ marginBottom: verticalScale(8) }} />
           }
-          initialNumToRender={10}
+          initialNumToRender={40}
           ListFooterComponent={listFooterComponent}
           onEndReached={onReachedEnd}
           onEndReachedThreshold={1}
-          maxToRenderPerBatch={10}
-          windowSize={10}
+          maxToRenderPerBatch={maxToRenderPerBatch}
+          updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
+          removeClippedSubviews={true}
+          // windowSize={10}
           renderItem={renderItem}
           refreshing={refreshing}
           onRefresh={onRefresh}

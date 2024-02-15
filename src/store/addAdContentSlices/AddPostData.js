@@ -7,7 +7,7 @@ const AddPostData = createSlice({
     category: null,
     itemDetail: null,
     formDataFiles: null,
-    postDataDraft: null,
+    postDataDraft: {},
   },
   reducers: {
     resetData: (state, action) => {

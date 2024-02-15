@@ -42,6 +42,7 @@ import CustomeHeader from "../../Components/CustomeHeader";
 const MyAds = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
+  let maxToRenderPerBatch = 100;
   const {
     userContentData: userContentRes,
     error: userContentError,
@@ -221,16 +222,19 @@ const MyAds = ({ navigation, route }) => {
           ItemSeparatorComponent={
             <Divider style={{ marginBottom: verticalScale(8) }} />
           }
-          initialNumToRender={10}
+          initialNumToRender={40}
           ListFooterComponent={listFooterComponent}
           onEndReached={onReachedEnd}
           onEndReachedThreshold={1}
-          maxToRenderPerBatch={10}
-          windowSize={10}
+          maxToRenderPerBatch={maxToRenderPerBatch}
+          updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
+          // windowSize={10}
           renderItem={renderItem}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          // refreshControl={
+          //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          // }
         />
       )}
       <CustomeAlertModal
