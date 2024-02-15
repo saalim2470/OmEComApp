@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { Alert, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
   scale,
@@ -35,9 +35,23 @@ const ForgotPassword = () => {
   };
   useEffect(() => {
     if (dataResponce !== null && dataResponce?.Success) {
-      navigation.navigate(screenName.verification, { email: email_mobile });
-      dispatch(resetPasswordSliceData());
+      Alert.alert("Otp", dataResponce?.Data?.resetCode, [
+        {
+          text: "OK",
+          onPress: () => {
+            dispatch(resetPasswordSliceData());
+            navigation.navigate(screenName.verification, {
+              email: email_mobile,
+            });
+          },
+        },
+      ]);
     }
+    // uncomment code when sms enabled
+    // navigation.navigate(screenName.verification, {
+    //   email: email_mobile,
+    // });
+    // dispatch(resetPasswordSliceData());
   }, [dataResponce]);
 
   return (
