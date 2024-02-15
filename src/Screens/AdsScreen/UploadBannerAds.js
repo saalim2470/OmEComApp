@@ -77,7 +77,7 @@ const UploadBannerAds = ({ title }) => {
       />
       <BannerSlider
         data={defaultAdImg.concat(image).reverse()}
-        onClick={(index) => {}}
+        isLocalData={true}
       />
       <CustomeButton
         title={"Upload"}

@@ -2,14 +2,13 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { Image } from "expo-image";
-import { baseURL, serverImagePath } from "../../Constants/defaults";
 
-const SliderCard = ({ item, onClickCard = () => {}, data, index }) => {
+const SliderCard = ({ item, onClickCard = () => {}, data, index, image }) => {
   return (
     <TouchableOpacity
       activeOpacity={0.6}
       onPress={() => {
-        onClickCard();
+        onClickCard(image);
       }}
       style={[
         styles.cardContainer,
@@ -27,8 +26,9 @@ const SliderCard = ({ item, onClickCard = () => {}, data, index }) => {
       </Text> */}
       <View style={styles.cardImgContainer}>
         <Image
-          source={{ uri: `${baseURL}${serverImagePath}/${item?.imagePath}` }}
+          source={{ uri: image }}
           contentFit="contain"
+          cachePolicy={"memory"}
           style={{ width: "100%", height: "100%" }}
         />
       </View>

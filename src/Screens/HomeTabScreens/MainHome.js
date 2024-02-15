@@ -257,9 +257,8 @@ const MainHome = ({ route }) => {
           // windowSize={10}
           removeClippedSubviews={true}
           updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
+          refreshing={refreshing}
+          onRefresh={onRefresh}
         />
       )}
       <CustomeAlertModal

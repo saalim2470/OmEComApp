@@ -2,12 +2,16 @@ import { FlatList, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import SliderCard from "./SliderCard";
 import { scale } from "react-native-size-matters";
+import { baseURL, serverImagePath } from "../../Constants/defaults";
 
-const CardSlider = ({ data, onClickCard = () => {} }) => {
+const CardSlider = ({ data, onClickCard = () => {}, isLocalData }) => {
   const renderCard = ({ item, index }) => {
     return (
       <SliderCard
         item={item}
+        image={
+          isLocalData ? item : `${baseURL}${serverImagePath}/${item?.imagePath}`
+        }
         data={data}
         index={index}
         onClickCard={() => {
@@ -21,7 +25,7 @@ const CardSlider = ({ data, onClickCard = () => {} }) => {
       <FlatList
         data={data}
         horizontal
-        contentContainerStyle={{columnGap:scale(10)}}
+        contentContainerStyle={{ columnGap: scale(10) }}
         showsHorizontalScrollIndicator={false}
         keyExtractor={(item, index) => {
           return `card_${item.id}_${index}`;

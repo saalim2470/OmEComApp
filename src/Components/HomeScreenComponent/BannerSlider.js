@@ -13,7 +13,7 @@ import { baseURL, serverImagePath } from "../../Constants/defaults";
 import Carousel from "react-native-reanimated-carousel";
 
 const width = Dimensions.get("window").width;
-const BannerSlider = ({ data, onClick, disable }) => {
+const BannerSlider = ({ data, onClick, disable, isLocalData }) => {
   const blurhash = "L6PZfSi_.AyE_3t7t7R**0o#DgR4";
   const [images, setImages] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -39,19 +39,32 @@ const BannerSlider = ({ data, onClick, disable }) => {
         renderItem={({ item, index }) => (
           <TouchableOpacity
             activeOpacity={0.9}
+            disabled={disable}
             onPress={() => {
               onClick(item);
             }}
           >
-            <Image
-              source={{
-                uri: `${baseURL}${serverImagePath}/${item?.imagePath}`,
-              }}
-              style={{ width: "100%", height: "100%" }}
-              contentFit="contain"
-              placeholder={blurhash}
-              cachePolicy={"memory"}
-            />
+            {!isLocalData ? (
+              <Image
+                source={{
+                  uri: `${baseURL}${serverImagePath}/${item?.imagePath}`,
+                }}
+                style={{ width: "100%", height: "100%" }}
+                contentFit="contain"
+                placeholder={blurhash}
+                cachePolicy={"memory"}
+              />
+            ) : (
+              <Image
+                source={{
+                  uri: item,
+                }}
+                style={{ width: "100%", height: "100%" }}
+                contentFit="contain"
+                placeholder={blurhash}
+                cachePolicy={"memory"}
+              />
+            )}
           </TouchableOpacity>
         )}
       />

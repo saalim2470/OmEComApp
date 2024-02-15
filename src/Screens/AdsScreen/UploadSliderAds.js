@@ -1,19 +1,17 @@
 import { Dimensions, FlatList, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import HeaderWithButton from "../../Components/HeaderWithButton";
-import BannerSlider from "../../Components/HomeScreenComponent/BannerSlider";
 import CustomeButton from "../../Components/CustomeButton";
 import * as ImagePicker from "expo-image-picker";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
-import images from "../../Constants/images";
 import { useNavigation } from "@react-navigation/native";
-import SliderCard from "../../Components/HomeScreenComponent/SliderCard";
 import screenName from "../../Constants/screenName";
 import SelectButton from "../../Components/SelectButton";
 import RbBottomSheet from "../../Components/BottomSheet/RbBottomSheet";
 import { subcriptionType } from "../../Constants/Constant";
 import { setPostDataDraft } from "../../store/addAdContentSlices/AddPostData";
 import { useDispatch } from "react-redux";
+import CardSlider from "../../Components/HomeScreenComponent/CardSlider";
 
 const screenHeight = Dimensions.get("screen").height / 2;
 const UploadSliderAds = ({ title }) => {
@@ -52,9 +50,6 @@ const UploadSliderAds = ({ title }) => {
       setUploadImage(result.assets[0]);
     }
   };
-  const renderCard = ({ item, index }) => {
-    return <SliderCard item={item} onClickCard={() => {}} />;
-  };
   const onClickUpload = () => {
     const uriParts = uploadImage.uri.split(".");
     const fileType = uriParts[uriParts.length - 1];
@@ -81,14 +76,10 @@ const UploadSliderAds = ({ title }) => {
         }}
         style={{ marginBottom: verticalScale(8) }}
       />
-      <FlatList
+
+      <CardSlider
         data={defaultAdImg.concat(image).reverse()}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        keyExtractor={(item, index) => {
-          return `card_${item.id}_${index}`;
-        }}
-        renderItem={renderCard}
+        isLocalData={true}
       />
       <CustomeButton
         title={"Upload"}

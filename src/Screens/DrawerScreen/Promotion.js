@@ -40,7 +40,7 @@ const Promotion = ({ navigation }) => {
         }}
         style={{ marginBottom: verticalScale(8) }}
       />
-      <BannerSlider data={img} onClick={(index) => {}} />
+      <BannerSlider data={img} disable={true} isLocalData={true} />
       <HeaderWithButton
         title={"Slider Ad"}
         onClick={() => {
@@ -50,7 +50,7 @@ const Promotion = ({ navigation }) => {
         }}
         style={{ marginTop: verticalScale(8) }}
       />
-      <CardSlider data={sliderData} onClickCard={(item) => {}} />
+      <CardSlider data={sliderData} isLocalData={true} />
     </SafeAreaView>
   );
 };
