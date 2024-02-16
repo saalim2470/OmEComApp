@@ -1,4 +1,5 @@
 import {
+  Alert,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -21,6 +22,7 @@ import colors from "../../Constants/colors";
 import screenName from "../../Constants/screenName";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  forgotPasswordApi,
   resetPasswordApi,
   resetPasswordSliceData,
 } from "../../store/authSlices/PasswordSlice";
@@ -38,7 +40,6 @@ const Verification = ({ route }) => {
     responce: dataResponce,
     error: error,
   } = useSelector((state) => state.passwordSlice);
-  console.log(useSelector((state) => state.passwordSlice));
   const [otpValue1, setOtpValue1] = useState("");
   const [otpValue2, setOtpValue2] = useState("");
   const [otpValue3, setOtpValue3] = useState("");
@@ -96,12 +97,23 @@ const Verification = ({ route }) => {
   };
   useEffect(() => {
     if (dataResponce !== null && dataResponce?.Success) {
-      setShowAlert({
-        show: true,
-        title: "Reset Password",
-        msg: "Password reset successfully",
-        type: "success",
-      });
+      if (dataResponce?.Data!==null&& "resetCode" in dataResponce?.Data) {
+        Alert.alert("Otp", dataResponce?.Data?.resetCode, [
+          {
+            text: "OK",
+            onPress: () => {
+              dispatch(resetPasswordSliceData());
+            },
+          },
+        ]);
+      } else {
+        setShowAlert({
+          show: true,
+          title: "Reset Password",
+          msg: "Password reset successfully",
+          type: "success",
+        });
+      }
     }
   }, [dataResponce]);
   useEffect(() => {
@@ -114,7 +126,9 @@ const Verification = ({ route }) => {
       });
     }
   }, [error]);
-
+  const onClickResendCode = () => {
+    dispatch(forgotPasswordApi(email));
+  };
   const onClickModalBtn = () => {
     setShowAlert({ ...showAlert, show: false });
     dispatch(resetPasswordSliceData());
@@ -225,7 +239,13 @@ const Verification = ({ route }) => {
         <Text style={[styles.subTxt, { alignSelf: "center" }]}>
           Didn't recieve a verification code?
         </Text>
-        <TouchableOpacity style={{ alignSelf: "center" }} activeOpacity={0.6}>
+        <TouchableOpacity
+          style={{ alignSelf: "center" }}
+          activeOpacity={0.6}
+          onPress={() => {
+            onClickResendCode();
+          }}
+        >
           <Text style={styles.resendTxt}>Resend code</Text>
         </TouchableOpacity>
       </View>

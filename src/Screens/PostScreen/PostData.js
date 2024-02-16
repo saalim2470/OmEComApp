@@ -59,7 +59,6 @@ const PostData = ({ navigation, route }) => {
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
   const [cameraStatus, requestCameraPermission] =
     ImagePicker.useCameraPermissions();
-  const [searchResult, setSearchResult] = useState([]);
 
   useEffect(() => {
     if (route?.params != null) {
@@ -245,14 +244,11 @@ const PostData = ({ navigation, route }) => {
     }
     dispatch(setPostDataDraft(formData));
     dispatch(setCategoryId(route?.params?.editData?.categoryId));
-    console.log("=-=-updtae=-", formData);
     dispatch(updateAdContentApi(formData));
   };
   const onClickModalBtn = () => {
     setShowAlert({ ...showAlert, show: false });
-    dispatch(resetData());
-    dispatch(reseAdPosttData());
-    dispatch(resetUpdateAdContent());
+    clearData()
     showAlert.type == "success" &&
       navigation.navigate(screenName.drawerNavigation, {
         screen: screenName.bottomNavigation,
@@ -289,7 +285,12 @@ const PostData = ({ navigation, route }) => {
           }}
         />
         <Divider bold />
-        <UserHeader userLocation={selectLocation} />
+        <UserHeader
+          userLocation={selectLocation}
+          onCLickHeaderLocation={() => {
+            setSelectLocation(null);
+          }}
+        />
         <PostScreenTextView
           imageData={image}
           disabled={addPostData?.isLoading || updatePostData?.isLoading}
@@ -339,7 +340,6 @@ const PostData = ({ navigation, route }) => {
         setIsOpen={setOpenSheet}
         children={
           <GpsSearch
-            data={searchResult}
             onClickLocationResult={(data) => {
               setSelectLocation(data);
               setOpenSheet(false);

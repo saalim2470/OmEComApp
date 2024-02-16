@@ -19,6 +19,7 @@ import {
   resetPasswordSliceData,
   setResponce,
 } from "../../store/authSlices/PasswordSlice";
+import CustomeAlertModal from "../../Components/CustomeAlertModal";
 
 const ForgotPassword = () => {
   const navigation = useNavigation();
@@ -28,8 +29,13 @@ const ForgotPassword = () => {
     responce: dataResponce,
     error: error,
   } = useSelector((state) => state.passwordSlice);
-  console.log(useSelector((state) => state.passwordSlice));
   const [email_mobile, setEmail_mobile] = useState("");
+  const [showAlert, setShowAlert] = useState({
+    show: false,
+    title: null,
+    msg: null,
+    type: null,
+  });
   const handleForgotPassword = () => {
     dispatch(forgotPasswordApi(email_mobile));
   };
@@ -53,6 +59,20 @@ const ForgotPassword = () => {
     // });
     // dispatch(resetPasswordSliceData());
   }, [dataResponce]);
+  useEffect(() => {
+    if (error !== null && !error?.Success) {
+      setShowAlert({
+        show: true,
+        title: "Forgot Password",
+        msg: error?.ErrorMessage || "Some error occured",
+        type: "error",
+      });
+    }
+  }, [error]);
+  const onClickModalBtn = () => {
+    setShowAlert({ ...showAlert, show: false });
+    dispatch(resetPasswordSliceData());
+  };
 
   return (
     <SafeAreaView style={commonStyle.container}>
@@ -83,6 +103,15 @@ const ForgotPassword = () => {
           }}
         />
       </View>
+      <CustomeAlertModal
+        isVisible={showAlert.show}
+        title={showAlert.title}
+        msg={showAlert.msg}
+        type={showAlert.type}
+        onClickBtn={() => {
+          onClickModalBtn();
+        }}
+      />
     </SafeAreaView>
   );
 };

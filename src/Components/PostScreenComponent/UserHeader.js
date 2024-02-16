@@ -9,7 +9,7 @@ import {
   serverImagePath,
 } from "../../Constants/defaults";
 
-const UserHeader = ({ userLocation }) => {
+const UserHeader = ({ userLocation, onCLickHeaderLocation = () => {} }) => {
   const userDetail = useSelector((state) => state.login?.userDetail);
   return (
     <View style={styles.userView}>
@@ -30,11 +30,20 @@ const UserHeader = ({ userLocation }) => {
         />
       )}
       <View style={{ marginHorizontal: moderateScale(5), flex: 1 }}>
-        <Text style={styles.headingTxt}>
-          {!userLocation
-            ? `${userDetail?.firstName} ${userDetail?.lastName}`
-            : `${userDetail?.firstName} ${userDetail?.lastName} - at ${userLocation?.text}`}
-        </Text>
+        {!userLocation ? (
+          <Text style={styles.headingTxt}>
+            {`${userDetail?.firstName} ${userDetail?.lastName}`}
+          </Text>
+        ) : (
+          <Text
+            style={styles.headingTxt}
+            onPress={() => {
+              onCLickHeaderLocation();
+            }}
+          >
+            {`${userDetail?.firstName} ${userDetail?.lastName} - at ${userLocation?.text}`}
+          </Text>
+        )}
       </View>
     </View>
   );
