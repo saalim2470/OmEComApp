@@ -20,6 +20,7 @@ import {
 
 const RoundCategoryView = ({ onClickCategory = () => {} }) => {
   const dispatch = useDispatch();
+  const maxToRenderPerBatch = 100;
   const categoryDataRes = useSelector((state) => state.category.categoryData);
   const categoryId = useSelector((state) => state.storeData.categoryId);
   const categoryPage = useSelector((state) => state.category.page);
@@ -82,12 +83,14 @@ const RoundCategoryView = ({ onClickCategory = () => {} }) => {
         showsHorizontalScrollIndicator={false}
         nestedScrollEnabled={true}
         horizontal
-        onEndReachedThreshold={0.1}
+        onEndReachedThreshold={1}
         renderItem={renderCategory}
         ListFooterComponent={listFooterComponent}
         onEndReached={onReachedEnd}
-        initialNumToRender={10}
-        maxToRenderPerBatch={10}
+        initialNumToRender={40}
+        maxToRenderPerBatch={maxToRenderPerBatch}
+        removeClippedSubviews={true}
+        updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
         windowSize={10}
       />
     </View>

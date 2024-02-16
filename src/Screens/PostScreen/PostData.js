@@ -22,10 +22,6 @@ import screenName from "../../Constants/screenName";
 import CustomeAlertModal from "../../Components/CustomeAlertModal";
 import BottomComponent from "../../Components/PostScreenComponent/BottomComponent";
 import { imageurl } from "../../Constants/functions";
-import {
-  resetUpdateAdContent,
-  updateAdContentApi,
-} from "../../store/AdContentSlices/UpdateAdContent";
 import { setCategoryId } from "../../store/StoreDataSlice";
 import PostScreenHeader from "../../Components/PostScreenComponent/PostScreenHeader";
 import EmojiPicker from "rn-emoji-keyboard";
@@ -40,7 +36,6 @@ const PostData = ({ navigation, route }) => {
   const formData = new FormData();
   const categoryId = useSelector((state) => state.storeData.categoryId);
   const addPostData = useSelector((state) => state.addAdContentData);
-  const updatePostData = useSelector((state) => state.updateAdContentData);
   const [image, setImage] = useState([]);
   const [description, setDescription] = useState("");
   const [showEmoji, setShowEmoji] = useState(false);
@@ -64,6 +59,7 @@ const PostData = ({ navigation, route }) => {
     if (route?.params != null) {
       setDescription(route?.params?.editData?.description);
       setImage(imageurl(route?.params?.editData?.imagesData));
+      dispatch(setCategoryId(route?.params?.editData?.categoryId));
       setBtnTxt("Update");
       setScreenTitle("Update post");
       route?.params?.editData?.placeName !== null &&
@@ -74,10 +70,7 @@ const PostData = ({ navigation, route }) => {
     }
   }, [route?.params]);
   useEffect(() => {
-    if (
-      addPostData?.addContentData?.Success ||
-      updatePostData?.updateContentData?.Success
-    ) {
+    if (addPostData?.addContentData?.Success) {
       clearData();
       route?.params?.editData != null
         ? navigation.navigate(screenName.drawerNavigation, {
@@ -99,47 +92,40 @@ const PostData = ({ navigation, route }) => {
             },
           });
     }
-  }, [addPostData?.addContentData, updatePostData?.updateContentData]);
+  }, [addPostData?.addContentData]);
 
   useEffect(() => {
-    const { errorCode, error } = addPostData;
-    const { errorCode: updateErrorCode, error: updateError } = updatePostData;
+    if (addPostData?.error !== null) {
+      const { errorCode, error } = addPostData;
 
-    const handleErrorCode = (code) => {
-      if (code === 403) {
-        navigation.navigate(screenName.drawerNavigation, {
-          screen: screenName.subscription,
-          params: {
-            adsType: subcriptionType[0],
-          },
-        });
-      } else if (code === 401) {
-        setShowAlert({
-          show: true,
-          title: "UnAuthorized",
-          msg: "Please login to continue",
-          type: "warning",
-        });
-      } else if (error != null || updateError != null) {
-        setShowAlert({
-          show: true,
-          title: "Error",
-          msg:
-            addPostData?.error?.ErrorMessage ||
-            updatePostData?.error?.ErrorMessage,
-          type: "error",
-        });
-      }
-    };
+      const handleErrorCode = (code) => {
+        if (code === 403) {
+          navigation.navigate(screenName.drawerNavigation, {
+            screen: screenName.subscription,
+            params: {
+              adsType: subcriptionType[0],
+            },
+          });
+        } else if (code === 401) {
+          setShowAlert({
+            show: true,
+            title: "UnAuthorized",
+            msg: "Please login to continue",
+            type: "warning",
+          });
+        } else if (error != null) {
+          setShowAlert({
+            show: true,
+            title: "Error",
+            msg: addPostData?.error?.ErrorMessage,
+            type: "error",
+          });
+        }
+      };
 
-    handleErrorCode(errorCode);
-    handleErrorCode(updateErrorCode);
-  }, [
-    addPostData.errorCode,
-    addPostData?.error,
-    updatePostData.errorCode,
-    updatePostData?.error,
-  ]);
+      handleErrorCode(errorCode);
+    }
+  }, [addPostData.errorCode, addPostData?.error]);
   const openImagePicker = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -216,6 +202,9 @@ const PostData = ({ navigation, route }) => {
     });
     formData.append("description", description);
     formData.append("categoryId", categoryId);
+    if (route?.params !== null) {
+      formData.append("id", route?.params?.editData?.id);
+    }
     if (selectLocation !== null) {
       formData.append("Lat", parseInt(selectLocation?.center[0]));
       formData.append("Lon", parseInt(selectLocation?.center[1]));
@@ -224,31 +213,33 @@ const PostData = ({ navigation, route }) => {
     dispatch(setPostDataDraft(formData));
     dispatch(addAdContentApi(formData));
   };
-  const onClickUpdate = () => {
-    image.forEach((element, index) => {
-      const uriParts = element.split(".");
-      const fileType = uriParts[uriParts.length - 1];
-      formData.append("files", {
-        uri: element,
-        name: `image_${index}.${fileType}`,
-        type: `image/${fileType}`,
-      });
-    });
-    formData.append("description", description);
-    formData.append("categoryId", route?.params?.editData?.categoryId);
-    formData.append("id", route?.params?.editData?.id);
-    if (selectLocation !== null) {
-      formData.append("Lat", parseInt(selectLocation?.center[0]));
-      formData.append("Lon", parseInt(selectLocation?.center[1]));
-      formData.append("PlaceName", selectLocation?.text);
-    }
-    dispatch(setPostDataDraft(formData));
-    dispatch(setCategoryId(route?.params?.editData?.categoryId));
-    dispatch(updateAdContentApi(formData));
-  };
+  // const onClickUpdate = () => {
+  //   image.forEach((element, index) => {
+  //     const uriParts = element.split(".");
+  //     const fileType = uriParts[uriParts.length - 1];
+  //     formData.append("files", {
+  //       uri: element,
+  //       name: `image_${index}.${fileType}`,
+  //       type: `image/${fileType}`,
+  //     });
+  //   });
+  //   formData.append("description", description);
+  //   formData.append("categoryId", categoryId);
+  //   if(route?.params!==null){
+  //     formData.append("id", route?.params?.editData?.id);
+  //   }
+
+  //   if (selectLocation !== null) {
+  //     formData.append("Lat", parseInt(selectLocation?.center[0]));
+  //     formData.append("Lon", parseInt(selectLocation?.center[1]));
+  //     formData.append("PlaceName", selectLocation?.text);
+  //   }
+  //   dispatch(setPostDataDraft(formData));
+  //   dispatch(updateAdContentApi(formData));
+  // };
   const onClickModalBtn = () => {
     setShowAlert({ ...showAlert, show: false });
-    clearData()
+    clearData();
     showAlert.type == "success" &&
       navigation.navigate(screenName.drawerNavigation, {
         screen: screenName.bottomNavigation,
@@ -278,10 +269,10 @@ const PostData = ({ navigation, route }) => {
         <PostScreenHeader
           btnTxt={btnTxt}
           screenTitle={screenTitle}
-          loading={addPostData?.isLoading || updatePostData?.isLoading}
+          loading={addPostData?.isLoading}
           disabled={!description && image.length === 0 ? true : false}
           onClick={() => {
-            route?.params != null ? onClickUpdate() : onClickBtn();
+            onClickBtn();
           }}
         />
         <Divider bold />
@@ -293,7 +284,7 @@ const PostData = ({ navigation, route }) => {
         />
         <PostScreenTextView
           imageData={image}
-          disabled={addPostData?.isLoading || updatePostData?.isLoading}
+          disabled={addPostData?.isLoading}
           value={description}
           removeImage={(index) => {
             onClickRemove(index);

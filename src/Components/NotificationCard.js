@@ -4,7 +4,7 @@ import { Avatar } from "react-native-paper";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import colors from "../Constants/colors";
 
-const NotificationCard = () => {
+const NotificationCard = ({ data }) => {
   return (
     <View style={styles.notificationCard}>
       <View style={styles.notificationLeftView}>
@@ -15,9 +15,15 @@ const NotificationCard = () => {
             uri: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?cs=srgb&dl=pexels-pixabay-220453.jpg&fm=jpg",
           }}
         />
-        <Text style={styles.notificationTxt}>
-          50% OFF in Ultraboost All Terrain Ltd Shoes!
-        </Text>
+        <View>
+          <Text style={styles.notificationTxt}>
+            {data?.request?.content?.title}
+          </Text>
+          <Text style={styles.notificationTxt}>
+            {/* 50% OFF in Ultraboost All Terrain Ltd Shoes! */}
+            {data?.request?.content?.body}
+          </Text>
+        </View>
       </View>
       <View style={styles.notificationRightView}>
         <Text style={styles.notificationTimeTxt}>9:35 AM</Text>

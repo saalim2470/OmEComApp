@@ -53,8 +53,6 @@ const MainHome = ({ route }) => {
     page: contentDataPage,
     pageSize: contentDataPageSize,
   } = useSelector((state) => state.getAddContentByCategory);
-  const a = useSelector((state) => state.getAddContentByCategory);
-  console.log("-=-=-=content data-=---", a);
 
   const {
     error: likeError,

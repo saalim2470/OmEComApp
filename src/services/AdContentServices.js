@@ -17,10 +17,8 @@ class AdContentServices {
   addContentSave(data) {
     return http.post("/UserSavedAdContent", data);
   }
+  // add update both one url
   addAdContent(data) {
-    return httpFile.post("/AdContent/PostWithFiles", data);
-  }
-  updateAdContent(data, id) {
     return httpFile.post("/AdContent/PostWithFiles", data);
   }
   deleteAdContent(id) {
