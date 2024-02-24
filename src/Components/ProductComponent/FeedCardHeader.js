@@ -75,8 +75,7 @@ const FeedCardHeader = ({ itemData }) => {
     >
       <View style={styles.cardHeaderView}>
         <View style={styles.onlyRowStyle}>
-          {itemData?.user?.profilePicturePath != null ||
-          itemData?.user?.profilePicturePath != "" ? (
+          {itemData?.user?.profilePicturePath != null ? (
             <Avatar.Image
               source={{
                 uri: `${baseURL}${serverImagePath}/${itemData?.user?.profilePicturePath}`,

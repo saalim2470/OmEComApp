@@ -35,11 +35,11 @@ export const {
   resetUploadBannerSliderPostData,
 } = PostBannerOrSliderSlice.actions;
 
-export const postBannerOrSliderApi = (data) => async (dispatch) => {
+export const postBannerOrSliderApi = (subscriptionID,data) => async (dispatch) => {
   try {
     dispatch(setError(null));
     dispatch(setLoading(true));
-    const responce = await UploadAdServices.postBannerOrSliderAd(data);
+    const responce = await UploadAdServices.postBannerOrSliderAd(subscriptionID,data);
     dispatch(setUploadAdsRes(responce?.data));
     dispatch(setLoading(false));
   } catch (error) {

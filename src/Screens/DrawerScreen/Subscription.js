@@ -244,7 +244,7 @@ const Subscription = ({ route }) => {
                     }
                     onClick={() => {
                       dispatch(
-                        getSubscriptionPlanId(item?.id, postData?.postDataDraft,item?.subscriptionType)
+                        getSubscriptionPlanId(item?.id, postData?.postDataDraft)
                       );
                     }}
                   />
@@ -273,7 +273,7 @@ const Subscription = ({ route }) => {
                     }
                     onClick={() => {
                       dispatch(
-                        getSubscriptionPlanId(item?.id, postData?.postDataDraft,item?.subscriptionType)
+                        postBannerOrSliderApi(item?.id, postData?.postDataDraft)
                       );
                     }}
                   />
