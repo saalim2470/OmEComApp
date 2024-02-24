@@ -39,12 +39,13 @@ export const {
 } = GetSubscriptionPlanSlice.actions;
 
 export const getSubscriptionPlanId =
-  (subscriptionId, data) => async (dispatch) => {
+  (subscriptionId, data,subscriptionType) => async (dispatch) => {
     try {
       dispatch(setLoading(true));
       const responce = await SubscriptionServices.getSubscriptionPlan(
         subscriptionId,
-        data
+        data,
+        subscriptionType
       );
       await dispatch(setSubscriptionPlanData(responce.data));
       dispatch(setLoading(false));

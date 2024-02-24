@@ -244,7 +244,7 @@ const Subscription = ({ route }) => {
                     }
                     onClick={() => {
                       dispatch(
-                        getSubscriptionPlanId(item?.id, postData?.postDataDraft)
+                        getSubscriptionPlanId(item?.id, postData?.postDataDraft,item?.subscriptionType)
                       );
                     }}
                   />
@@ -273,7 +273,7 @@ const Subscription = ({ route }) => {
                     }
                     onClick={() => {
                       dispatch(
-                        getSubscriptionPlanId(item?.id, postData?.postDataDraft)
+                        getSubscriptionPlanId(item?.id, postData?.postDataDraft,item?.subscriptionType)
                       );
                     }}
                   />
@@ -302,7 +302,7 @@ const Subscription = ({ route }) => {
                     }
                     onClick={() => {
                       dispatch(
-                        getSubscriptionPlanId(item?.id, postData?.postDataDraft)
+                        getSubscriptionPlanId(item?.id, postData?.postDataDraft,item?.subscriptionType)
                       );
                     }}
                   />
@@ -331,7 +331,7 @@ const Subscription = ({ route }) => {
                     }
                     onClick={() => {
                       dispatch(
-                        getSubscriptionPlanId(item?.id, postData?.postDataDraft)
+                        getSubscriptionPlanId(item?.id, postData?.postDataDraft,item?.subscriptionType)
                       );
                     }}
                   />
@@ -360,7 +360,7 @@ const Subscription = ({ route }) => {
                     }
                     onClick={() => {
                       dispatch(
-                        getSubscriptionPlanId(item?.id, postData?.postDataDraft)
+                        getSubscriptionPlanId(item?.id, postData?.postDataDraft,item?.subscriptionType)
                       );
                     }}
                   />

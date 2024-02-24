@@ -6,10 +6,10 @@ class SubscriptionServices {
       `/Subscription?pageNumber=${pageNumber}&pageSize=${pageSize}`
     );
   }
-  getSubscriptionPlan(subscriptionID, data) {
-    console.log(subscriptionID, data);
+  getSubscriptionPlan(subscriptionID, data,subscriptionType) {
+    console.log(subscriptionID, data,subscriptionType);
     return httpFile.post(
-      `/UserSubscription/GetSubscriptionPaymentLink?subscriptionID=${subscriptionID}`,
+      `/UserSubscription/GetSubscriptionPaymentLink?subscriptionID=${subscriptionID}&subscriptionType=${subscriptionType}`,
       data
     );
   }
