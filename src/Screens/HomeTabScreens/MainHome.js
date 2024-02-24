@@ -41,7 +41,7 @@ import useLikeHook from "../../CustomeHooks/useLikeHook";
 const MainHome = ({ route }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const { postData, updateData,setPostData } = useLikeHook();
+  
   const maxToRenderPerBatch = 100;
   const categoryId = useSelector((state) => state.storeData.categoryId);
   const {
@@ -66,6 +66,7 @@ const MainHome = ({ route }) => {
     statusCode: saveErrorCode,
     saveData: saveDataRes,
   } = useSelector((state) => state.saveContent);
+  const { postData, setPostData } = useLikeHook(likeDataRes,saveDataRes);
   // const [postData, setPostData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [showAlert, setShowAlert] = useState({
@@ -74,12 +75,6 @@ const MainHome = ({ route }) => {
     msg: null,
     type: null,
   });
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     dispatch(setGetAdContentPage(1));
-  //     getContentDataByCategory(categoryId);
-  //   }, [categoryId])
-  // );
   const contentDataResMemoized = useMemo(
     () => contentDataRes,
     [contentDataRes]
@@ -110,16 +105,16 @@ const MainHome = ({ route }) => {
       setRefreshing(false);
     }
   }, [contentDataResMemoized, contentDataSuccess]);
-  useEffect(() => {
-    if (likeDataRes != null && likeDataRes.Success) {
-      updateData(likeDataRes?.Data, "like");
-    }
-  }, [likeDataRes]);
-  useEffect(() => {
-    if (saveDataRes != null && saveDataRes.Success) {
-      updateData(saveDataRes?.Data, "save");
-    }
-  }, [saveDataRes]);
+  // useEffect(() => {
+  //   if (likeDataRes != null && likeDataRes.Success) {
+  //     updateData(likeDataRes?.Data, "like");
+  //   }
+  // }, [likeDataRes]);
+  // useEffect(() => {
+  //   if (saveDataRes != null && saveDataRes.Success) {
+  //     updateData(saveDataRes?.Data, "save");
+  //   }
+  // }, [saveDataRes]);
   useEffect(() => {
     const handleErrorCode = (code) => {
       if (code === 401) {
