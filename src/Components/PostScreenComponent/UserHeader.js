@@ -13,8 +13,7 @@ const UserHeader = ({ userLocation, onCLickHeaderLocation = () => {} }) => {
   const userDetail = useSelector((state) => state.login?.userDetail);
   return (
     <View style={styles.userView}>
-      {userDetail?.profilePicture !== "" ||
-      userDetail?.profilePicture !== null ? (
+      {userDetail?.profilePicture !== null ? (
         <Avatar.Image
           source={{
             uri: `${baseURL}${serverImagePath}/${userDetail?.profilePicture}`,

@@ -56,7 +56,7 @@ const PostData = ({ navigation, route }) => {
     ImagePicker.useCameraPermissions();
 
   useEffect(() => {
-    if (route?.params != null) {
+    if (route?.params != undefined) {
       setDescription(route?.params?.editData?.description);
       setImage(imageurl(route?.params?.editData?.imagesData));
       dispatch(setCategoryId(route?.params?.editData?.categoryId));
@@ -202,7 +202,7 @@ const PostData = ({ navigation, route }) => {
     });
     formData.append("description", description);
     formData.append("categoryId", categoryId);
-    if (route?.params !== null) {
+    if (route?.params!==undefined) {
       formData.append("id", route?.params?.editData?.id);
     }
     if (selectLocation !== null) {
@@ -212,6 +212,7 @@ const PostData = ({ navigation, route }) => {
     }
     dispatch(setPostDataDraft(formData));
     dispatch(addAdContentApi(formData));
+    console.log(formData);
   };
   // const onClickUpdate = () => {
   //   image.forEach((element, index) => {
@@ -261,7 +262,6 @@ const PostData = ({ navigation, route }) => {
   const clearData = () => {
     dispatch(resetData());
     dispatch(reseAdPosttData());
-    dispatch(resetUpdateAdContent());
   };
   return (
     <SafeAreaProvider style={commonStyle.container}>

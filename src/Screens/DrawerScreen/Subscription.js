@@ -81,7 +81,6 @@ const Subscription = ({ route }) => {
   useEffect(() => {
     dispatch(getSubscriptionPlan(1, 70));
   }, []);
-
   useEffect(() => {
     if (getSubscriptionData && getSubscriptionData?.Success) {
       openRazorpay(getSubscriptionData?.Data?.short_url);

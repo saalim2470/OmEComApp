@@ -232,7 +232,7 @@ const MainHome = ({ route }) => {
       ) : !contentDataLoading && contentDataError != null ? (
         <ErrorMsg />
       ) : !contentDataLoading && postData?.length <= 0 ? (
-        <FriendlyMsg msg={"Content not availaibale"} />
+        <FriendlyMsg msgWithImage={"Content not availaibale"} />
       ) : (
         <FlatList
           data={postData}
