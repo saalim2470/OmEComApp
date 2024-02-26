@@ -45,11 +45,11 @@ export function groupBy(items, callbackFn) {
   }, {});
 }
 
-export const onShare = async () => {
+export const onShare = async (url) => {
   try {
     const result = await Share.share({
-      message: "Om Classified Download to this link: https://www.google.com/",
-      url: "https://www.google.com/",
+      message: `Om Classified Download to this link: ${url}`,
+      url: url,
     });
     if (result.action === Share.sharedAction) {
       if (result.activityType) {

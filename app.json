@@ -40,18 +40,21 @@
       "googleServicesFile": "./google-services.json",
       "intentFilters": [
         {
-        "action": "VIEW",
-        "autoVerify": true,
-        "data": [
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
             {
-            "scheme": "https",
-            "host": "suryahealthclub.com:8585",
-            "pathPrefix": "/swagger"
+              "scheme": "https",
+              "host": "suryahealthclub.com:8585",
+              "pathPrefix": "/swagger"
             }
-        ],
-        "category": ["BROWSABLE", "DEFAULT"]
+          ],
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
-    ]
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -62,7 +65,8 @@
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
-      ]
+      ],
+      "expo-font"
     ],
     "extra": {
       "eas": {

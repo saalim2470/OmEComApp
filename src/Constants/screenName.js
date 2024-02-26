@@ -23,7 +23,7 @@ const screenName = {
   postData: "PostData",
   // bottomNavigation home route
   homeScreenIcons: "HomeScreenIcons",
-  mainHome: "Main Home",
+  mainHome: "MainHome",
   productDetail: "ProductDetail",
   messagesHome: "MessagesHome",
   notification: "Notification",

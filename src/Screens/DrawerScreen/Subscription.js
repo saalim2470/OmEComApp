@@ -70,6 +70,10 @@ const Subscription = ({ route }) => {
     uploadAdsData: bannerSliderPostAdsRes,
     error: bannerSliderPostAdsError,
   } = useSelector((state) => state.postBannerOrSliderSlice);
+  console.log(
+    "=-=-=banner slider data-=-=-",
+    useSelector((state) => state.postBannerOrSliderSlice)
+  );
   const [openSheet, setOpenSheet] = useState(false);
   const [subsType, setSubsType] = useState();
   const [showAlert, setShowAlert] = useState({
@@ -302,7 +306,11 @@ const Subscription = ({ route }) => {
                     }
                     onClick={() => {
                       dispatch(
-                        getSubscriptionPlanId(item?.id, postData?.postDataDraft,item?.subscriptionType)
+                        getSubscriptionPlanId(
+                          item?.id,
+                          postData?.postDataDraft,
+                          item?.subscriptionType
+                        )
                       );
                     }}
                   />
@@ -331,7 +339,11 @@ const Subscription = ({ route }) => {
                     }
                     onClick={() => {
                       dispatch(
-                        getSubscriptionPlanId(item?.id, postData?.postDataDraft,item?.subscriptionType)
+                        getSubscriptionPlanId(
+                          item?.id,
+                          postData?.postDataDraft,
+                          item?.subscriptionType
+                        )
                       );
                     }}
                   />
@@ -360,7 +372,11 @@ const Subscription = ({ route }) => {
                     }
                     onClick={() => {
                       dispatch(
-                        getSubscriptionPlanId(item?.id, postData?.postDataDraft,item?.subscriptionType)
+                        getSubscriptionPlanId(
+                          item?.id,
+                          postData?.postDataDraft,
+                          item?.subscriptionType
+                        )
                       );
                     }}
                   />
