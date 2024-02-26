@@ -30,7 +30,7 @@ import { resetSaveData } from "../../store/AdContentSlices/SaveContentSlice";
 import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 import colors from "../../Constants/colors";
 
-const OtherUserProfile = ({ navigation }) => {
+const OtherUserProfile = ({ navigation, route }) => {
   const maxToRenderPerBatch = 100;
   const dispatch = useDispatch();
   const {
@@ -69,6 +69,10 @@ const OtherUserProfile = ({ navigation }) => {
     msg: null,
     type: null,
   });
+  useEffect(() => {
+    dispatch(getOtherUserInfoApi(route?.params?.userId));
+  }, [route]);
+
   useEffect(() => {
     if (userDetail !== null && userDetail?.Success) {
       setUserProfileDetail(userDetail?.Data);

@@ -28,7 +28,11 @@ export default function App() {
         screens: {
           BottonNavigation: {
             screens: {
-              ProfileRoute: "ProfileRoute",
+              BottomNavigationHomeRoute: {
+                screens: {
+                  OtherUserProfile: "OtherUserProfile/:id",
+                },
+              },
             },
           },
         },
@@ -39,7 +43,6 @@ export default function App() {
     prefixes: [prefix],
     config,
   };
-  console.log(linking);
 
   return (
     <SafeAreaProvider>

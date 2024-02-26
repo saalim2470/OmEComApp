@@ -29,8 +29,10 @@ const FeedCardHeader = ({ itemData }) => {
   const navigation = useNavigation();
   const userDetail = useSelector((state) => state.login?.userDetail);
   const onClickHeader = () => {
-    navigation.navigate(screenName.otherUserProfile);
-    dispatch(getOtherUserInfoApi(itemData?.user?.id));
+    navigation.navigate(screenName.otherUserProfile, {
+      userId: itemData?.user?.id,
+    });
+    // dispatch(getOtherUserInfoApi(itemData?.user?.id));
   };
   const onClickCurrentUser = () => {
     navigation.navigate(screenName.bottomNavigation, {
