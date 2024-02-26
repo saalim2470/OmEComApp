@@ -1,6 +1,5 @@
 import {
   Image,
-  Linking,
   Pressable,
   StyleSheet,
   Text,
@@ -22,9 +21,13 @@ import { onShare } from "../../Constants/Constant";
 import { useDispatch } from "react-redux";
 import { followUserApi } from "../../store/profileSlices/Follow_UnFollowSlice";
 import colors from "../../Constants/colors";
+import * as Linking from "expo-linking";
 
 const ProfileScreenTopView = ({ profileData, isEditBtn, totalPost }) => {
   const navigation = useNavigation();
+  const prefix = "omecomapp://";
+  const screenRoute = "ProfileRoute";
+  const deepLinkingURL = Linking.createURL(screenRoute);
   const dispatch = useDispatch();
   const [openImageViewer, setImageViewer] = useState(false);
   const imgViewerData = [
@@ -98,7 +101,9 @@ const ProfileScreenTopView = ({ profileData, isEditBtn, totalPost }) => {
               style={styles.editBtn}
               activeOpacity={0.6}
               onPress={() => {
-                onShare(`omecomapp://ProfileRoute`);
+                // onShare(`omecomapp://ProfileRoute`);
+                onShare(deepLinkingURL);
+                console.log(deepLinkingURL);
               }}
             >
               <Text style={styles.editBtnTxt}>Share Profile</Text>

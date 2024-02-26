@@ -11,6 +11,7 @@ import { PaperProvider } from "react-native-paper";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { name as appName } from "./app.json";
 import * as Linking from "expo-linking";
+import { useEffect } from "react";
 
 const theme = {
   dark: false,
@@ -35,7 +36,7 @@ export default function App() {
     },
   };
   const linking = {
-    prefixes: ["omecomapp://"],
+    prefixes: [prefix],
     config,
   };
   console.log(linking);
