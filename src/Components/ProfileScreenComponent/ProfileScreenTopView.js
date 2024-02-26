@@ -98,7 +98,7 @@ const ProfileScreenTopView = ({ profileData, isEditBtn, totalPost }) => {
               style={styles.editBtn}
               activeOpacity={0.6}
               onPress={() => {
-                onShare(`omecomapp://Profile`);
+                onShare(`omecomapp://ProfileRoute`);
               }}
             >
               <Text style={styles.editBtnTxt}>Share Profile</Text>

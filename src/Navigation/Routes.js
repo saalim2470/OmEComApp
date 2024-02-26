@@ -33,7 +33,7 @@ import AuthServices from "../services/AuthServices";
 import ContactUs from "../Screens/DrawerScreen/ContactUs";
 import Location from "../Screens/Location";
 import Video1 from "../Screens/Video1";
-import * as Linking from 'expo-linking';
+import * as Linking from "expo-linking";
 
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
@@ -43,25 +43,6 @@ const Routes = () => {
   const [appIsReady, setAppIsReady] = useState(false);
   const [isToken, setIsToken] = useState(false);
   const accessToken = useSelector((state) => state.login.accessToken);
-
-  useEffect(() => {
-    const handleDeepLink = async (event) => {
-      const { url } = event;
-      console.log('-==app url-=-',event);
-      if (url.startsWith('omecomapp://')) {
-        // URL se product ID extract karein
-        const productId = url.split('/')[2];
-        // Product ID ke hisaab se appropriate product screen pe navigate karein
-        // Example: navigation.navigate('ProductDetail', { productId });
-      }
-    };
-  
-    Linking.addEventListener('url', handleDeepLink);
-  
-    return () => {
-      Linking.removeEventListener('url', handleDeepLink);
-    };
-  }, []);
 
   useEffect(() => {
     async function prepare() {

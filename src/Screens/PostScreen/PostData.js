@@ -202,7 +202,7 @@ const PostData = ({ navigation, route }) => {
     });
     formData.append("description", description);
     formData.append("categoryId", categoryId);
-    if (route?.params!==undefined) {
+    if (route?.params !== undefined) {
       formData.append("id", route?.params?.editData?.id);
     }
     if (selectLocation !== null) {

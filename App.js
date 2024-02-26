@@ -23,7 +23,15 @@ export default function App() {
   }
   const config = {
     screens: {
-      Profile: "Profile",
+      DrawerNavigation: {
+        screens: {
+          BottonNavigation: {
+            screens: {
+              ProfileRoute: "ProfileRoute",
+            },
+          },
+        },
+      },
     },
   };
   const linking = {
