@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import {
   getContentByUserIdApi,
+  getOtherUserInfoApi,
   resetContentByUserIdPage,
   setUserContentPage,
 } from "../../store/profileSlices/GetContentByUserId";

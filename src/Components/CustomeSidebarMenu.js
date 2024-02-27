@@ -193,7 +193,7 @@ const CustomSidebarMenu = (props) => {
           <DrawerItem
             label="Refer to friend"
             onPress={() => {
-              onShare();
+              onShare('https://www.google.com/');
             }}
             labelStyle={styles.labelStyle}
             icon={({ color, size, focused }) => (

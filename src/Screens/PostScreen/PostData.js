@@ -215,30 +215,6 @@ const PostData = ({ navigation, route }) => {
     dispatch(addAdContentApi(formData));
     console.log(formData);
   };
-  // const onClickUpdate = () => {
-  //   image.forEach((element, index) => {
-  //     const uriParts = element.split(".");
-  //     const fileType = uriParts[uriParts.length - 1];
-  //     formData.append("files", {
-  //       uri: element,
-  //       name: `image_${index}.${fileType}`,
-  //       type: `image/${fileType}`,
-  //     });
-  //   });
-  //   formData.append("description", description);
-  //   formData.append("categoryId", categoryId);
-  //   if(route?.params!==null){
-  //     formData.append("id", route?.params?.editData?.id);
-  //   }
-
-  //   if (selectLocation !== null) {
-  //     formData.append("Lat", parseInt(selectLocation?.center[0]));
-  //     formData.append("Lon", parseInt(selectLocation?.center[1]));
-  //     formData.append("PlaceName", selectLocation?.text);
-  //   }
-  //   dispatch(setPostDataDraft(formData));
-  //   dispatch(updateAdContentApi(formData));
-  // };
   const onClickModalBtn = () => {
     setShowAlert({ ...showAlert, show: false });
     clearData();

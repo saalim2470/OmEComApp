@@ -4,31 +4,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import commonStyle from "../../Constants/commonStyle";
 import CustomeHeader from "../../Components/CustomeHeader";
 import { useIsFocused } from "@react-navigation/native";
+import { onShare } from "../../Constants/Constant";
 
 const ReferToFriend = () => {
   const focused=useIsFocused()
   useEffect(() => {
-    onShare();
+    onShare('https://www.google.com/');
   },[focused]);
-  const onShare = async () => {
-    try {
-      const result = await Share.share({
-        message: "Om Classified Download to this link: https://www.google.com/",
-        url: "https://www.google.com/",
-      });
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-        } else {
-          // shared
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
-      }
-    } catch (error) {
-      Alert.alert(error.message);
-    }
-  };
 
   return (
     <SafeAreaView style={commonStyle.container}>

@@ -34,7 +34,7 @@ const ProfileScreenTopView = ({ profileData, isEditBtn, totalPost }) => {
   const imgViewerData = [
     {
       uri:
-        profileData?.profilePicture != null || profileData?.profilePicture != ""
+        profileData?.profilePicture != null
           ? `${baseURL}${serverImagePath}/${profileData?.profilePicture}`
           : defaultProfileImg,
     },
@@ -58,13 +58,23 @@ const ProfileScreenTopView = ({ profileData, isEditBtn, totalPost }) => {
       >
         <View style={styles.row}>
           <Pressable onPress={() => setImageViewer(true)}>
-            <Avatar.Image
-              size={scale(60)}
-              style={{ marginRight: moderateScale(8) }}
-              source={{
-                uri: `${baseURL}${serverImagePath}/${profileData?.profilePicture}`,
-              }}
-            />
+            {profileData?.profilePicture != null ? (
+              <Avatar.Image
+                size={scale(60)}
+                style={{ marginRight: moderateScale(8) }}
+                source={{
+                  uri: `${baseURL}${serverImagePath}/${profileData?.profilePicture}`,
+                }}
+              />
+            ) : (
+              <Avatar.Image
+                size={scale(60)}
+                style={{ marginRight: moderateScale(8) }}
+                source={{
+                  uri: defaultProfileImg,
+                }}
+              />
+            )}
           </Pressable>
           <View>
             <Text

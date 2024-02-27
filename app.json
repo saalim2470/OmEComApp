@@ -45,8 +45,8 @@
           "data": [
             {
               "scheme": "https",
-              "host": "suryahealthclub.com:8585",
-              "pathPrefix": "/swagger"
+              "host": "suryahealthclub.com",
+              "pathPrefix": "/"
             }
           ],
           "category": [

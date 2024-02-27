@@ -12,6 +12,7 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { name as appName } from "./app.json";
 import * as Linking from "expo-linking";
 import { useEffect } from "react";
+import Loading from "./src/Components/Loading";
 
 const theme = {
   dark: false,
@@ -41,7 +42,7 @@ export default function App() {
     },
   };
   const linking = {
-    prefixes: [prefix],
+    prefixes: [prefix,'https://suryahealthclub.com/'],
     config,
   };
 
@@ -53,10 +54,9 @@ export default function App() {
           <BottomSheetModalProvider>
             <NavigationContainer
               linking={linking}
-              fallback={<Text>Loading...</Text>}
+              fallback={<Loading/>}
             >
               <Routes />
-              {/* <DrawerNavigation /> */}
             </NavigationContainer>
           </BottomSheetModalProvider>
         </PaperProvider>
@@ -64,6 +64,6 @@ export default function App() {
     </SafeAreaProvider>
   );
 }
-AppRegistry.registerComponent(appName, () => App);
+// AppRegistry.registerComponent(appName, () => App);
 
 const styles = StyleSheet.create({});
