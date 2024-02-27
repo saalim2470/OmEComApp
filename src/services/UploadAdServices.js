@@ -4,7 +4,7 @@ class UploadAdServices {
   postBannerOrSliderAd(subscriptionID, data) {
     console.log("-=-banner data=-=-", subscriptionID, data);
     return httpFile.post(
-      `/api/UserSubscription/GetSubscriptionPaymentLinkForBanner?subscriptionID=${subscriptionID}`,
+      `/UserSubscription/GetSubscriptionPaymentLinkForBanner?subscriptionID=${subscriptionID}`,
       data
     );
   }

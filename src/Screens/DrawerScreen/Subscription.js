@@ -69,6 +69,7 @@ const Subscription = ({ route }) => {
   const {
     uploadAdsData: bannerSliderPostAdsRes,
     error: bannerSliderPostAdsError,
+    isLoading: bannerSliderPostAdsLoading,
   } = useSelector((state) => state.postBannerOrSliderSlice);
   console.log(
     "=-=-=banner slider data-=-=-",
@@ -86,8 +87,14 @@ const Subscription = ({ route }) => {
     dispatch(getSubscriptionPlan(1, 70));
   }, []);
   useEffect(() => {
-    if (getSubscriptionData && getSubscriptionData?.Success) {
-      openRazorpay(getSubscriptionData?.Data?.short_url);
+    if (
+      (getSubscriptionData && getSubscriptionData?.Success) ||
+      (bannerSliderPostAdsRes && bannerSliderPostAdsRes?.Success)
+    ) {
+      openRazorpay(
+        getSubscriptionData?.Data?.short_url ||
+          bannerSliderPostAdsRes?.Data?.short_url
+      );
       // if (postData?.postDataDraft != null) {
       //   adsType !== subcriptionType[0]
       //     ? dispatch(postBannerOrSliderApi(postData?.postDataDraft))
@@ -101,7 +108,7 @@ const Subscription = ({ route }) => {
       //   });
       // }
     }
-  }, [getSubscriptionData]);
+  }, [getSubscriptionData, bannerSliderPostAdsRes]);
   useEffect(() => {
     if (
       addContentDataRes?.addContentData?.Success ||
@@ -222,7 +229,9 @@ const Subscription = ({ route }) => {
   return (
     <SafeAreaView style={commonStyle.container}>
       <MainHeader navigation={navigation} />
-      {subscriptionPlanLoading || getSubscriptionLoading ? (
+      {subscriptionPlanLoading ||
+      getSubscriptionLoading ||
+      bannerSliderPostAdsLoading ? (
         <Loading />
       ) : (
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -306,11 +315,7 @@ const Subscription = ({ route }) => {
                     }
                     onClick={() => {
                       dispatch(
-                        getSubscriptionPlanId(
-                          item?.id,
-                          postData?.postDataDraft,
-                          item?.subscriptionType
-                        )
+                        postBannerOrSliderApi(item?.id, postData?.postDataDraft)
                       );
                     }}
                   />
@@ -339,11 +344,7 @@ const Subscription = ({ route }) => {
                     }
                     onClick={() => {
                       dispatch(
-                        getSubscriptionPlanId(
-                          item?.id,
-                          postData?.postDataDraft,
-                          item?.subscriptionType
-                        )
+                        postBannerOrSliderApi(item?.id, postData?.postDataDraft)
                       );
                     }}
                   />
@@ -372,11 +373,7 @@ const Subscription = ({ route }) => {
                     }
                     onClick={() => {
                       dispatch(
-                        getSubscriptionPlanId(
-                          item?.id,
-                          postData?.postDataDraft,
-                          item?.subscriptionType
-                        )
+                        postBannerOrSliderApi(item?.id, postData?.postDataDraft)
                       );
                     }}
                   />

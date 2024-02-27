@@ -95,11 +95,12 @@ const FeedCardHeader = ({ itemData }) => {
           <View style={{ marginLeft: moderateScale(5), flex: 1 }}>
             {itemData?.placeName ? (
               <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  flexWrap: "wrap",
-                }}
+                style={[
+                  styles.onlyRowStyle,
+                  {
+                    flexWrap: "wrap",
+                  },
+                ]}
               >
                 <Text style={styles.headingTxt}>
                   {`${itemData?.user?.firstname} ${itemData?.user?.lastname}`}
@@ -118,11 +119,12 @@ const FeedCardHeader = ({ itemData }) => {
                 <TouchableOpacity
                   // onPress={() => openMap()}
                   activeOpacity={0.6}
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    marginTop: verticalScale(5),
-                  }}
+                  style={[
+                    styles.onlyRowStyle,
+                    {
+                      marginTop: verticalScale(5),
+                    },
+                  ]}
                 >
                   <Image
                     source={images.location}

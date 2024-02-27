@@ -30,7 +30,8 @@ export default function App() {
             screens: {
               BottomNavigationHomeRoute: {
                 screens: {
-                  OtherUserProfile: "OtherUserProfile/:id",
+                  OtherUserProfile: "OtherUserProfile/:userId",
+                  MainHome: "MainHome",
                 },
               },
             },

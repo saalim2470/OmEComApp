@@ -26,8 +26,9 @@ import * as Linking from "expo-linking";
 const ProfileScreenTopView = ({ profileData, isEditBtn, totalPost }) => {
   const navigation = useNavigation();
   const prefix = "omecomapp://";
-  const screenRoute = "OtherUserProfile";
+  const screenRoute = `OtherUserProfile/${profileData?.userId}`;
   const deepLinkingURL = Linking.createURL(screenRoute);
+  const url = `whatsapp://send?phone=${profileData?.phoneNumber}&text=Hello`;
   const dispatch = useDispatch();
   const [openImageViewer, setImageViewer] = useState(false);
   const imgViewerData = [
@@ -39,7 +40,6 @@ const ProfileScreenTopView = ({ profileData, isEditBtn, totalPost }) => {
     },
   ];
 
-  const url = `whatsapp://send?phone=${profileData?.phoneNumber}&text=Hello`;
   const handleFollow = () => {
     dispatch(
       followUserApi({
@@ -101,7 +101,6 @@ const ProfileScreenTopView = ({ profileData, isEditBtn, totalPost }) => {
               style={styles.editBtn}
               activeOpacity={0.6}
               onPress={() => {
-                // onShare(`omecomapp://ProfileRoute`);
                 onShare(deepLinkingURL);
                 console.log(deepLinkingURL);
               }}

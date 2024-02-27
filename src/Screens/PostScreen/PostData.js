@@ -100,6 +100,7 @@ const PostData = ({ navigation, route }) => {
 
       const handleErrorCode = (code) => {
         if (code === 403) {
+          dispatch(reseAdPosttData());
           navigation.navigate(screenName.drawerNavigation, {
             screen: screenName.subscription,
             params: {

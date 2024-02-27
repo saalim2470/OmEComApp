@@ -35,16 +35,20 @@ export const {
   resetUploadBannerSliderPostData,
 } = PostBannerOrSliderSlice.actions;
 
-export const postBannerOrSliderApi = (subscriptionID,data) => async (dispatch) => {
-  try {
-    dispatch(setError(null));
-    dispatch(setLoading(true));
-    const responce = await UploadAdServices.postBannerOrSliderAd(subscriptionID,data);
-    dispatch(setUploadAdsRes(responce?.data));
-    dispatch(setLoading(false));
-  } catch (error) {
-    dispatch(setLoading(false));
-    dispatch(setError(error.response.data));
-    console.log("-=-=-create upload ads error-=-=-", error.response.data);
-  }
-};
+export const postBannerOrSliderApi =
+  (subscriptionID, data) => async (dispatch) => {
+    try {
+      dispatch(setError(null));
+      dispatch(setLoading(true));
+      const responce = await UploadAdServices.postBannerOrSliderAd(
+        subscriptionID,
+        data
+      );
+      dispatch(setUploadAdsRes(responce?.data));
+      dispatch(setLoading(false));
+    } catch (error) {
+      dispatch(setLoading(false));
+      dispatch(setError(error.response.data));
+      console.log("-=-=-create upload ads error-=-=-", error);
+    }
+  };
