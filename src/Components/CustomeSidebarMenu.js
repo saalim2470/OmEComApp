@@ -19,7 +19,7 @@ import { resetUserAdContent } from "../store/profileSlices/GetUserContentSlice";
 import CustomeAlert from "./CustomeAlert";
 import NavigationProfile from "./NavigationComponents/NavigationProfile";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { onShare } from "../Constants/Constant";
+import { googlePlayUrl, onShare } from "../Constants/Constant";
 
 const CustomSidebarMenu = (props) => {
   const navigation = useNavigation();
@@ -193,7 +193,7 @@ const CustomSidebarMenu = (props) => {
           <DrawerItem
             label="Refer to friend"
             onPress={() => {
-              onShare('https://www.google.com/');
+              onShare(googlePlayUrl);
             }}
             labelStyle={styles.labelStyle}
             icon={({ color, size, focused }) => (
