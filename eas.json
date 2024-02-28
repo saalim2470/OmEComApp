@@ -1,23 +1,16 @@
 {
   "cli": {
-    "version": ">= 5.9.2"
+    "appVersionSource": "local"
   },
   "build": {
-    "development": {
+    "staging": {
       "distribution": "internal",
       "android": {
-        "gradleCommand": ":app:assembleDebug"
-      },
-      "ios": {
-        "buildConfiguration": "Debug"
+        "buildType": "apk"
       }
     },
-    "preview": {
-      "distribution": "internal"
-    },
-    "production": {}
-  },
-  "submit": {
-    "production": {}
+    "production": {
+      "autoIncrement": true
+    }
   }
 }

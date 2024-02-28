@@ -57,7 +57,11 @@ const PostData = ({ navigation, route }) => {
 
   useEffect(() => {
     if (route?.params != undefined) {
-      setDescription(route?.params?.editData?.description);
+      setDescription(
+        route?.params?.editData?.description === "null"
+          ? ""
+          : route?.params?.editData?.description
+      );
       setImage(imageurl(route?.params?.editData?.imagesData));
       dispatch(setCategoryId(route?.params?.editData?.categoryId));
       setBtnTxt("Update");

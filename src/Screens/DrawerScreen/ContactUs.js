@@ -14,6 +14,7 @@ import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import CustomeButton from "../../Components/CustomeButton";
 import images from "../../Constants/images";
 import colors from "../../Constants/colors";
+import { contactUsMobileNo } from "../../Constants/Constant";
 
 const ContactUs = () => {
   const [value, setValue] = useState("");
@@ -54,7 +55,7 @@ const ContactUs = () => {
             style={styles.img}
             resizeMode="contain"
           />
-          <Text style={styles.btnTxt}>1234567890</Text>
+          <Text style={styles.btnTxt}>{contactUsMobileNo}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

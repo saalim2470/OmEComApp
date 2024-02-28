@@ -30,10 +30,13 @@ import { resetLikeData } from "../../store/AdContentSlices/LikeSlice";
 import { resetSaveData } from "../../store/AdContentSlices/SaveContentSlice";
 import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 import colors from "../../Constants/colors";
+import useLikeHook from "../../CustomeHooks/useLikeHook";
+import ServerError from "../../Components/ErrorScreens/ServerError";
 
 const OtherUserProfile = ({ navigation, route }) => {
   const maxToRenderPerBatch = 100;
   const dispatch = useDispatch();
+
   const {
     otherUserDetail: userDetail,
     contentData: contentData,
@@ -61,7 +64,7 @@ const OtherUserProfile = ({ navigation, route }) => {
     followResData: follow_unFollowData,
     isLoading: follow_UnFollowLoading,
   } = useSelector((state) => state.follow_UnFollowSlice);
-  const [postData, setPostData] = useState([]);
+  const { postData, setPostData } = useLikeHook(likeDataRes, saveDataRes);
   const [refreshing, setRefreshing] = useState(false);
   const [userProfileDetail, setUserProfileDetail] = useState(null);
   const [showAlert, setShowAlert] = useState({
@@ -97,16 +100,6 @@ const OtherUserProfile = ({ navigation, route }) => {
     }
   }, [contentData, userContentSuccess]);
   useEffect(() => {
-    if (likeDataRes != null && likeDataRes.Success) {
-      updateData(likeDataRes?.Data, "like");
-    }
-  }, [likeDataRes]);
-  useEffect(() => {
-    if (saveDataRes != null && saveDataRes.Success) {
-      updateData(saveDataRes?.Data, "save");
-    }
-  }, [saveDataRes]);
-  useEffect(() => {
     const handleErrorCode = (code) => {
       if (code === 401) {
         showModal("UnAuthorized", "Please login to continue", "warning");
@@ -130,25 +123,6 @@ const OtherUserProfile = ({ navigation, route }) => {
         userContentPageSize
       )
     );
-  };
-  const updateData = (data, actionType) => {
-    const updatedData = postData.map((item) => {
-      if (actionType === "like" && item.id === data.contentId) {
-        return {
-          ...item,
-          isCurrentUserLiked: data.isLiked,
-          totalLikes: data.totalLikes,
-        };
-      }
-      if (actionType === "save" && item.id === data.adContentID) {
-        return {
-          ...item,
-          isCurrentUserSaved: data.isSaved,
-        };
-      }
-      return item;
-    });
-    setPostData(updatedData);
   };
   const showModal = (title, msg, type) => {
     setShowAlert({
@@ -191,8 +165,10 @@ const OtherUserProfile = ({ navigation, route }) => {
   }
   if (contentError != null && !contentError.Success) {
     return (
-      // <ServerError msg={contentError?.ErrorMessage || "Some error occured"} />
-      <ErrorMsg statusCode={statusCode} />
+      <ServerError
+        msg={contentError?.ErrorMessage || "Some error occured"}
+        statusCode={statusCode}
+      />
     );
   }
   const renderItem = ({ item, index }) => {

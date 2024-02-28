@@ -46,7 +46,8 @@ export const getSubscriptionPlanId =
         subscriptionId,
         data
       );
-      await dispatch(setSubscriptionPlanData(responce.data));
+      dispatch(setSubscriptionPlanData(responce.data));
+      console.log("---getSubscription-=-", responce.data);
       dispatch(setLoading(false));
     } catch (error) {
       dispatch(setLoading(false));

@@ -22,9 +22,12 @@ import { Divider } from "react-native-paper";
 import FeedCard from "../../Components/ProductComponent/FeedCard";
 import colors from "../../Constants/colors";
 import ShimmerLoading from "../../Components/LoadingComponents/ShimmerLoading";
+import screenName from "../../Constants/screenName";
+import useLikeHook from "../../CustomeHooks/useLikeHook";
 
 const SearchResultScreen = ({ navigation }) => {
   const dispatch = useDispatch();
+  const maxToRenderPerBatch = 100;
   const filterType = useSelector((state) => state.storeData.searchFilterId);
   const {
     isLoading: searchLoading,
@@ -45,47 +48,18 @@ const SearchResultScreen = ({ navigation }) => {
     statusCode: saveErrorCode,
     saveData: saveDataRes,
   } = useSelector((state) => state.saveContent);
+  const { postData, setPostData } = useLikeHook(likeDataRes, saveDataRes);
 
   const [searchKeyWord, setSearchKeyWord] = useState("");
-  const [searchData, setSearchData] = useState([]);
   useEffect(() => {
     if (searchKeyWord != "")
       dispatch(getSearchData(searchKeyWord, searchPage, 10, filterType));
   }, [searchPage]);
   useEffect(() => {
     if (searchResultRes != null && searchSuccess) {
-      setSearchData(searchResultRes);
+      setPostData(searchResultRes);
     }
   }, [searchResultRes, searchSuccess]);
-  useEffect(() => {
-    if (likeDataRes != null && likeDataRes.Success) {
-      updateData(likeDataRes?.Data, "like");
-    }
-  }, [likeDataRes]);
-  useEffect(() => {
-    if (saveDataRes != null && saveDataRes.Success) {
-      updateData(saveDataRes?.Data, "save");
-    }
-  }, [saveDataRes]);
-  const updateData = (data, actionType) => {
-    const updatedData = searchData.map((item) => {
-      if (actionType === "like" && item.id === data.contentId) {
-        return {
-          ...item,
-          isCurrentUserLiked: data.isLiked,
-          totalLikes: data.totalLikes,
-        };
-      }
-      if (actionType === "save" && item.id === data.adContentID) {
-        return {
-          ...item,
-          isCurrentUserSaved: data.isSaved,
-        };
-      }
-      return item;
-    });
-    setSearchData(updatedData);
-  };
   const onClickSearch = () => {
     if (searchKeyWord != "") {
       dispatch(resetSearchResultPage());
@@ -143,7 +117,7 @@ const SearchResultScreen = ({ navigation }) => {
       ) : (
         <View>
           <FlatList
-            data={searchData}
+            data={postData}
             keyExtractor={(item, index) => {
               return `data_${item.id}_${index}`;
             }}
@@ -157,9 +131,10 @@ const SearchResultScreen = ({ navigation }) => {
             }
             ListFooterComponent={listFooterComponent}
             renderItem={renderItem}
-            initialNumToRender={10}
-            maxToRenderPerBatch={10}
-            windowSize={10}
+            initialNumToRender={40}
+            maxToRenderPerBatch={maxToRenderPerBatch}
+            updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
+            // windowSize={10}
             removeClippedSubviews={true}
           />
         </View>

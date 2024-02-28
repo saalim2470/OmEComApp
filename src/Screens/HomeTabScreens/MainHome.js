@@ -34,14 +34,13 @@ import { resetSaveData } from "../../store/AdContentSlices/SaveContentSlice";
 import { resetLikeData } from "../../store/AdContentSlices/LikeSlice";
 import RoundCategoryView from "../../Components/HomeScreenComponent/RoundCategoryView";
 import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
-import { setCategoryId } from "../../store/StoreDataSlice";
 import ShimmerLoading from "../../Components/LoadingComponents/ShimmerLoading";
 import useLikeHook from "../../CustomeHooks/useLikeHook";
 
 const MainHome = ({ route }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  
+
   const maxToRenderPerBatch = 100;
   const categoryId = useSelector((state) => state.storeData.categoryId);
   const {
@@ -66,7 +65,7 @@ const MainHome = ({ route }) => {
     statusCode: saveErrorCode,
     saveData: saveDataRes,
   } = useSelector((state) => state.saveContent);
-  const { postData, setPostData } = useLikeHook(likeDataRes,saveDataRes);
+  const { postData, setPostData } = useLikeHook(likeDataRes, saveDataRes);
   // const [postData, setPostData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [showAlert, setShowAlert] = useState({

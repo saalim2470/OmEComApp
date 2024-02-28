@@ -88,8 +88,8 @@ const EditProfile = () => {
     ImagePicker.useCameraPermissions();
   console.log("=-=-user detail-=-=-", userDetail);
   useEffect(() => {
-    dispatch(getStateData(userDetail?.stateId, 1, 10));
-    dispatch(getCityData(userDetail?.cityId, 1, 10));
+    dispatch(getStateData(userDetail?.stateId, 1, 50));
+    dispatch(getCityData(userDetail?.cityId, 1, 50));
     setFirstName(userDetail?.firstName);
     setLastName(userDetail?.lastName);
     setEmail(userDetail?.email);

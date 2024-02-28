@@ -34,7 +34,6 @@ const useLikeHook = (likeDataRes, saveDataRes) => {
   };
 
   return { postData, setPostData };
-  // return { postData, updateData,setPostData };
 };
 
 export default useLikeHook;

@@ -36,13 +36,14 @@ import { resetDeleteAdContentData } from "../../store/AdContentSlices/DeleteAdCo
 import { useIsFocused } from "@react-navigation/native";
 import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 import colors from "../../Constants/colors";
-import MainHeader from "../../Components/MainHeader";
 import CustomeHeader from "../../Components/CustomeHeader";
+import useLikeHook from "../../CustomeHooks/useLikeHook";
 
 const MyAds = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
   let maxToRenderPerBatch = 100;
+  const { postData, setPostData } = useLikeHook(likeDataRes, saveDataRes);
   const {
     userContentData: userContentRes,
     error: userContentError,
@@ -69,7 +70,6 @@ const MyAds = ({ navigation, route }) => {
     deleteData: deleteDataRes,
     isLoading: deleteLoading,
   } = useSelector((state) => state.deleteAdContent);
-  const [postData, setPostData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [showAlert, setShowAlert] = useState({
     show: false,
@@ -90,16 +90,6 @@ const MyAds = ({ navigation, route }) => {
       setRefreshing(false);
     }
   }, [userContentRes]);
-  useEffect(() => {
-    if (likeDataRes != null && likeDataRes?.Success) {
-      updateData(likeDataRes?.Data, "like");
-    }
-  }, [likeDataRes]);
-  useEffect(() => {
-    if (saveDataRes != null && saveDataRes?.Success) {
-      updateData(saveDataRes?.Data, "save");
-    }
-  }, [saveDataRes]);
   useEffect(() => {
     const handleErrorCode = (code) => {
       if (code === 401) {
@@ -135,25 +125,6 @@ const MyAds = ({ navigation, route }) => {
 
   const getUserContent = () => {
     dispatch(getUserContentApi(userContentPage, userContentPageSize));
-  };
-  const updateData = (data, actionType) => {
-    const updatedData = postData.map((item) => {
-      if (actionType === "like" && item.id === data.contentId) {
-        return {
-          ...item,
-          isCurrentUserLiked: data.isLiked,
-          totalLikes: data.totalLikes,
-        };
-      }
-      if (actionType === "save" && item.id === data.adContentID) {
-        return {
-          ...item,
-          isCurrentUserSaved: data.isSaved,
-        };
-      }
-      return item;
-    });
-    setPostData(updatedData);
   };
   const showModal = (title, msg, type) => {
     setShowAlert({
@@ -232,9 +203,6 @@ const MyAds = ({ navigation, route }) => {
           renderItem={renderItem}
           refreshing={refreshing}
           onRefresh={onRefresh}
-          // refreshControl={
-          //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          // }
         />
       )}
       <CustomeAlertModal

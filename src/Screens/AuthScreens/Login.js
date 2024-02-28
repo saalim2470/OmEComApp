@@ -231,7 +231,7 @@ const Login = ({ navigation }) => {
             />
           </KeyboardAvoidingView>
           <View style={commonStyle.row}>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={{
                 marginTop: moderateScale(3),
               }}
@@ -251,7 +251,7 @@ const Login = ({ navigation }) => {
               >
                 Login with Mpin
               </Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
             <TouchableOpacity
               style={{
                 alignSelf: "flex-end",
@@ -317,7 +317,7 @@ const Login = ({ navigation }) => {
                 fontFamily: "Montserrat-Medium",
               }}
               onPress={() => {
-                dispatch(getCountryData(1, 10));
+                dispatch(getCountryData(1, 50));
                 navigation.navigate(screenName.createAccount);
               }}
             >
