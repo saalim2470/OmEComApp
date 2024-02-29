@@ -55,7 +55,7 @@ const DrawerNavigation = () => {
         <CustomSidebarMenu {...props} closeDrawer={closeDrawer} />
       )}
     >
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name={screenName.homeBottomNavigation}
         component={HomeBottomNavigation}
         options={{
@@ -67,7 +67,7 @@ const DrawerNavigation = () => {
             />
           ),
         }}
-      />
+      /> */}
       <Drawer.Screen
         name={screenName.bottomNavigation}
         component={BottomNavigation}

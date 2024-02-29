@@ -21,6 +21,7 @@ import { AntDesign } from "@expo/vector-icons";
 import PostData from "../Screens/PostScreen/PostData";
 import PostCategory from "../Screens/PostScreen/PostCategory";
 import BottomNavigationProfileRoute from "./BottomNavigationProfileRoute";
+import HomeScreenIcons from "../Screens/HomeTabScreens/HomeScreenIcons";
 
 const Tab = createBottomTabNavigator();
 
@@ -53,16 +54,22 @@ const BottomNavigation = () => {
         }}
       />
       <Tab.Screen
-        name={screenName.bottomNavigationSearchRoute}
-        component={BottomNavigationSearchRoute}
+        name={screenName.homeScreenIcons}
+        component={HomeScreenIcons}
         options={{
-          tabBarLabel: "Home",
-          tabBarIcon: ({ color, size, focused }) => (
-            <Image
-              source={images.searchIcon}
-              style={[styles.iconStyle, { tintColor: focused ? color : null }]}
-            />
-          ),
+          tabBarLabel: "Category",
+          tabBarIcon: ({ color, size, focused }) =>
+            focused ? (
+              <Image
+                source={images.categoriesFillIcon}
+                style={[styles.iconStyle, { tintColor: color }]}
+              />
+            ) : (
+              <Image
+                source={images.categoriesOutlineIcon}
+                style={[styles.iconStyle]}
+              />
+            ),
         }}
       />
       <Tab.Screen
@@ -81,6 +88,19 @@ const BottomNavigation = () => {
         }}
       />
       <Tab.Screen
+        name={screenName.bottomNavigationSearchRoute}
+        component={BottomNavigationSearchRoute}
+        options={{
+          tabBarLabel: "Home",
+          tabBarIcon: ({ color, size, focused }) => (
+            <Image
+              source={images.searchIcon}
+              style={[styles.iconStyle, { tintColor: focused ? color : null }]}
+            />
+          ),
+        }}
+      />
+      {/* <Tab.Screen
         name={screenName.message}
         component={MessagesHome}
         options={{
@@ -92,7 +112,7 @@ const BottomNavigation = () => {
             />
           ),
         }}
-      />
+      /> */}
       <Tab.Screen
         name={screenName.profileRoute}
         component={BottomNavigationProfileRoute}

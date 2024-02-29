@@ -66,36 +66,17 @@ const CustomSidebarMenu = (props) => {
               />
             )}
           />
-
           <DrawerItem
-            label="Categories"
+            label="Promotion"
             onPress={() => {
-              navigation.navigate(screenName.bottomNavigation, {
-                screen: screenName.bottomNavigationHomeRoute,
-                params: {
-                  screen: screenName.homeScreenIcons,
-                },
+              navigation.navigate(screenName.promotionRoute, {
+                screen: screenName.promotion,
               });
             }}
             labelStyle={styles.labelStyle}
             icon={({ color, size, focused }) => (
               <Image
-                source={images.categories}
-                style={{ width: scale(30), height: scale(30) }}
-                resizeMode="contain"
-              />
-            )}
-          />
-
-          <DrawerItem
-            label="Saved Item"
-            onPress={() => {
-              navigation.navigate(screenName.bookmarkScreen);
-            }}
-            labelStyle={styles.labelStyle}
-            icon={({ color, size, focused }) => (
-              <Image
-                source={images.savedIcon}
+                source={images.promotion}
                 style={{ width: scale(30), height: scale(30) }}
                 resizeMode="contain"
               />
@@ -117,6 +98,54 @@ const CustomSidebarMenu = (props) => {
               />
             )}
           />
+          {/* <DrawerItem
+            label="Categories"
+            onPress={() => {
+              navigation.navigate(screenName.bottomNavigation, {
+                screen: screenName.bottomNavigationHomeRoute,
+                params: {
+                  screen: screenName.homeScreenIcons,
+                },
+              });
+            }}
+            labelStyle={styles.labelStyle}
+            icon={({ color, size, focused }) => (
+              <Image
+                source={images.categories}
+                style={{ width: scale(30), height: scale(30) }}
+                resizeMode="contain"
+              />
+            )}
+          /> */}
+
+          <DrawerItem
+            label="Saved Item"
+            onPress={() => {
+              navigation.navigate(screenName.bookmarkScreen);
+            }}
+            labelStyle={styles.labelStyle}
+            icon={({ color, size, focused }) => (
+              <Image
+                source={images.savedIcon}
+                style={{ width: scale(30), height: scale(30) }}
+                resizeMode="contain"
+              />
+            )}
+          />
+          <DrawerItem
+            label="My Ads"
+            onPress={() => {
+              navigation.navigate(screenName.myAds);
+            }}
+            labelStyle={styles.labelStyle}
+            icon={({ color, size, focused }) => (
+              <Image
+                source={images.announcmentIcon}
+                style={{ width: scale(30), height: scale(30) }}
+                resizeMode="contain"
+              />
+            )}
+          />
           <DrawerItem
             label="Terms & Condition"
             onPress={() => {
@@ -126,34 +155,6 @@ const CustomSidebarMenu = (props) => {
             icon={({ color, size, focused }) => (
               <Image
                 source={images.terms}
-                style={{ width: scale(30), height: scale(30) }}
-                resizeMode="contain"
-              />
-            )}
-          />
-          <DrawerItem
-            label="About us"
-            onPress={() => {
-              navigation.navigate(screenName.aboutUs);
-            }}
-            labelStyle={styles.labelStyle}
-            icon={({ color, size, focused }) => (
-              <Image
-                source={images.aboutIcon}
-                style={{ width: scale(30), height: scale(30) }}
-                resizeMode="contain"
-              />
-            )}
-          />
-          <DrawerItem
-            label="PlayStore Rating"
-            onPress={() => {
-              navigation.navigate(screenName.playStoreRating);
-            }}
-            labelStyle={styles.labelStyle}
-            icon={({ color, size, focused }) => (
-              <Image
-                source={images.playstore}
                 style={{ width: scale(30), height: scale(30) }}
                 resizeMode="contain"
               />
@@ -174,22 +175,19 @@ const CustomSidebarMenu = (props) => {
             )}
           />
           <DrawerItem
-            label="Promotion"
+            label="PlayStore Rating"
             onPress={() => {
-              navigation.navigate(screenName.promotionRoute, {
-                screen: screenName.promotion,
-              });
+              navigation.navigate(screenName.playStoreRating);
             }}
             labelStyle={styles.labelStyle}
             icon={({ color, size, focused }) => (
               <Image
-                source={images.promotion}
+                source={images.playstore}
                 style={{ width: scale(30), height: scale(30) }}
                 resizeMode="contain"
               />
             )}
           />
-
           <DrawerItem
             label="Refer to friend"
             onPress={() => {
@@ -204,22 +202,22 @@ const CustomSidebarMenu = (props) => {
               />
             )}
           />
-
           <DrawerItem
-            label="My Ads"
+            label="About us"
             onPress={() => {
-              navigation.navigate(screenName.myAds);
+              navigation.navigate(screenName.aboutUs);
             }}
             labelStyle={styles.labelStyle}
             icon={({ color, size, focused }) => (
               <Image
-                source={images.announcmentIcon}
+                source={images.aboutIcon}
                 style={{ width: scale(30), height: scale(30) }}
                 resizeMode="contain"
               />
             )}
           />
-          <DrawerItem
+
+          {/* <DrawerItem
             label="Profile"
             onPress={() => {
               navigation.navigate(screenName.bottomNavigation, {
@@ -235,7 +233,7 @@ const CustomSidebarMenu = (props) => {
                 resizeMode="contain"
               />
             )}
-          />
+          /> */}
           <DrawerItem
             label="Contact Us"
             onPress={() => {
