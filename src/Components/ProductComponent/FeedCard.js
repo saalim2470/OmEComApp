@@ -2,11 +2,8 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import React, { memo, useState } from "react";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import PropTypes from "prop-types";
-import Slider from "./Slider";
-import { useEffect } from "react";
 import FeedCardHeader from "./FeedCardHeader";
 import FeedCardBottomView from "./FeedCardBottomView";
-import { imageurl } from "../../Constants/functions";
 import ProfileFeedCardHeader from "../ProfileScreenComponent/ProfileFeedCardHeader";
 import FeedCardTopView from "./FeedCardTopView";
 import ImageVideoSlider from "../PostScreenComponent/SliderComponent/ImageVideoSlider";
@@ -16,11 +13,8 @@ const FeedCard = ({
   onClickMoreBtn = () => {},
   disable,
   profile,
+  isVideoPlay
 }) => {
-  // const [files, setFiles] = useState([]);
-  // useEffect(() => {
-  //   setFiles(imageurl(itemData?.imagesData));
-  // }, [itemData]);
   return (
     <View
       style={{ marginBottom: verticalScale(8), backgroundColor: "#FFFFFF" }}
@@ -39,6 +33,7 @@ const FeedCard = ({
           sliderData={JSON.parse(itemData?.imagesData)}
           onClickImage={onClickMoreBtn}
           disable={disable}
+          shouldVideoPlay={isVideoPlay}
         />
       ) : null}
       <View style={[styles.bottomView]}>

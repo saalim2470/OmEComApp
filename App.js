@@ -25,6 +25,7 @@ export default function App() {
   }
   const config = {
     screens: {
+      Notification:'Notification',
       DrawerNavigation: {
         screens: {
           BottonNavigation: {

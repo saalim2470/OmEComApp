@@ -16,10 +16,16 @@ import { getFileExtension, imageExtensions } from "../../../Constants/Constant";
 import { Image } from "expo-image";
 
 const SCREEM_WIDTH = Dimensions.get("window").width;
-const ImageVideoSlider = ({ sliderData, onClickImage, disable }) => {
+const ImageVideoSlider = ({
+  sliderData,
+  onClickImage,
+  disable,
+  shouldVideoPlay,
+}) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const onViewableItemsChanged = ({ viewableItems, changed }) => {
     setCurrentSlide(viewableItems[0].index);
+    console.log('-=-=-vieo-=-=-',changed);
   };
   const blurhash = "L6PZfSi_.AyE_3t7t7R**0o#DgR4";
   const renderItem = ({ item, index }) => {
@@ -51,7 +57,9 @@ const ImageVideoSlider = ({ sliderData, onClickImage, disable }) => {
         ) : (
           <VideoViewer
             item={item}
-            shouldPlay={index === currentSlide ? true : false}
+            shouldPlay={
+              index === currentSlide && shouldVideoPlay ? true : false
+            }
           />
         )}
       </TouchableOpacity>
@@ -60,7 +68,10 @@ const ImageVideoSlider = ({ sliderData, onClickImage, disable }) => {
   return (
     <View>
       <FlatList
-        data={sliderData}
+        data={[
+          ...sliderData,
+          "https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4",
+        ]}
         horizontal={true}
         snapToInterval={SCREEM_WIDTH}
         snapToAlignment="center"
@@ -82,7 +93,7 @@ const ImageVideoSlider = ({ sliderData, onClickImage, disable }) => {
       />
       {sliderData?.length != 1 && (
         <View style={styles.dotStyleWrapper}>
-          {sliderData.map((item, index) => {
+          {sliderData?.map((item, index) => {
             return (
               <View
                 style={[

@@ -33,17 +33,7 @@ const VideoViewer = ({ item, shouldPlay }) => {
         onPress={() => {
           video.current.setIsMutedAsync(!status?.isMuted);
         }}
-        style={{
-          width: scale(22),
-          height: scale(22),
-          borderRadius: 100,
-          position: "absolute",
-          bottom: verticalScale(10),
-          right: moderateScale(10),
-          backgroundColor: "#FFFFFF",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
+        style={styles.muteBtn}
       >
         <Entypo
           name={status?.isMuted ? "sound-mute" : "sound"}
@@ -62,4 +52,15 @@ const styles = StyleSheet.create({
     width: SCREEM_WIDTH,
     height: "100%",
   },
+  muteBtn:{
+    width: scale(22),
+    height: scale(22),
+    borderRadius: 100,
+    position: "absolute",
+    bottom: verticalScale(10),
+    right: moderateScale(10),
+    backgroundColor: "#FFFFFF",
+    justifyContent: "center",
+    alignItems: "center",
+  }
 });

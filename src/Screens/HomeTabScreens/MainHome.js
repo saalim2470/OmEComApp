@@ -68,6 +68,7 @@ const MainHome = ({ route }) => {
   const { postData, setPostData } = useLikeHook(likeDataRes, saveDataRes);
   // const [postData, setPostData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [currentIndex,setCurrentIndex]=useState()
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -152,6 +153,7 @@ const MainHome = ({ route }) => {
     return (
       <FeedCard
         itemData={item}
+        isVideoPlay={currentIndex===index?true:false}
         onClickMoreBtn={() => {
           navigation.navigate(screenName.productDetail, { data: item });
         }}
@@ -182,6 +184,9 @@ const MainHome = ({ route }) => {
     // dispatch(setGetAdContentPage(1));
     // getContentDataByCategory(id);
     dispatch(resetPage());
+  };
+  const onViewableItemsChanged = ({ viewableItems, changed }) => {
+    setCurrentIndex(viewableItems[0].index)
   };
   return (
     <SafeAreaView style={commonStyle.container}>
@@ -223,6 +228,7 @@ const MainHome = ({ route }) => {
           updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
           refreshing={refreshing}
           onRefresh={onRefresh}
+          onViewableItemsChanged={onViewableItemsChanged}
         />
       )}
       <CustomeAlertModal
