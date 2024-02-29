@@ -1,16 +1,32 @@
 {
   "cli": {
-    "appVersionSource": "local"
+    "version": ">= 5.9.2"
   },
   "build": {
-    "staging": {
+    "development": {
       "distribution": "internal",
-      "android": {
-        "buildType": "apk"
+      "developmentClient":true
+    },
+    "preview": {
+      "distribution": "internal",
+      "android":{
+        "buildType":"apk"
       }
     },
-    "production": {
-      "autoIncrement": true
-    }
+    "preview2": {
+      "android": {
+        "gradleCommand": ":app:assembleRelease"
+      }
+    },
+    "preview3": {
+      "developmentClient": true
+    },
+    "preview4": {
+      "distribution": "internal"
+    },
+    "production": {}
+  },
+  "submit": {
+    "production": {}
   }
 }
