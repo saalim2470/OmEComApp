@@ -3,7 +3,7 @@
     "scheme": "omecomapp",
     "name": "OmEComApp",
     "slug": "OmEComApp",
-    "version": "1.0.0",
+    "version": "1.0.032",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -54,7 +54,8 @@
             "DEFAULT"
           ]
         }
-      ]
+      ],
+      "versionCode": 32
     },
     "web": {
       "favicon": "./assets/favicon.png"
