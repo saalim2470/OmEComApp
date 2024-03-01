@@ -67,7 +67,7 @@ const images = {
   contact_us: require("../utils/assets/images/contact_us.png"),
   promotion: require("../utils/assets/images/promotion.png"),
   location: require("../utils/assets/images/location.png"),
-  defaultAd: require("../utils/assets/images/DefaultAd.jpg"),
+  defaultAd: require("../utils/assets/images/DefaultAd.png"),
   commingSoon: require("../utils/assets/images/commingSoon.png"),
   categoriesOutlineIcon: require("../utils/assets/images/categoriesOutlineIcon.png"),
   categoriesFillIcon: require("../utils/assets/images/categoriesFillIcon.png"),

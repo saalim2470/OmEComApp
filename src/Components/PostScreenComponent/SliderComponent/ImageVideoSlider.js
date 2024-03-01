@@ -25,7 +25,6 @@ const ImageVideoSlider = ({
   const [currentSlide, setCurrentSlide] = useState(0);
   const onViewableItemsChanged = ({ viewableItems, changed }) => {
     setCurrentSlide(viewableItems[0].index);
-    console.log('-=-=-vieo-=-=-',changed);
   };
   const blurhash = "L6PZfSi_.AyE_3t7t7R**0o#DgR4";
   const renderItem = ({ item, index }) => {
@@ -70,7 +69,8 @@ const ImageVideoSlider = ({
       <FlatList
         data={[
           ...sliderData,
-          "https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4",
+          // "https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4",
+          'https://sampletestfile.com/wp-content/uploads/2023/07/1MB-MP4.mp4'
         ]}
         horizontal={true}
         snapToInterval={SCREEM_WIDTH}

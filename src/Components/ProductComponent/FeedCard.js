@@ -8,7 +8,7 @@ import ProfileFeedCardHeader from "../ProfileScreenComponent/ProfileFeedCardHead
 import FeedCardTopView from "./FeedCardTopView";
 import ImageVideoSlider from "../PostScreenComponent/SliderComponent/ImageVideoSlider";
 
-const FeedCard = ({
+const FeedCard =memo( ({
   itemData,
   onClickMoreBtn = () => {},
   disable,
@@ -41,7 +41,7 @@ const FeedCard = ({
       </View>
     </View>
   );
-};
+});
 
 FeedCard.propTypes = {
   itemData: PropTypes.object,
@@ -54,7 +54,7 @@ FeedCard.propTypes = {
   onClickComment: PropTypes.func,
 };
 
-export default memo(FeedCard);
+export default FeedCard;
 
 const styles = StyleSheet.create({
   cardView: {},

@@ -66,6 +66,23 @@ const CustomSidebarMenu = (props) => {
               />
             )}
           />
+              <DrawerItem
+            label="Categories"
+            onPress={() => {
+              navigation.navigate(screenName.bottomNavigation, {
+                screen: screenName.homeScreenIcons,
+             
+              });
+            }}
+            labelStyle={styles.labelStyle}
+            icon={({ color, size, focused }) => (
+              <Image
+                source={images.categories}
+                style={{ width: scale(30), height: scale(30) }}
+                resizeMode="contain"
+              />
+            )}
+          />
           <DrawerItem
             label="Promotion"
             onPress={() => {

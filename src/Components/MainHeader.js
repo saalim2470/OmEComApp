@@ -21,8 +21,8 @@ const MainHeader = ({ navigation }) => {
       <Image
         source={images.omLogo}
         style={{
-          width: scale(50),
-          height: scale(50),
+          width: scale(60),
+          height: scale(60),
         }}
         resizeMode="contain"
       />
