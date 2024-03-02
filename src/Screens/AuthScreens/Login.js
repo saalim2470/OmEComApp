@@ -28,6 +28,7 @@ import { EXPO_PUSH_TOKEN } from "../../Constants/Constant";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
+import { setExpoPushToken } from "../../store/StoreDataSlice";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -94,11 +95,12 @@ async function registerForPushNotificationsAsync() {
 
 const Login = ({ navigation }) => {
   const dispatch = useDispatch();
+  const expoPushToken=useSelector((state)=>state.storeData.expoPushToken)
   const loginSuccess = useSelector((state) => state.login.isSuccess);
   const loginLoading = useSelector((state) => state.login.isLoading);
   const loginError = useSelector((state) => state.login.error);
   const logindata = useSelector((state) => state.login);
-  const [expoPushToken, setExpoPushToken] = useState("");
+  // const [expoPushToken, setExpoPushToken] = useState("");
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
@@ -112,7 +114,8 @@ const Login = ({ navigation }) => {
 
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) => {
-      setExpoPushToken(token);
+      // setExpoPushToken(token);
+      dispatch(setExpoPushToken(token))
     });
 
     notificationListener.current =
@@ -132,6 +135,19 @@ const Login = ({ navigation }) => {
       Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
+  const getNotificationPermission=async()=>{
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== "granted") {
+      alert("Failed to get push token for push notification!");
+      return;
+    }
+  }
   useEffect(() => {
     if (loginSuccess) {
       // navigation.dispatch(StackActions.replace(screenName.drawerNavigation));
@@ -145,6 +161,7 @@ const Login = ({ navigation }) => {
   }, [loginError]);
 
   const onClickLogin = () => {
+    getNotificationPermission()
     if (email != "" && password != "") {
       dispatch(
         getLoginUser({

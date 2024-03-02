@@ -36,6 +36,7 @@ import RoundCategoryView from "../../Components/HomeScreenComponent/RoundCategor
 import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 import ShimmerLoading from "../../Components/LoadingComponents/ShimmerLoading";
 import useLikeHook from "../../CustomeHooks/useLikeHook";
+import ListingComponent from "../../Components/ListingComponent";
 
 const MainHome = ({ route }) => {
   const navigation = useNavigation();
@@ -68,7 +69,7 @@ const MainHome = ({ route }) => {
   const { postData, setPostData } = useLikeHook(likeDataRes, saveDataRes);
   // const [postData, setPostData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const [currentIndex,setCurrentIndex]=useState()
+  const [currentIndex, setCurrentIndex] = useState();
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -153,7 +154,7 @@ const MainHome = ({ route }) => {
     return (
       <FeedCard
         itemData={item}
-        isVideoPlay={currentIndex===index?true:false}
+        isVideoPlay={currentIndex === index ? true : false}
         onClickMoreBtn={() => {
           navigation.navigate(screenName.productDetail, { data: item });
         }}
@@ -178,15 +179,10 @@ const MainHome = ({ route }) => {
     }
   };
   const onClickCategory = (id) => {
-    // dispatch(resetAdContent());
-    // dispatch(resetAdContentData());
-    // dispatch(setCategoryId(id));
-    // dispatch(setGetAdContentPage(1));
-    // getContentDataByCategory(id);
     dispatch(resetPage());
   };
   const onViewableItemsChanged = ({ viewableItems, changed }) => {
-    setCurrentIndex(viewableItems[0].index)
+    setCurrentIndex(viewableItems[0].index);
   };
   return (
     <SafeAreaView style={commonStyle.container}>
@@ -205,30 +201,41 @@ const MainHome = ({ route }) => {
       ) : !contentDataLoading && postData?.length <= 0 ? (
         <FriendlyMsg msgWithImage={"Content not availaibale"} />
       ) : (
-        <FlatList
+        // <FlatList
+        //   data={postData}
+        //   keyExtractor={(item, index) => {
+        //     return `data_${item.id}_${index}`;
+        //   }}
+        //   showsVerticalScrollIndicator={false}
+        //   onEndReachedThreshold={1}
+        //   onEndReached={() => {
+        //     onReachedEnd();
+        //   }}
+        //   contentContainerStyle={{ gap: scale(10) ,paddingBottom:verticalScale(10)}}
+        //   ItemSeparatorComponent={
+        //     <Divider style={{ marginBottom: verticalScale(8) }} />
+        //   }
+        //   ListFooterComponent={listFooterComponent}
+        //   renderItem={renderItem}
+        //   initialNumToRender={40}
+        //   maxToRenderPerBatch={maxToRenderPerBatch}
+        //   // windowSize={10}
+        //   removeClippedSubviews={true}
+        //   updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
+        //   refreshing={refreshing}
+        //   onRefresh={onRefresh}
+        //   onViewableItemsChanged={onViewableItemsChanged}
+        // />
+        <ListingComponent
           data={postData}
-          keyExtractor={(item, index) => {
-            return `data_${item.id}_${index}`;
-          }}
-          showsVerticalScrollIndicator={false}
-          onEndReachedThreshold={1}
-          onEndReached={() => {
+          loadMore={contentMoreLoading}
+          refreshing={refreshing}
+          onReachedEnd={() => {
             onReachedEnd();
           }}
-          contentContainerStyle={{ gap: scale(10) }}
-          ItemSeparatorComponent={
-            <Divider style={{ marginBottom: verticalScale(8) }} />
-          }
-          ListFooterComponent={listFooterComponent}
-          renderItem={renderItem}
-          initialNumToRender={40}
-          maxToRenderPerBatch={maxToRenderPerBatch}
-          // windowSize={10}
-          removeClippedSubviews={true}
-          updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-          onViewableItemsChanged={onViewableItemsChanged}
+          onRefresh={() => {
+            onRefresh();
+          }}
         />
       )}
       <CustomeAlertModal

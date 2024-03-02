@@ -5,6 +5,7 @@ const StoreDataSlice = createSlice({
   initialState: {
     categoryId: 0,
     searchFilterId: 0,
+    expoPushToken:''
   },
   reducers: {
     setCategoryId: (state, action) => {
@@ -14,7 +15,10 @@ const StoreDataSlice = createSlice({
     setSearchFilterId: (state, action) => {
       state.searchFilterId = action.payload;
     },
+    setExpoPushToken:(state,action)=>{
+      state.expoPushToken=action.payload
+    }
   },
 });
 export default StoreDataSlice.reducer;
-export const { setCategoryId, setSearchFilterId } = StoreDataSlice.actions;
+export const { setCategoryId, setSearchFilterId ,setExpoPushToken} = StoreDataSlice.actions;
