@@ -69,8 +69,7 @@ const ImageVideoSlider = ({
       <FlatList
         data={[
           ...sliderData,
-          // "https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4",
-          'https://sampletestfile.com/wp-content/uploads/2023/07/1MB-MP4.mp4'
+          "https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4",
         ]}
         horizontal={true}
         snapToInterval={SCREEM_WIDTH}
