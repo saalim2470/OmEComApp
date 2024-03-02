@@ -19,6 +19,8 @@ const ListingComponent = ({
   loadMore,
   refreshing,
   onRefresh = () => {},
+  renderItemFlatlist,
+  style
 }) => {
   const maxToRenderPerBatch = 100;
   const navigation = useNavigation();
@@ -50,10 +52,13 @@ const ListingComponent = ({
   }, []);
 
   const onViewableItemsChanged = ({ viewableItems, changed }) => {
-    setCurrentIndex(viewableItems[0].index);
+    if (viewableItems.length > 0) {
+      // Set the currentIndex to the index of the first viewable item
+      setCurrentIndex(viewableItems[0].index);
+    }
   };
   return (
-    <View style={{ marginBottom: verticalScale(150) }}>
+    <View style={style}>
       <FlatList
         data={data}
         keyExtractor={(item, index) => {
@@ -65,14 +70,14 @@ const ListingComponent = ({
           onReachedEnd();
         }}
         contentContainerStyle={{
-          gap: scale(10),
+          // gap: scale(10),
           paddingBottom: verticalScale(10),
         }}
         ItemSeparatorComponent={
           <Divider style={{ marginBottom: verticalScale(8) }} />
         }
         ListFooterComponent={listFooterComponent}
-        renderItem={renderItem}
+        renderItem={renderItemFlatlist?renderItemFlatlist: renderItem}
         initialNumToRender={40}
         maxToRenderPerBatch={maxToRenderPerBatch}
         windowSize={5}

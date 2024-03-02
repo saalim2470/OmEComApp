@@ -1,12 +1,14 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { Avatar } from "react-native-paper";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import colors from "../Constants/colors";
+import moment from "moment";
+import { getUserUploadTime } from "../Constants/Constant";
 
 const NotificationCard = ({ data }) => {
   return (
-    <View style={styles.notificationCard}>
+    <TouchableOpacity activeOpacity={0.5} style={styles.notificationCard}>
       <View style={styles.notificationLeftView}>
         <Avatar.Image
           size={scale(45)}
@@ -16,20 +18,19 @@ const NotificationCard = ({ data }) => {
           }}
         />
         <View>
+          <Text style={styles.notificationTxt}>{data?.title}</Text>
           <Text style={styles.notificationTxt}>
-            {data?.request?.content?.title}
-          </Text>
-          <Text style={styles.notificationTxt}>
-            {/* 50% OFF in Ultraboost All Terrain Ltd Shoes! */}
-            {data?.request?.content?.body}
+            {data?.description}
           </Text>
         </View>
       </View>
       <View style={styles.notificationRightView}>
-        <Text style={styles.notificationTimeTxt}>9:35 AM</Text>
-        <View style={styles.notificationCircle}></View>
+        <Text style={styles.notificationTimeTxt}>
+          {moment(getUserUploadTime(data?.createdDate)).format('DD-MM-YYYY','m:s')}
+        </Text>
+        {!data?.isRead&&<View style={styles.notificationCircle}></View>}
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

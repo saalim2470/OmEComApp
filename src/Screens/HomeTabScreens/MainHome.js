@@ -227,6 +227,7 @@ const MainHome = ({ route }) => {
         //   onViewableItemsChanged={onViewableItemsChanged}
         // />
         <ListingComponent
+        style={{marginBottom:verticalScale(120)}}
           data={postData}
           loadMore={contentMoreLoading}
           refreshing={refreshing}
