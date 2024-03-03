@@ -6,6 +6,7 @@ import colors from "../Constants/colors";
 import moment from "moment";
 import { getUserUploadTime } from "../Constants/Constant";
 import { useDispatch } from "react-redux";
+import { getUserReadNotificationApi } from "../store/NotificationSlices/GetUserReadNotification";
 
 const NotificationCard = ({ data }) => {
   const dispatch = useDispatch();

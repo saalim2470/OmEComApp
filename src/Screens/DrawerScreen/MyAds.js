@@ -182,6 +182,12 @@ const MyAds = ({ navigation, route }) => {
       setCurrentIndex(viewableItems[0].index);
     }
   };
+  const handleScroll = useCallback((event) => {
+    const viewSize = event.nativeEvent.layoutMeasurement.width;
+    const contentOffset = event.nativeEvent.contentOffset.y;
+    const index = Math.floor(contentOffset / viewSize) + 1;
+    setCurrentIndex(index);
+  }, []);
   return (
     <SafeAreaView style={commonStyle.container}>
       <CustomeHeader isBackBtn={true} title={"My Ads"} />
@@ -211,8 +217,10 @@ const MyAds = ({ navigation, route }) => {
           renderItem={renderItem}
           refreshing={refreshing}
           onRefresh={onRefresh}
-          onViewableItemsChanged={onViewableItemsChanged}
+          // onViewableItemsChanged={onViewableItemsChanged}
           fadeDuration={0}
+          onScroll={handleScroll}
+          scrollEventThrottle={12}
         />
       )}
       <CustomeAlertModal

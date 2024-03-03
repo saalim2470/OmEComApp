@@ -13,6 +13,8 @@ import {
 import Loading from "../../Components/Loading";
 import ListingComponent from "../../Components/ListingComponent";
 import { verticalScale } from "react-native-size-matters";
+import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
+import FriendlyMsg from "../../Components/ErrorScreens/FriendlyMsg";
 
 const Notification = () => {
   const dispatch = useDispatch();
@@ -24,6 +26,8 @@ const Notification = () => {
     isSuccess,
     isMoreLoading,
     isReachedEnd,
+    error,
+    statusCode: errorCode,
   } = useSelector((state) => state.getCurrentUserAllNotifications);
   const { readNotificationData: readData } = useSelector(
     (state) => state.getUserReadNotification
@@ -60,22 +64,29 @@ const Notification = () => {
   if (notificationLoading) {
     return <Loading />;
   }
+  if (error !== null && !error?.Success) {
+    return <ErrorMsg statusCode={errorCode} />;
+  }
   return (
     <SafeAreaView style={commonStyle.container}>
       <CustomeHeader isBackBtn={true} title={"Notification"} />
       <View style={{ marginBottom: verticalScale(60) }}>
-        <ListingComponent
-          data={notification}
-          loadMore={isMoreLoading}
-          refreshing={refreshing}
-          renderItem={renderItem}
-          onReachedEnd={() => {
-            onReachedEnd();
-          }}
-          onRefresh={() => {
-            onRefresh();
-          }}
-        />
+        {notification.length <= 0 ? (
+          <FriendlyMsg msgWithImage={"No Notification"} />
+        ) : (
+          <ListingComponent
+            data={notification}
+            loadMore={isMoreLoading}
+            refreshing={refreshing}
+            renderItem={renderItem}
+            onReachedEnd={() => {
+              onReachedEnd();
+            }}
+            onRefresh={() => {
+              onRefresh();
+            }}
+          />
+        )}
       </View>
     </SafeAreaView>
   );

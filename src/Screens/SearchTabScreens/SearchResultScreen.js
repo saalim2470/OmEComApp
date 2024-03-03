@@ -99,6 +99,12 @@ const SearchResultScreen = ({ navigation }) => {
       setCurrentIndex(viewableItems[0].index);
     }
   };
+  const handleScroll = useCallback((event) => {
+    const viewSize = event.nativeEvent.layoutMeasurement.width;
+    const contentOffset = event.nativeEvent.contentOffset.y;
+    const index = Math.floor(contentOffset / viewSize) + 1;
+    setCurrentIndex(index);
+  }, []);
   return (
     <SafeAreaView style={commonStyle.container}>
       <View style={styles.innerContainer}>
@@ -141,10 +147,12 @@ const SearchResultScreen = ({ navigation }) => {
             initialNumToRender={40}
             maxToRenderPerBatch={maxToRenderPerBatch}
             updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
-            // windowSize={10}
+            windowSize={5}
             removeClippedSubviews={true}
-            onViewableItemsChanged={onViewableItemsChanged}
+            // onViewableItemsChanged={onViewableItemsChanged}
             fadeDuration={0}
+            onScroll={handleScroll}
+            scrollEventThrottle={12}
           />
         </View>
       )}

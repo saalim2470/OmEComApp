@@ -1,5 +1,6 @@
 import {
   Image,
+  Linking,
   StyleSheet,
   Text,
   TextInput,
@@ -14,7 +15,7 @@ import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import CustomeButton from "../../Components/CustomeButton";
 import images from "../../Constants/images";
 import colors from "../../Constants/colors";
-import { contactUsMobileNo } from "../../Constants/Constant";
+import { contactUsMobileNo, omEmail } from "../../Constants/Constant";
 
 const ContactUs = () => {
   const [value, setValue] = useState("");
@@ -49,13 +50,35 @@ const ContactUs = () => {
             onClickBtn();
           }}
         />
-        <TouchableOpacity style={styles.btn} activeOpacity={0.6}>
+        <TouchableOpacity
+          style={styles.btn}
+          activeOpacity={0.6}
+          onPress={() => {
+            Linking.openURL(`tel:${contactUsMobileNo}`);
+          }}
+        >
           <Image
             source={images.whatsAppLogo}
             style={styles.img}
             resizeMode="contain"
           />
           <Text style={styles.btnTxt}>{contactUsMobileNo}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.btn}
+          activeOpacity={0.6}
+          onPress={() => {
+            Linking.openURL(
+              `mailto:${omEmail}?subject=SendMail&body=Description`
+            );
+          }}
+        >
+          <Image
+            source={images.gmailLogo}
+            style={styles.img}
+            resizeMode="contain"
+          />
+          <Text style={styles.btnTxt}>{omEmail}</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -77,6 +100,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderColor: colors.themeColor,
+    marginBottom: verticalScale(15),
   },
   img: {
     width: scale(30),

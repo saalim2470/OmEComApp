@@ -70,6 +70,7 @@ const images = {
   commingSoon: require("../utils/assets/images/commingSoon.png"),
   categoriesOutlineIcon: require("../utils/assets/images/categoriesOutlineIcon.png"),
   categoriesFillIcon: require("../utils/assets/images/categoriesFillIcon.png"),
+  gmailLogo: require("../utils/assets/images/gmailLogo.png"),
 };
 
 export default images;
