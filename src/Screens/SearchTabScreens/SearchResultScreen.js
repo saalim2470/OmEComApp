@@ -49,7 +49,7 @@ const SearchResultScreen = ({ navigation }) => {
     saveData: saveDataRes,
   } = useSelector((state) => state.saveContent);
   const { postData, setPostData } = useLikeHook(likeDataRes, saveDataRes);
-
+  const [currentIndex, setCurrentIndex] = useState();
   const [searchKeyWord, setSearchKeyWord] = useState("");
   useEffect(() => {
     if (searchKeyWord != "")
@@ -86,11 +86,18 @@ const SearchResultScreen = ({ navigation }) => {
     return (
       <FeedCard
         itemData={item}
+        isVideoPlay={currentIndex === index ? true : false}
         onClickMoreBtn={() => {
           navigation.navigate(screenName.productDetail, { data: item });
         }}
       />
     );
+  };
+  const onViewableItemsChanged = ({ viewableItems, changed }) => {
+    if (viewableItems.length > 0) {
+      // Set the currentIndex to the index of the first viewable item
+      setCurrentIndex(viewableItems[0].index);
+    }
   };
   return (
     <SafeAreaView style={commonStyle.container}>
@@ -136,6 +143,8 @@ const SearchResultScreen = ({ navigation }) => {
             updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
             // windowSize={10}
             removeClippedSubviews={true}
+            onViewableItemsChanged={onViewableItemsChanged}
+            fadeDuration={0}
           />
         </View>
       )}

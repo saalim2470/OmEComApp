@@ -66,6 +66,7 @@ const OtherUserProfile = ({ navigation, route }) => {
   } = useSelector((state) => state.follow_UnFollowSlice);
   const { postData, setPostData } = useLikeHook(likeDataRes, saveDataRes);
   const [refreshing, setRefreshing] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState();
   const [userProfileDetail, setUserProfileDetail] = useState(null);
   const [showAlert, setShowAlert] = useState({
     show: false,
@@ -175,13 +176,19 @@ const OtherUserProfile = ({ navigation, route }) => {
     return (
       <FeedCard
         itemData={item}
+        isVideoPlay={currentIndex === index ? true : false}
         onClickMoreBtn={() => {
           navigation.navigate(screenName.productDetail, { data: item });
         }}
       />
     );
   };
-
+  const onViewableItemsChanged = ({ viewableItems, changed }) => {
+    if (viewableItems.length > 0) {
+      // Set the currentIndex to the index of the first viewable item
+      setCurrentIndex(viewableItems[0].index);
+    }
+  };
   return (
     <SafeAreaView style={commonStyle.container}>
       <HeaderWithMiddleName
@@ -210,13 +217,12 @@ const OtherUserProfile = ({ navigation, route }) => {
           initialNumToRender={40}
           maxToRenderPerBatch={maxToRenderPerBatch}
           updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
-          // windowSize={10}
+          windowSize={5}
           renderItem={renderItem}
           refreshing={refreshing}
           onRefresh={onRefresh}
-          // refreshControl={
-          //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          // }
+          onViewableItemsChanged={onViewableItemsChanged}
+          fadeDuration={0}
         />
       )}
       <CustomeAlertModal

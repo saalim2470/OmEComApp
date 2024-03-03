@@ -25,7 +25,10 @@ const Notification = () => {
     isMoreLoading,
     isReachedEnd,
   } = useSelector((state) => state.getCurrentUserAllNotifications);
- 
+  const { readNotificationData: readData } = useSelector(
+    (state) => state.getUserReadNotification
+  );
+
   const [notification, setNotification] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
@@ -37,6 +40,10 @@ const Notification = () => {
       setRefreshing(false);
     }
   }, [isSuccess, notificationData]);
+  useEffect(() => {
+    if (readData !== null && readData?.Success) {
+    }
+  }, [readData]);
 
   const onRefresh = useCallback(() => {
     dispatch(resetPage());
@@ -56,12 +63,12 @@ const Notification = () => {
   return (
     <SafeAreaView style={commonStyle.container}>
       <CustomeHeader isBackBtn={true} title={"Notification"} />
-      <View style={{marginBottom:verticalScale(60)}}>
+      <View style={{ marginBottom: verticalScale(60) }}>
         <ListingComponent
           data={notification}
           loadMore={isMoreLoading}
           refreshing={refreshing}
-          renderItemFlatlist={renderItem}
+          renderItem={renderItem}
           onReachedEnd={() => {
             onReachedEnd();
           }}

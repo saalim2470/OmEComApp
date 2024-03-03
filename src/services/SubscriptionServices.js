@@ -13,5 +13,8 @@ class SubscriptionServices {
       data
     );
   }
+  subscriptionTypeRules() {
+    return http.get("/SubscriptionTypeRules");
+  }
 }
 export default new SubscriptionServices();

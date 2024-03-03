@@ -71,6 +71,7 @@ const MyAds = ({ navigation, route }) => {
     isLoading: deleteLoading,
   } = useSelector((state) => state.deleteAdContent);
   const [refreshing, setRefreshing] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState();
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -148,6 +149,7 @@ const MyAds = ({ navigation, route }) => {
       <FeedCard
         itemData={item}
         profile={true}
+        isVideoPlay={currentIndex === index ? true : false}
         onClickMoreBtn={() => {
           navigation.navigate(screenName.productDetail, { data: item });
         }}
@@ -172,6 +174,12 @@ const MyAds = ({ navigation, route }) => {
   const onReachedEnd = () => {
     if (!userContentReachedEnd) {
       dispatch(setUserContentPage(userContentPage + 1));
+    }
+  };
+  const onViewableItemsChanged = ({ viewableItems, changed }) => {
+    if (viewableItems.length > 0) {
+      // Set the currentIndex to the index of the first viewable item
+      setCurrentIndex(viewableItems[0].index);
     }
   };
   return (
@@ -199,10 +207,12 @@ const MyAds = ({ navigation, route }) => {
           onEndReachedThreshold={1}
           maxToRenderPerBatch={maxToRenderPerBatch}
           updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
-          // windowSize={10}
+          windowSize={5}
           renderItem={renderItem}
           refreshing={refreshing}
           onRefresh={onRefresh}
+          onViewableItemsChanged={onViewableItemsChanged}
+          fadeDuration={0}
         />
       )}
       <CustomeAlertModal

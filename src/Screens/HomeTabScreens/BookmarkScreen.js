@@ -61,6 +61,7 @@ const BookmarkScreen = ({ navigation, route }) => {
   } = useSelector((state) => state.deleteAdContent);
   const [postData, setPostData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState();
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -162,6 +163,7 @@ const BookmarkScreen = ({ navigation, route }) => {
     return (
       <FeedCard
         itemData={item?.adContent}
+        isVideoPlay={currentIndex === index ? true : false}
         onClickMoreBtn={() => {
           navigation.navigate(screenName.productDetail, {
             data: item?.adContent,
@@ -188,6 +190,12 @@ const BookmarkScreen = ({ navigation, route }) => {
   const onReachedEnd = () => {
     if (!userContentReachedEnd) {
       dispatch(setSavedContentPage(userContentPage + 1));
+    }
+  };
+  const onViewableItemsChanged = ({ viewableItems, changed }) => {
+    if (viewableItems.length > 0) {
+      // Set the currentIndex to the index of the first viewable item
+      setCurrentIndex(viewableItems[0].index);
     }
   };
   return (
@@ -217,10 +225,12 @@ const BookmarkScreen = ({ navigation, route }) => {
           maxToRenderPerBatch={maxToRenderPerBatch}
           updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
           removeClippedSubviews={true}
-          // windowSize={10}
+          windowSize={5}
           renderItem={renderItem}
           refreshing={refreshing}
           onRefresh={onRefresh}
+          onViewableItemsChanged={onViewableItemsChanged}
+          fadeDuration={0}
         />
       )}
       <CustomeAlertModal

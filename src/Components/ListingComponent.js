@@ -7,8 +7,6 @@ import {
 } from "react-native";
 import React, { useCallback, useState } from "react";
 import colors from "../Constants/colors";
-import FeedCard from "./ProductComponent/FeedCard";
-import screenName from "../Constants/screenName";
 import { useNavigation } from "@react-navigation/native";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { Divider } from "react-native-paper";
@@ -19,8 +17,8 @@ const ListingComponent = ({
   loadMore,
   refreshing,
   onRefresh = () => {},
-  renderItemFlatlist,
-  style
+  style,
+  renderItem
 }) => {
   const maxToRenderPerBatch = 100;
   const navigation = useNavigation();
@@ -36,20 +34,6 @@ const ListingComponent = ({
       )
     );
   };
-  const renderItem = ({ item, index }) => {
-    return (
-      <FeedCard
-        itemData={item}
-        isVideoPlay={currentIndex === index ? true : false}
-        onClickMoreBtn={() => {
-          onClickMoreBtn(item);
-        }}
-      />
-    );
-  };
-  const onClickMoreBtn = useCallback((item) => {
-    navigation.navigate(screenName.productDetail, { data: item });
-  }, []);
 
   const onViewableItemsChanged = ({ viewableItems, changed }) => {
     if (viewableItems.length > 0) {
@@ -57,6 +41,12 @@ const ListingComponent = ({
       setCurrentIndex(viewableItems[0].index);
     }
   };
+  const handleScroll = useCallback((event) => {
+    const viewSize = event.nativeEvent.layoutMeasurement.width;
+    const contentOffset = event.nativeEvent.contentOffset.y;
+    const index = Math.floor(contentOffset / viewSize) + 1;
+    setCurrentIndex(index);
+  }, []);
   return (
     <View style={style}>
       <FlatList
@@ -77,7 +67,7 @@ const ListingComponent = ({
           <Divider style={{ marginBottom: verticalScale(8) }} />
         }
         ListFooterComponent={listFooterComponent}
-        renderItem={renderItemFlatlist?renderItemFlatlist: renderItem}
+        renderItem={renderItem}
         initialNumToRender={40}
         maxToRenderPerBatch={maxToRenderPerBatch}
         windowSize={5}
@@ -85,8 +75,10 @@ const ListingComponent = ({
         updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
         refreshing={refreshing}
         onRefresh={onRefresh}
-        onViewableItemsChanged={onViewableItemsChanged}
+        // onViewableItemsChanged={onViewableItemsChanged}
         fadeDuration={0}
+        onScroll={handleScroll}
+        scrollEventThrottle={12}
       />
     </View>
   );

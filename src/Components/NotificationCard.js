@@ -5,10 +5,21 @@ import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import colors from "../Constants/colors";
 import moment from "moment";
 import { getUserUploadTime } from "../Constants/Constant";
+import { useDispatch } from "react-redux";
 
 const NotificationCard = ({ data }) => {
+  const dispatch = useDispatch();
+  const onClickNotification=()=>{
+    dispatch(getUserReadNotificationApi(data?.id))
+  }
   return (
-    <TouchableOpacity activeOpacity={0.5} style={styles.notificationCard}>
+    <TouchableOpacity
+      activeOpacity={0.5}
+      style={styles.notificationCard}
+      onPress={() => {
+        onClickNotification();
+      }}
+    >
       <View style={styles.notificationLeftView}>
         <Avatar.Image
           size={scale(45)}
@@ -18,17 +29,22 @@ const NotificationCard = ({ data }) => {
           }}
         />
         <View>
-          <Text style={styles.notificationTxt}>{data?.title}</Text>
-          <Text style={styles.notificationTxt}>
-            {data?.description}
+          <Text
+            style={[styles.notificationTxt, { fontFamily: "Montserrat-Bold" }]}
+          >
+            {data?.title}
           </Text>
+          <Text style={styles.notificationTxt}>{data?.description}</Text>
         </View>
       </View>
       <View style={styles.notificationRightView}>
         <Text style={styles.notificationTimeTxt}>
-          {moment(getUserUploadTime(data?.createdDate)).format('DD-MM-YYYY','m:s')}
+          {moment(getUserUploadTime(data?.createdDate)).format(
+            "DD-MM-YYYY",
+            "m:s"
+          )}
         </Text>
-        {!data?.isRead&&<View style={styles.notificationCircle}></View>}
+        {!data?.isRead && <View style={styles.notificationCircle}></View>}
       </View>
     </TouchableOpacity>
   );

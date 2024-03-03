@@ -81,7 +81,6 @@ const MainHome = ({ route }) => {
     [contentDataRes]
   );
   useEffect(() => {
-    // dispatch(setGetAdContentPage(1));
     getContentDataByCategory(categoryId);
   }, [categoryId, contentDataPage, refreshing]);
 
@@ -124,8 +123,6 @@ const MainHome = ({ route }) => {
   const onRefresh = useCallback(() => {
     dispatch(resetPage());
     setRefreshing(true);
-    // dispatch(setCategoryId(categoryId));
-    // getContentDataByCategory(categoryId);
   }, []);
   const showModal = (title, msg, type) => {
     setShowAlert({
@@ -175,15 +172,23 @@ const MainHome = ({ route }) => {
   const onReachedEnd = () => {
     if (!contentReachedEnd) {
       dispatch(setGetAdContentPage(contentDataPage + 1));
-      // getContentDataByCategory(categoryId);
     }
   };
   const onClickCategory = (id) => {
     dispatch(resetPage());
   };
   const onViewableItemsChanged = ({ viewableItems, changed }) => {
-    setCurrentIndex(viewableItems[0].index);
+    if (viewableItems.length > 0) {
+      // Set the currentIndex to the index of the first viewable item
+      setCurrentIndex(viewableItems[0].index);
+    }
   };
+  const handleScroll = useCallback((event) => {
+    const viewSize = event.nativeEvent.layoutMeasurement.width;
+    const contentOffset = event.nativeEvent.contentOffset.y;
+    const index = Math.floor(contentOffset / viewSize) + 1;
+    setCurrentIndex(index);
+  }, []);
   return (
     <SafeAreaView style={commonStyle.container}>
       <MainHeader navigation={navigation} />
@@ -201,43 +206,35 @@ const MainHome = ({ route }) => {
       ) : !contentDataLoading && postData?.length <= 0 ? (
         <FriendlyMsg msgWithImage={"Content not availaibale"} />
       ) : (
-        // <FlatList
-        //   data={postData}
-        //   keyExtractor={(item, index) => {
-        //     return `data_${item.id}_${index}`;
-        //   }}
-        //   showsVerticalScrollIndicator={false}
-        //   onEndReachedThreshold={1}
-        //   onEndReached={() => {
-        //     onReachedEnd();
-        //   }}
-        //   contentContainerStyle={{ gap: scale(10) ,paddingBottom:verticalScale(10)}}
-        //   ItemSeparatorComponent={
-        //     <Divider style={{ marginBottom: verticalScale(8) }} />
-        //   }
-        //   ListFooterComponent={listFooterComponent}
-        //   renderItem={renderItem}
-        //   initialNumToRender={40}
-        //   maxToRenderPerBatch={maxToRenderPerBatch}
-        //   // windowSize={10}
-        //   removeClippedSubviews={true}
-        //   updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
-        //   refreshing={refreshing}
-        //   onRefresh={onRefresh}
-        //   onViewableItemsChanged={onViewableItemsChanged}
-        // />
-        <ListingComponent
-        style={{marginBottom:verticalScale(120)}}
+        <FlatList
           data={postData}
-          loadMore={contentMoreLoading}
-          refreshing={refreshing}
-          onReachedEnd={() => {
+          keyExtractor={(item, index) => {
+            return `data_${item.id}_${index}`;
+          }}
+          showsVerticalScrollIndicator={false}
+          onEndReachedThreshold={1}
+          onEndReached={() => {
             onReachedEnd();
           }}
-          onRefresh={() => {
-            onRefresh();
-          }}
+          contentContainerStyle={{ gap: scale(10) ,paddingBottom:verticalScale(10)}}
+          ItemSeparatorComponent={
+            <Divider style={{ marginBottom: verticalScale(8) }} />
+          }
+          ListFooterComponent={listFooterComponent}
+          renderItem={renderItem}
+          initialNumToRender={40}
+          maxToRenderPerBatch={maxToRenderPerBatch}
+          windowSize={5}
+          removeClippedSubviews={true}
+          updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          // onViewableItemsChanged={onViewableItemsChanged}
+          onScroll={handleScroll}
+          scrollEventThrottle={12}
+          fadeDuration={0}
         />
+      
       )}
       <CustomeAlertModal
         isVisible={showAlert.show}

@@ -91,7 +91,8 @@ const RoundCategoryView = ({ onClickCategory = () => {} }) => {
         maxToRenderPerBatch={maxToRenderPerBatch}
         removeClippedSubviews={true}
         updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
-        windowSize={10}
+        windowSize={5}
+        fadeDuration={0}
       />
     </View>
   );
@@ -102,6 +103,6 @@ export default RoundCategoryView;
 const styles = StyleSheet.create({
   storyView: {
     marginTop: verticalScale(10),
-    flexDirection: "row",
+    // flexDirection: "row",
   },
 });

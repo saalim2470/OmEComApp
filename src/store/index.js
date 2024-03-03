@@ -29,6 +29,8 @@ import PostBannerOrSliderSlice from "./bannerorSliderAdSlices/PostBannerOrSlider
 import GetPromotedContentSlice from "./bannerorSliderAdSlices/GetPromotedContentSlice";
 import PasswordSlice from "./authSlices/PasswordSlice";
 import GetCurrentUserAllNotifications from "./NotificationSlices/GetCurrentUserAllNotifications";
+import SubscriptionTypeRulesSlice from "./subscriptionSlices/SubscriptionTypeRulesSlice";
+import GetUserReadNotification from "./NotificationSlices/GetUserReadNotification";
 
 const store = configureStore({
   reducer: {
@@ -60,7 +62,9 @@ const store = configureStore({
     postBannerOrSliderSlice: PostBannerOrSliderSlice,
     getPromotedContentSlice: GetPromotedContentSlice,
     passwordSlice: PasswordSlice,
-    getCurrentUserAllNotifications:GetCurrentUserAllNotifications
+    getCurrentUserAllNotifications:GetCurrentUserAllNotifications,
+    subscriptionTypeRulesSlice:SubscriptionTypeRulesSlice,
+    getUserReadNotification:GetUserContentSlice
   },
   middleware: [thunk],
 });

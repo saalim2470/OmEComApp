@@ -11,6 +11,7 @@ import React, {
   useEffect,
   useLayoutEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import commonStyle from "../../Constants/commonStyle";
@@ -76,6 +77,7 @@ const Profile = ({ navigation, route }) => {
   } = useSelector((state) => state.deleteAdContent);
   const { postData, setPostData } = useLikeHook(likeDataRes, saveDataRes);
   const [refreshing, setRefreshing] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState();
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -162,12 +164,14 @@ const Profile = ({ navigation, route }) => {
       <FeedCard
         itemData={item}
         profile={true}
+        isVideoPlay={currentIndex === index ? true : false}
         onClickMoreBtn={() => {
           navigation.navigate(screenName.productDetail, { data: item });
         }}
       />
     );
-  };
+  }
+
   const onRefresh = useCallback(() => {
     dispatch(resetUserContentPage());
     setRefreshing(true);
@@ -188,6 +192,13 @@ const Profile = ({ navigation, route }) => {
       dispatch(setUserContentPage(userContentPage + 1));
     }
   };
+  const handleScroll = useCallback((event) => {
+    const viewSize = event.nativeEvent.layoutMeasurement.width;
+    const contentOffset = event.nativeEvent.contentOffset.y;
+    const index = Math.floor(contentOffset / viewSize) + 1;
+    setCurrentIndex(index);
+  }, []);
+
   return (
     <SafeAreaView style={commonStyle.container}>
       <ProfileScreenTopView
@@ -221,13 +232,18 @@ const Profile = ({ navigation, route }) => {
           onEndReached={onReachedEnd}
           onEndReachedThreshold={1}
           removeClippedSubviews={true}
-          // windowSize={10}
+          windowSize={5}
           renderItem={renderItem}
           refreshing={refreshing}
           onRefresh={onRefresh}
-          // refreshControl={
-          //   <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          // }
+          // onViewableItemsChanged={onViewableItemsChanged}
+          // viewabilityConfig={{
+          //   minimumViewTime: 300,
+          //   itemVisiblePercentThreshold: 50, // Change this threshold as needed
+          // }}
+          onScroll={handleScroll}
+          scrollEventThrottle={12}
+          fadeDuration={0}
         />
       )}
       <CustomeAlertModal

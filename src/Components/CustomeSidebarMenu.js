@@ -20,6 +20,7 @@ import CustomeAlert from "./CustomeAlert";
 import NavigationProfile from "./NavigationComponents/NavigationProfile";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { googlePlayUrl, onShare } from "../Constants/Constant";
+import { resetData } from "../store/addAdContentSlices/AddPostData";
 
 const CustomSidebarMenu = (props) => {
   const navigation = useNavigation();
@@ -32,6 +33,7 @@ const CustomSidebarMenu = (props) => {
     try {
       dispatch(logOut());
       dispatch(resetUserAdContent());
+      dispatch(resetData());
       await AsyncStorage.removeItem(accessToken);
       await AsyncStorage.removeItem(userDetail);
     } catch (error) {}
