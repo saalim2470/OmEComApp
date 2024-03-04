@@ -10,6 +10,7 @@ import React, {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useRef,
   useState,
 } from "react";
 import commonStyle from "../../Constants/commonStyle";
@@ -71,7 +72,7 @@ const MyAds = ({ navigation, route }) => {
     isLoading: deleteLoading,
   } = useSelector((state) => state.deleteAdContent);
   const [refreshing, setRefreshing] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState();
+  const [currentPost, setCurrentPost] = useState();
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -149,7 +150,7 @@ const MyAds = ({ navigation, route }) => {
       <FeedCard
         itemData={item}
         profile={true}
-        isVideoPlay={currentIndex === index ? true : false}
+        currentPost={currentPost}
         onClickMoreBtn={() => {
           navigation.navigate(screenName.productDetail, { data: item });
         }}
@@ -176,18 +177,18 @@ const MyAds = ({ navigation, route }) => {
       dispatch(setUserContentPage(userContentPage + 1));
     }
   };
-  const onViewableItemsChanged = ({ viewableItems, changed }) => {
-    if (viewableItems.length > 0) {
-      // Set the currentIndex to the index of the first viewable item
-      setCurrentIndex(viewableItems[0].index);
-    }
-  };
-  const handleScroll = useCallback((event) => {
-    const viewSize = event.nativeEvent.layoutMeasurement.width;
-    const contentOffset = event.nativeEvent.contentOffset.y;
-    const index = Math.floor(contentOffset / viewSize) + 1;
-    setCurrentIndex(index);
-  }, []);
+  const viewabilityConfigCallbackPairs = useRef([
+    {
+      viewabilityConfig: { itemVisiblePercentThreshold: 50 },
+      onViewableItemsChanged: ({ changed, viewableItems }) => {
+        if (viewableItems.length > 0 && viewableItems[0].isViewable) {
+          console.log(viewableItems);
+          setCurrentPost(viewableItems[0].item?.id);
+        }
+      },
+    },
+  ]);
+
   return (
     <SafeAreaView style={commonStyle.container}>
       <CustomeHeader isBackBtn={true} title={"My Ads"} />
@@ -217,9 +218,10 @@ const MyAds = ({ navigation, route }) => {
           renderItem={renderItem}
           refreshing={refreshing}
           onRefresh={onRefresh}
-          // onViewableItemsChanged={onViewableItemsChanged}
+          viewabilityConfigCallbackPairs={
+            viewabilityConfigCallbackPairs.current
+          }
           fadeDuration={0}
-          onScroll={handleScroll}
           scrollEventThrottle={12}
         />
       )}

@@ -5,15 +5,34 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ResizeMode, Video } from "expo-av";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { Entypo } from "@expo/vector-icons";
 
 const SCREEM_WIDTH = Dimensions.get("window").width;
-const VideoViewer = ({ item, shouldPlay }) => {
+const VideoViewer = ({
+  item,
+  shouldPlay,
+  postDetail,
+  currentFeedPost,
+  currentSliderIndex,
+  index,
+}) => {
   const video = React.useRef(null);
   const [status, setStatus] = useState({});
+  // useEffect(() => {
+  //   if (!video?.current) {
+  //     return;
+  //   }
+  //   if (currentFeedPost !== postDetail?.id || currentSliderIndex !== index) {
+  //     video.current.pauseAsync();
+  //   }
+  //   if (currentFeedPost === postDetail?.id || currentSliderIndex === index) {
+  //     video.current.playAsync();
+  //   }
+  // }, [currentFeedPost, video.current]);
+
   return (
     <View style={{ flex: 1 }}>
       <Video
@@ -25,8 +44,10 @@ const VideoViewer = ({ item, shouldPlay }) => {
         }}
         useNativeControls={false}
         resizeMode={ResizeMode.CONTAIN}
-        isLooping
-        onPlaybackStatusUpdate={(status) => setStatus(() => status)}
+        isLooping={false}
+        onPlaybackStatusUpdate={(status) => {
+          setStatus(() => status);
+        }}
       />
       <TouchableOpacity
         activeOpacity={0.6}
@@ -52,7 +73,7 @@ const styles = StyleSheet.create({
     width: SCREEM_WIDTH,
     height: "100%",
   },
-  muteBtn:{
+  muteBtn: {
     width: scale(22),
     height: scale(22),
     borderRadius: 100,
@@ -62,5 +83,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     justifyContent: "center",
     alignItems: "center",
-  }
+  },
 });

@@ -32,7 +32,6 @@ const Notification = () => {
   const { readNotificationData: readData } = useSelector(
     (state) => state.getUserReadNotification
   );
-
   const [notification, setNotification] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
@@ -46,6 +45,15 @@ const Notification = () => {
   }, [isSuccess, notificationData]);
   useEffect(() => {
     if (readData !== null && readData?.Success) {
+      const updatedData = notification.map((item) => {
+        if (item.id === readData?.Data?.id)
+          return {
+            ...item,
+            isRead: readData?.Data?.isRead,
+          };
+        return item;
+      });
+      setNotification(updatedData);
     }
   }, [readData]);
 
@@ -59,7 +67,7 @@ const Notification = () => {
     }
   };
   const renderItem = ({ item, index }) => {
-    return <NotificationCard data={item} />;
+    return <NotificationCard data={item} user={item?.user} />;
   };
   if (notificationLoading) {
     return <Loading />;
@@ -70,10 +78,11 @@ const Notification = () => {
   return (
     <SafeAreaView style={commonStyle.container}>
       <CustomeHeader isBackBtn={true} title={"Notification"} />
-      <View style={{ marginBottom: verticalScale(60) }}>
-        {notification.length <= 0 ? (
-          <FriendlyMsg msgWithImage={"No Notification"} />
-        ) : (
+
+      {notification.length <= 0 ? (
+        <FriendlyMsg msgWithImage={"No Notification"} />
+      ) : (
+        <View style={{ marginBottom: verticalScale(60) }}>
           <ListingComponent
             data={notification}
             loadMore={isMoreLoading}
@@ -86,8 +95,8 @@ const Notification = () => {
               onRefresh();
             }}
           />
-        )}
-      </View>
+        </View>
+      )}
     </SafeAreaView>
   );
 };

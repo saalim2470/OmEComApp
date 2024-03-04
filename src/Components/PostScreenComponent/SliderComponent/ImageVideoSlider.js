@@ -14,6 +14,7 @@ import colors from "../../../Constants/colors";
 import { scale, verticalScale } from "react-native-size-matters";
 import { getFileExtension, imageExtensions } from "../../../Constants/Constant";
 import { Image } from "expo-image";
+import { ResizeMode, Video } from "expo-av";
 
 const SCREEM_WIDTH = Dimensions.get("window").width;
 const ImageVideoSlider = ({
@@ -21,12 +22,27 @@ const ImageVideoSlider = ({
   onClickImage,
   disable,
   shouldVideoPlay,
+  currentPost,
+  postDetail,
 }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const video = React.useRef(null);
+  const [status, setStatus] = useState({});
   const onViewableItemsChanged = ({ viewableItems, changed }) => {
     setCurrentSlide(viewableItems[0].index);
   };
   const blurhash = "L6PZfSi_.AyE_3t7t7R**0o#DgR4";
+  useEffect(() => {
+    if (!video?.current) {
+      return;
+    }
+    if (currentPost !== postDetail?.id) {
+      video.current.pauseAsync();
+    }
+    if (currentPost === postDetail?.id) {
+      video.current.playAsync();
+    }
+  }, [currentPost, video.current]);
   const renderItem = ({ item, index }) => {
     return (
       <TouchableOpacity
@@ -54,11 +70,37 @@ const ImageVideoSlider = ({
             style={styles.sliderImage}
           />
         ) : (
-          <VideoViewer
-            item={item}
+          // <VideoViewer
+          //   item={`${baseURL}${serverImagePath}/${item}`}
+          //   postDetail={postDetail}
+          //   currentFeedPost={currentPost}
+          //   currentSliderIndex={currentSlide}
+          //   index={index}
+          //   shouldPlay={
+          //     // index === currentSlide || shouldVideoPlay ? true : false
+          //     index === currentSlide && currentPost === postDetail?.id
+          //       ? true
+          //       : false
+          //   }
+          // />
+          <Video
+            ref={video}
             shouldPlay={
-              index === currentSlide && shouldVideoPlay ? true : false
+              // index === currentSlide || shouldVideoPlay ? true : false
+              index === currentSlide && currentPost === postDetail?.id
+                ? true
+                : false
             }
+            style={styles.videoStyle}
+            source={{
+              uri: `${baseURL}${serverImagePath}/${item}`,
+            }}
+            useNativeControls={false}
+            resizeMode={ResizeMode.CONTAIN}
+            isLooping={true}
+            onPlaybackStatusUpdate={(status) => {
+              setStatus(() => status);
+            }}
           />
         )}
       </TouchableOpacity>

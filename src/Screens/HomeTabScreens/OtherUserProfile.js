@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import commonStyle from "../../Constants/commonStyle";
 import HeaderWithMiddleName from "../../Components/HeaderWithMiddleName";
@@ -66,7 +66,7 @@ const OtherUserProfile = ({ navigation, route }) => {
   } = useSelector((state) => state.follow_UnFollowSlice);
   const { postData, setPostData } = useLikeHook(likeDataRes, saveDataRes);
   const [refreshing, setRefreshing] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState();
+  const [currentPost, setCurrentPost] = useState();
   const [userProfileDetail, setUserProfileDetail] = useState(null);
   const [showAlert, setShowAlert] = useState({
     show: false,
@@ -176,19 +176,24 @@ const OtherUserProfile = ({ navigation, route }) => {
     return (
       <FeedCard
         itemData={item}
-        isVideoPlay={currentIndex === index ? true : false}
+        currentPost={currentPost}
         onClickMoreBtn={() => {
           navigation.navigate(screenName.productDetail, { data: item });
         }}
       />
     );
   };
-  const onViewableItemsChanged = ({ viewableItems, changed }) => {
-    if (viewableItems.length > 0) {
-      // Set the currentIndex to the index of the first viewable item
-      setCurrentIndex(viewableItems[0].index);
-    }
-  };
+  const viewabilityConfigCallbackPairs = useRef([
+    {
+      viewabilityConfig: { itemVisiblePercentThreshold: 50 },
+      onViewableItemsChanged: ({ changed, viewableItems }) => {
+        if (viewableItems.length > 0 && viewableItems[0].isViewable) {
+          console.log(viewableItems);
+          setCurrentPost(viewableItems[0].item?.id);
+        }
+      },
+    },
+  ]);
   return (
     <SafeAreaView style={commonStyle.container}>
       <HeaderWithMiddleName
@@ -221,7 +226,9 @@ const OtherUserProfile = ({ navigation, route }) => {
           renderItem={renderItem}
           refreshing={refreshing}
           onRefresh={onRefresh}
-          onViewableItemsChanged={onViewableItemsChanged}
+          viewabilityConfigCallbackPairs={
+            viewabilityConfigCallbackPairs.current
+          }
           fadeDuration={0}
         />
       )}

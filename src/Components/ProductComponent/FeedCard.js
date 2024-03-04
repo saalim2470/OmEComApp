@@ -8,40 +8,45 @@ import ProfileFeedCardHeader from "../ProfileScreenComponent/ProfileFeedCardHead
 import FeedCardTopView from "./FeedCardTopView";
 import ImageVideoSlider from "../PostScreenComponent/SliderComponent/ImageVideoSlider";
 
-const FeedCard =memo( ({
-  itemData,
-  onClickMoreBtn = () => {},
-  disable,
-  profile,
-  isVideoPlay
-}) => {
-  return (
-    <View
-      style={{ marginBottom: verticalScale(8), backgroundColor: "#FFFFFF" }}
-    >
-      {profile ? (
-        <ProfileFeedCardHeader itemData={itemData} />
-      ) : (
-        <FeedCardHeader itemData={itemData} />
-      )}
-      {itemData?.description !== null ? (
-        <FeedCardTopView itemData={itemData} disable={disable} />
-      ) : null}
-      {itemData?.imagesData !== "[]" ? (
-        // <Slider data={files} onClick={onClickMoreBtn} disable={disable} />
-        <ImageVideoSlider
-          sliderData={JSON.parse(itemData?.imagesData)}
-          onClickImage={onClickMoreBtn}
-          disable={disable}
-          shouldVideoPlay={isVideoPlay}
-        />
-      ) : null}
-      <View style={[styles.bottomView]}>
-        <FeedCardBottomView itemData={itemData} />
+const FeedCard = memo(
+  ({
+    itemData,
+    onClickMoreBtn = () => {},
+    disable,
+    profile,
+    isVideoPlay,
+    currentPost,
+  }) => {
+    return (
+      <View
+        style={{ marginBottom: verticalScale(8), backgroundColor: "#FFFFFF" }}
+      >
+        {profile ? (
+          <ProfileFeedCardHeader itemData={itemData} />
+        ) : (
+          <FeedCardHeader itemData={itemData} />
+        )}
+        {itemData?.description !== null ? (
+          <FeedCardTopView itemData={itemData} disable={disable} />
+        ) : null}
+        {itemData?.imagesData !== "[]" ? (
+          // <Slider data={files} onClick={onClickMoreBtn} disable={disable} />
+          <ImageVideoSlider
+            sliderData={JSON.parse(itemData?.imagesData)}
+            postDetail={itemData}
+            onClickImage={onClickMoreBtn}
+            disable={disable}
+            shouldVideoPlay={isVideoPlay}
+            currentPost={currentPost}
+          />
+        ) : null}
+        <View style={[styles.bottomView]}>
+          <FeedCardBottomView itemData={itemData} />
+        </View>
       </View>
-    </View>
-  );
-});
+    );
+  }
+);
 
 FeedCard.propTypes = {
   itemData: PropTypes.object,

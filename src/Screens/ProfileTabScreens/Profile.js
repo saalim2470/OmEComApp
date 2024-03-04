@@ -78,6 +78,7 @@ const Profile = ({ navigation, route }) => {
   const { postData, setPostData } = useLikeHook(likeDataRes, saveDataRes);
   const [refreshing, setRefreshing] = useState(false);
   const [currentIndex, setCurrentIndex] = useState();
+  const [currentPost, setCurrentPost] = useState();
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -164,13 +165,13 @@ const Profile = ({ navigation, route }) => {
       <FeedCard
         itemData={item}
         profile={true}
-        isVideoPlay={currentIndex === index ? true : false}
+        currentPost={currentPost}
         onClickMoreBtn={() => {
           navigation.navigate(screenName.productDetail, { data: item });
         }}
       />
     );
-  }
+  };
 
   const onRefresh = useCallback(() => {
     dispatch(resetUserContentPage());
@@ -192,13 +193,6 @@ const Profile = ({ navigation, route }) => {
       dispatch(setUserContentPage(userContentPage + 1));
     }
   };
-  const handleScroll = useCallback((event) => {
-    const viewSize = event.nativeEvent.layoutMeasurement.width;
-    const contentOffset = event.nativeEvent.contentOffset.y;
-    const index = Math.floor(contentOffset / viewSize) + 1;
-    setCurrentIndex(index);
-  }, []);
-
   return (
     <SafeAreaView style={commonStyle.container}>
       <ProfileScreenTopView
@@ -219,7 +213,7 @@ const Profile = ({ navigation, route }) => {
         <FlatList
           data={postData}
           keyExtractor={(item, index) => {
-            `data_${item.id}_${index}`;
+            return `data_${item.id}_${index}`;
           }}
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={
@@ -236,12 +230,14 @@ const Profile = ({ navigation, route }) => {
           renderItem={renderItem}
           refreshing={refreshing}
           onRefresh={onRefresh}
-          // onViewableItemsChanged={onViewableItemsChanged}
-          // viewabilityConfig={{
-          //   minimumViewTime: 300,
-          //   itemVisiblePercentThreshold: 50, // Change this threshold as needed
-          // }}
-          onScroll={handleScroll}
+          viewabilityConfig={{
+            itemVisiblePercentThreshold: 50,
+          }}
+          onViewableItemsChanged={({ viewableItems }) => {
+            if (viewableItems.length > 0 && viewableItems[0].isViewable) {
+              setCurrentPost(viewableItems[0].item?.id);
+            }
+          }}
           scrollEventThrottle={12}
           fadeDuration={0}
         />

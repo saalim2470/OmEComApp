@@ -75,7 +75,11 @@ const ProductDetail = ({ route }) => {
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={true}
       >
-        <FeedCard itemData={adContent} disable={true} showFullDesc={true} />
+        <FeedCard
+          itemData={adContent}
+          disable={true}
+          currentPost={adContent?.id}
+        />
         {/* unComment After 1st version */}
         {/* <AdView /> */}
       </ScrollView>

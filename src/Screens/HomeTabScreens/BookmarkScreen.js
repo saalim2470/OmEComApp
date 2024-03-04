@@ -4,7 +4,7 @@ import {
   RefreshControl,
   StyleSheet,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import commonStyle from "../../Constants/commonStyle";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { Divider, Menu } from "react-native-paper";
@@ -61,7 +61,7 @@ const BookmarkScreen = ({ navigation, route }) => {
   } = useSelector((state) => state.deleteAdContent);
   const [postData, setPostData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState();
+  const [currentPost, setCurrentPost] = useState();
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -163,7 +163,7 @@ const BookmarkScreen = ({ navigation, route }) => {
     return (
       <FeedCard
         itemData={item?.adContent}
-        isVideoPlay={currentIndex === index ? true : false}
+        currentPost={currentPost}
         onClickMoreBtn={() => {
           navigation.navigate(screenName.productDetail, {
             data: item?.adContent,
@@ -192,18 +192,11 @@ const BookmarkScreen = ({ navigation, route }) => {
       dispatch(setSavedContentPage(userContentPage + 1));
     }
   };
-  const onViewableItemsChanged = ({ viewableItems, changed }) => {
-    if (viewableItems.length > 0) {
-      // Set the currentIndex to the index of the first viewable item
-      setCurrentIndex(viewableItems[0].index);
+  const onViewableItemsChanged = useRef(({ viewableItems }) => {
+    if (viewableItems && viewableItems.length > 0) {
+      setCurrentPost(viewableItems[0].item?.adContent?.id);
     }
-  };
-  const handleScroll = useCallback((event) => {
-    const viewSize = event.nativeEvent.layoutMeasurement.width;
-    const contentOffset = event.nativeEvent.contentOffset.y;
-    const index = Math.floor(contentOffset / viewSize) + 1;
-    setCurrentIndex(index);
-  }, []);
+  }).current;
   return (
     <SafeAreaView style={commonStyle.container}>
       <CustomeHeader isBackBtn={true} title={"Saved Items"} />
@@ -235,9 +228,11 @@ const BookmarkScreen = ({ navigation, route }) => {
           renderItem={renderItem}
           refreshing={refreshing}
           onRefresh={onRefresh}
-          // onViewableItemsChanged={onViewableItemsChanged}
+          onViewableItemsChanged={onViewableItemsChanged}
+          viewabilityConfig={{
+            itemVisiblePercentThreshold: 50, // Ya aapki jarurat ke anusaar set karein
+          }}
           fadeDuration={0}
-          onScroll={handleScroll}
           scrollEventThrottle={12}
         />
       )}

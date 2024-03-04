@@ -28,6 +28,7 @@ import Promotion from "../Screens/DrawerScreen/Promotion";
 import MyAds from "../Screens/DrawerScreen/MyAds";
 import ContactUs from "../Screens/DrawerScreen/ContactUs";
 import PromotionRoute from "./PromotionRoute";
+import RefundPolicy from "../Screens/DrawerScreen/RefundPolicy";
 
 const Drawer = createDrawerNavigator();
 
@@ -212,6 +213,21 @@ const DrawerNavigation = () => {
           drawerIcon: ({ color, size, focused }) => (
             <Image
               source={images.contact_us}
+              style={{ width: scale(30), height: scale(30) }}
+              resizeMode="contain"
+            />
+          ),
+        }}
+      />
+      <Drawer.Screen
+        name={screenName.refundPolicy}
+        component={RefundPolicy}
+        options={{
+          drawerLabel: "Refund Policy",
+          swipeEnabled: false,
+          drawerIcon: ({ color, size, focused }) => (
+            <Image
+              source={images.refundIcon}
               style={{ width: scale(30), height: scale(30) }}
               resizeMode="contain"
             />

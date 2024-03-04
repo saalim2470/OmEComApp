@@ -68,12 +68,11 @@ const CustomSidebarMenu = (props) => {
               />
             )}
           />
-              <DrawerItem
+          <DrawerItem
             label="Categories"
             onPress={() => {
               navigation.navigate(screenName.bottomNavigation, {
                 screen: screenName.homeScreenIcons,
-             
               });
             }}
             labelStyle={styles.labelStyle}
@@ -262,6 +261,20 @@ const CustomSidebarMenu = (props) => {
             icon={({ color, size, focused }) => (
               <Image
                 source={images.contact_us}
+                style={{ width: scale(30), height: scale(30) }}
+                resizeMode="contain"
+              />
+            )}
+          />
+          <DrawerItem
+            label="Refund Policy"
+            onPress={() => {
+              navigation.navigate(screenName.refundPolicy);
+            }}
+            labelStyle={styles.labelStyle}
+            icon={({ color, size, focused }) => (
+              <Image
+                source={images.refundIcon}
                 style={{ width: scale(30), height: scale(30) }}
                 resizeMode="contain"
               />

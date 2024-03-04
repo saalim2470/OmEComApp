@@ -19,7 +19,10 @@ import { contactUsMobileNo, omEmail } from "../../Constants/Constant";
 
 const ContactUs = () => {
   const [value, setValue] = useState("");
-  const onClickBtn = () => {};
+  const mailSubject = "Thank you for choosing our app!";
+  const onClickBtn = () => {
+    Linking.openURL(`whatsapp://send?phone=${contactUsMobileNo}&text=${value}`);
+  };
   return (
     <SafeAreaView style={commonStyle.container}>
       <CustomeHeader isBackBtn={true} title={"Contact us"} />
@@ -30,11 +33,7 @@ const ContactUs = () => {
             multiline={true}
             value={value}
             textAlignVertical="top"
-            style={{
-              marginVertical: verticalScale(5),
-              fontFamily: "Montserrat-Regular",
-              padding: moderateScale(5),
-            }}
+            style={styles.textInput}
             onChangeText={(text) => {
               setValue(text);
             }}
@@ -58,7 +57,7 @@ const ContactUs = () => {
           }}
         >
           <Image
-            source={images.whatsAppLogo}
+            source={images.phoneIcon}
             style={styles.img}
             resizeMode="contain"
           />
@@ -69,7 +68,7 @@ const ContactUs = () => {
           activeOpacity={0.6}
           onPress={() => {
             Linking.openURL(
-              `mailto:${omEmail}?subject=SendMail&body=Description`
+              `mailto:${omEmail}?subject=${mailSubject}&body=${value}`
             );
           }}
         >
@@ -111,5 +110,10 @@ const styles = StyleSheet.create({
     fontFamily: "Montserrat-Medium",
     fontSize: moderateScale(12),
     color: colors.themeColor,
+  },
+  textInput: {
+    marginVertical: verticalScale(5),
+    fontFamily: "Montserrat-Regular",
+    padding: moderateScale(5),
   },
 });

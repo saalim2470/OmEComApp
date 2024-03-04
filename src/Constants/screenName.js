@@ -58,6 +58,7 @@ const screenName = {
   promotion: "Promotion",
   uploadPromotionAds: "UploadPromotionAds",
   promotionRoute: "PromotionRoute",
+  refundPolicy: "RefundPolicy",
 };
 
 export default screenName;

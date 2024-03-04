@@ -7,12 +7,21 @@ import moment from "moment";
 import { getUserUploadTime } from "../Constants/Constant";
 import { useDispatch } from "react-redux";
 import { getUserReadNotificationApi } from "../store/NotificationSlices/GetUserReadNotification";
+import { useNavigation } from "@react-navigation/native";
+import screenName from "../Constants/screenName";
+import {
+  baseURL,
+  defaultProfileImg,
+  serverImagePath,
+} from "../Constants/defaults";
 
-const NotificationCard = ({ data }) => {
+const NotificationCard = ({ data, user }) => {
   const dispatch = useDispatch();
-  const onClickNotification=()=>{
-    dispatch(getUserReadNotificationApi(data?.id))
-  }
+  const navigation = useNavigation();
+  const onClickNotification = () => {
+    dispatch(getUserReadNotificationApi(data?.id));
+    navigation.navigate(screenName.productDetail, { data: data?.content });
+  };
   return (
     <TouchableOpacity
       activeOpacity={0.5}
@@ -22,13 +31,23 @@ const NotificationCard = ({ data }) => {
       }}
     >
       <View style={styles.notificationLeftView}>
-        <Avatar.Image
-          size={scale(45)}
-          style={{ marginRight: moderateScale(7) }}
-          source={{
-            uri: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?cs=srgb&dl=pexels-pixabay-220453.jpg&fm=jpg",
-          }}
-        />
+        {user?.profilePicturePath != null ? (
+          <Avatar.Image
+            style={{ marginRight: moderateScale(7) }}
+            source={{
+              uri: `${baseURL}${serverImagePath}/${itemData?.user?.profilePicturePath}`,
+            }}
+            size={scale(45)}
+          />
+        ) : (
+          <Avatar.Image
+            style={{ marginRight: moderateScale(7) }}
+            source={{
+              uri: defaultProfileImg,
+            }}
+            size={scale(45)}
+          />
+        )}
         <View>
           <Text
             style={[styles.notificationTxt, { fontFamily: "Montserrat-Bold" }]}

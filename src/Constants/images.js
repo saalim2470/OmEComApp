@@ -71,6 +71,7 @@ const images = {
   categoriesOutlineIcon: require("../utils/assets/images/categoriesOutlineIcon.png"),
   categoriesFillIcon: require("../utils/assets/images/categoriesFillIcon.png"),
   gmailLogo: require("../utils/assets/images/gmailLogo.png"),
+  refundIcon: require("../utils/assets/images/refundIcon.png"),
 };
 
 export default images;

@@ -5,7 +5,7 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useRef } from "react";
 import MainHeader from "../../Components/MainHeader";
 import commonStyle from "../../Constants/commonStyle";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
@@ -69,7 +69,7 @@ const MainHome = ({ route }) => {
   const { postData, setPostData } = useLikeHook(likeDataRes, saveDataRes);
   // const [postData, setPostData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState();
+  const [currentPost, setCurrentPost] = useState();
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -151,7 +151,7 @@ const MainHome = ({ route }) => {
     return (
       <FeedCard
         itemData={item}
-        isVideoPlay={currentIndex === index ? true : false}
+        currentPost={currentPost}
         onClickMoreBtn={() => {
           navigation.navigate(screenName.productDetail, { data: item });
         }}
@@ -177,18 +177,12 @@ const MainHome = ({ route }) => {
   const onClickCategory = (id) => {
     dispatch(resetPage());
   };
-  const onViewableItemsChanged = ({ viewableItems, changed }) => {
-    if (viewableItems.length > 0) {
-      // Set the currentIndex to the index of the first viewable item
-      setCurrentIndex(viewableItems[0].index);
+  const onViewableItemsChanged = useRef(({ viewableItems }) => {
+    if (viewableItems && viewableItems.length > 0) {
+      setCurrentPost(viewableItems[0].item?.id);
     }
-  };
-  const handleScroll = useCallback((event) => {
-    const viewSize = event.nativeEvent.layoutMeasurement.width;
-    const contentOffset = event.nativeEvent.contentOffset.y;
-    const index = Math.floor(contentOffset / viewSize) + 1;
-    setCurrentIndex(index);
-  }, []);
+  }).current;
+
   return (
     <SafeAreaView style={commonStyle.container}>
       <MainHeader navigation={navigation} />
@@ -216,7 +210,10 @@ const MainHome = ({ route }) => {
           onEndReached={() => {
             onReachedEnd();
           }}
-          contentContainerStyle={{ gap: scale(10) ,paddingBottom:verticalScale(10)}}
+          contentContainerStyle={{
+            gap: scale(10),
+            paddingBottom: verticalScale(10),
+          }}
           ItemSeparatorComponent={
             <Divider style={{ marginBottom: verticalScale(8) }} />
           }
@@ -229,12 +226,13 @@ const MainHome = ({ route }) => {
           updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
           refreshing={refreshing}
           onRefresh={onRefresh}
-          // onViewableItemsChanged={onViewableItemsChanged}
-          onScroll={handleScroll}
+          onViewableItemsChanged={onViewableItemsChanged}
+          viewabilityConfig={{
+            itemVisiblePercentThreshold: 50, // Ya aapki jarurat ke anusaar set karein
+          }}
           scrollEventThrottle={12}
           fadeDuration={0}
         />
-      
       )}
       <CustomeAlertModal
         isVisible={showAlert.show}
