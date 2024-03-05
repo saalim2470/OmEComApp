@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Dimensions,
   StyleSheet,
   Text,
@@ -9,6 +10,7 @@ import React, { useEffect, useState } from "react";
 import { ResizeMode, Video } from "expo-av";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { Entypo } from "@expo/vector-icons";
+import { millisecondsToMinutes } from "../../../Constants/Constant";
 
 const SCREEM_WIDTH = Dimensions.get("window").width;
 const VideoViewer = ({
@@ -21,20 +23,18 @@ const VideoViewer = ({
 }) => {
   const video = React.useRef(null);
   const [status, setStatus] = useState({});
-  // useEffect(() => {
-  //   if (!video?.current) {
-  //     return;
-  //   }
-  //   if (currentFeedPost !== postDetail?.id || currentSliderIndex !== index) {
-  //     video.current.pauseAsync();
-  //   }
-  //   if (currentFeedPost === postDetail?.id || currentSliderIndex === index) {
-  //     video.current.playAsync();
-  //   }
-  // }, [currentFeedPost, video.current]);
+  const [isVideoLoading, setIsVideoLoading] = useState(true);
 
+  const handleVideoLoadStart = () => {
+    setIsVideoLoading(true);
+  };
+
+  const handleVideoLoad = () => {
+    setIsVideoLoading(false);
+  };
   return (
     <View style={{ flex: 1 }}>
+      {isVideoLoading && <ActivityIndicator size="large" color="#0000ff" />}
       <Video
         ref={video}
         shouldPlay={shouldPlay}
@@ -45,6 +45,8 @@ const VideoViewer = ({
         useNativeControls={false}
         resizeMode={ResizeMode.CONTAIN}
         isLooping={false}
+        onLoadStart={handleVideoLoadStart}
+        onLoad={handleVideoLoad}
         onPlaybackStatusUpdate={(status) => {
           setStatus(() => status);
         }}
