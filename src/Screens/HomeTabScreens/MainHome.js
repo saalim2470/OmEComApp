@@ -78,16 +78,10 @@ const MainHome = ({ route }) => {
   });
   useFocusEffect(
     React.useCallback(() => {
-      // Yaha par screen focus hone par chahiye actions ko handle karein
       console.log('Screen focused');
-      // Agar aap video pause karna chahte hain jab screen change hoti hai
-      // to yaha par video ko pause karne ka code likhein
       return () => {
-        // Yaha par screen unfocus hone par chahiye actions ko handle karein
         console.log('Screen unfocused');
         setCurrentPost(null)
-        // Agar aap video play karna chahte hain jab screen change hoti hai
-        // to yaha par video ko play karne ka code likhein
       };
     }, [])
   );
