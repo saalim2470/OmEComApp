@@ -35,7 +35,7 @@ import { resetSaveData } from "../../store/AdContentSlices/SaveContentSlice";
 import FeedCard from "../../Components/ProductComponent/FeedCard";
 import screenName from "../../Constants/screenName";
 import { resetDeleteAdContentData } from "../../store/AdContentSlices/DeleteAdContent";
-import { useIsFocused } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 import colors from "../../Constants/colors";
 import ShimmerLoading from "../../Components/LoadingComponents/ShimmerLoading";
@@ -77,7 +77,6 @@ const Profile = ({ navigation, route }) => {
   } = useSelector((state) => state.deleteAdContent);
   const { postData, setPostData } = useLikeHook(likeDataRes, saveDataRes);
   const [refreshing, setRefreshing] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState();
   const [currentPost, setCurrentPost] = useState();
   const [showAlert, setShowAlert] = useState({
     show: false,
@@ -85,6 +84,15 @@ const Profile = ({ navigation, route }) => {
     msg: null,
     type: null,
   });
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log("Screen focused");
+      return () => {
+        console.log("Screen unfocused");
+        setCurrentPost(null);
+      };
+    }, [])
+  );
   const userDataResMemoized = useMemo(
     () => userContentRes,
     [userContentRes, userContentSuccess]

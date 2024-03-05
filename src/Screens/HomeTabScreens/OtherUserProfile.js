@@ -32,11 +32,12 @@ import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 import colors from "../../Constants/colors";
 import useLikeHook from "../../CustomeHooks/useLikeHook";
 import ServerError from "../../Components/ErrorScreens/ServerError";
+import { useFocusEffect } from "@react-navigation/native";
 
 const OtherUserProfile = ({ navigation, route }) => {
   const maxToRenderPerBatch = 100;
   const dispatch = useDispatch();
-
+  const { userId } = route?.params;
   const {
     otherUserDetail: userDetail,
     contentData: contentData,
@@ -74,10 +75,20 @@ const OtherUserProfile = ({ navigation, route }) => {
     msg: null,
     type: null,
   });
-  useEffect(() => {
-    dispatch(getOtherUserInfoApi(route?.params?.userId));
-  }, [route]);
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     console.log("Screen focused");
+  //     dispatch(getOtherUserInfoApi(route?.params?.userId));
+  //     return () => {
+  //       console.log("Screen unfocused other user");
+  //       setCurrentPost(null);
+  //     };
+  //   }, [])
+  // );
 
+  useEffect(() => {
+    dispatch(getOtherUserInfoApi(userId));
+  }, [userId]);
   useEffect(() => {
     if (userDetail !== null && userDetail?.Success) {
       setUserProfileDetail(userDetail?.Data);
@@ -101,6 +112,14 @@ const OtherUserProfile = ({ navigation, route }) => {
     }
   }, [contentData, userContentSuccess]);
   useEffect(() => {
+    if (
+      likeError !== null ||
+      saveError !== null ||
+      likeErrorCode !== null ||
+      saveErrorCode !== null
+    ) {
+      handleErrorCode(likeErrorCode || saveErrorCode);
+    }
     const handleErrorCode = (code) => {
       if (code === 401) {
         showModal("UnAuthorized", "Please login to continue", "warning");
@@ -112,14 +131,20 @@ const OtherUserProfile = ({ navigation, route }) => {
         showModal("Error", errorMessage, "error");
       }
     };
-
-    handleErrorCode(likeErrorCode || saveErrorCode);
   }, [likeError, likeErrorCode, saveError, saveErrorCode]);
+
+  const onViewableItemsChanged = useRef(({ viewableItems }) => {
+    console.log(viewableItems);
+    if (viewableItems && viewableItems.length > 0) {
+      setCurrentPost(viewableItems[0].item?.id);
+    }
+  }).current;
 
   const getContent = () => {
     dispatch(
       getContentByUserIdApi(
-        userDetail?.Data?.userId,
+        // userDetail?.Data?.userId,
+        userId,
         userContentPage,
         userContentPageSize
       )
@@ -176,24 +201,14 @@ const OtherUserProfile = ({ navigation, route }) => {
     return (
       <FeedCard
         itemData={item}
-        currentPost={currentPost}
+        currentPost={66}
         onClickMoreBtn={() => {
           navigation.navigate(screenName.productDetail, { data: item });
         }}
       />
     );
   };
-  const viewabilityConfigCallbackPairs = useRef([
-    {
-      viewabilityConfig: { itemVisiblePercentThreshold: 50 },
-      onViewableItemsChanged: ({ changed, viewableItems }) => {
-        if (viewableItems.length > 0 && viewableItems[0].isViewable) {
-          console.log(viewableItems);
-          setCurrentPost(viewableItems[0].item?.id);
-        }
-      },
-    },
-  ]);
+
   return (
     <SafeAreaView style={commonStyle.container}>
       <HeaderWithMiddleName
@@ -204,7 +219,7 @@ const OtherUserProfile = ({ navigation, route }) => {
         profileData={userProfileDetail}
         totalPost={userTotalContent}
       />
-      {contentData != null && contentData?.length <= 0 ? (
+      {postData != null && postData?.length <= 0 ? (
         <FriendlyMsg />
       ) : (
         <FlatList
@@ -226,10 +241,12 @@ const OtherUserProfile = ({ navigation, route }) => {
           renderItem={renderItem}
           refreshing={refreshing}
           onRefresh={onRefresh}
-          viewabilityConfigCallbackPairs={
-            viewabilityConfigCallbackPairs.current
-          }
+          onViewableItemsChanged={onViewableItemsChanged}
+          viewabilityConfig={{
+            itemVisiblePercentThreshold: 50,
+          }}
           fadeDuration={0}
+          scrollEventThrottle={12}
         />
       )}
       <CustomeAlertModal

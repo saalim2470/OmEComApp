@@ -11,9 +11,12 @@ import { setError } from "../../store/AdContentSlices/GetAdContentSlice";
 import FeedCard from "../../Components/ProductComponent/FeedCard";
 import Loading from "../../Components/Loading";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { getAdContentByIdApi } from "../../store/AdContentSlices/GetAdContentById";
 
 const ProductDetail = ({ route }) => {
   const dispatch = useDispatch();
+  const { contentId } = route?.params;
+  console.log(contentId);
   const {
     error: likeError,
     statusCode: likeErrorCode,
@@ -24,7 +27,10 @@ const ProductDetail = ({ route }) => {
     statusCode: saveErrorCode,
     saveData: saveDataRes,
   } = useSelector((state) => state.saveContent);
-  const [adContent, setAdContent] = useState(null);
+  const { contentData, isLoading, error } = useSelector(
+    (state) => state.getAdContentById
+  );
+  const [adContent, setAdContent] = useState({});
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -32,8 +38,16 @@ const ProductDetail = ({ route }) => {
     type: null,
   });
   useEffect(() => {
-    setAdContent(route?.params?.data);
-  }, [route?.params]);
+    if (contentId) dispatch(getAdContentByIdApi(contentId));
+  }, [contentId]);
+
+  // useEffect(() => {
+  //   setAdContent(route?.params?.data);
+  // }, [route?.params]);
+  useEffect(() => {
+    if (contentData !== null && contentData?.Success)
+      setAdContent(contentData?.Data);
+  }, [contentData]);
   useEffect(() => {
     if (likeDataRes != null && likeDataRes.Success) {
       updateData(likeDataRes?.Data, "like");
@@ -64,7 +78,10 @@ const ProductDetail = ({ route }) => {
       });
     }
   };
-  if (!adContent && adContent == null) {
+  // if (!adContent && adContent == null) {
+  //   return <Loading />;
+  // }
+  if (isLoading) {
     return <Loading />;
   }
   return (
@@ -75,11 +92,13 @@ const ProductDetail = ({ route }) => {
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={true}
       >
-        <FeedCard
-          itemData={adContent}
-          disable={true}
-          currentPost={adContent?.id}
-        />
+        {adContent !== null ? (
+          <FeedCard
+            itemData={adContent}
+            disable={true}
+            currentPost={adContent?.id}
+          />
+        ) : null}
         {/* unComment After 1st version */}
         {/* <AdView /> */}
       </ScrollView>

@@ -24,6 +24,7 @@ import colors from "../../Constants/colors";
 import ShimmerLoading from "../../Components/LoadingComponents/ShimmerLoading";
 import screenName from "../../Constants/screenName";
 import useLikeHook from "../../CustomeHooks/useLikeHook";
+import { useFocusEffect } from "@react-navigation/native";
 
 const SearchResultScreen = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -52,6 +53,15 @@ const SearchResultScreen = ({ navigation }) => {
   const [currentIndex, setCurrentIndex] = useState();
   const [currentPost, setCurrentPost] = useState();
   const [searchKeyWord, setSearchKeyWord] = useState("");
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log("Screen focused");
+      return () => {
+        console.log("Screen unfocused");
+        setCurrentPost(null);
+      };
+    }, [])
+  );
   useEffect(() => {
     if (searchKeyWord != "")
       dispatch(getSearchData(searchKeyWord, searchPage, 10, filterType));
@@ -94,17 +104,11 @@ const SearchResultScreen = ({ navigation }) => {
       />
     );
   };
-  const viewabilityConfigCallbackPairs = useRef([
-    {
-      viewabilityConfig: { itemVisiblePercentThreshold: 50 },
-      onViewableItemsChanged: ({ changed, viewableItems }) => {
-        if (viewableItems.length > 0 && viewableItems[0].isViewable) {
-          console.log(viewableItems);
-          setCurrentPost(viewableItems[0].item?.id);
-        }
-      },
-    },
-  ]);
+  const onViewableItemsChanged = useRef(({ viewableItems }) => {
+    if (viewableItems && viewableItems.length > 0) {
+      setCurrentPost(viewableItems[0].item?.id);
+    }
+  }).current;
   return (
     <SafeAreaView style={commonStyle.container}>
       <View style={styles.innerContainer}>
@@ -149,9 +153,10 @@ const SearchResultScreen = ({ navigation }) => {
             updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
             windowSize={5}
             removeClippedSubviews={true}
-            viewabilityConfigCallbackPairs={
-              viewabilityConfigCallbackPairs.current
-            }
+            onViewableItemsChanged={onViewableItemsChanged}
+            viewabilityConfig={{
+              itemVisiblePercentThreshold: 50,
+            }}
             fadeDuration={0}
             scrollEventThrottle={12}
           />

@@ -44,7 +44,7 @@ const VideoViewer = ({
         }}
         useNativeControls={false}
         resizeMode={ResizeMode.CONTAIN}
-        isLooping={false}
+        isLooping={true}
         onLoadStart={handleVideoLoadStart}
         onLoad={handleVideoLoad}
         onPlaybackStatusUpdate={(status) => {

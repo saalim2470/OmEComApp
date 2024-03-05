@@ -3,6 +3,7 @@ import {
   FlatList,
   RefreshControl,
   StyleSheet,
+  View,
 } from "react-native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import commonStyle from "../../Constants/commonStyle";
@@ -18,7 +19,7 @@ import { resetSaveData } from "../../store/AdContentSlices/SaveContentSlice";
 import FeedCard from "../../Components/ProductComponent/FeedCard";
 import screenName from "../../Constants/screenName";
 import { resetDeleteAdContentData } from "../../store/AdContentSlices/DeleteAdContent";
-import { useIsFocused } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 import colors from "../../Constants/colors";
 import {
@@ -68,6 +69,15 @@ const BookmarkScreen = ({ navigation, route }) => {
     msg: null,
     type: null,
   });
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log("Screen focused");
+      return () => {
+        console.log("Screen unfocused");
+        setCurrentPost(null);
+      };
+    }, [])
+  );
   useEffect(() => {
     getSavedContent();
   }, [refreshing, userContentPage, isFocused]);
@@ -194,7 +204,8 @@ const BookmarkScreen = ({ navigation, route }) => {
   };
   const onViewableItemsChanged = useRef(({ viewableItems }) => {
     if (viewableItems && viewableItems.length > 0) {
-      setCurrentPost(viewableItems[0].item?.adContent?.id);
+      console.log("-=-=-=-=-", viewableItems[0].item?.adContent?.id);
+      setCurrentPost(viewableItems[0].item?.adContentID);
     }
   }).current;
   return (
@@ -208,33 +219,35 @@ const BookmarkScreen = ({ navigation, route }) => {
       ) : !userContentLoading && postData.length <= 0 ? (
         <FriendlyMsg msgWithImage={"No Saved Ads"} />
       ) : (
-        <FlatList
-          data={postData}
-          keyExtractor={(item, index) => {
-            `data_${item.id}_${index}`;
-          }}
-          showsVerticalScrollIndicator={false}
-          ItemSeparatorComponent={
-            <Divider style={{ marginBottom: verticalScale(8) }} />
-          }
-          initialNumToRender={40}
-          ListFooterComponent={listFooterComponent}
-          onEndReached={onReachedEnd}
-          onEndReachedThreshold={1}
-          maxToRenderPerBatch={maxToRenderPerBatch}
-          updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
-          removeClippedSubviews={true}
-          windowSize={5}
-          renderItem={renderItem}
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-          onViewableItemsChanged={onViewableItemsChanged}
-          viewabilityConfig={{
-            itemVisiblePercentThreshold: 50, // Ya aapki jarurat ke anusaar set karein
-          }}
-          fadeDuration={0}
-          scrollEventThrottle={12}
-        />
+        <View style={{ flex: 1, marginBottom: verticalScale(10) }}>
+          <FlatList
+            data={postData}
+            keyExtractor={(item, index) => {
+              `data_${item.id}_${index}`;
+            }}
+            showsVerticalScrollIndicator={false}
+            ItemSeparatorComponent={
+              <Divider style={{ marginBottom: verticalScale(8) }} />
+            }
+            initialNumToRender={40}
+            ListFooterComponent={listFooterComponent}
+            onEndReached={onReachedEnd}
+            onEndReachedThreshold={1}
+            maxToRenderPerBatch={maxToRenderPerBatch}
+            updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
+            removeClippedSubviews={true}
+            windowSize={5}
+            renderItem={renderItem}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            onViewableItemsChanged={onViewableItemsChanged}
+            viewabilityConfig={{
+              itemVisiblePercentThreshold: 50,
+            }}
+            fadeDuration={0}
+            scrollEventThrottle={12}
+          />
+        </View>
       )}
       <CustomeAlertModal
         isVisible={showAlert.show}

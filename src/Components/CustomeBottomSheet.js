@@ -71,7 +71,9 @@ const CustomeBottomSheet = ({ isOpen, setIsOpen, data }) => {
       <TouchableOpacity
         style={styles.btn}
         onPress={() => {
-          Linking.openURL(`whatsapp://send?phone=9016730106&text=Hello`);
+          Linking.openURL(
+            `whatsapp://send?phone=${data?.user?.phoneNumber}&text=Hello`
+          );
         }}
       >
         <Image source={images.whatsAppLogo} style={styles.logoStyle} />
@@ -80,7 +82,7 @@ const CustomeBottomSheet = ({ isOpen, setIsOpen, data }) => {
       <TouchableOpacity
         style={styles.btn}
         onPress={() => {
-          Linking.openURL(`tel:9016730106`);
+          Linking.openURL(`tel:${data?.user?.phoneNumber}`);
         }}
       >
         <Image source={images.phoneIcon} style={styles.logoStyle} />

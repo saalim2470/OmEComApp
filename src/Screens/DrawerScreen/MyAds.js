@@ -34,7 +34,7 @@ import { resetSaveData } from "../../store/AdContentSlices/SaveContentSlice";
 import FeedCard from "../../Components/ProductComponent/FeedCard";
 import screenName from "../../Constants/screenName";
 import { resetDeleteAdContentData } from "../../store/AdContentSlices/DeleteAdContent";
-import { useIsFocused } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 import colors from "../../Constants/colors";
 import CustomeHeader from "../../Components/CustomeHeader";
@@ -79,6 +79,15 @@ const MyAds = ({ navigation, route }) => {
     msg: null,
     type: null,
   });
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log("Screen focused");
+      return () => {
+        console.log("Screen unfocused");
+        setCurrentPost(null);
+      };
+    }, [])
+  );
   useEffect(() => {
     getUserContent();
   }, [isFocused, userContentPage, refreshing]);
@@ -177,17 +186,11 @@ const MyAds = ({ navigation, route }) => {
       dispatch(setUserContentPage(userContentPage + 1));
     }
   };
-  const viewabilityConfigCallbackPairs = useRef([
-    {
-      viewabilityConfig: { itemVisiblePercentThreshold: 50 },
-      onViewableItemsChanged: ({ changed, viewableItems }) => {
-        if (viewableItems.length > 0 && viewableItems[0].isViewable) {
-          console.log(viewableItems);
-          setCurrentPost(viewableItems[0].item?.id);
-        }
-      },
-    },
-  ]);
+  const onViewableItemsChanged = useRef(({ viewableItems }) => {
+    if (viewableItems && viewableItems.length > 0) {
+      setCurrentPost(viewableItems[0].item?.id);
+    }
+  }).current;
 
   return (
     <SafeAreaView style={commonStyle.container}>
@@ -218,9 +221,10 @@ const MyAds = ({ navigation, route }) => {
           renderItem={renderItem}
           refreshing={refreshing}
           onRefresh={onRefresh}
-          viewabilityConfigCallbackPairs={
-            viewabilityConfigCallbackPairs.current
-          }
+          onViewableItemsChanged={onViewableItemsChanged}
+          viewabilityConfig={{
+            itemVisiblePercentThreshold: 50,
+          }}
           fadeDuration={0}
           scrollEventThrottle={12}
         />

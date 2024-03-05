@@ -20,7 +20,9 @@ const NotificationCard = ({ data, user }) => {
   const navigation = useNavigation();
   const onClickNotification = () => {
     dispatch(getUserReadNotificationApi(data?.id));
-    navigation.navigate(screenName.productDetail, { data: data?.content });
+    navigation.navigate(screenName.productDetail, {
+      contentId: data?.adContentId,
+    });
   };
   return (
     <TouchableOpacity
@@ -35,7 +37,7 @@ const NotificationCard = ({ data, user }) => {
           <Avatar.Image
             style={{ marginRight: moderateScale(7) }}
             source={{
-              uri: `${baseURL}${serverImagePath}/${itemData?.user?.profilePicturePath}`,
+              uri: `${baseURL}${serverImagePath}/${data?.user?.profilePicturePath}`,
             }}
             size={scale(45)}
           />
