@@ -130,16 +130,27 @@ const CreateAccount = () => {
     dispatch(createAccountApi(formData));
   };
   useEffect(() => {
-    if (countryDataRes != null && countryDataRes?.Success) {
-      setCountryData(countryDataRes?.Data?.items);
+    if (countryDataRes != null ) {
+      setCountryData(countryDataRes?.items);
     }
-    if (stateDataRes != null && stateDataRes?.Success) {
-      setStateData(stateDataRes?.Data?.items);
+    if (stateDataRes != null ) {
+      setStateData(stateDataRes?.items);
     }
-    if (cityDataRes != null && cityDataRes?.Success) {
-      setCityData(cityDataRes?.Data?.items);
+    if (cityDataRes != null ) {
+      setCityData(cityDataRes?.items);
     }
   }, [countryDataRes, stateDataRes, cityDataRes]);
+  // useEffect(() => {
+  //   if (countryDataRes != null && countryDataRes?.Success) {
+  //     setCountryData(countryDataRes?.Data?.items);
+  //   }
+  //   if (stateDataRes != null && stateDataRes?.Success) {
+  //     setStateData(stateDataRes?.Data?.items);
+  //   }
+  //   if (cityDataRes != null && cityDataRes?.Success) {
+  //     setCityData(cityDataRes?.Data?.items);
+  //   }
+  // }, [countryDataRes, stateDataRes, cityDataRes]);
   useEffect(() => {
     if (authSuccess != false && authSuccess) {
       dispatch(clearCreateAccountData());
