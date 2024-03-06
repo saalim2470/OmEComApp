@@ -30,7 +30,6 @@ const FeedCard = memo(
           <FeedCardTopView itemData={itemData} disable={disable} />
         ) : null}
         {itemData?.imagesData !== "[]" ? (
-          // <Slider data={files} onClick={onClickMoreBtn} disable={disable} />
           <ImageVideoSlider
             sliderData={JSON.parse(itemData?.imagesData)}
             postDetail={itemData}

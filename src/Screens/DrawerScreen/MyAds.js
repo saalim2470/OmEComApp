@@ -39,6 +39,8 @@ import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 import colors from "../../Constants/colors";
 import CustomeHeader from "../../Components/CustomeHeader";
 import useLikeHook from "../../CustomeHooks/useLikeHook";
+import CustomeFlatlist from "../../Components/CustomeFlatlist";
+import useErrorHook from "../../CustomeHooks/useErrorHook";
 
 const MyAds = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -73,12 +75,10 @@ const MyAds = ({ navigation, route }) => {
   } = useSelector((state) => state.deleteAdContent);
   const [refreshing, setRefreshing] = useState(false);
   const [currentPost, setCurrentPost] = useState();
-  const [showAlert, setShowAlert] = useState({
-    show: false,
-    title: null,
-    msg: null,
-    type: null,
-  });
+  const { apiShowError, setApiShowError } = useErrorHook(
+    likeError || saveError || deleteError,
+    likeErrorCode || saveErrorCode || deleteStatusCode
+  );
   useFocusEffect(
     React.useCallback(() => {
       console.log("Screen focused");
@@ -102,33 +102,6 @@ const MyAds = ({ navigation, route }) => {
     }
   }, [userContentRes]);
   useEffect(() => {
-    const handleErrorCode = (code) => {
-      if (code === 401) {
-        showModal("UnAuthorized", "Please login to continue", "warning");
-      } else if (
-        likeError != null ||
-        saveError != null ||
-        deleteError != null
-      ) {
-        const errorMessage =
-          likeError?.ErrorMessage ||
-          saveError?.ErrorMessage ||
-          deleteError?.ErrorMessage ||
-          "Some Error Occurred";
-        showModal("Error", errorMessage, "error");
-      }
-    };
-
-    handleErrorCode(likeErrorCode || saveErrorCode || deleteStatusCode);
-  }, [
-    likeError,
-    likeErrorCode,
-    saveError,
-    saveErrorCode,
-    deleteError,
-    deleteStatusCode,
-  ]);
-  useEffect(() => {
     if (userContentError != null && !userContentError?.Success) {
       setRefreshing(false);
     }
@@ -137,20 +110,12 @@ const MyAds = ({ navigation, route }) => {
   const getUserContent = () => {
     dispatch(getUserContentApi(userContentPage, userContentPageSize));
   };
-  const showModal = (title, msg, type) => {
-    setShowAlert({
-      show: true,
-      title: title,
-      msg: msg,
-      type: type,
-    });
-  };
   const onClickModalBtn = () => {
     dispatch(resetLikeData());
     dispatch(resetSaveData());
     dispatch(resetDeleteAdContentData());
-    setShowAlert({
-      ...showAlert,
+    setApiShowError({
+      ...apiShowError,
       show: false,
     });
   };
@@ -202,38 +167,21 @@ const MyAds = ({ navigation, route }) => {
       ) : !userContentLoading && postData.length <= 0 ? (
         <FriendlyMsg msg={"Post Your First Ad"} />
       ) : (
-        <FlatList
+        <CustomeFlatlist
           data={postData}
-          keyExtractor={(item, index) => {
-            `data_${item.id}_${index}`;
-          }}
-          showsVerticalScrollIndicator={false}
-          ItemSeparatorComponent={
-            <Divider style={{ marginBottom: verticalScale(8) }} />
-          }
-          initialNumToRender={40}
-          ListFooterComponent={listFooterComponent}
-          onEndReached={onReachedEnd}
-          onEndReachedThreshold={1}
-          maxToRenderPerBatch={maxToRenderPerBatch}
-          updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
-          windowSize={5}
           renderItem={renderItem}
-          refreshing={refreshing}
+          onEndReached={onReachedEnd}
+          listFooterComponent={listFooterComponent}
           onRefresh={onRefresh}
+          refreshing={refreshing}
           onViewableItemsChanged={onViewableItemsChanged}
-          viewabilityConfig={{
-            itemVisiblePercentThreshold: 50,
-          }}
-          fadeDuration={0}
-          scrollEventThrottle={12}
         />
       )}
       <CustomeAlertModal
-        isVisible={showAlert.show}
-        title={showAlert.title}
-        msg={showAlert.msg}
-        type={showAlert.type}
+        isVisible={apiShowError.show}
+        title={apiShowError.title}
+        msg={apiShowError.msg}
+        type={apiShowError.type}
         onClickBtn={() => {
           onClickModalBtn();
         }}

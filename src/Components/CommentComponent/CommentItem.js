@@ -1,33 +1,14 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-import { Avatar } from "react-native-paper";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
-import {
-  baseURL,
-  defaultProfileImg,
-  serverImagePath,
-} from "../../Constants/defaults";
 import moment from "moment";
 import { getUserUploadTime } from "../../Constants/Constant";
+import ProfileImage from "../ProfileImage";
 
 const CommentItem = ({ item }) => {
   return (
     <View style={styles.onlyRowStyle}>
-      {item?.user?.profilePicturePath != null ? (
-        <Avatar.Image
-          source={{
-            uri: `${baseURL}${serverImagePath}/${item?.user?.profilePicturePath}`,
-          }}
-          size={scale(30)}
-        />
-      ) : (
-        <Avatar.Image
-          source={{
-            uri: defaultProfileImg,
-          }}
-          size={scale(30)}
-        />
-      )}
+      <ProfileImage url={item?.user?.profilePicturePath} size={scale(30)} />
       <View
         style={{
           marginLeft: moderateScale(5),
@@ -36,13 +17,7 @@ const CommentItem = ({ item }) => {
           gap: scale(5),
         }}
       >
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            gap: scale(5),
-          }}
-        >
+        <View style={styles.profileNameView}>
           <Text
             style={styles.headingTxt}
           >{`${item?.user?.firstname} ${item?.user?.lastname}`}</Text>
@@ -80,5 +55,10 @@ const styles = StyleSheet.create({
   subTxt: {
     fontSize: scale(7.5),
     fontFamily: "Montserrat-Light",
+  },
+  profileNameView: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: scale(5),
   },
 });

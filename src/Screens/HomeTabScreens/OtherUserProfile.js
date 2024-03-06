@@ -33,6 +33,8 @@ import colors from "../../Constants/colors";
 import useLikeHook from "../../CustomeHooks/useLikeHook";
 import ServerError from "../../Components/ErrorScreens/ServerError";
 import { useFocusEffect } from "@react-navigation/native";
+import CustomeFlatlist from "../../Components/CustomeFlatlist";
+import useErrorHook from "../../CustomeHooks/useErrorHook";
 
 const OtherUserProfile = ({ navigation, route }) => {
   const maxToRenderPerBatch = 100;
@@ -69,12 +71,10 @@ const OtherUserProfile = ({ navigation, route }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [currentPost, setCurrentPost] = useState();
   const [userProfileDetail, setUserProfileDetail] = useState(null);
-  const [showAlert, setShowAlert] = useState({
-    show: false,
-    title: null,
-    msg: null,
-    type: null,
-  });
+  const { apiShowError, setApiShowError } = useErrorHook(
+    likeError || saveError,
+    likeErrorCode || saveErrorCode
+  );
   // useFocusEffect(
   //   React.useCallback(() => {
   //     console.log("Screen focused");
@@ -111,27 +111,6 @@ const OtherUserProfile = ({ navigation, route }) => {
       setRefreshing(false);
     }
   }, [contentData, userContentSuccess]);
-  useEffect(() => {
-    if (
-      likeError !== null ||
-      saveError !== null ||
-      likeErrorCode !== null ||
-      saveErrorCode !== null
-    ) {
-      handleErrorCode(likeErrorCode || saveErrorCode);
-    }
-    const handleErrorCode = (code) => {
-      if (code === 401) {
-        showModal("UnAuthorized", "Please login to continue", "warning");
-      } else if (likeError != null || saveError != null) {
-        const errorMessage =
-          likeError?.ErrorMessage ||
-          saveError?.ErrorMessage ||
-          "Some Error Occurred";
-        showModal("Error", errorMessage, "error");
-      }
-    };
-  }, [likeError, likeErrorCode, saveError, saveErrorCode]);
 
   const onViewableItemsChanged = useRef(({ viewableItems }) => {
     console.log(viewableItems);
@@ -150,19 +129,11 @@ const OtherUserProfile = ({ navigation, route }) => {
       )
     );
   };
-  const showModal = (title, msg, type) => {
-    setShowAlert({
-      show: true,
-      title: title,
-      msg: msg,
-      type: type,
-    });
-  };
   const onClickModalBtn = () => {
     dispatch(resetLikeData());
     dispatch(resetSaveData());
-    setShowAlert({
-      ...showAlert,
+    setApiShowError({
+      ...apiShowError,
       show: false,
     });
   };
@@ -201,7 +172,7 @@ const OtherUserProfile = ({ navigation, route }) => {
     return (
       <FeedCard
         itemData={item}
-        currentPost={66}
+        currentPost={currentPost}
         onClickMoreBtn={() => {
           navigation.navigate(screenName.productDetail, { data: item });
         }}
@@ -222,38 +193,21 @@ const OtherUserProfile = ({ navigation, route }) => {
       {postData != null && postData?.length <= 0 ? (
         <FriendlyMsg />
       ) : (
-        <FlatList
+        <CustomeFlatlist
           data={postData}
-          keyExtractor={(item, index) => {
-            `data_${item.id}_${index}`;
-          }}
-          showsVerticalScrollIndicator={false}
-          ItemSeparatorComponent={
-            <Divider style={{ marginBottom: verticalScale(8) }} />
-          }
-          ListFooterComponent={listFooterComponent}
-          onEndReached={onReachedEnd}
-          onEndReachedThreshold={1}
-          initialNumToRender={40}
-          maxToRenderPerBatch={maxToRenderPerBatch}
-          updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
-          windowSize={5}
           renderItem={renderItem}
-          refreshing={refreshing}
+          onEndReached={onReachedEnd}
+          listFooterComponent={listFooterComponent}
           onRefresh={onRefresh}
+          refreshing={refreshing}
           onViewableItemsChanged={onViewableItemsChanged}
-          viewabilityConfig={{
-            itemVisiblePercentThreshold: 50,
-          }}
-          fadeDuration={0}
-          scrollEventThrottle={12}
         />
       )}
       <CustomeAlertModal
-        isVisible={showAlert.show}
-        title={showAlert.title}
-        msg={showAlert.msg}
-        type={showAlert.type}
+        isVisible={apiShowError.show}
+        title={apiShowError.title}
+        msg={apiShowError.msg}
+        type={apiShowError.type}
         onClickBtn={() => {
           onClickModalBtn();
         }}

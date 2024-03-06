@@ -20,7 +20,11 @@ import commonStyle from "../../Constants/commonStyle";
 import { KeyboardAvoidingView } from "react-native";
 import CustomeSnackbar from "../../Components/CustomeSnackbar";
 import { useDispatch, useSelector } from "react-redux";
-import { getLoginUser, setError } from "../../store/authSlices/LoginSlice";
+import {
+  clearLoginSlice,
+  getLoginUser,
+  setError,
+} from "../../store/authSlices/LoginSlice";
 import { useEffect } from "react";
 import { getCountryData } from "../../store/contrySlices/GetCountrySlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -29,6 +33,8 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import Constants from "expo-constants";
 import { setExpoPushToken } from "../../store/StoreDataSlice";
+import CustomeAlertModal from "../../Components/CustomeAlertModal";
+import useErrorHook from "../../CustomeHooks/useErrorHook";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -95,11 +101,13 @@ async function registerForPushNotificationsAsync() {
 
 const Login = ({ navigation }) => {
   const dispatch = useDispatch();
-  const expoPushToken=useSelector((state)=>state.storeData.expoPushToken)
+  const expoPushToken = useSelector((state) => state.storeData.expoPushToken);
   const loginSuccess = useSelector((state) => state.login.isSuccess);
   const loginLoading = useSelector((state) => state.login.isLoading);
   const loginError = useSelector((state) => state.login.error);
+  const loginErrorCode = useSelector((state) => state.login.errorCode);
   const logindata = useSelector((state) => state.login);
+  console.log(logindata);
   // const [expoPushToken, setExpoPushToken] = useState("");
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
@@ -111,11 +119,15 @@ const Login = ({ navigation }) => {
   const [passwordError, setPasswordError] = useState(false);
   const [expoDeviceToken, setExpoDeviceToken] = useState();
   const [showError, setShowError] = useState({ isError: false, msg: null });
+  const { apiShowError, setApiShowError } = useErrorHook(
+    loginError,
+    loginErrorCode
+  );
 
   useEffect(() => {
     registerForPushNotificationsAsync().then((token) => {
       // setExpoPushToken(token);
-      dispatch(setExpoPushToken(token))
+      dispatch(setExpoPushToken(token));
     });
 
     notificationListener.current =
@@ -135,7 +147,7 @@ const Login = ({ navigation }) => {
       Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
-  const getNotificationPermission=async()=>{
+  const getNotificationPermission = async () => {
     const { status: existingStatus } =
       await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
@@ -147,21 +159,15 @@ const Login = ({ navigation }) => {
       alert("Failed to get push token for push notification!");
       return;
     }
-  }
+  };
   useEffect(() => {
     if (loginSuccess) {
       // navigation.dispatch(StackActions.replace(screenName.drawerNavigation));
     }
   }, [loginSuccess]);
-  useEffect(() => {
-    if (loginError != null && !loginError?.Success) {
-      const errorData = JSON.parse(loginError?.ErrorMessage);
-      setShowError({ isError: true, msg: errorData?.title });
-    }
-  }, [loginError]);
 
   const onClickLogin = () => {
-    getNotificationPermission()
+    getNotificationPermission();
     if (email != "" && password != "") {
       dispatch(
         getLoginUser({
@@ -213,7 +219,9 @@ const Login = ({ navigation }) => {
           <KeyboardAvoidingView behavior="padding">
             <TextBox
               // placeholderTextColor={"#cacaca"}
-              containerStyle={{ marginBottom: verticalScale(8) }}
+              containerStyle={{
+                marginBottom: verticalScale(8),
+              }}
               error={emailError}
               errorMsg={"Email address is invalid!"}
               value={email}
@@ -333,7 +341,7 @@ const Login = ({ navigation }) => {
                 fontFamily: "Montserrat-Medium",
               }}
               onPress={() => {
-                dispatch(getCountryData(1, 50));
+                dispatch(getCountryData(1, 250));
                 navigation.navigate(screenName.createAccount);
               }}
             >
@@ -349,6 +357,19 @@ const Login = ({ navigation }) => {
           }}
         />
       </ScrollView>
+      <CustomeAlertModal
+        isVisible={apiShowError.show}
+        title={apiShowError.title}
+        msg={apiShowError.msg}
+        type={apiShowError.type}
+        onClickBtn={() => {
+          dispatch(clearLoginSlice());
+          setApiShowError({
+            ...apiShowError,
+            show: false,
+          });
+        }}
+      />
     </SafeAreaView>
   );
 };
@@ -405,5 +426,10 @@ const styles = StyleSheet.create({
   commonTxt: {
     fontFamily: "Montserrat-Regular",
     color: "#cacaca",
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 });

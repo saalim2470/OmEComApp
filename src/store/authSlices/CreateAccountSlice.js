@@ -21,10 +21,17 @@ const CreateAccountSlice = createSlice({
     setError: (state, action) => {
       state.error = action.payload;
     },
+    clearCreateAccountData: (state, action) => {
+      state.error = null;
+      state.isLoading = false;
+      state.isLoggedIn = false;
+      state.isSuccess = false;
+    },
   },
 });
 export default CreateAccountSlice.reducer;
-export const { setLoggedIn, setLoading, setError } = CreateAccountSlice.actions;
+export const { setLoggedIn, setLoading, setError, clearCreateAccountData } =
+  CreateAccountSlice.actions;
 
 export const createAccountApi = (data) => async (dispatch) => {
   try {

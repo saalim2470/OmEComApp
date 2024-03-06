@@ -30,6 +30,7 @@ import * as Location from "expo-location";
 import GpsSearch from "../../Components/GpsSearch";
 import { getGpsDataApi } from "../../store/gpsSlice/GetGpsData";
 import { subcriptionType } from "../../Constants/Constant";
+import useErrorHook from "../../CustomeHooks/useErrorHook";
 
 const PostData = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -334,33 +335,4 @@ const PostData = ({ navigation, route }) => {
 
 export default PostData;
 
-const styles = StyleSheet.create({
-  headerView: {
-    // borderBottomWidth: 0.5,
-    marginTop: verticalScale(30),
-    paddingHorizontal: moderateScale(8),
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingVertical: verticalScale(5),
-  },
-  headerTxt: {
-    fontFamily: "Montserrat-Light",
-    fontSize: scale(15),
-    marginLeft: moderateScale(4),
-  },
-  boxView: {
-    borderWidth: 0.2,
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    padding: scale(7),
-    backgroundColor: "white",
-  },
-  circle: {
-    borderWidth: 1,
-    borderRadius: 100,
-    backgroundColor: "#363230",
-    padding: scale(3),
-  },
-});
+const styles = StyleSheet.create({});

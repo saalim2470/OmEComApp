@@ -28,23 +28,30 @@ import { useDispatch, useSelector } from "react-redux";
 import { getStateData } from "../../store/contrySlices/GetStateSlice";
 import { getCityData } from "../../store/contrySlices/GetCitySlice";
 import DropDownPicker from "react-native-dropdown-picker";
-import { createAccountApi } from "../../store/authSlices/CreateAccountSlice";
+import {
+  clearCreateAccountData,
+  createAccountApi,
+} from "../../store/authSlices/CreateAccountSlice";
 import { checkPassword, validateEmail } from "../../Constants/Constant";
 import { Entypo } from "@expo/vector-icons";
 import BottomSheetCustome from "../../Components/BottomSheet/BottomSheetCustome";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { FontAwesome } from "@expo/vector-icons";
+import CustomeAlertModal from "../../Components/CustomeAlertModal";
 
 const CreateAccount = () => {
   const dispatch = useDispatch();
+  DropDownPicker.setListMode("SCROLLVIEW");
   const countryDataRes = useSelector((state) => state.getCountry.countryData);
+  console.log(useSelector((state) => state.createAccount));
   const stateDataRes = useSelector((state) => state.getState.stateData);
   const stateDataResLoading = useSelector((state) => state.getState.isLoading);
   const cityDataRes = useSelector((state) => state.getCity.cityData);
   const cityDataResLoading = useSelector((state) => state.getCity.isLoading);
   const authLoading = useSelector((state) => state.createAccount.isLoading);
   const authSuccess = useSelector((state) => state.createAccount.isLoggedIn);
+  const authError = useSelector((state) => state.createAccount.error);
   const navigation = useNavigation();
   const formData = new FormData();
   const [firstName, setFirstName] = useState("");
@@ -71,6 +78,12 @@ const CreateAccount = () => {
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
   const [cameraStatus, requestCameraPermission] =
     ImagePicker.useCameraPermissions();
+  const [showError, setShowError] = useState({
+    show: false,
+    title: null,
+    msg: null,
+    type: null,
+  });
   const loginBtns = (icon, name, bkColor, txtColor) => {
     return (
       <TouchableOpacity
@@ -129,14 +142,11 @@ const CreateAccount = () => {
   }, [countryDataRes, stateDataRes, cityDataRes]);
   useEffect(() => {
     if (authSuccess != false && authSuccess) {
+      dispatch(clearCreateAccountData());
       navigation.dispatch(
         StackActions.replace(screenName.authRoute, {
           screen: screenName.login,
         })
-        // navigation.dispatch(
-        //   StackActions.replace(screenName.drawerNavigation, {
-        //     screen: screenName.homeScreenIcons,
-        //   })
       );
     }
   }, [authSuccess]);
@@ -154,6 +164,20 @@ const CreateAccount = () => {
       hideKeyboard.remove();
     };
   }, []);
+  useEffect(() => {
+    const handleErrorCode = (authError) => {
+      if (!authError?.Success && authError != null) {
+        setShowError({
+          show: true,
+          title: "Error",
+          msg: authError?.ErrorMessage || "Some Error Occurred",
+          type: "error",
+        });
+      }
+    };
+
+    handleErrorCode(authError);
+  }, [authError]);
   const validate = () => {
     let isValid = true;
     if (!firstName.trim()) {
@@ -263,12 +287,17 @@ const CreateAccount = () => {
   const removeImage = () => {
     setProfileImage("");
   };
+  const onClickModalBtn = () => {
+    dispatch(clearCreateAccountData());
+    setShowError({ ...showError, show: false });
+  };
   return (
     <SafeAreaView style={commonStyle.container}>
       <Header />
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={commonStyle.innerContainer}
+        nestedScrollEnabled={true}
       >
         <Text style={commonStyle.headingTxt}>Create an Account</Text>
         <KeyboardAvoidingView>
@@ -398,6 +427,7 @@ const CreateAccount = () => {
               label: "name",
               value: "id",
             }}
+            searchable={true}
             labelStyle={styles.ddTxt}
             textStyle={styles.ddTxt}
             placeholder="Select Country"
@@ -609,6 +639,15 @@ const CreateAccount = () => {
             </TouchableOpacity>
           </>
         }
+      />
+      <CustomeAlertModal
+        isVisible={showError.show}
+        title={showError.title}
+        msg={showError.msg}
+        type={showError.type}
+        onClickBtn={() => {
+          onClickModalBtn();
+        }}
       />
     </SafeAreaView>
   );

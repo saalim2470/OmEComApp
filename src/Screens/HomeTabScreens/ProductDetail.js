@@ -13,11 +13,12 @@ import Loading from "../../Components/Loading";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getAdContentByIdApi } from "../../store/AdContentSlices/GetAdContentById";
 import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
+import useErrorHook from "../../CustomeHooks/useErrorHook";
 
 const ProductDetail = ({ route }) => {
   const dispatch = useDispatch();
   const { contentId } = route?.params;
-  const {data}=route?.params
+  const { data } = route?.params;
   console.log(contentId);
   const {
     error: likeError,
@@ -33,19 +34,16 @@ const ProductDetail = ({ route }) => {
     (state) => state.getAdContentById
   );
   const [adContent, setAdContent] = useState(null);
-  const [showAlert, setShowAlert] = useState({
-    show: false,
-    title: null,
-    msg: null,
-    type: null,
-  });
+  const { apiShowError, setApiShowError } = useErrorHook(
+    likeError || saveError,
+    likeErrorCode || saveErrorCode
+  );
   useEffect(() => {
     if (contentId) dispatch(getAdContentByIdApi(contentId));
   }, [contentId]);
 
   useEffect(() => {
-    if(data)
-    setAdContent(data);
+    if (data) setAdContent(data);
   }, [data]);
   useEffect(() => {
     if (contentData !== null && contentData?.Success)
@@ -64,7 +62,7 @@ const ProductDetail = ({ route }) => {
 
   const onClickModalBtn = () => {
     dispatch(setError(null));
-    setShowAlert({ ...showAlert, show: false });
+    setApiShowError({ ...apiShowError, show: false });
   };
   const updateData = (data, actionType) => {
     if (actionType === "like" && adContent?.id === data?.contentId) {
@@ -88,7 +86,7 @@ const ProductDetail = ({ route }) => {
     return <Loading />;
   }
   if (error !== null && !error?.Success) {
-    return <ErrorMsg/>;
+    return <ErrorMsg />;
   }
   return (
     <SafeAreaView style={commonStyle.container}>
@@ -98,7 +96,7 @@ const ProductDetail = ({ route }) => {
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={true}
       >
-        {adContent&&adContent !== null ? (
+        {adContent && adContent !== null ? (
           <FeedCard
             itemData={adContent}
             disable={true}
@@ -109,10 +107,10 @@ const ProductDetail = ({ route }) => {
         {/* <AdView /> */}
       </ScrollView>
       <CustomeAlertModal
-        isVisible={showAlert.show}
-        title={showAlert.title}
-        msg={showAlert.msg}
-        type={showAlert.type}
+        isVisible={apiShowError.show}
+        title={apiShowError.title}
+        msg={apiShowError.msg}
+        type={apiShowError.type}
         onClickBtn={() => {
           onClickModalBtn();
         }}

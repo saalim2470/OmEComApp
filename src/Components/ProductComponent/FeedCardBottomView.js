@@ -67,12 +67,6 @@ const FeedCardBottomView = ({ itemData }) => {
     dispatch(resetCommentPage());
     setIsShowBottomSheet(true);
   };
-  const getCommentData = () => {
-    console.log("=-=-=-comment page-=-=", commentPage);
-    dispatch(
-      getCommentByContentIdApi(itemData?.id, commentPage, commentPageSize)
-    );
-  };
   const onClickModalBtn = () => {
     dispatch(resetCommentData());
     dispatch(resetLikeData());
@@ -105,13 +99,6 @@ const FeedCardBottomView = ({ itemData }) => {
         children={<CommentSection postDetail={itemData} />}
         height={SHEET_HEIGHT}
       />
-      {/* <CommentView
-        postDetail={itemData}
-        isVisible={isShowBottomSheet}
-        onBackDropPress={() => {
-          setIsShowBottomSheet(false);
-        }}
-      /> */}
       <CustomeAlertModal
         isVisible={showAlert.show}
         title={showAlert.title}

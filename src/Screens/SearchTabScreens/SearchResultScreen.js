@@ -1,34 +1,25 @@
-import {
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import commonStyle from "../../Constants/commonStyle";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
-import ImageGrid from "../../Components/ImageGrid";
 import { useDispatch, useSelector } from "react-redux";
 import SearchHeader from "../../Components/SearchScreenComponents/SearchHeader";
-import Loading from "../../Components/Loading";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   getSearchData,
   resetSearchResultPage,
   setSearchResultPage,
 } from "../../store/searchContentSlices/SearchContentSlice";
-import { Divider } from "react-native-paper";
 import FeedCard from "../../Components/ProductComponent/FeedCard";
 import colors from "../../Constants/colors";
 import ShimmerLoading from "../../Components/LoadingComponents/ShimmerLoading";
 import screenName from "../../Constants/screenName";
 import useLikeHook from "../../CustomeHooks/useLikeHook";
 import { useFocusEffect } from "@react-navigation/native";
+import CustomeFlatlist from "../../Components/CustomeFlatlist";
 
 const SearchResultScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  const maxToRenderPerBatch = 100;
   const filterType = useSelector((state) => state.storeData.searchFilterId);
   const {
     isLoading: searchLoading,
@@ -133,32 +124,12 @@ const SearchResultScreen = ({ navigation }) => {
         <Text style={{ alignSelf: "center" }}>Data Not Found</Text>
       ) : (
         <View>
-          <FlatList
+          <CustomeFlatlist
             data={postData}
-            keyExtractor={(item, index) => {
-              return `data_${item.id}_${index}`;
-            }}
-            showsVerticalScrollIndicator={false}
-            onEndReachedThreshold={1}
-            onEndReached={() => {
-              onReachedEnd();
-            }}
-            ItemSeparatorComponent={
-              <Divider style={{ marginBottom: verticalScale(8) }} />
-            }
-            ListFooterComponent={listFooterComponent}
             renderItem={renderItem}
-            initialNumToRender={40}
-            maxToRenderPerBatch={maxToRenderPerBatch}
-            updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
-            windowSize={5}
-            removeClippedSubviews={true}
+            onEndReached={onReachedEnd}
+            listFooterComponent={listFooterComponent}
             onViewableItemsChanged={onViewableItemsChanged}
-            viewabilityConfig={{
-              itemVisiblePercentThreshold: 50,
-            }}
-            fadeDuration={0}
-            scrollEventThrottle={12}
           />
         </View>
       )}

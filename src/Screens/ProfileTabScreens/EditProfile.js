@@ -43,6 +43,7 @@ import CustomeAlertModal from "../../Components/CustomeAlertModal";
 import Loading from "../../Components/Loading";
 
 const EditProfile = () => {
+  DropDownPicker.setListMode("SCROLLVIEW");
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const formData = new FormData();

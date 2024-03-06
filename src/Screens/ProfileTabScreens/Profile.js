@@ -41,6 +41,8 @@ import colors from "../../Constants/colors";
 import ShimmerLoading from "../../Components/LoadingComponents/ShimmerLoading";
 import { getLoggedInUSerInfo } from "../../store/authSlices/LoginSlice";
 import useLikeHook from "../../CustomeHooks/useLikeHook";
+import CustomeFlatlist from "../../Components/CustomeFlatlist";
+import useErrorHook from "../../CustomeHooks/useErrorHook";
 
 const Profile = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -78,12 +80,10 @@ const Profile = ({ navigation, route }) => {
   const { postData, setPostData } = useLikeHook(likeDataRes, saveDataRes);
   const [refreshing, setRefreshing] = useState(false);
   const [currentPost, setCurrentPost] = useState();
-  const [showAlert, setShowAlert] = useState({
-    show: false,
-    title: null,
-    msg: null,
-    type: null,
-  });
+  const { apiShowError, setApiShowError } = useErrorHook(
+    likeError || saveError || deleteError,
+    likeErrorCode || saveErrorCode || deleteStatusCode
+  );
   useFocusEffect(
     React.useCallback(() => {
       console.log("Screen focused");
@@ -116,33 +116,6 @@ const Profile = ({ navigation, route }) => {
     }
   }, [userDataResMemoized, userContentSuccess]);
   useEffect(() => {
-    const handleErrorCode = (code) => {
-      if (code === 401) {
-        showModal("UnAuthorized", "Please login to continue", "warning");
-      } else if (
-        likeError != null ||
-        saveError != null ||
-        deleteError != null
-      ) {
-        const errorMessage =
-          likeError?.ErrorMessage ||
-          saveError?.ErrorMessage ||
-          deleteError?.ErrorMessage ||
-          "Some Error Occurred";
-        showModal("Error", errorMessage, "error");
-      }
-    };
-
-    handleErrorCode(likeErrorCode || saveErrorCode || deleteStatusCode);
-  }, [
-    likeError,
-    likeErrorCode,
-    saveError,
-    saveErrorCode,
-    deleteError,
-    deleteStatusCode,
-  ]);
-  useEffect(() => {
     if (userContentError != null && !userContentError?.Success) {
       setRefreshing(false);
     }
@@ -151,20 +124,12 @@ const Profile = ({ navigation, route }) => {
   const getUserContent = () => {
     dispatch(getUserContentApi(userContentPage, userContentPageSize));
   };
-  const showModal = (title, msg, type) => {
-    setShowAlert({
-      show: true,
-      title: title,
-      msg: msg,
-      type: type,
-    });
-  };
   const onClickModalBtn = () => {
     dispatch(resetLikeData());
     dispatch(resetSaveData());
     dispatch(resetDeleteAdContentData());
-    setShowAlert({
-      ...showAlert,
+    setApiShowError({
+      ...apiShowError,
       show: false,
     });
   };
@@ -201,6 +166,11 @@ const Profile = ({ navigation, route }) => {
       dispatch(setUserContentPage(userContentPage + 1));
     }
   };
+  const onViewableItemsChanged = useRef(({ viewableItems }) => {
+    if (viewableItems && viewableItems.length > 0) {
+      setCurrentPost(viewableItems[0].item?.id);
+    }
+  }).current;
   return (
     <SafeAreaView style={commonStyle.container}>
       <ProfileScreenTopView
@@ -218,43 +188,21 @@ const Profile = ({ navigation, route }) => {
       ) : !userContentLoading && postData.length <= 0 ? (
         <FriendlyMsg msg={"Post Your First Ad"} />
       ) : (
-        <FlatList
+        <CustomeFlatlist
           data={postData}
-          keyExtractor={(item, index) => {
-            return `data_${item.id}_${index}`;
-          }}
-          showsVerticalScrollIndicator={false}
-          ItemSeparatorComponent={
-            <Divider style={{ marginBottom: verticalScale(8) }} />
-          }
-          initialNumToRender={40}
-          maxToRenderPerBatch={maxToRenderPerBatch}
-          updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
-          ListFooterComponent={listFooterComponent}
-          onEndReached={onReachedEnd}
-          onEndReachedThreshold={1}
-          removeClippedSubviews={true}
-          windowSize={5}
           renderItem={renderItem}
-          refreshing={refreshing}
+          onEndReached={onReachedEnd}
+          listFooterComponent={listFooterComponent}
           onRefresh={onRefresh}
-          viewabilityConfig={{
-            itemVisiblePercentThreshold: 50,
-          }}
-          onViewableItemsChanged={({ viewableItems }) => {
-            if (viewableItems.length > 0 && viewableItems[0].isViewable) {
-              setCurrentPost(viewableItems[0].item?.id);
-            }
-          }}
-          scrollEventThrottle={12}
-          fadeDuration={0}
+          refreshing={refreshing}
+          onViewableItemsChanged={onViewableItemsChanged}
         />
       )}
       <CustomeAlertModal
-        isVisible={showAlert.show}
-        title={showAlert.title}
-        msg={showAlert.msg}
-        type={showAlert.type}
+        isVisible={apiShowError.show}
+        title={apiShowError.title}
+        msg={apiShowError.msg}
+        type={apiShowError.type}
         onClickBtn={() => {
           onClickModalBtn();
         }}

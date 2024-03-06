@@ -47,7 +47,7 @@ const Routes = () => {
   useEffect(() => {
     async function prepare() {
       try {
-        dispatch(getCountryData(1, 50));
+        dispatch(getCountryData(1, 250));
         const token = await AsyncStorage.getItem("accessToken");
         console.log(token);
         if (!token) {

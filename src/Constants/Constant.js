@@ -112,5 +112,11 @@ export const imageExtensions = [
   "svg",
   "webp",
 ];
-
+export const errorCodes = {
+  404: "Not Found",
+  401: "Unauthorized. Please login again.",
+  403: "Forbidden. You do not have permission",
+  500: "Internal Server Error",
+  default: "An unexpected error occurred.",
+};
 // const serverPathWithDomain=`${baseURL}${serverImagePath}/${item}`

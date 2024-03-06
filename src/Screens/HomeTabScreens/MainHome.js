@@ -37,12 +37,11 @@ import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 import ShimmerLoading from "../../Components/LoadingComponents/ShimmerLoading";
 import useLikeHook from "../../CustomeHooks/useLikeHook";
 import ListingComponent from "../../Components/ListingComponent";
+import CustomeFlatlist from "../../Components/CustomeFlatlist";
 
 const MainHome = ({ route }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
-
-  const maxToRenderPerBatch = 100;
   const categoryId = useSelector((state) => state.storeData.categoryId);
   const {
     contentData: contentDataRes,
@@ -70,18 +69,16 @@ const MainHome = ({ route }) => {
   // const [postData, setPostData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [currentPost, setCurrentPost] = useState();
-  const [showAlert, setShowAlert] = useState({
-    show: false,
-    title: null,
-    msg: null,
-    type: null,
-  });
+  const { apiShowError, setApiShowError } = useErrorHook(
+    likeError || saveError,
+    likeErrorCode || saveErrorCode
+  );
   useFocusEffect(
     React.useCallback(() => {
-      console.log('Screen focused');
+      console.log("Screen focused");
       return () => {
-        console.log('Screen unfocused');
-        setCurrentPost(null)
+        console.log("Screen unfocused");
+        setCurrentPost(null);
       };
     }, [])
   );
@@ -94,53 +91,15 @@ const MainHome = ({ route }) => {
   }, [categoryId, contentDataPage, refreshing]);
 
   useEffect(() => {
-    if (
-      contentDataError != null &&
-      !contentDataError?.Success &&
-      statusCode === 401
-    ) {
-      setRefreshing(false);
-      setShowAlert({
-        show: true,
-        title: "Authentication Error",
-        msg: "Please Login to continue",
-        type: "error",
-      });
-    }
-  }, [contentDataError]);
-  useEffect(() => {
     if (contentDataResMemoized != null && contentDataSuccess) {
       setPostData(contentDataResMemoized);
       setRefreshing(false);
     }
   }, [contentDataResMemoized, contentDataSuccess]);
-  useEffect(() => {
-    const handleErrorCode = (code) => {
-      if (code === 401) {
-        showModal("UnAuthorized", "Please login to continue", "warning");
-      } else if (likeError != null || saveError != null) {
-        const errorMessage =
-          likeError?.ErrorMessage ||
-          saveError?.ErrorMessage ||
-          "Some Error Occurred";
-        showModal("Error", errorMessage, "error");
-      }
-    };
-
-    handleErrorCode(likeErrorCode || saveErrorCode);
-  }, [likeError, likeErrorCode, saveError, saveErrorCode]);
   const onRefresh = useCallback(() => {
     dispatch(resetPage());
     setRefreshing(true);
   }, []);
-  const showModal = (title, msg, type) => {
-    setShowAlert({
-      show: true,
-      title: title,
-      msg: msg,
-      type: type,
-    });
-  };
   const getContentDataByCategory = (categoryID) => {
     if (categoryId === 0) {
       dispatch(getAllContentApi(contentDataPage, contentDataPageSize));
@@ -154,7 +113,7 @@ const MainHome = ({ route }) => {
     dispatch(setError(null));
     dispatch(resetSaveData());
     dispatch(resetLikeData());
-    setShowAlert({ ...showAlert, show: false });
+    setApiShowError({ ...apiShowError, show: false });
   };
   const renderItem = ({ item, index }) => {
     return (
@@ -209,45 +168,21 @@ const MainHome = ({ route }) => {
       ) : !contentDataLoading && postData?.length <= 0 ? (
         <FriendlyMsg msgWithImage={"Content not availaibale"} />
       ) : (
-        <FlatList
+        <CustomeFlatlist
           data={postData}
-          keyExtractor={(item, index) => {
-            return `data_${item.id}_${index}`;
-          }}
-          showsVerticalScrollIndicator={false}
-          onEndReachedThreshold={1}
-          onEndReached={() => {
-            onReachedEnd();
-          }}
-          contentContainerStyle={{
-            gap: scale(10),
-            paddingBottom: verticalScale(10),
-          }}
-          ItemSeparatorComponent={
-            <Divider style={{ marginBottom: verticalScale(8) }} />
-          }
-          ListFooterComponent={listFooterComponent}
           renderItem={renderItem}
-          initialNumToRender={40}
-          maxToRenderPerBatch={maxToRenderPerBatch}
-          windowSize={5}
-          removeClippedSubviews={true}
-          updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
-          refreshing={refreshing}
+          onEndReached={onReachedEnd}
+          listFooterComponent={listFooterComponent}
           onRefresh={onRefresh}
+          refreshing={refreshing}
           onViewableItemsChanged={onViewableItemsChanged}
-          viewabilityConfig={{
-            itemVisiblePercentThreshold: 50, 
-          }}
-          scrollEventThrottle={12}
-          fadeDuration={0}
         />
       )}
       <CustomeAlertModal
-        isVisible={showAlert.show}
-        title={showAlert.title}
-        msg={showAlert.msg}
-        type={showAlert.type}
+        isVisible={apiShowError.show}
+        title={apiShowError.title}
+        msg={apiShowError.msg}
+        type={apiShowError.type}
         onClickBtn={() => {
           onClickModalBtn();
         }}
