@@ -22,6 +22,7 @@ import { useDispatch } from "react-redux";
 import { followUserApi } from "../../store/profileSlices/Follow_UnFollowSlice";
 import colors from "../../Constants/colors";
 import * as Linking from "expo-linking";
+import ProfileImage from "../ProfileImage";
 
 const ProfileScreenTopView = ({ profileData, isEditBtn, totalPost }) => {
   const navigation = useNavigation();
@@ -58,23 +59,8 @@ const ProfileScreenTopView = ({ profileData, isEditBtn, totalPost }) => {
       >
         <View style={styles.row}>
           <Pressable onPress={() => setImageViewer(true)}>
-            {profileData?.profilePicture != null ? (
-              <Avatar.Image
-                size={scale(60)}
-                style={{ marginRight: moderateScale(8) }}
-                source={{
-                  uri: `${baseURL}${serverImagePath}/${profileData?.profilePicture}`,
-                }}
-              />
-            ) : (
-              <Avatar.Image
-                size={scale(60)}
-                style={{ marginRight: moderateScale(8) }}
-                source={{
-                  uri: defaultProfileImg,
-                }}
-              />
-            )}
+            <ProfileImage url={profileData?.profilePicture} size={scale(60)} style={{ marginRight: moderateScale(8) }}/>
+    
           </Pressable>
           <View>
             <Text
@@ -112,7 +98,6 @@ const ProfileScreenTopView = ({ profileData, isEditBtn, totalPost }) => {
               activeOpacity={0.6}
               onPress={() => {
                 onShare(deepLinkingURL);
-                console.log(deepLinkingURL);
               }}
             >
               <Text style={styles.editBtnTxt}>Share Profile</Text>

@@ -32,6 +32,7 @@ import {
 } from "../../store/commentSlices/GetCommentByContentIdSlice";
 import CustomeAlertModal from "../CustomeAlertModal";
 import colors from "../../Constants/colors";
+import ProfileImage from "../ProfileImage";
 
 const SHEET_HEIGHT = Dimensions.get("screen").height / 2;
 const CommentSection = ({
@@ -183,12 +184,7 @@ const CommentSection = ({
           </View>
         )}
         <View style={styles.txtInputView}>
-          <Avatar.Image
-            source={{
-              uri: `${baseURL}${serverImagePath}/${userDetail?.profilePicture}`,
-            }}
-            size={scale(30)}
-          />
+          <ProfileImage url={userDetail?.profilePicture} size={scale(30)}/>
           <TextInput
             style={{ flex: 1, padding: verticalScale(3) }}
             placeholder="Add comment"

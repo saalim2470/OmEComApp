@@ -2,8 +2,8 @@ import { Alert, Share } from "react-native";
 import { defaultCategoryImg } from "./defaults";
 import momentz from "moment-timezone";
 
-export const hostUrl = "http://192.168.1.19:9020/api";
-// export const hostUrl = "https://omsarvatra.com:8585/api";
+// export const hostUrl = "http://192.168.1.19:9020/api";
+export const hostUrl = "https://omsarvatra.com:8585/api";
 // export const hostUrl = "https://suryahealthclub.com:8585/api";
 const packageName = "com.om.classified";
 export const googlePlayUrl = `https://play.google.com/store/apps/details?id=${packageName}&hl=en&gl=US`;
@@ -54,7 +54,7 @@ export function groupBy(items, callbackFn) {
 export const onShare = async (url) => {
   try {
     const result = await Share.share({
-      message: `Om Classified Download to this link: ${url}`,
+      message: `${url}`,
       url: url,
     });
     if (result.action === Share.sharedAction) {

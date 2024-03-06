@@ -12,10 +12,12 @@ import FeedCard from "../../Components/ProductComponent/FeedCard";
 import Loading from "../../Components/Loading";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getAdContentByIdApi } from "../../store/AdContentSlices/GetAdContentById";
+import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 
 const ProductDetail = ({ route }) => {
   const dispatch = useDispatch();
   const { contentId } = route?.params;
+  const {data}=route?.params
   console.log(contentId);
   const {
     error: likeError,
@@ -30,7 +32,7 @@ const ProductDetail = ({ route }) => {
   const { contentData, isLoading, error } = useSelector(
     (state) => state.getAdContentById
   );
-  const [adContent, setAdContent] = useState({});
+  const [adContent, setAdContent] = useState(null);
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -41,9 +43,10 @@ const ProductDetail = ({ route }) => {
     if (contentId) dispatch(getAdContentByIdApi(contentId));
   }, [contentId]);
 
-  // useEffect(() => {
-  //   setAdContent(route?.params?.data);
-  // }, [route?.params]);
+  useEffect(() => {
+    if(data)
+    setAdContent(data);
+  }, [data]);
   useEffect(() => {
     if (contentData !== null && contentData?.Success)
       setAdContent(contentData?.Data);
@@ -84,6 +87,9 @@ const ProductDetail = ({ route }) => {
   if (isLoading) {
     return <Loading />;
   }
+  if (error !== null && !error?.Success) {
+    return <ErrorMsg/>;
+  }
   return (
     <SafeAreaView style={commonStyle.container}>
       <CustomeHeader isBackBtn={true} title={"Product Detail"} />
@@ -92,7 +98,7 @@ const ProductDetail = ({ route }) => {
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={true}
       >
-        {adContent !== null ? (
+        {adContent&&adContent !== null ? (
           <FeedCard
             itemData={adContent}
             disable={true}

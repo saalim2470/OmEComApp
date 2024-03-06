@@ -20,6 +20,7 @@ import ImageViewer from "../ImageViewer";
 import images from "../../Constants/images";
 import colors from "../../Constants/colors";
 import { StatusBar } from "expo-status-bar";
+import ProfileImage from "../ProfileImage";
 
 const NavigationProfile = () => {
   const userDetail = useSelector((state) => state.login?.userDetail);
@@ -57,8 +58,7 @@ const NavigationProfile = () => {
           style={styles.sideMenuProfileIcon}
           onPress={() => setImageViewer(true)}
         >
-          {userDetail?.profilePicture != null ||
-          userDetail?.profilePicture != "" ? (
+          {userDetail?.profilePicture != null ?(
             <Image
               source={{
                 uri: `${baseURL}${serverImagePath}/${userDetail?.profilePicture}`,

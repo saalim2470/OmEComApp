@@ -1,6 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
-import { Avatar } from "react-native-paper";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import colors from "../Constants/colors";
 import moment from "moment";
@@ -9,11 +8,7 @@ import { useDispatch } from "react-redux";
 import { getUserReadNotificationApi } from "../store/NotificationSlices/GetUserReadNotification";
 import { useNavigation } from "@react-navigation/native";
 import screenName from "../Constants/screenName";
-import {
-  baseURL,
-  defaultProfileImg,
-  serverImagePath,
-} from "../Constants/defaults";
+import ProfileImage from "./ProfileImage";
 
 const NotificationCard = ({ data, user }) => {
   const dispatch = useDispatch();
@@ -33,23 +28,8 @@ const NotificationCard = ({ data, user }) => {
       }}
     >
       <View style={styles.notificationLeftView}>
-        {user?.profilePicturePath != null ? (
-          <Avatar.Image
-            style={{ marginRight: moderateScale(7) }}
-            source={{
-              uri: `${baseURL}${serverImagePath}/${data?.user?.profilePicturePath}`,
-            }}
-            size={scale(45)}
-          />
-        ) : (
-          <Avatar.Image
-            style={{ marginRight: moderateScale(7) }}
-            source={{
-              uri: defaultProfileImg,
-            }}
-            size={scale(45)}
-          />
-        )}
+        <ProfileImage url={data?.user?.profilePicturePath} size={scale(45)}/>
+      
         <View>
           <Text
             style={[styles.notificationTxt, { fontFamily: "Montserrat-Bold" }]}
