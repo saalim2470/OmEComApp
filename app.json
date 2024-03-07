@@ -17,7 +17,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.om.omsarvatra",
+      "bundleIdentifier": "com.om.classified",
       "infoPlist": {
         "NSCameraUsageDescription": "Om needs camera access to take photos",
         "NSLocationWhenInUseUsageDescription": "Om needs location access to show your current location"
@@ -36,7 +36,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.om.omsarvatra",
+      "package": "com.om.classified",
       "googleServicesFile": "./google-services.json",
       "intentFilters": [
         {
@@ -71,9 +71,8 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "d4527ec2-33ad-4633-8220-cc679117b046"
+        "projectId": "24538d56-012a-4598-8c0c-6e11cbc65490"
       }
-    },
-    "owner": "omsarvatra"
+    }
   }
 }

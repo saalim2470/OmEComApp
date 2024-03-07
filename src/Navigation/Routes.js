@@ -74,7 +74,8 @@ const Routes = () => {
     prepare();
   }, []);
   (async function () {
-    if (appIsReady && countryData != null && countryData?.Success) {
+    // if (appIsReady && countryData != null && countryData?.Success) {
+    if (appIsReady && countryData != null ) {
       await SplashScreen.hideAsync();
     }
   })();
