@@ -226,6 +226,7 @@ const Subscription = ({ route }) => {
       console.error(error);
     }
   };
+  console.log(useSelector((state) => state.getSubscriptionPlan));
   return (
     <SafeAreaView style={commonStyle.container}>
       <MainHeader navigation={navigation} />

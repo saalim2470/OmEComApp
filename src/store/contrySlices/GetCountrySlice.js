@@ -10,7 +10,7 @@ const GetCountrySlice = createSlice({
   },
   reducers: {
     setCountryData: (state, action) => {
-      return { ...state, countryData: action.payload };
+      state.countryData = action.payload;
     },
     setLoading: (state, action) => {
       state.isLoading = action.payload;
@@ -23,10 +23,11 @@ const GetCountrySlice = createSlice({
 export default GetCountrySlice.reducer;
 export const { setCountryData, setLoading, setError } = GetCountrySlice.actions;
 
-export const getCountryData = (pageNumber, pageSize) => async (dispatch) => {
+export const getCountryData = () => async (dispatch) => {
   try {
+    dispatch(setError(null));
     dispatch(setLoading(true));
-    const responce = await CountryServices.getCountry(pageNumber, pageSize);
+    const responce = await CountryServices.getCountry();
     await dispatch(setCountryData(responce.data));
     dispatch(setLoading(false));
   } catch (error) {

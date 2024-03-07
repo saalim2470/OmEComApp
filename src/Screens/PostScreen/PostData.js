@@ -217,8 +217,7 @@ const PostData = ({ navigation, route }) => {
       formData.append("PlaceName", selectLocation?.text);
     }
     dispatch(setPostDataDraft(formData));
-    dispatch(addAdContentApi(formData));
-    console.log(formData);
+    dispatch(addAdContentApi(formData, route?.params?.editData?.id));
   };
   const onClickModalBtn = () => {
     setShowAlert({ ...showAlert, show: false });

@@ -40,10 +40,11 @@ export const {
   setErrorCode,
 } = AddAdContent.actions;
 
-export const addAdContentApi = (data) => async (dispatch) => {
+export const addAdContentApi = (data, id) => async (dispatch) => {
+  console.log("-=-id-=-", id);
   try {
     dispatch(setLoading(true));
-    const responce = await AdContentServices.addAdContent(data);
+    const responce = await AdContentServices.addAdContent(data, id);
     await dispatch(setContentResponce(responce.data));
     dispatch(setLoading(false));
   } catch (error) {

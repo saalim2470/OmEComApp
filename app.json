@@ -1,9 +1,9 @@
 {
   "expo": {
     "scheme": "omecomapp",
-    "name": "OmEComApp",
-    "slug": "OmEComApp",
-    "version": "1.0.032",
+    "name": "omsarvatra",
+    "slug": "omsarvatra",
+    "version": "1.0.001",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -17,7 +17,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.om.classified",
+      "bundleIdentifier": "com.om.omsarvatra",
       "infoPlist": {
         "NSCameraUsageDescription": "Om needs camera access to take photos",
         "NSLocationWhenInUseUsageDescription": "Om needs location access to show your current location"
@@ -36,7 +36,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.om.classified",
+      "package": "com.om.omsarvatra",
       "googleServicesFile": "./google-services.json",
       "intentFilters": [
         {
@@ -45,7 +45,7 @@
           "data": [
             {
               "scheme": "https",
-              "host": "suryahealthclub.com",
+              "host": "omsarvatra.com",
               "pathPrefix": "/"
             }
           ],
@@ -55,7 +55,7 @@
           ]
         }
       ],
-      "versionCode": 32
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -71,8 +71,9 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "24538d56-012a-4598-8c0c-6e11cbc65490"
+        "projectId": "d4527ec2-33ad-4633-8220-cc679117b046"
       }
-    }
+    },
+    "owner": "omsarvatra"
   }
 }

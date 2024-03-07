@@ -10,7 +10,7 @@ const GetCitySlice = createSlice({
   },
   reducers: {
     setCityData: (state, action) => {
-      return { ...state, cityData: action.payload };
+      state.cityData = action.payload;
     },
     setLoading: (state, action) => {
       state.isLoading = action.payload;
@@ -23,21 +23,16 @@ const GetCitySlice = createSlice({
 export default GetCitySlice.reducer;
 export const { setCityData, setLoading, setError } = GetCitySlice.actions;
 
-export const getCityData =
-  (stateId, pageNumber, pageSize) => async (dispatch) => {
-    try {
-      dispatch(setError(null));
-      dispatch(setLoading(true));
-      const responce = await CountryServices.getCityByStateId(
-        stateId,
-        pageNumber,
-        pageSize
-      );
-      dispatch(setCityData(responce.data));
-      dispatch(setLoading(false));
-    } catch (error) {
-      dispatch(setLoading(false));
-      dispatch(setError(error.response.data));
-      console.log(error.response.data);
-    }
-  };
+export const getCityData = (stateId) => async (dispatch) => {
+  try {
+    dispatch(setError(null));
+    dispatch(setLoading(true));
+    const responce = await CountryServices.getCityByStateId(stateId);
+    dispatch(setCityData(responce.data));
+    dispatch(setLoading(false));
+  } catch (error) {
+    dispatch(setLoading(false));
+    dispatch(setError(error.response.data));
+    console.log(error.response.data);
+  }
+};

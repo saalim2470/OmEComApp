@@ -114,8 +114,8 @@ const CreateAccount = () => {
     formData.append("countryId", country);
     formData.append("username", email);
     formData.append("roleId", 0);
-    if (profileImage != "") {
-      const uriParts = profileImage.uri.split(".");
+    if (profileImage !== "") {
+      const uriParts = profileImage?.uri?.split(".");
       const fileType = uriParts[uriParts.length - 1];
       formData.append("ProfilePicture", {
         uri: profileImage.uri,
@@ -131,15 +131,22 @@ const CreateAccount = () => {
   };
   useEffect(() => {
     if (countryDataRes != null && countryDataRes?.Success) {
-      setCountryData(countryDataRes?.Data?.items);
+      setCountryData(countryDataRes?.Data);
     }
+  }, [countryDataRes]);
+
+  useEffect(() => {
     if (stateDataRes != null && stateDataRes?.Success) {
-      setStateData(stateDataRes?.Data?.items);
+      setStateData(stateDataRes?.Data);
     }
+  }, [stateDataRes]);
+
+  useEffect(() => {
     if (cityDataRes != null && cityDataRes?.Success) {
-      setCityData(cityDataRes?.Data?.items);
+      setCityData(cityDataRes?.Data);
     }
-  }, [countryDataRes, stateDataRes, cityDataRes]);
+  }, [cityDataRes]);
+
   useEffect(() => {
     if (authSuccess != false && authSuccess) {
       dispatch(clearCreateAccountData());
@@ -445,7 +452,7 @@ const CreateAccount = () => {
             zIndexInverse={1000}
             onSelectItem={(item) => {
               handleError(null, "country");
-              dispatch(getStateData(item.id, 1, 10));
+              dispatch(getStateData(item.id));
             }}
           />
           {errors.country ? (
@@ -461,6 +468,7 @@ const CreateAccount = () => {
           ) : null}
           <DropDownPicker
             loading={stateDataResLoading}
+            searchable={true}
             schema={{
               label: "name",
               value: "id",
@@ -482,7 +490,7 @@ const CreateAccount = () => {
             // zIndexInverse={2000}
             onSelectItem={(item) => {
               handleError(null, "state");
-              dispatch(getCityData(item.id, 1, 10));
+              dispatch(getCityData(item.id));
             }}
           />
           {errors.state ? (
@@ -498,6 +506,7 @@ const CreateAccount = () => {
           ) : null}
           <DropDownPicker
             loading={cityDataResLoading}
+            searchable={true}
             labelStyle={styles.ddTxt}
             textStyle={styles.ddTxt}
             schema={{

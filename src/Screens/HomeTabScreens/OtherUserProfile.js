@@ -75,6 +75,7 @@ const OtherUserProfile = ({ navigation, route }) => {
     likeError || saveError,
     likeErrorCode || saveErrorCode
   );
+  console.log(useSelector((state) => state.getContentByUserId));
   // useFocusEffect(
   //   React.useCallback(() => {
   //     console.log("Screen focused");

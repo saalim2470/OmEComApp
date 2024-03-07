@@ -11,7 +11,6 @@ import { PaperProvider } from "react-native-paper";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { name as appName } from "./app.json";
 import * as Linking from "expo-linking";
-import { useEffect } from "react";
 import Loading from "./src/Components/Loading";
 
 const theme = {
@@ -25,7 +24,7 @@ export default function App() {
   }
   const config = {
     screens: {
-      Notification:'Notification',
+      Notification: "Notification",
       DrawerNavigation: {
         screens: {
           BottonNavigation: {
@@ -43,7 +42,7 @@ export default function App() {
     },
   };
   const linking = {
-    prefixes: [prefix,'https://suryahealthclub.com/'],
+    prefixes: [prefix, "https://onsarvatra.com/"],
     config,
   };
 
@@ -53,10 +52,7 @@ export default function App() {
       <Provider store={store}>
         <PaperProvider theme={theme}>
           <BottomSheetModalProvider>
-            <NavigationContainer
-              linking={linking}
-              fallback={<Loading/>}
-            >
+            <NavigationContainer linking={linking} fallback={<Loading />}>
               <Routes />
             </NavigationContainer>
           </BottomSheetModalProvider>

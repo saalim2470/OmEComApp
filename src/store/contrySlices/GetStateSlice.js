@@ -10,7 +10,7 @@ const GetStateSlice = createSlice({
   },
   reducers: {
     setStateData: (state, action) => {
-      return { ...state, stateData: action.payload };
+      state.stateData = action.payload;
     },
     setLoading: (state, action) => {
       state.isLoading = action.payload;
@@ -23,21 +23,17 @@ const GetStateSlice = createSlice({
 export default GetStateSlice.reducer;
 export const { setStateData, setLoading, setError } = GetStateSlice.actions;
 
-export const getStateData =
-  (countryId, pageNumber, pageSize) => async (dispatch) => {
-    try {
-      dispatch(setLoading(true));
-      const responce = await CountryServices.getStateByCountryId(
-        countryId,
-        pageNumber,
-        pageSize
-      );
-      await dispatch(setStateData(responce.data));
-      dispatch(setLoading(false));
-      console.log(responce.data);
-    } catch (error) {
-      dispatch(setLoading(false));
-      dispatch(setError(error.response.data));
-      console.log(error.response.data);
-    }
-  };
+export const getStateData = (countryId) => async (dispatch) => {
+  try {
+    dispatch(setError(null));
+    dispatch(setLoading(true));
+    const responce = await CountryServices.getStateByCountryId(countryId);
+    await dispatch(setStateData(responce.data));
+    dispatch(setLoading(false));
+    console.log(responce.data);
+  } catch (error) {
+    dispatch(setLoading(false));
+    dispatch(setError(error.response.data));
+    console.log(error.response.data);
+  }
+};

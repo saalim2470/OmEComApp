@@ -38,6 +38,7 @@ import ShimmerLoading from "../../Components/LoadingComponents/ShimmerLoading";
 import useLikeHook from "../../CustomeHooks/useLikeHook";
 import ListingComponent from "../../Components/ListingComponent";
 import CustomeFlatlist from "../../Components/CustomeFlatlist";
+import useErrorHook from "../../CustomeHooks/useErrorHook";
 
 const MainHome = ({ route }) => {
   const navigation = useNavigation();

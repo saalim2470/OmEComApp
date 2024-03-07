@@ -11,7 +11,7 @@ class AuthServices {
     return http.get("/Account/GetUserInfo");
   }
   editProfile(data) {
-    return httpFile.put("/Account/Updateuser", data);
+    return httpFile.post("/Account/Updateuser", data);
   }
   forgotPassword(data) {
     return http.post(`/Account/ForgotPassword?email=${data}`);

@@ -2,10 +2,10 @@ import { Alert, Share } from "react-native";
 import { defaultCategoryImg } from "./defaults";
 import momentz from "moment-timezone";
 
-// export const hostUrl = "http://192.168.1.19:9020/api";
+// export const hostUrl = "http://192.168.1.10:9020/api";
 export const hostUrl = "https://omsarvatra.com:8585/api";
 // export const hostUrl = "https://suryahealthclub.com:8585/api";
-const packageName = "com.om.classified";
+const packageName = "com.om.omsarvatra";
 export const googlePlayUrl = `https://play.google.com/store/apps/details?id=${packageName}&hl=en&gl=US`;
 
 export const contactUsMobileNo = "+919998520722";

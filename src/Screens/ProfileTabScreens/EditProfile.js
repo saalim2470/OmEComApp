@@ -59,8 +59,10 @@ const EditProfile = () => {
     (state) => state.editProfile.updateProfileData
   );
   const editProfileError = useSelector((state) => state.editProfile.error);
+  const editProfileErrorCode = useSelector(
+    (state) => state.editProfile.errorCode
+  );
   const userDetail = useSelector((state) => state.login?.userDetail);
-
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -87,10 +89,9 @@ const EditProfile = () => {
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
   const [cameraStatus, requestCameraPermission] =
     ImagePicker.useCameraPermissions();
-  console.log("=-=-user detail-=-=-", userDetail);
   useEffect(() => {
-    dispatch(getStateData(userDetail?.stateId, 1, 50));
-    dispatch(getCityData(userDetail?.cityId, 1, 50));
+    dispatch(getStateData(userDetail?.countryId));
+    dispatch(getCityData(userDetail?.stateId));
     setFirstName(userDetail?.firstName);
     setLastName(userDetail?.lastName);
     setEmail(userDetail?.email);
@@ -98,22 +99,21 @@ const EditProfile = () => {
     setProfileImage(
       userDetail?.profilePicture !== null
         ? `${baseURL}${serverImagePath}/${userDetail?.profilePicture}`
-        : null
+        : ""
     );
   }, [userDetail]);
-  console.log(profileImage);
 
   useEffect(() => {
     if (countryDataRes != null && countryDataRes?.Success) {
-      setCountryData(countryDataRes?.Data?.items);
+      setCountryData(countryDataRes?.Data);
       setCountry(userDetail?.countryId);
     }
     if (stateDataRes != null && stateDataRes?.Success) {
-      setStateData(stateDataRes?.Data?.items);
+      setStateData(stateDataRes?.Data);
       setState(userDetail?.stateId);
     }
     if (cityDataRes != null && cityDataRes?.Success) {
-      setCityData(cityDataRes?.Data?.items);
+      setCityData(cityDataRes?.Data);
       setCity(userDetail?.cityId);
     }
   }, [countryDataRes, stateDataRes, cityDataRes]);
@@ -164,13 +164,18 @@ const EditProfile = () => {
     formData.append("countryId", country);
     formData.append("username", email);
     formData.append("roleId", 0);
-    const uriParts = profileImage.split(".");
-    const fileType = uriParts[uriParts.length - 1];
-    formData.append("ProfilePicture", {
-      uri: profileImage,
-      name: `image_.${fileType}`,
-      type: `image/${fileType}`,
-    });
+
+    if (profileImage !== "") {
+      const uriParts = profileImage?.split(".");
+      const fileType = uriParts[uriParts.length - 1];
+      formData.append("ProfilePicture", {
+        uri: profileImage,
+        name: `image_.${fileType}`,
+        type: `image/${fileType}`,
+      });
+    } else {
+      formData.append("ProfilePicture", null);
+    }
     dispatch(editProfileApi(formData));
   };
   const validate = () => {
@@ -277,225 +282,230 @@ const EditProfile = () => {
         style={commonStyle.innerContainer}
       >
         <Text style={commonStyle.headingTxt}>Edit Profile</Text>
-        {stateDataResLoading || cityDataResLoading ? (
-          <Loading />
-        ) : (
-          <KeyboardAvoidingView>
-            <View style={styles.profileImgView}>
-              <TouchableOpacity
-                activeOpacity={0.6}
-                style={styles.profileImgBtn}
-                onPress={() => {
-                  !profileImage ? setOpenCameraMenu(true) : removeImage();
-                }}
-              >
-                {!profileImage ? (
-                  <Entypo name="camera" size={scale(13)} color="white" />
-                ) : (
-                  <FontAwesome name="remove" size={scale(13)} color="white" />
-                )}
-              </TouchableOpacity>
-              {profileImage !== null ? (
-                <Image
-                  source={{
-                    uri: profileImage,
-                  }}
-                  style={styles.profileImg}
-                />
+        <KeyboardAvoidingView>
+          <View style={styles.profileImgView}>
+            <TouchableOpacity
+              activeOpacity={0.6}
+              style={styles.profileImgBtn}
+              onPress={() => {
+                !profileImage ? setOpenCameraMenu(true) : removeImage();
+              }}
+            >
+              {!profileImage ? (
+                <Entypo name="camera" size={scale(13)} color="white" />
               ) : (
-                <Image
-                  source={{
-                    uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1sE47wDfhJWPfb_C6ceXAImxmTZe1DE_CpeZYtgg_Vw&s",
-                  }}
-                  style={styles.profileImg}
-                />
+                <FontAwesome name="remove" size={scale(13)} color="white" />
               )}
-            </View>
-            <TextBox
-              label={"First Name"}
-              value={firstName}
-              containerStyle={{ marginBottom: verticalScale(8) }}
-              error={errors.fName}
-              onFocus={() => {
-                handleError(null, "fName");
-              }}
-              left={
-                <TextInput.Icon icon={"account-outline"} tintColor="grey" />
-              }
-              onchange={(value) => {
-                setFirstName(value);
-              }}
-            />
-            <TextBox
-              label={"Last Name"}
-              value={lastName}
-              error={errors.lName}
-              onFocus={() => {
-                handleError(null, "lName");
-              }}
-              containerStyle={{ marginBottom: verticalScale(8) }}
-              left={
-                <TextInput.Icon icon={"account-outline"} tintColor="grey" />
-              }
-              onchange={(value) => {
-                setLastName(value);
-              }}
-            />
-            <TextBox
-              label={"Email"}
-              value={email}
-              onFocus={() => {
-                handleError(null, "email");
-              }}
-              error={errors.email}
-              keyboardType={"email-address"}
-              containerStyle={{ marginBottom: verticalScale(8) }}
-              left={<TextInput.Icon icon={"email-outline"} tintColor="grey" />}
-              onchange={(value) => {
-                setEmail(value);
-              }}
-            />
-            <TextBox
-              label={"Mobile number"}
-              value={mobileNo}
-              error={errors.mobileNo}
-              onFocus={() => {
-                handleError(null, "mobileNo");
-              }}
-              keyboardType={"phone-pad"}
-              containerStyle={{ marginBottom: verticalScale(8) }}
-              left={
-                <TextInput.Icon
-                  icon={"phone-hangup-outline"}
-                  tintColor="grey"
-                />
-              }
-              onchange={(value) => {
-                setMobileNo(value);
-              }}
-            />
-            <DropDownPicker
-              schema={{
-                label: "name",
-                value: "id",
-              }}
-              labelStyle={styles.ddTxt}
-              textStyle={styles.ddTxt}
-              placeholder="Select Country"
-              open={openCountryPicker}
-              value={country}
-              items={countryData}
-              setOpen={setOpenCountryPicker}
-              setValue={setCountry}
-              setItems={setCountryData}
-              style={[
-                styles.ddStyle,
-                { borderColor: errors.country ? "red" : "#cacaca" },
-              ]}
-              zIndex={3000}
-              zIndexInverse={1000}
-              onSelectItem={(item) => {
-                handleError(null, "country");
-                dispatch(getStateData(item.id, 1, 10));
-              }}
-            />
-            {errors.country ? (
-              <Text
-                style={{
-                  color: "red",
-                  fontFamily: "Montserrat-Regular",
-                  fontSize: scale(11),
+            </TouchableOpacity>
+            {profileImage !== "" ? (
+              <Image
+                source={{
+                  uri: profileImage,
                 }}
-              >
-                {errors.country}
-              </Text>
-            ) : null}
-            <DropDownPicker
-              loading={stateDataResLoading}
-              schema={{
-                label: "name",
-                value: "id",
-              }}
-              labelStyle={styles.ddTxt}
-              textStyle={styles.ddTxt}
-              placeholder="Select an State"
-              open={openStatePicker}
-              value={state}
-              items={stateData}
-              setOpen={setOpenStatePicker}
-              setValue={setState}
-              setItems={setStateData}
-              style={[
-                styles.ddStyle,
-                { borderColor: errors.state ? "red" : "#cacaca" },
-              ]}
-              zIndex={2000}
-              // zIndexInverse={2000}
-              onSelectItem={(item) => {
-                handleError(null, "state");
-                dispatch(getCityData(item.id, 1, 10));
-              }}
-            />
-            {errors.state ? (
-              <Text
-                style={{
-                  color: "red",
-                  fontFamily: "Montserrat-Regular",
-                  fontSize: scale(11),
+                style={styles.profileImg}
+              />
+            ) : (
+              <Image
+                source={{
+                  uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1sE47wDfhJWPfb_C6ceXAImxmTZe1DE_CpeZYtgg_Vw&s",
                 }}
-              >
-                {errors.state}
-              </Text>
-            ) : null}
-            <DropDownPicker
-              loading={cityDataResLoading}
-              labelStyle={styles.ddTxt}
-              textStyle={styles.ddTxt}
-              schema={{
-                label: "name",
-                value: "id",
+                style={styles.profileImg}
+              />
+            )}
+          </View>
+          <TextBox
+            label={"First Name"}
+            value={firstName}
+            containerStyle={{ marginBottom: verticalScale(8) }}
+            error={errors.fName}
+            onFocus={() => {
+              handleError(null, "fName");
+            }}
+            left={<TextInput.Icon icon={"account-outline"} tintColor="grey" />}
+            onchange={(value) => {
+              setFirstName(value);
+            }}
+          />
+          <TextBox
+            label={"Last Name"}
+            value={lastName}
+            error={errors.lName}
+            onFocus={() => {
+              handleError(null, "lName");
+            }}
+            containerStyle={{ marginBottom: verticalScale(8) }}
+            left={<TextInput.Icon icon={"account-outline"} tintColor="grey" />}
+            onchange={(value) => {
+              setLastName(value);
+            }}
+          />
+          <TextBox
+            label={"Email"}
+            value={email}
+            onFocus={() => {
+              handleError(null, "email");
+            }}
+            error={errors.email}
+            keyboardType={"email-address"}
+            containerStyle={{ marginBottom: verticalScale(8) }}
+            left={<TextInput.Icon icon={"email-outline"} tintColor="grey" />}
+            onchange={(value) => {
+              setEmail(value);
+            }}
+          />
+          <TextBox
+            label={"Mobile number"}
+            value={mobileNo}
+            error={errors.mobileNo}
+            onFocus={() => {
+              handleError(null, "mobileNo");
+            }}
+            keyboardType={"phone-pad"}
+            containerStyle={{ marginBottom: verticalScale(8) }}
+            left={
+              <TextInput.Icon icon={"phone-hangup-outline"} tintColor="grey" />
+            }
+            onchange={(value) => {
+              setMobileNo(value);
+            }}
+          />
+          <DropDownPicker
+            schema={{
+              label: "name",
+              value: "id",
+            }}
+            scrollViewProps={{
+              decelerationRate: "fast",
+            }}
+            dropDownDirection="TOP"
+            searchable={true}
+            labelStyle={styles.ddTxt}
+            textStyle={styles.ddTxt}
+            placeholder="Select Country"
+            open={openCountryPicker}
+            value={country}
+            items={countryData}
+            setOpen={setOpenCountryPicker}
+            setValue={setCountry}
+            setItems={setCountryData}
+            style={[
+              styles.ddStyle,
+              { borderColor: errors.country ? "red" : "#cacaca" },
+            ]}
+            zIndex={3000}
+            zIndexInverse={1000}
+            onSelectItem={(item) => {
+              handleError(null, "country");
+              dispatch(getStateData(item.id));
+            }}
+          />
+          {errors.country ? (
+            <Text
+              style={{
+                color: "red",
+                fontFamily: "Montserrat-Regular",
+                fontSize: scale(11),
               }}
-              placeholder="Select an City"
-              open={openCityPicker}
-              value={city}
-              items={cityData}
-              setOpen={setOpenCityPicker}
-              setValue={setCity}
-              setItems={setCityData}
-              style={[
-                styles.ddStyle,
-                { borderColor: errors.city ? "red" : "#cacaca" },
-              ]}
-              zIndex={1000}
-              zIndexInverse={3000}
-              onSelectItem={(item) => {
-                handleError(null, "city");
+            >
+              {errors.country}
+            </Text>
+          ) : null}
+          <DropDownPicker
+            loading={stateDataResLoading}
+            searchable={true}
+            schema={{
+              label: "name",
+              value: "id",
+            }}
+            scrollViewProps={{
+              decelerationRate: "fast",
+            }}
+            dropDownDirection="TOP"
+            labelStyle={styles.ddTxt}
+            textStyle={styles.ddTxt}
+            placeholder="Select an State"
+            open={openStatePicker}
+            value={state}
+            items={stateData}
+            setOpen={setOpenStatePicker}
+            setValue={setState}
+            setItems={setStateData}
+            style={[
+              styles.ddStyle,
+              { borderColor: errors.state ? "red" : "#cacaca" },
+            ]}
+            zIndex={2000}
+            // zIndexInverse={2000}
+            onSelectItem={(item) => {
+              handleError(null, "state");
+              dispatch(getCityData(item.id));
+            }}
+          />
+          {errors.state ? (
+            <Text
+              style={{
+                color: "red",
+                fontFamily: "Montserrat-Regular",
+                fontSize: scale(11),
               }}
-            />
-            {errors.city ? (
-              <Text
-                style={{
-                  color: "red",
-                  fontFamily: "Montserrat-Regular",
-                  fontSize: scale(11),
-                }}
-              >
-                {errors.city}
-              </Text>
-            ) : null}
-          </KeyboardAvoidingView>
-        )}
+            >
+              {errors.state}
+            </Text>
+          ) : null}
+          <DropDownPicker
+            loading={cityDataResLoading}
+            scrollViewProps={{
+              decelerationRate: "fast",
+            }}
+            searchable={true}
+            dropDownDirection="TOP"
+            labelStyle={styles.ddTxt}
+            textStyle={styles.ddTxt}
+            schema={{
+              label: "name",
+              value: "id",
+            }}
+            placeholder="Select an City"
+            open={openCityPicker}
+            value={city}
+            items={cityData}
+            setOpen={setOpenCityPicker}
+            setValue={setCity}
+            setItems={setCityData}
+            style={[
+              styles.ddStyle,
+              { borderColor: errors.city ? "red" : "#cacaca" },
+            ]}
+            zIndex={1000}
+            zIndexInverse={3000}
+            onSelectItem={(item) => {
+              handleError(null, "city");
+            }}
+          />
+          {errors.city ? (
+            <Text
+              style={{
+                color: "red",
+                fontFamily: "Montserrat-Regular",
+                fontSize: scale(11),
+              }}
+            >
+              {errors.city}
+            </Text>
+          ) : null}
+        </KeyboardAvoidingView>
       </ScrollView>
-      {stateDataResLoading || cityDataResLoading ? null : (
-        <CustomeButton
-          title={"Edit Profile"}
-          isLoading={editProfileLoading}
-          style={{ marginHorizontal: moderateScale(15) }}
-          onClick={() => {
-            validate();
-          }}
-        />
-      )}
+      <CustomeButton
+        title={"Edit Profile"}
+        isLoading={editProfileLoading}
+        style={{
+          marginHorizontal: moderateScale(15),
+          marginVertical: moderateScale(10),
+        }}
+        onClick={() => {
+          validate();
+        }}
+      />
       <BottomSheetCustome
         isVisible={openCameraMenu}
         height={verticalScale(200)}
