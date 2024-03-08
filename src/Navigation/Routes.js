@@ -47,7 +47,6 @@ const Routes = () => {
   useEffect(() => {
     async function prepare() {
       try {
-        dispatch(getCountryData(1, 250));
         const token = await AsyncStorage.getItem("accessToken");
         console.log(token);
         if (!token) {
@@ -59,7 +58,7 @@ const Routes = () => {
           console.log(token);
           const userResponce = await AuthServices.getUserInfo();
           dispatch(setuserDetail(userResponce?.data?.Data));
-          // await getUserInfo();
+          setAppIsReady(userResponce?.data?.Success);
           setIsToken(true);
         }
         await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -75,7 +74,7 @@ const Routes = () => {
   }, []);
   (async function () {
     // if (appIsReady && countryData != null && countryData?.Success) {
-    if (appIsReady && countryData != null ) {
+    if (appIsReady) {
       await SplashScreen.hideAsync();
     }
   })();

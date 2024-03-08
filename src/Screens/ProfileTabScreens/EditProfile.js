@@ -106,17 +106,20 @@ const EditProfile = () => {
   useEffect(() => {
     if (countryDataRes != null && countryDataRes?.Success) {
       setCountryData(countryDataRes?.Data);
-      setCountry(userDetail?.countryId);
     }
+  }, [countryDataRes]);
+
+  useEffect(() => {
     if (stateDataRes != null && stateDataRes?.Success) {
       setStateData(stateDataRes?.Data);
-      setState(userDetail?.stateId);
     }
+  }, [stateDataRes]);
+
+  useEffect(() => {
     if (cityDataRes != null && cityDataRes?.Success) {
       setCityData(cityDataRes?.Data);
-      setCity(userDetail?.cityId);
     }
-  }, [countryDataRes, stateDataRes, cityDataRes]);
+  }, [cityDataRes]);
 
   useEffect(() => {
     if (editProfileError != null && !editProfileError?.success) {

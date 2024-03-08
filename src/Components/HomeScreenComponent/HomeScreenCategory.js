@@ -84,6 +84,6 @@ const styles = StyleSheet.create({
     width: scale(50),
     textAlign: "center",
     fontFamily: "Montserrat-Medium",
-    fontSize: scale(10),
+    fontSize: scale(8),
   },
 });

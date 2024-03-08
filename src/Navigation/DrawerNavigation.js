@@ -33,13 +33,8 @@ import RefundPolicy from "../Screens/DrawerScreen/RefundPolicy";
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigation = () => {
-  const drawerRef = useRef(null);
-  const closeDrawer = () => {
-    drawerRef.current && drawerRef.current.closeDrawer(); // Close Drawer
-  };
   return (
     <Drawer.Navigator
-      ref={drawerRef}
       screenOptions={{
         headerShown: false,
         drawerStyle: { width: scale(280), backgroundColor: "#FFFFFF" },
@@ -53,7 +48,7 @@ const DrawerNavigation = () => {
         },
       }}
       drawerContent={(props) => (
-        <CustomSidebarMenu {...props} closeDrawer={closeDrawer} />
+        <CustomSidebarMenu {...props}  />
       )}
     >
       {/* <Drawer.Screen

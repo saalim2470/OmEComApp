@@ -1,15 +1,17 @@
 import { Alert, Share } from "react-native";
 import { defaultCategoryImg } from "./defaults";
 import momentz from "moment-timezone";
+import Constants from "expo-constants";
 
 // export const hostUrl = "http://192.168.1.10:9020/api";
 export const hostUrl = "https://omsarvatra.com:8585/api";
 // export const hostUrl = "https://suryahealthclub.com:8585/api";
-const packageName = "com.om.omsarvatra";
+const packageName = Constants.expoConfig.android.package;
 export const googlePlayUrl = `https://play.google.com/store/apps/details?id=${packageName}&hl=en&gl=US`;
 
 export const contactUsMobileNo = "+919998520722";
 export const omEmail = "omsarvatra1986@gmail.com";
+export const appVersion=Constants.expoConfig.version
 
 export const validateEmail = (email) => {
   return String(email)

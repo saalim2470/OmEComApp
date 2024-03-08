@@ -19,8 +19,9 @@ import { resetUserAdContent } from "../store/profileSlices/GetUserContentSlice";
 import CustomeAlert from "./CustomeAlert";
 import NavigationProfile from "./NavigationComponents/NavigationProfile";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { googlePlayUrl, onShare } from "../Constants/Constant";
+import { appVersion, googlePlayUrl, onShare } from "../Constants/Constant";
 import { resetData } from "../store/addAdContentSlices/AddPostData";
+import * as StoreReview from "expo-store-review";
 
 const CustomSidebarMenu = (props) => {
   const navigation = useNavigation();
@@ -38,6 +39,15 @@ const CustomSidebarMenu = (props) => {
       await AsyncStorage.removeItem(userDetail);
     } catch (error) {}
   };
+  const handleReviewPress = async () => {
+    const isSupported = await StoreReview.isAvailableAsync();
+    if (isSupported) {
+      await StoreReview.requestReview();
+    } else {
+      alert("Store review is not available on this device.");
+    }
+  };
+  
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <NavigationProfile />
@@ -195,7 +205,8 @@ const CustomSidebarMenu = (props) => {
           <DrawerItem
             label="PlayStore Rating"
             onPress={() => {
-              navigation.navigate(screenName.playStoreRating);
+              handleReviewPress();
+              // navigation.navigate(screenName.playStoreRating);
             }}
             labelStyle={styles.labelStyle}
             icon={({ color, size, focused }) => (
@@ -311,7 +322,7 @@ const CustomSidebarMenu = (props) => {
             textAlign: "center",
           }}
         >
-          Version 1.0.015
+          {`Version ${appVersion}`}
         </Text>
       </View>
       <CustomeAlert

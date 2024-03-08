@@ -149,12 +149,13 @@ const CreateAccount = () => {
 
   useEffect(() => {
     if (authSuccess != false && authSuccess) {
-      dispatch(clearCreateAccountData());
-      navigation.dispatch(
-        StackActions.replace(screenName.authRoute, {
-          screen: screenName.login,
-        })
-      );
+      setShowError({
+        show: true,
+        title: "Success",
+        msg: `We sent verification link to ${email} email address please verify to continue login`,
+        type: "success",
+      });
+     
     }
   }, [authSuccess]);
 
@@ -297,6 +298,11 @@ const CreateAccount = () => {
   const onClickModalBtn = () => {
     dispatch(clearCreateAccountData());
     setShowError({ ...showError, show: false });
+    authSuccess&&  navigation.dispatch(
+      StackActions.replace(screenName.authRoute, {
+        screen: screenName.login,
+      })
+    );
   };
   return (
     <SafeAreaView style={commonStyle.container}>

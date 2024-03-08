@@ -5,7 +5,7 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { setCategoryId } from "../../store/StoreDataSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +21,7 @@ import {
 const RoundCategoryView = ({ onClickCategory = () => {} }) => {
   const dispatch = useDispatch();
   const maxToRenderPerBatch = 100;
+  const flatListRef = useRef(null);
   const categoryDataRes = useSelector((state) => state.category.categoryData);
   const categoryId = useSelector((state) => state.storeData.categoryId);
   const categoryPage = useSelector((state) => state.category.page);
@@ -33,6 +34,8 @@ const RoundCategoryView = ({ onClickCategory = () => {} }) => {
     (state) => state.category.isReachedEnd
   );
   const [categoryData, setCategoryData] = useState(null);
+  
+  
 
   useEffect(() => {
     if (!categoryData) getCategory();
@@ -43,7 +46,6 @@ const RoundCategoryView = ({ onClickCategory = () => {} }) => {
       setCategoryData([allCategorie, ...categoryDataRes]);
     }
   }, [categoryDataRes, categorySuccess]);
-
   const getCategory = () => {
     dispatch(getCategoryData(categoryPage, categoryPageSize));
   };
@@ -78,6 +80,7 @@ const RoundCategoryView = ({ onClickCategory = () => {} }) => {
   return (
     <View style={styles.storyView}>
       <FlatList
+       ref={flatListRef}
         data={categoryData}
         keyExtractor={(item, index) => `category${item.id}_${index}`}
         showsHorizontalScrollIndicator={false}

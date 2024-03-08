@@ -23,6 +23,7 @@ import { followUserApi } from "../../store/profileSlices/Follow_UnFollowSlice";
 import colors from "../../Constants/colors";
 import * as Linking from "expo-linking";
 import ProfileImage from "../ProfileImage";
+import { getCountryData } from "../../store/contrySlices/GetCountrySlice";
 
 const ProfileScreenTopView = ({ profileData, isEditBtn, totalPost }) => {
   const navigation = useNavigation();
@@ -88,6 +89,7 @@ const ProfileScreenTopView = ({ profileData, isEditBtn, totalPost }) => {
               style={styles.editBtn}
               activeOpacity={0.6}
               onPress={() => {
+                dispatch(getCountryData());
                 navigation.navigate(screenName.editProfile);
               }}
             >

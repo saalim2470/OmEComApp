@@ -17,13 +17,15 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.om.classified",
       "infoPlist": {
         "NSCameraUsageDescription": "Om needs camera access to take photos",
         "NSLocationWhenInUseUsageDescription": "Om needs location access to show your current location"
       }
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.om.omsarvatra",
+      "package":"com.om.omsarvatra",
       "permissions": [
         "android.permission.INTERNET",
         "android.permission.CAMERA",
@@ -36,8 +38,6 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.om.classified",
-      "googleServicesFile": "./google-services.json",
       "intentFilters": [
         {
           "action": "VIEW",
@@ -71,7 +71,7 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "24538d56-012a-4598-8c0c-6e11cbc65490"
+        "projectId": "e14c1d33-384f-4481-bb23-6b12556bb88a"
       }
     }
   }
