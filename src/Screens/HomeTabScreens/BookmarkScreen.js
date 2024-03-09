@@ -72,15 +72,16 @@ const BookmarkScreen = ({ navigation, route }) => {
   useFocusEffect(
     React.useCallback(() => {
       console.log("Screen focused");
+      getSavedContent();
       return () => {
         console.log("Screen unfocused");
         setCurrentPost(null);
       };
-    }, [])
+    }, [refreshing, userContentPage, ])
   );
-  useEffect(() => {
-    getSavedContent();
-  }, [refreshing, userContentPage, isFocused]);
+  // useEffect(() => {
+  //   getSavedContent();
+  // }, [isFocused]);
   useEffect(() => {
     if (userContentRes != null && userContentSuccess) {
       setPostData(userContentRes);

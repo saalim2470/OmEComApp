@@ -42,13 +42,14 @@ export default function App() {
     },
   };
   const linking = {
-    prefixes: [prefix, "https://onsarvatra.com/"],
+    prefixes: [prefix, "https://omsarvatra.com/"],
     config,
   };
 
   return (
     <SafeAreaProvider>
-      <StatusBar />
+      <StatusBar style="auto" />
+
       <Provider store={store}>
         <PaperProvider theme={theme}>
           <BottomSheetModalProvider>

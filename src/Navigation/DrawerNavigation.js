@@ -36,6 +36,8 @@ const DrawerNavigation = () => {
   return (
     <Drawer.Navigator
       screenOptions={{
+        lazy:true,
+        unmountOnBlur:true,
         headerShown: false,
         drawerStyle: { width: scale(280), backgroundColor: "#FFFFFF" },
         drawerItemStyle: { backgroundColor: "#FFFFFF" },

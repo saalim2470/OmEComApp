@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import { baseURL, serverImagePath } from "../../../Constants/defaults";
 import VideoViewer from "./VideoViewer";
 import colors from "../../../Constants/colors";
@@ -124,7 +124,7 @@ const ImageVideoSlider = ({
   );
 };
 
-export default ImageVideoSlider;
+export default memo(ImageVideoSlider);
 
 const styles = StyleSheet.create({
   container: {

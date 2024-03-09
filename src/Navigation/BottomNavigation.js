@@ -34,6 +34,7 @@ const BottomNavigation = () => {
         tabBarActiveTintColor: colors.themeColor,
         headerShown: false,
         tabBarHideOnKeyboard: true,
+        lazy:true
       }}
       initialRouteName={screenName.bottomNavigationHomeRoute}
     >

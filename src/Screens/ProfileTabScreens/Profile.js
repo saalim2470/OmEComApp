@@ -46,8 +46,6 @@ import useErrorHook from "../../CustomeHooks/useErrorHook";
 
 const Profile = ({ navigation, route }) => {
   const dispatch = useDispatch();
-  const isFocused = useIsFocused();
-
   const maxToRenderPerBatch = 100;
   const {
     userContentData: userContentRes,
@@ -88,7 +86,7 @@ const Profile = ({ navigation, route }) => {
     React.useCallback(() => {
       console.log("Screen focused");
       return () => {
-        console.log("Screen unfocused");
+        console.log("Screen unfocused profile");
         setCurrentPost(null);
       };
     }, [])
@@ -133,7 +131,7 @@ const Profile = ({ navigation, route }) => {
       show: false,
     });
   };
-  const renderItem = ({ item, index }) => {
+  const renderItem = useCallback(({ item, index }) => {
     return (
       <FeedCard
         itemData={item}
@@ -144,7 +142,8 @@ const Profile = ({ navigation, route }) => {
         }}
       />
     );
-  };
+  }, [navigation, currentPost]);
+  
 
   const onRefresh = useCallback(() => {
     dispatch(resetUserContentPage());
@@ -188,15 +187,46 @@ const Profile = ({ navigation, route }) => {
       ) : !userContentLoading && postData.length <= 0 ? (
         <FriendlyMsg msg={"Post Your First Ad"} />
       ) : (
-        <CustomeFlatlist
-          data={postData}
-          renderItem={renderItem}
-          onEndReached={onReachedEnd}
-          listFooterComponent={listFooterComponent}
-          onRefresh={onRefresh}
-          refreshing={refreshing}
-          onViewableItemsChanged={onViewableItemsChanged}
-        />
+        // <CustomeFlatlist
+        //   data={postData}
+        //   renderItem={renderItem}
+        //   onEndReached={onReachedEnd}
+        //   listFooterComponent={listFooterComponent}
+        //   onRefresh={onRefresh}
+        //   refreshing={refreshing}
+        //   onViewableItemsChanged={onViewableItemsChanged}
+        // />
+        <FlatList
+        data={postData}
+        keyExtractor={(item, index) => {
+          return `data_${item.id}_${index}`;
+        }}
+        showsVerticalScrollIndicator={false}
+        onEndReachedThreshold={1}
+        onEndReached={onReachedEnd}
+        contentContainerStyle={{
+          gap: scale(10),
+          paddingBottom: verticalScale(10),
+        }}
+        ItemSeparatorComponent={
+          <Divider style={{ marginBottom: verticalScale(8) }} />
+        }
+        ListFooterComponent={listFooterComponent}
+        renderItem={renderItem}
+        initialNumToRender={40}
+        maxToRenderPerBatch={maxToRenderPerBatch}
+        windowSize={5}
+        removeClippedSubviews={true}
+        updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
+        refreshing={refreshing}
+        onRefresh={onRefresh}
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={{
+          itemVisiblePercentThreshold: 70,
+        }}
+        scrollEventThrottle={12}
+        fadeDuration={0}
+      />
       )}
       <CustomeAlertModal
         isVisible={apiShowError.show}

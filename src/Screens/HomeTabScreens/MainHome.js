@@ -116,7 +116,7 @@ const MainHome = ({ route }) => {
     dispatch(resetLikeData());
     setApiShowError({ ...apiShowError, show: false });
   };
-  const renderItem = ({ item, index }) => {
+  const renderItem = useCallback(({ item, index }) => {
     return (
       <FeedCard
         itemData={item}
@@ -126,7 +126,7 @@ const MainHome = ({ route }) => {
         }}
       />
     );
-  };
+  }, [navigation, currentPost]);
   const listFooterComponent = () => {
     return (
       contentMoreLoading && (

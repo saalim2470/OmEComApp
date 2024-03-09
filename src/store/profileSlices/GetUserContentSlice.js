@@ -47,6 +47,9 @@ const GetUserContentSlice = createSlice({
       state.isLoading = false;
       state.isSuccess = false;
     },
+    setUserContentData: (state, action) => {
+      state.userContentData = [];
+    },
     setUserContentPage: (state, action) => {
       state.page = action.payload;
     },
@@ -65,6 +68,7 @@ export const {
   resetUserAdContent,
   setUserContentPage,
   resetUserContentPage,
+  setUserContentData
 } = GetUserContentSlice.actions;
 
 export const getUserContentApi = (pageNumber, pageSize) => async (dispatch) => {

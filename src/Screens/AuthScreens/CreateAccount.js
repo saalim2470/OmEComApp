@@ -44,7 +44,7 @@ const CreateAccount = () => {
   const dispatch = useDispatch();
   DropDownPicker.setListMode("SCROLLVIEW");
   const countryDataRes = useSelector((state) => state.getCountry.countryData);
-  console.log(useSelector((state) => state.createAccount));
+  const countryLoading = useSelector((state) => state.getCountry.isLoading);
   const stateDataRes = useSelector((state) => state.getState.stateData);
   const stateDataResLoading = useSelector((state) => state.getState.isLoading);
   const cityDataRes = useSelector((state) => state.getCity.cityData);
@@ -440,7 +440,12 @@ const CreateAccount = () => {
               label: "name",
               value: "id",
             }}
+            scrollViewProps={{
+              decelerationRate: "fast",
+            }}
+            dropDownDirection="TOP"
             searchable={true}
+            loading={countryLoading}
             labelStyle={styles.ddTxt}
             textStyle={styles.ddTxt}
             placeholder="Select Country"
@@ -474,6 +479,10 @@ const CreateAccount = () => {
           ) : null}
           <DropDownPicker
             loading={stateDataResLoading}
+            scrollViewProps={{
+              decelerationRate: "fast",
+            }}
+            dropDownDirection="TOP"
             searchable={true}
             schema={{
               label: "name",
@@ -512,6 +521,10 @@ const CreateAccount = () => {
           ) : null}
           <DropDownPicker
             loading={cityDataResLoading}
+            scrollViewProps={{
+              decelerationRate: "fast",
+            }}
+            dropDownDirection="TOP"
             searchable={true}
             labelStyle={styles.ddTxt}
             textStyle={styles.ddTxt}

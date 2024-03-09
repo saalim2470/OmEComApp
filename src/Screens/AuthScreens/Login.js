@@ -341,11 +341,11 @@ const Login = ({ navigation }) => {
                 fontFamily: "Montserrat-Medium",
               }}
               onPress={() => {
-                dispatch(getCountryData(1, 250));
+                dispatch(getCountryData());
                 navigation.navigate(screenName.createAccount);
               }}
             >
-              Sign Up
+               {" "}Sign Up
             </Text>
           </Text>
         </View>

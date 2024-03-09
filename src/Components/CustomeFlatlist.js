@@ -40,7 +40,7 @@ const CustomeFlatlist = ({
       onRefresh={onRefresh}
       onViewableItemsChanged={onViewableItemsChanged}
       viewabilityConfig={{
-        itemVisiblePercentThreshold: 50,
+        itemVisiblePercentThreshold: 70,
       }}
       scrollEventThrottle={12}
       fadeDuration={0}

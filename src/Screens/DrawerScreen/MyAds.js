@@ -23,6 +23,7 @@ import {
   getUserContentApi,
   resetUserContentPage,
   resetUserPage,
+  setUserContentData,
   setUserContentPage,
 } from "../../store/profileSlices/GetUserContentSlice";
 import Loading from "../../Components/Loading";
@@ -74,7 +75,7 @@ const MyAds = ({ navigation, route }) => {
     isLoading: deleteLoading,
   } = useSelector((state) => state.deleteAdContent);
   const [refreshing, setRefreshing] = useState(false);
-  const [currentPost, setCurrentPost] = useState();
+  const [currentPost, setCurrentPost] = useState(null);
   const { apiShowError, setApiShowError } = useErrorHook(
     likeError || saveError || deleteError,
     likeErrorCode || saveErrorCode || deleteStatusCode
@@ -82,15 +83,18 @@ const MyAds = ({ navigation, route }) => {
   useFocusEffect(
     React.useCallback(() => {
       console.log("Screen focused");
+      getUserContent();
       return () => {
-        console.log("Screen unfocused");
+        console.log("Screen unfocused myads");
         setCurrentPost(null);
+        // dispatch(setUserContentData());
       };
-    }, [])
+    }, [userContentPage, refreshing])
   );
-  useEffect(() => {
-    getUserContent();
-  }, [isFocused, userContentPage, refreshing]);
+  console.log('-=-=current post myads-=-=-',currentPost);
+  // useEffect(() => {
+  //   getUserContent();
+  // }, [ userContentPage, refreshing]);
   useEffect(() => {
     if (deleteDataRes !== null && deleteDataRes?.Success)
       dispatch(resetUserContentPage());
@@ -119,7 +123,7 @@ const MyAds = ({ navigation, route }) => {
       show: false,
     });
   };
-  const renderItem = ({ item, index }) => {
+  const renderItem = useCallback(({ item, index }) => {
     return (
       <FeedCard
         itemData={item}
@@ -130,7 +134,7 @@ const MyAds = ({ navigation, route }) => {
         }}
       />
     );
-  };
+  }, [navigation, currentPost]);
   const onRefresh = useCallback(() => {
     dispatch(resetUserContentPage());
     setRefreshing(true);
@@ -156,7 +160,6 @@ const MyAds = ({ navigation, route }) => {
       setCurrentPost(viewableItems[0].item?.id);
     }
   }).current;
-
   return (
     <SafeAreaView style={commonStyle.container}>
       <CustomeHeader isBackBtn={true} title={"My Ads"} />
@@ -167,15 +170,46 @@ const MyAds = ({ navigation, route }) => {
       ) : !userContentLoading && postData.length <= 0 ? (
         <FriendlyMsg msg={"Post Your First Ad"} />
       ) : (
-        <CustomeFlatlist
-          data={postData}
-          renderItem={renderItem}
-          onEndReached={onReachedEnd}
-          listFooterComponent={listFooterComponent}
-          onRefresh={onRefresh}
-          refreshing={refreshing}
-          onViewableItemsChanged={onViewableItemsChanged}
-        />
+        // <CustomeFlatlist
+        //   data={postData}
+        //   renderItem={renderItem}
+        //   onEndReached={onReachedEnd}
+        //   listFooterComponent={listFooterComponent}
+        //   onRefresh={onRefresh}
+        //   refreshing={refreshing}
+        //   onViewableItemsChanged={onViewableItemsChanged}
+        // />
+        <FlatList
+        data={postData}
+        keyExtractor={(item, index) => {
+          return `data_${item.id}_${index}`;
+        }}
+        showsVerticalScrollIndicator={false}
+        onEndReachedThreshold={1}
+        onEndReached={onReachedEnd}
+        contentContainerStyle={{
+          gap: scale(10),
+          paddingBottom: verticalScale(10),
+        }}
+        ItemSeparatorComponent={
+          <Divider style={{ marginBottom: verticalScale(8) }} />
+        }
+        ListFooterComponent={listFooterComponent}
+        renderItem={renderItem}
+        initialNumToRender={40}
+        maxToRenderPerBatch={maxToRenderPerBatch}
+        windowSize={5}
+        removeClippedSubviews={true}
+        updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
+        refreshing={refreshing}
+        onRefresh={onRefresh}
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={{
+          itemVisiblePercentThreshold: 50,
+        }}
+        scrollEventThrottle={12}
+        fadeDuration={0}
+      />
       )}
       <CustomeAlertModal
         isVisible={apiShowError.show}

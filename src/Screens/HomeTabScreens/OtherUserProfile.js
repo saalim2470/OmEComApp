@@ -169,7 +169,7 @@ const OtherUserProfile = ({ navigation, route }) => {
       />
     );
   }
-  const renderItem = ({ item, index }) => {
+  const renderItem = useCallback(({ item, index }) => {
     return (
       <FeedCard
         itemData={item}
@@ -179,8 +179,7 @@ const OtherUserProfile = ({ navigation, route }) => {
         }}
       />
     );
-  };
-
+  }, [navigation, currentPost]);
   return (
     <SafeAreaView style={commonStyle.container}>
       <HeaderWithMiddleName

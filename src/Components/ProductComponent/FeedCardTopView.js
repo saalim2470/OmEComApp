@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { memo } from "react";
 import { useNavigation } from "@react-navigation/native";
 import screenName from "../../Constants/screenName";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
@@ -27,7 +27,7 @@ const FeedCardTopView = ({ itemData, disable }) => {
   );
 };
 
-export default FeedCardTopView;
+export default memo(FeedCardTopView);
 
 const styles = StyleSheet.create({
   topView: {

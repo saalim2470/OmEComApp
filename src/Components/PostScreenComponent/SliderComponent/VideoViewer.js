@@ -11,6 +11,7 @@ import { ResizeMode, Video } from "expo-av";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { Entypo } from "@expo/vector-icons";
 import { millisecondsToMinutes } from "../../../Constants/Constant";
+import Loading from "../../Loading";
 
 const SCREEM_WIDTH = Dimensions.get("window").width;
 const VideoViewer = ({
@@ -33,38 +34,40 @@ const VideoViewer = ({
     setIsVideoLoading(false);
   };
   return (
-    <View style={{ flex: 1 }}>
-      {isVideoLoading && <ActivityIndicator size="large" color="#0000ff" />}
-      <Video
-        ref={video}
-        shouldPlay={shouldPlay}
-        style={styles.videoStyle}
-        source={{
-          uri: item,
-        }}
-        useNativeControls={false}
-        resizeMode={ResizeMode.CONTAIN}
-        isLooping={true}
-        onLoadStart={handleVideoLoadStart}
-        onLoad={handleVideoLoad}
-        onPlaybackStatusUpdate={(status) => {
-          setStatus(() => status);
-        }}
-      />
-      <TouchableOpacity
-        activeOpacity={0.6}
-        onPress={() => {
-          video.current.setIsMutedAsync(!status?.isMuted);
-        }}
-        style={styles.muteBtn}
-      >
-        <Entypo
-          name={status?.isMuted ? "sound-mute" : "sound"}
-          size={scale(15)}
-          color="black"
+    <>
+      {isVideoLoading && <Loading />}
+      <View style={{ flex: 1 }}>
+        <Video
+          ref={video}
+          shouldPlay={shouldPlay}
+          style={styles.videoStyle}
+          source={{
+            uri: item,
+          }}
+          useNativeControls={false}
+          resizeMode={ResizeMode.CONTAIN}
+          isLooping={true}
+          onLoadStart={handleVideoLoadStart}
+          onLoad={handleVideoLoad}
+          onPlaybackStatusUpdate={(status) => {
+            setStatus(() => status);
+          }}
         />
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity
+          activeOpacity={0.6}
+          onPress={() => {
+            video.current.setIsMutedAsync(!status?.isMuted);
+          }}
+          style={styles.muteBtn}
+        >
+          <Entypo
+            name={status?.isMuted ? "sound-mute" : "sound"}
+            size={scale(15)}
+            color="black"
+          />
+        </TouchableOpacity>
+      </View>
+    </>
   );
 };
 

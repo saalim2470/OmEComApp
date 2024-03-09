@@ -13,7 +13,7 @@ import { baseURL, serverImagePath } from "../../Constants/defaults";
 import Carousel from "react-native-reanimated-carousel";
 
 const width = Dimensions.get("window").width;
-const BannerSlider = ({ data, onClick, disable, isLocalData }) => {
+const BannerSlider = ({ data, onClick=()=>{}, disable, isLocalData }) => {
   const blurhash = "L6PZfSi_.AyE_3t7t7R**0o#DgR4";
   const [images, setImages] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);

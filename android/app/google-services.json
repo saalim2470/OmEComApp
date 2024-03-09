@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "380874981592",
+    "project_id": "omsarvatra-5c26b",
+    "storage_bucket": "omsarvatra-5c26b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:380874981592:android:6dd99133b2a670451957ad",
+        "android_client_info": {
+          "package_name": "com.om.omsarvatra"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbJWBDCDP7LPFu7MfEyX5CSW-xB70MPv8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
