@@ -76,19 +76,19 @@ const OtherUserProfile = ({ navigation, route }) => {
     likeErrorCode || saveErrorCode
   );
   console.log(useSelector((state) => state.getContentByUserId));
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     console.log("Screen focused");
-  //     dispatch(getOtherUserInfoApi(route?.params?.userId));
-  //     return () => {
-  //       console.log("Screen unfocused other user");
-  //       setCurrentPost(null);
-  //     };
-  //   }, [])
-  // );
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log("Screen focused");
+      dispatch(getOtherUserInfoApi(route?.params?.userId));
+      return () => {
+        console.log("Screen unfocused other user");
+        setCurrentPost(null);
+      };
+    }, [])
+  );
 
   useEffect(() => {
-    dispatch(getOtherUserInfoApi(userId));
+    if (userId) dispatch(getOtherUserInfoApi(userId));
   }, [userId]);
   useEffect(() => {
     if (userDetail !== null && userDetail?.Success) {
@@ -119,7 +119,6 @@ const OtherUserProfile = ({ navigation, route }) => {
       setCurrentPost(viewableItems[0].item?.id);
     }
   }).current;
-
   const getContent = () => {
     dispatch(
       getContentByUserIdApi(
@@ -130,6 +129,7 @@ const OtherUserProfile = ({ navigation, route }) => {
       )
     );
   };
+  console.log("-=-=-=6 getcontent");
   const onClickModalBtn = () => {
     dispatch(resetLikeData());
     dispatch(resetSaveData());
@@ -158,10 +158,8 @@ const OtherUserProfile = ({ navigation, route }) => {
     dispatch(resetContentByUserIdPage());
     setRefreshing(true);
   }, []);
-  if (!refreshing && contentLoading) {
-    return <Loading />;
-  }
-  if (contentError != null && !contentError.Success) {
+
+  if (contentError != null && !contentError?.Success) {
     return (
       <ServerError
         msg={contentError?.ErrorMessage || "Some error occured"}
@@ -169,17 +167,23 @@ const OtherUserProfile = ({ navigation, route }) => {
       />
     );
   }
-  const renderItem = useCallback(({ item, index }) => {
-    return (
-      <FeedCard
-        itemData={item}
-        currentPost={currentPost}
-        onClickMoreBtn={() => {
-          navigation.navigate(screenName.productDetail, { data: item });
-        }}
-      />
-    );
-  }, [navigation, currentPost]);
+  //   if (!refreshing && contentLoading) {
+  //   return <Loading />;
+  // }
+  const renderItem = useCallback(
+    ({ item, index }) => {
+      return (
+        <FeedCard
+          itemData={item}
+          currentPost={currentPost}
+          onClickMoreBtn={() => {
+            navigation.navigate(screenName.productDetail, { data: item });
+          }}
+        />
+      );
+    },
+    [navigation, currentPost]
+  );
   return (
     <SafeAreaView style={commonStyle.container}>
       <HeaderWithMiddleName
@@ -190,7 +194,9 @@ const OtherUserProfile = ({ navigation, route }) => {
         profileData={userProfileDetail}
         totalPost={userTotalContent}
       />
-      {postData != null && postData?.length <= 0 ? (
+      {!refreshing && contentLoading ? (
+        <Loading />
+      ) : postData != null && postData?.length <= 0 ? (
         <FriendlyMsg />
       ) : (
         <CustomeFlatlist
