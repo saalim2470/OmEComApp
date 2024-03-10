@@ -79,7 +79,7 @@ const OtherUserProfile = ({ navigation, route }) => {
   useFocusEffect(
     React.useCallback(() => {
       console.log("Screen focused");
-      dispatch(getOtherUserInfoApi(route?.params?.userId));
+      // dispatch(getOtherUserInfoApi(route?.params?.userId));
       return () => {
         console.log("Screen unfocused other user");
         setCurrentPost(null);
@@ -88,7 +88,7 @@ const OtherUserProfile = ({ navigation, route }) => {
   );
 
   useEffect(() => {
-    if (userId) dispatch(getOtherUserInfoApi(userId));
+  dispatch(getOtherUserInfoApi(userId));
   }, [userId]);
   useEffect(() => {
     if (userDetail !== null && userDetail?.Success) {
@@ -129,7 +129,6 @@ const OtherUserProfile = ({ navigation, route }) => {
       )
     );
   };
-  console.log("-=-=-=6 getcontent");
   const onClickModalBtn = () => {
     dispatch(resetLikeData());
     dispatch(resetSaveData());

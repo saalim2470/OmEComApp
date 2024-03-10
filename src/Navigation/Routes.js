@@ -39,7 +39,6 @@ SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
 const Routes = () => {
   const dispatch = useDispatch();
-  const countryData = useSelector((state) => state.getCountry.countryData);
   const [appIsReady, setAppIsReady] = useState(false);
   const [isToken, setIsToken] = useState(false);
   const accessToken = useSelector((state) => state.login.accessToken);
@@ -73,7 +72,6 @@ const Routes = () => {
     prepare();
   }, []);
   (async function () {
-    // if (appIsReady && countryData != null && countryData?.Success) {
     if (appIsReady) {
       await SplashScreen.hideAsync();
     }

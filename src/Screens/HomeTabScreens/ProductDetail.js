@@ -11,7 +11,7 @@ import { setError } from "../../store/AdContentSlices/GetAdContentSlice";
 import FeedCard from "../../Components/ProductComponent/FeedCard";
 import Loading from "../../Components/Loading";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getAdContentByIdApi } from "../../store/AdContentSlices/GetAdContentById";
+import { getAdContentByIdApi, resetAdContentDataById } from "../../store/AdContentSlices/GetAdContentById";
 import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 import useErrorHook from "../../CustomeHooks/useErrorHook";
 
@@ -19,7 +19,6 @@ const ProductDetail = ({ route }) => {
   const dispatch = useDispatch();
   const { contentId } = route?.params;
   const { data } = route?.params;
-  console.log(contentId);
   const {
     error: likeError,
     statusCode: likeErrorCode,
@@ -40,10 +39,16 @@ const ProductDetail = ({ route }) => {
   );
   useEffect(() => {
     if (contentId) dispatch(getAdContentByIdApi(contentId));
+    return () => {
+      dispatch(resetAdContentDataById())
+    };
   }, [contentId]);
 
   useEffect(() => {
     if (data) setAdContent(data);
+    return () => {
+      dispatch(resetAdContentDataById())
+    };
   }, [data]);
   useEffect(() => {
     if (contentData !== null && contentData?.Success)

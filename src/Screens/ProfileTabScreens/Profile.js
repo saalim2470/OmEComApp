@@ -35,7 +35,7 @@ import { resetSaveData } from "../../store/AdContentSlices/SaveContentSlice";
 import FeedCard from "../../Components/ProductComponent/FeedCard";
 import screenName from "../../Constants/screenName";
 import { resetDeleteAdContentData } from "../../store/AdContentSlices/DeleteAdContent";
-import { useFocusEffect, useIsFocused } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused, useNavigation } from "@react-navigation/native";
 import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 import colors from "../../Constants/colors";
 import ShimmerLoading from "../../Components/LoadingComponents/ShimmerLoading";
@@ -44,7 +44,8 @@ import useLikeHook from "../../CustomeHooks/useLikeHook";
 import CustomeFlatlist from "../../Components/CustomeFlatlist";
 import useErrorHook from "../../CustomeHooks/useErrorHook";
 
-const Profile = ({ navigation, route }) => {
+const Profile = ({  route }) => {
+  const navigation=useNavigation()
   const dispatch = useDispatch();
   const maxToRenderPerBatch = 100;
   const {
@@ -84,6 +85,7 @@ const Profile = ({ navigation, route }) => {
   );
   useFocusEffect(
     React.useCallback(() => {
+      onRefresh()
       console.log("Screen focused");
       return () => {
         console.log("Screen unfocused profile");

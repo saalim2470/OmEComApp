@@ -36,7 +36,7 @@ const NotificationCard = ({ data, user }) => {
           >
             {data?.title}
           </Text>
-          <Text style={styles.notificationTxt}>{data?.description}</Text>
+          <Text style={[styles.notificationTxt,{fontSize:scale(10)}]}>{data?.description}</Text>
         </View>
       </View>
       <View style={styles.notificationRightView}>
@@ -66,6 +66,7 @@ const styles = StyleSheet.create({
   notificationLeftView: {
     flexDirection: "row",
     alignItems: "center",
+    gap:moderateScale(6)
   },
   notificationRightView: {
     alignSelf: "flex-start",
