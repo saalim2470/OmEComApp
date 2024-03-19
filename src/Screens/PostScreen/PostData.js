@@ -138,13 +138,13 @@ const PostData = ({ navigation, route }) => {
   }, [addPostData.errorCode, addPostData?.error]);
   const imageSetter=(result)=>{
     if (result?.assets[0]?.type === "image") {
-      if (Math.round(bytesToMB(result?.assets[0]?.filesize)) <= 10) {
+      if (Math.round(bytesToMB(result?.assets[0]?.filesize)) <= 5) {
         setImage([...image, result.assets[0].uri]);
       } else {
         setShowAlert({
           show: true,
           title: "Validation",
-          msg: "Image size under 10 Mb",
+          msg: "Image size under 5 Mb",
           type: "warning",
         });
       }

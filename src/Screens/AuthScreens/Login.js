@@ -163,6 +163,8 @@ const Login = ({ navigation }) => {
   useEffect(() => {
     if (loginSuccess) {
       // navigation.dispatch(StackActions.replace(screenName.drawerNavigation));
+      setEmail('')
+      setPassword('')
     }
   }, [loginSuccess]);
 
