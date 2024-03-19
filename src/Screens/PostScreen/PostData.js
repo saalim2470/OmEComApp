@@ -29,7 +29,11 @@ import RbBottomSheet from "../../Components/BottomSheet/RbBottomSheet";
 import * as Location from "expo-location";
 import GpsSearch from "../../Components/GpsSearch";
 import { getGpsDataApi } from "../../store/gpsSlice/GetGpsData";
-import { subcriptionType } from "../../Constants/Constant";
+import {
+  bytesToMB,
+  bytesToSize,
+  subcriptionType,
+} from "../../Constants/Constant";
 import useErrorHook from "../../CustomeHooks/useErrorHook";
 
 const PostData = ({ navigation, route }) => {
@@ -132,6 +136,31 @@ const PostData = ({ navigation, route }) => {
       handleErrorCode(errorCode);
     }
   }, [addPostData.errorCode, addPostData?.error]);
+  const imageSetter=(result)=>{
+    if (result?.assets[0]?.type === "image") {
+      if (Math.round(bytesToMB(result?.assets[0]?.filesize)) <= 10) {
+        setImage([...image, result.assets[0].uri]);
+      } else {
+        setShowAlert({
+          show: true,
+          title: "Validation",
+          msg: "Image size under 10 Mb",
+          type: "warning",
+        });
+      }
+    }else if(result?.assets[0]?.type === "video"){
+      if (Math.round(bytesToMB(result?.assets[0]?.filesize)) <= 20) {
+        setImage([...image, result.assets[0].uri]);
+      } else {
+        setShowAlert({
+          show: true,
+          title: "Validation",
+          msg: "Video size under 20 Mb",
+          type: "warning",
+        });
+      }
+    }
+  }
   const openImagePicker = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -140,7 +169,7 @@ const PostData = ({ navigation, route }) => {
       quality: 1,
     });
     if (!result.canceled) {
-      setImage([...image, result.assets[0].uri]);
+      imageSetter(result)
     }
   };
   const openCamera = async () => {
@@ -152,7 +181,7 @@ const PostData = ({ navigation, route }) => {
     });
 
     if (!result.canceled) {
-      setImage([...image, result.assets[0].uri]);
+      imageSetter(result)
     }
   };
   const onClickRemove = (index1) => {

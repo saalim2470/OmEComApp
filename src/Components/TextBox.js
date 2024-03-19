@@ -54,6 +54,7 @@ const TextBox = ({
           style,
           {
             // backgroundColor: "#FFFFFF",
+            textAlign:'auto',
             backgroundColor: "transparent",
             // marginVertical: moderateVerticalScale(5),
             fontSize: scale(13),

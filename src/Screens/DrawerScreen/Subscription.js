@@ -84,7 +84,8 @@ const Subscription = ({ route }) => {
     type: null,
   });
   useEffect(() => {
-    dispatch(getSubscriptionPlan(1, 70));
+    dispatch(resetGetSubscriptionPlanData())
+    dispatch(getSubscriptionPlan(1, 100));
   }, []);
   useEffect(() => {
     if (
@@ -95,18 +96,6 @@ const Subscription = ({ route }) => {
         getSubscriptionData?.Data?.short_url ||
           bannerSliderPostAdsRes?.Data?.short_url
       );
-      // if (postData?.postDataDraft != null) {
-      //   adsType !== subcriptionType[0]
-      //     ? dispatch(postBannerOrSliderApi(postData?.postDataDraft))
-      // : dispatch(addAdContentApi(postData?.postDataDraft));
-      // } else {
-      //   setShowAlert({
-      //     show: true,
-      //     title: "Success",
-      //     msg: "Subscription Added",
-      //     type: "success",
-      //   });
-      // }
     }
   }, [getSubscriptionData, bannerSliderPostAdsRes]);
   useEffect(() => {

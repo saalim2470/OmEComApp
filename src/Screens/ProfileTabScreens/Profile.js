@@ -85,25 +85,26 @@ const Profile = ({  route }) => {
   );
   useFocusEffect(
     React.useCallback(() => {
-      onRefresh()
-      console.log("Screen focused");
+      getUserContent();
       return () => {
-        console.log("Screen unfocused profile");
+        dispatch(resetUserContentPage());
         setCurrentPost(null);
       };
-    }, [])
+    }, [userContentPage, refreshing])
   );
   const userDataResMemoized = useMemo(
     () => userContentRes,
     [userContentRes, userContentSuccess]
   );
   useEffect(() => {
+    console.log('-=---user info-=-=-');
     dispatch(getLoggedInUSerInfo());
   }, [refreshing]);
 
-  useEffect(() => {
-    getUserContent();
-  }, [userContentPage, refreshing]);
+  // useEffect(() => {
+  //   console.log('-=-=-user content-=-=-');
+  //   getUserContent();
+  // }, [userContentPage, refreshing]);
 
   useEffect(() => {
     if (deleteDataRes !== null && deleteDataRes?.Success)

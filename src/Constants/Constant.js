@@ -122,3 +122,6 @@ export const errorCodes = {
   default: "An unexpected error occurred.",
 };
 // const serverPathWithDomain=`${baseURL}${serverImagePath}/${item}`
+export function bytesToMB(bytes) {
+  return bytes / (1024 * 1024);
+}
