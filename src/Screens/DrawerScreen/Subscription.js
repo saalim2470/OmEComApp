@@ -72,8 +72,9 @@ const Subscription = ({ route }) => {
     isLoading: bannerSliderPostAdsLoading,
   } = useSelector((state) => state.postBannerOrSliderSlice);
   console.log(
-    "=-=-=banner slider data-=-=-",
-    useSelector((state) => state.postBannerOrSliderSlice)
+    "=-=-= sub s data-=-=-",
+    useSelector(
+      (state) => state.getSubscriptionPlan)
   );
   const [openSheet, setOpenSheet] = useState(false);
   const [subsType, setSubsType] = useState();
@@ -210,6 +211,8 @@ const Subscription = ({ route }) => {
   const openRazorpay = async (url) => {
     try {
       let result = await WebBrowser.openBrowserAsync(url);
+      dispatch(resetGetSubscriptionPlanData())
+      dispatch(resetUploadBannerSliderPostData());
       console.log(result);
     } catch (error) {
       console.error(error);
