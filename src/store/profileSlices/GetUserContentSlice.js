@@ -8,7 +8,7 @@ const GetUserContentSlice = createSlice({
     userContentData: [],
     error: null,
     isSuccess: false,
-    page: 1,
+    page: 0,
     pageSize: 10,
     totalCount: null,
     isReachedEnd: false,
@@ -54,7 +54,7 @@ const GetUserContentSlice = createSlice({
       state.page = action.payload;
     },
     resetUserContentPage: (state, action) => {
-      state.page = 1;
+      state.page = action.payload;
       state.isReachedEnd = false;
       state.totalCount = null;
     },

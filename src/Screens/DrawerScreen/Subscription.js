@@ -211,9 +211,9 @@ const Subscription = ({ route }) => {
   const openRazorpay = async (url) => {
     try {
       let result = await WebBrowser.openBrowserAsync(url);
+      console.log(result);
       dispatch(resetGetSubscriptionPlanData())
       dispatch(resetUploadBannerSliderPostData());
-      console.log(result);
     } catch (error) {
       console.error(error);
     }
@@ -243,7 +243,7 @@ const Subscription = ({ route }) => {
                     item={item}
                     disabled={
                       adsType === "all"
-                        ? false
+                        ? true
                         : adsType !== subcriptionType[0]
                         ? true
                         : false
@@ -272,7 +272,7 @@ const Subscription = ({ route }) => {
                     item={item}
                     disabled={
                       adsType === "all"
-                        ? false
+                        ? true
                         : adsType !== subcriptionType[1]
                         ? true
                         : false
@@ -301,7 +301,7 @@ const Subscription = ({ route }) => {
                     item={item}
                     disabled={
                       adsType === "all"
-                        ? false
+                        ? true
                         : adsType !== subcriptionType[2]
                         ? true
                         : false
@@ -330,7 +330,7 @@ const Subscription = ({ route }) => {
                     item={item}
                     disabled={
                       adsType === "all"
-                        ? false
+                        ? true
                         : adsType !== subcriptionType[3]
                         ? true
                         : false
@@ -359,7 +359,7 @@ const Subscription = ({ route }) => {
                     item={item}
                     disabled={
                       adsType === "all"
-                        ? false
+                        ? true
                         : adsType !== subcriptionType[4]
                         ? true
                         : false

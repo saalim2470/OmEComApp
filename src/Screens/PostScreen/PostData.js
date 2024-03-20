@@ -35,6 +35,9 @@ import {
   subcriptionType,
 } from "../../Constants/Constant";
 import useErrorHook from "../../CustomeHooks/useErrorHook";
+import { resetPage } from "../../store/AdContentSlices/GetAdContentSlice";
+import * as FileSystem from "expo-file-system";
+import Loading from "../../Components/Loading";
 
 const PostData = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -42,6 +45,7 @@ const PostData = ({ navigation, route }) => {
   const categoryId = useSelector((state) => state.storeData.categoryId);
   const addPostData = useSelector((state) => state.addAdContentData);
   const [image, setImage] = useState([]);
+  const [imagePickerLoading, setImagePickerLoading] = useState(false);
   const [description, setDescription] = useState("");
   const [showEmoji, setShowEmoji] = useState(false);
   const [emojiData, setEmojiData] = useState("");
@@ -52,6 +56,7 @@ const PostData = ({ navigation, route }) => {
     title: null,
     msg: null,
     type: null,
+    btnTxt: null,
   });
   const [openSheet, setOpenSheet] = useState(false);
   const [location, setLocation] = useState(null);
@@ -81,25 +86,29 @@ const PostData = ({ navigation, route }) => {
   useEffect(() => {
     if (addPostData?.addContentData?.Success) {
       clearData();
-      route?.params?.editData != null
-        ? navigation.navigate(screenName.drawerNavigation, {
-            screen: screenName.bottomNavigation,
+      if (route?.params?.editData != null) {
+        navigation.navigate(screenName.drawerNavigation, {
+          screen: screenName.bottomNavigation,
+          params: {
+            screen: screenName.profileRoute,
             params: {
-              screen: screenName.profileRoute,
-              params: {
-                screen: screenName.profile,
-              },
+              screen: screenName.profile,
             },
-          })
-        : navigation.navigate(screenName.drawerNavigation, {
-            screen: screenName.bottomNavigation,
+          },
+        });
+      } else {
+        dispatch(resetPage());
+        dispatch(setCategoryId(0));
+        navigation.navigate(screenName.drawerNavigation, {
+          screen: screenName.bottomNavigation,
+          params: {
+            screen: screenName.bottomNavigationHomeRoute,
             params: {
-              screen: screenName.bottomNavigationHomeRoute,
-              params: {
-                screen: screenName.mainHome,
-              },
+              screen: screenName.mainHome,
             },
-          });
+          },
+        });
+      }
     }
   }, [addPostData?.addContentData]);
 
@@ -136,40 +145,53 @@ const PostData = ({ navigation, route }) => {
       handleErrorCode(errorCode);
     }
   }, [addPostData.errorCode, addPostData?.error]);
-  const imageSetter=(result)=>{
+  const imageSetter = async (result) => {
+    setImagePickerLoading(true);
+    const info = await FileSystem.getInfoAsync(result.assets[0].uri);
+    const fileSizeInMB = info.size / (1024 * 1024);
     if (result?.assets[0]?.type === "image") {
-      if (Math.round(bytesToMB(result?.assets[0]?.filesize)) <= 5) {
-        setImage([...image, result.assets[0].uri]);
-      } else {
+      if (fileSizeInMB > 5) {
+        setImagePickerLoading(false);
         setShowAlert({
           show: true,
           title: "Validation",
-          msg: "Image size under 5 Mb",
+          msg: "Image size exceeds 5 MB. Please select a smaller image.",
           type: "warning",
+          btnTxt: "Ok",
         });
+      } else {
+        setImagePickerLoading(false);
+        setImage([...image, result.assets[0].uri]);
       }
-    }else if(result?.assets[0]?.type === "video"){
-      if (Math.round(bytesToMB(result?.assets[0]?.filesize)) <= 20) {
-        setImage([...image, result.assets[0].uri]);
-      } else {
+    } else if (result?.assets[0]?.type === "video") {
+      if (fileSizeInMB > 20) {
+        setImagePickerLoading(false);
         setShowAlert({
           show: true,
           title: "Validation",
-          msg: "Video size under 20 Mb",
+          msg: "Video size exceeds 20 MB. Please select a smaller video.",
           type: "warning",
+          btnTxt: "Ok",
         });
+      } else {
+        setImagePickerLoading(false);
+        setImage([...image, result.assets[0].uri]);
       }
     }
-  }
+  };
   const openImagePicker = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      // aspect: [4, 3],
-      quality: 1,
-    });
-    if (!result.canceled) {
-      imageSetter(result)
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        // aspect: [4, 3],
+        quality: 1,
+      });
+      if (!result.canceled) {
+        imageSetter(result);
+      }
+    } catch (error) {
+      console.error("Error picking video:", error);
     }
   };
   const openCamera = async () => {
@@ -181,7 +203,7 @@ const PostData = ({ navigation, route }) => {
     });
 
     if (!result.canceled) {
-      imageSetter(result)
+      imageSetter(result);
     }
   };
   const onClickRemove = (index1) => {
@@ -280,7 +302,11 @@ const PostData = ({ navigation, route }) => {
           btnTxt={btnTxt}
           screenTitle={screenTitle}
           loading={addPostData?.isLoading}
-          disabled={!description && image.length === 0 ? true : false}
+          disabled={
+            (!description && image.length === 0) || imagePickerLoading
+              ? true
+              : false
+          }
           onClick={() => {
             onClickBtn();
           }}
@@ -292,32 +318,40 @@ const PostData = ({ navigation, route }) => {
             setSelectLocation(null);
           }}
         />
-        <PostScreenTextView
-          imageData={image}
-          disabled={addPostData?.isLoading}
-          value={description}
-          removeImage={(index) => {
-            onClickRemove(index);
+        {imagePickerLoading ? (
+          <Loading />
+        ) : (
+          <PostScreenTextView
+            imageData={image}
+            disabled={addPostData?.isLoading}
+            value={description}
+            removeImage={(index) => {
+              onClickRemove(index);
+            }}
+            onChange={(text) => {
+              setDescription(text);
+            }}
+          />
+        )}
+      </View>
+      {imagePickerLoading ? (
+        <Loading />
+      ) : (
+        <BottomComponent
+          onClickGallery={() => {
+            checkLibrarayPermission();
           }}
-          onChange={(text) => {
-            setDescription(text);
+          onClickCamera={() => {
+            checkCameraPermission();
+          }}
+          onClickEmoji={() => {
+            setShowEmoji(true);
+          }}
+          onClickLocation={() => {
+            checkLocationPermission();
           }}
         />
-      </View>
-      <BottomComponent
-        onClickGallery={() => {
-          checkLibrarayPermission();
-        }}
-        onClickCamera={() => {
-          checkCameraPermission();
-        }}
-        onClickEmoji={() => {
-          setShowEmoji(true);
-        }}
-        onClickLocation={() => {
-          checkLocationPermission();
-        }}
-      />
+      )}
       <EmojiPicker
         onEmojiSelected={handlePick}
         open={showEmoji}
@@ -353,6 +387,7 @@ const PostData = ({ navigation, route }) => {
         title={showAlert.title}
         msg={showAlert.msg}
         type={showAlert.type}
+        btnTxt={showAlert.btnTxt}
         onClickBtn={() => {
           onClickModalBtn();
         }}

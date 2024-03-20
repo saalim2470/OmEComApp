@@ -15,6 +15,7 @@ const AddPostData = createSlice({
       state.category = null;
       state.itemDetail = null;
       state.formDataFiles = null;
+      state.postDataDraft={}
     },
     setFiles: (state, action) => {
       state.files = action.payload;

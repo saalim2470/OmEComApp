@@ -44,6 +44,7 @@ export const addAdContentApi = (data, id) => async (dispatch) => {
   console.log("-=-id-=-", id);
   try {
     dispatch(setLoading(true));
+    console.log('-=-=-add form data-=-=',JSON.stringify(data));
     const responce = await AdContentServices.addAdContent(data, id);
     await dispatch(setContentResponce(responce.data));
     dispatch(setLoading(false));

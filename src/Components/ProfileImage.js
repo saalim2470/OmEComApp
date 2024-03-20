@@ -6,6 +6,7 @@ import {
   defaultProfileImg,
   serverImagePath,
 } from "../Constants/defaults";
+import images from "../Constants/images";
 
 const ProfileImage = ({ url, size ,style}) => {
   return (
@@ -20,9 +21,7 @@ const ProfileImage = ({ url, size ,style}) => {
         />
       ) : (
         <Avatar.Image
-          source={{
-            uri: defaultProfileImg,
-          }}
+          source={images.user}
           style={style}
           size={size}
         />

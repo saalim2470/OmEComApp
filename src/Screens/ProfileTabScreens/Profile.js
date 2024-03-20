@@ -85,12 +85,13 @@ const Profile = ({  route }) => {
   );
   useFocusEffect(
     React.useCallback(() => {
-      getUserContent();
+      // getUserContent();
+      dispatch(setUserContentPage(1));
       return () => {
-        dispatch(resetUserContentPage());
+        dispatch(resetUserContentPage(0));
         setCurrentPost(null);
       };
-    }, [userContentPage, refreshing])
+    }, [])
   );
   const userDataResMemoized = useMemo(
     () => userContentRes,
@@ -101,14 +102,14 @@ const Profile = ({  route }) => {
     dispatch(getLoggedInUSerInfo());
   }, [refreshing]);
 
-  // useEffect(() => {
-  //   console.log('-=-=-user content-=-=-');
-  //   getUserContent();
-  // }, [userContentPage, refreshing]);
+  useEffect(() => {
+    if(userContentPage>0)
+    getUserContent();
+  }, [userContentPage, refreshing]);
 
   useEffect(() => {
     if (deleteDataRes !== null && deleteDataRes?.Success)
-      dispatch(resetUserContentPage());
+      dispatch(resetUserContentPage(1));
   }, [deleteDataRes?.Success]);
   useEffect(() => {
     if (userDataResMemoized != null && userContentSuccess) {
@@ -149,7 +150,7 @@ const Profile = ({  route }) => {
   
 
   const onRefresh = useCallback(() => {
-    dispatch(resetUserContentPage());
+    dispatch(resetUserContentPage(1));
     setRefreshing(true);
   }, []);
   const listFooterComponent = () => {

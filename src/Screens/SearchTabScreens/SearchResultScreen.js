@@ -7,6 +7,7 @@ import SearchHeader from "../../Components/SearchScreenComponents/SearchHeader";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   getSearchData,
+  resetSearchResultData,
   resetSearchResultPage,
   setSearchResultPage,
 } from "../../store/searchContentSlices/SearchContentSlice";
@@ -48,6 +49,7 @@ const SearchResultScreen = ({ navigation }) => {
     React.useCallback(() => {
       console.log("Screen focused");
       return () => {
+        dispatch(resetSearchResultData())
         console.log("Screen unfocused");
         setCurrentPost(null);
       };

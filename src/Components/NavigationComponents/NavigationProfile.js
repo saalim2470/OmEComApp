@@ -68,9 +68,7 @@ const NavigationProfile = () => {
             />
           ) : (
             <Image
-              source={{
-                uri: defaultProfileImg,
-              }}
+              source={images.user}
               resizeMode="contain"
               style={{ width: "100%", height: "100%" }}
             />

@@ -8,26 +8,15 @@ import {
   defaultProfileImg,
   serverImagePath,
 } from "../../Constants/defaults";
+import images from "../../Constants/images";
+import ProfileImage from "../ProfileImage";
 
 const UserHeader = ({ userLocation, onCLickHeaderLocation = () => {} }) => {
   const userDetail = useSelector((state) => state.login?.userDetail);
   return (
     <View style={styles.userView}>
-      {userDetail?.profilePicture !== null ? (
-        <Avatar.Image
-          source={{
-            uri: `${baseURL}${serverImagePath}/${userDetail?.profilePicture}`,
-          }}
-          size={scale(45)}
-        />
-      ) : (
-        <Avatar.Image
-          source={{
-            uri: defaultProfileImg,
-          }}
-          size={scale(45)}
-        />
-      )}
+      <ProfileImage url={userDetail?.profilePicture} size={scale(45)}/>
+    
       <View style={{ marginHorizontal: moderateScale(5), flex: 1 }}>
         {!userLocation ? (
           <Text style={styles.headingTxt}>

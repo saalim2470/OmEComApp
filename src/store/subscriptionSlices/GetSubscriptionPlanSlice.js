@@ -40,16 +40,22 @@ export const {
 
 export const getSubscriptionPlanId =
   (subscriptionId, data) => async (dispatch) => {
+    console.log('=-=-subs without data-=-=',subscriptionId,data);
     try {
+      console.log('-=-line 45');
       dispatch(setLoading(true));
+      console.log('-=-line 47');
       const responce = await SubscriptionServices.getSubscriptionPlan(
         subscriptionId,
         data
       );
+      console.log('-=-line 52');
       dispatch(setSubscriptionPlanData(responce.data));
+      console.log('-=-line 54');
       console.log("---getSubscription-=-", responce.data);
       dispatch(setLoading(false));
     } catch (error) {
+      console.log('-=-line 58');
       dispatch(setLoading(false));
       dispatch(setError(error.response.data));
       dispatch(setErrorCode(error.response.status));

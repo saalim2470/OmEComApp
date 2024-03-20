@@ -10,6 +10,7 @@ const CustomeAlertModal = ({
   title,
   msg,
   type,
+  btnTxt,
   onClickBtn = () => {},
 }) => {
   return (
@@ -37,7 +38,7 @@ const CustomeAlertModal = ({
             onClickBtn();
           }}
         >
-          <Text style={styles.btnTxt}>Done</Text>
+          <Text style={styles.btnTxt}>{btnTxt?btnTxt:'Done'}</Text>
         </TouchableOpacity>
       </View>
     </Modal>
