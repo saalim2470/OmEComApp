@@ -83,18 +83,21 @@ const MyAds = ({ navigation, route }) => {
   useFocusEffect(
     React.useCallback(() => {
       console.log("Screen focused");
-      getUserContent();
+      // getUserContent();
+      dispatch(setUserContentPage(1));
       return () => {
         console.log("Screen unfocused myads");
+        dispatch(resetUserContentPage(0));
         setCurrentPost(null);
         // dispatch(setUserContentData());
       };
-    }, [userContentPage, refreshing])
+    }, [])
   );
   console.log('-=-=current post myads-=-=-',currentPost);
-  // useEffect(() => {
-  //   getUserContent();
-  // }, [ userContentPage, refreshing]);
+  useEffect(() => {
+    if(userContentPage>0)
+    getUserContent();
+  }, [userContentPage, refreshing]);
   useEffect(() => {
     if (deleteDataRes !== null && deleteDataRes?.Success)
       dispatch(resetUserContentPage());
