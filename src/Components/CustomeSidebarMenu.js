@@ -19,7 +19,12 @@ import { resetUserAdContent } from "../store/profileSlices/GetUserContentSlice";
 import CustomeAlert from "./CustomeAlert";
 import NavigationProfile from "./NavigationComponents/NavigationProfile";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { appVersion, googlePlayUrl, onShare, packageName } from "../Constants/Constant";
+import {
+  appVersion,
+  googlePlayUrl,
+  onShare,
+  packageName,
+} from "../Constants/Constant";
 import { resetData } from "../store/addAdContentSlices/AddPostData";
 import * as StoreReview from "expo-store-review";
 
@@ -41,23 +46,25 @@ const CustomSidebarMenu = (props) => {
   };
   const handleReviewPress = async () => {
     const isSupported = await StoreReview.isAvailableAsync();
-    
+    const hasReviewed = await StoreReview.hasAction();
     if (isSupported) {
       try {
-        await StoreReview.requestReview();
-        Linking.openURL(
-          `https://play.google.com/store/apps/details?id=${packageName}&showAllReviews=true`
-        );
+        if (hasReviewed) {
+          Linking.openURL(
+            `https://play.google.com/store/apps/details?id=${packageName}&showAllReviews=true`
+          );
+        } else {
+          await StoreReview.requestReview();
+        }
       } catch (error) {
-        console.error('Error requesting review:', error);
+        console.error("Error requesting review:", error);
         // Handle error if the requestReview() fails
       }
     } else {
       alert("Store review is not available on this device.");
     }
   };
-  
-  
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <NavigationProfile />

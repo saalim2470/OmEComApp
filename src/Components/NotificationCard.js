@@ -10,7 +10,7 @@ import { useNavigation } from "@react-navigation/native";
 import screenName from "../Constants/screenName";
 import ProfileImage from "./ProfileImage";
 
-const NotificationCard = ({ data, user }) => {
+const NotificationCard = ({ data }) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const onClickNotification = () => {
@@ -28,7 +28,7 @@ const NotificationCard = ({ data, user }) => {
       }}
     >
       <View style={styles.notificationLeftView}>
-        <ProfileImage url={data?.user?.profilePicturePath} size={scale(45)}/>
+        <ProfileImage url={data?.fromUser?.profilePicturePath} size={scale(45)}/>
       
         <View>
           <Text

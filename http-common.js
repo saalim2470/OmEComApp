@@ -6,6 +6,7 @@ import { hostUrl } from "./src/Constants/Constant";
 export const http = axios.create({
   baseURL: hostUrl,
 });
+
 http.interceptors.request.use(async (config) => {
   const token = await AsyncStorage.getItem(accessToken);
   if (token) {

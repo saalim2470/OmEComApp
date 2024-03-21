@@ -64,7 +64,6 @@ const PostData = ({ navigation, route }) => {
   const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
   const [cameraStatus, requestCameraPermission] =
     ImagePicker.useCameraPermissions();
-
   useEffect(() => {
     if (route?.params != undefined) {
       setDescription(

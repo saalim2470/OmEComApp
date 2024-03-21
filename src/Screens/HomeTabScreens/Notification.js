@@ -67,7 +67,7 @@ const Notification = () => {
     }
   };
   const renderItem = ({ item, index }) => {
-    return <NotificationCard data={item} user={item?.fromUser} />;
+    return <NotificationCard data={item}/>;
   };
   if (notificationLoading) {
     return <Loading />;
