@@ -31,7 +31,6 @@ import TextBox from "../../Components/TextBox";
 import { TextInput } from "react-native-paper";
 import { checkPassword } from "../../Constants/Constant";
 import CustomeAlertModal from "../../Components/CustomeAlertModal";
-import Toast from "react-native-toast-message";
 
 const Verification = ({ route }) => {
   const navigation = useNavigation();
