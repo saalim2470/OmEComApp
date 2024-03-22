@@ -15,6 +15,9 @@ const CircleOTP = (props) => {
     <TextInput
       maxLength={1}
       value={value}
+      onFocus={()=>{
+        props?.onFocus()
+      }}
       cursorColor={"#000000"}
       ref={props.childRef}
       onChangeText={(input) => {

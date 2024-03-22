@@ -34,11 +34,13 @@ const RoundCategoryView = ({ onClickCategory = () => {} }) => {
     (state) => state.category.isReachedEnd
   );
   const [categoryData, setCategoryData] = useState(null);
-  
-  
 
   useEffect(() => {
-    if (!categoryData) getCategory();
+    dispatch(setCategoryPage(1));
+  }, []);
+
+  useEffect(() => {
+    getCategory();
   }, [categoryPage]);
 
   useEffect(() => {
@@ -80,7 +82,7 @@ const RoundCategoryView = ({ onClickCategory = () => {} }) => {
   return (
     <View style={styles.storyView}>
       <FlatList
-       ref={flatListRef}
+        ref={flatListRef}
         data={categoryData}
         keyExtractor={(item, index) => `category${item.id}_${index}`}
         showsHorizontalScrollIndicator={false}

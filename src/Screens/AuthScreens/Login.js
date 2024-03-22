@@ -292,7 +292,7 @@ const Login = ({ navigation }) => {
                 style={[
                   styles.commonTxt,
                   {
-                    fontFamily: "Montserrat-Medium",
+                    // fontFamily: "Montserrat-Medium",
                     fontSize: scale(12),
                   },
                 ]}
@@ -427,7 +427,7 @@ const styles = StyleSheet.create({
   },
   commonTxt: {
     fontFamily: "Montserrat-Regular",
-    color: "#cacaca",
+    // color: "#cacaca",
   },
   row: {
     flexDirection: "row",

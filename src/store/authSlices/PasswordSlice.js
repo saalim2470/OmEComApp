@@ -9,13 +9,21 @@ const PasswordSlice = createSlice({
     errorCode: null,
     isSuccess: false,
     responce: null,
+    resetPasswordResponce:null,
+    getCodeLoading:false
   },
   reducers: {
     setResponce: (state, action) => {
       state.responce = action.payload;
     },
+    setResetPasswordResponce: (state, action) => {
+      state.resetPasswordResponce = action.payload;
+    },
     setLoading: (state, action) => {
       state.isLoading = action.payload;
+    },
+    setGetCodeLaoding:(state,action)=>{
+      state.getCodeLoading=action.payload
     },
     setError: (state, action) => {
       state.error = action.payload;
@@ -27,6 +35,7 @@ const PasswordSlice = createSlice({
       state.errorCode = null;
       state.error = null;
       state.responce = null;
+      state.resetPasswordResponce=null
     },
   },
 });
@@ -37,17 +46,19 @@ export const {
   setError,
   setErrorCode,
   resetPasswordSliceData,
+  setResetPasswordResponce,
+  setGetCodeLaoding
 } = PasswordSlice.actions;
 
 export const forgotPasswordApi = (data) => async (dispatch) => {
   try {
     dispatch(resetPasswordSliceData());
-    dispatch(setLoading(true));
+    dispatch(setGetCodeLaoding(true));
     const responce = await AuthServices.forgotPassword(data);
     dispatch(setResponce(responce.data));
-    dispatch(setLoading(false));
+    dispatch(setGetCodeLaoding(false));
   } catch (error) {
-    dispatch(setLoading(false));
+    dispatch(setGetCodeLaoding(false));
     dispatch(setError(error.response.data));
     console.log("-=-=-forgot password error-=-=-", error.response.data);
   }
@@ -58,7 +69,7 @@ export const resetPasswordApi = (data) => async (dispatch) => {
     dispatch(resetPasswordSliceData());
     dispatch(setLoading(true));
     const responce = await AuthServices.resetPassword(data);
-    dispatch(setResponce(responce.data));
+    dispatch(setResetPasswordResponce(responce.data));
     dispatch(setLoading(false));
   } catch (error) {
     dispatch(setLoading(false));

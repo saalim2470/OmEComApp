@@ -25,9 +25,9 @@ const ForgotPassword = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const {
-    isLoading: loading,
     responce: dataResponce,
     error: error,
+    getCodeLoading
   } = useSelector((state) => state.passwordSlice);
   const [email_mobile, setEmail_mobile] = useState("");
   const [showAlert, setShowAlert] = useState({
@@ -40,18 +40,13 @@ const ForgotPassword = () => {
     dispatch(forgotPasswordApi(email_mobile));
   };
   useEffect(() => {
-    if (dataResponce !== null && dataResponce?.Success) {
-      Alert.alert("Otp", dataResponce?.Data?.resetCode, [
-        {
-          text: "OK",
-          onPress: () => {
-            dispatch(resetPasswordSliceData());
-            navigation.navigate(screenName.verification, {
-              email: email_mobile,
-            });
-          },
-        },
-      ]);
+    if ( dataResponce?.Success) {
+      setShowAlert({
+        show: true,
+        title: "Reset Password",
+        msg: `Verification code sent to your email/mobile ${email_mobile}`,
+        type: "success",
+      });
     }
     // uncomment code when sms enabled
     // navigation.navigate(screenName.verification, {
@@ -72,6 +67,10 @@ const ForgotPassword = () => {
   const onClickModalBtn = () => {
     setShowAlert({ ...showAlert, show: false });
     dispatch(resetPasswordSliceData());
+    showAlert.type === "success" &&
+      navigation.navigate(screenName.verification, {
+        email: email_mobile,
+      });
   };
 
   return (
@@ -97,7 +96,7 @@ const ForgotPassword = () => {
         <CustomeButton
           title={"Recover Password"}
           disabled={!email_mobile}
-          isLoading={loading}
+          isLoading={getCodeLoading}
           onClick={() => {
             handleForgotPassword();
           }}

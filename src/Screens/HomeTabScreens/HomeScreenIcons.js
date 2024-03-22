@@ -34,8 +34,12 @@ const HomeScreenIcons = () => {
   const [category, setCategory] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   useEffect(() => {
+    dispatch(setCategoryPage(1));
+  }, [])
+  
+  useEffect(() => {
     getCategory();
-  }, []);
+  }, [categoryPage,refreshing]);
   useEffect(() => {
     if (categorySuccess) {
       setCategory(categoryData);
@@ -54,7 +58,7 @@ const HomeScreenIcons = () => {
   const onRefresh = useCallback(() => {
     dispatch(setCategoryPage(1));
     setRefreshing(true);
-    getCategory();
+    // getCategory();
   }, []);
   return (
     <SafeAreaView style={commonStyle.container}>

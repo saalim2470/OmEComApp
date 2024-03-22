@@ -180,7 +180,7 @@ const EditProfile = () => {
         type: `image/${fileType}`,
       });
     } else {
-      formData.append("ProfilePicture", null);
+      formData.append("NoProfilePicture", true);
     }
     dispatch(editProfileApi(formData));
   };

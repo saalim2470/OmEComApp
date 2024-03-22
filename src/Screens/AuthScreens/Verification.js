@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Alert,
   SafeAreaView,
   StyleSheet,
@@ -30,6 +31,7 @@ import TextBox from "../../Components/TextBox";
 import { TextInput } from "react-native-paper";
 import { checkPassword } from "../../Constants/Constant";
 import CustomeAlertModal from "../../Components/CustomeAlertModal";
+import Toast from "react-native-toast-message";
 
 const Verification = ({ route }) => {
   const navigation = useNavigation();
@@ -39,6 +41,8 @@ const Verification = ({ route }) => {
     isLoading: loading,
     responce: dataResponce,
     error: error,
+    resetPasswordResponce,
+    getCodeLoading
   } = useSelector((state) => state.passwordSlice);
   const [otpValue1, setOtpValue1] = useState("");
   const [otpValue2, setOtpValue2] = useState("");
@@ -59,6 +63,7 @@ const Verification = ({ route }) => {
   const input_2 = useRef(null);
   const input_3 = useRef(null);
   const input_4 = useRef(null);
+  const verificationCode = `${otpValue1}${otpValue2}${otpValue3}${otpValue4}`;
   const handleVerify = () => {
     const verificationCode = `${otpValue1}${otpValue2}${otpValue3}${otpValue4}`;
     const resetPasswordModel = {
@@ -91,31 +96,26 @@ const Verification = ({ route }) => {
       handleError("Password and confirm password does not match", "cPassword");
       isValid = false;
     }
+    if (!verificationCode) {
+      handleError("Enter Verification code", "codeError");
+      isValid = false;
+    }
     if (isValid) {
       handleVerify();
     }
   };
   useEffect(() => {
-    if (dataResponce !== null && dataResponce?.Success) {
-      if (dataResponce?.Data!==null&& "resetCode" in dataResponce?.Data) {
-        Alert.alert("Otp", dataResponce?.Data?.resetCode, [
-          {
-            text: "OK",
-            onPress: () => {
-              dispatch(resetPasswordSliceData());
-            },
-          },
-        ]);
-      } else {
-        setShowAlert({
-          show: true,
-          title: "Reset Password",
-          msg: "Password reset successfully",
-          type: "success",
-        });
-      }
+    if (resetPasswordResponce !== null && resetPasswordResponce?.Success) {
+      setShowAlert({
+        show: true,
+        title: "Reset Password",
+        msg: "Password reset successfully",
+        type: "success",
+      });
     }
-  }, [dataResponce]);
+  }, [resetPasswordResponce]);
+
+
   useEffect(() => {
     if (error !== null && !error?.Success) {
       setShowAlert({
@@ -150,6 +150,9 @@ const Verification = ({ route }) => {
         <View style={commonStyle.row}>
           <CircleOTP
             childRef={input_1}
+            onFocus={() => {
+              handleError(null, "codeError");
+            }}
             autoFocus={true}
             onChangeText={(value) => {
               setOtpValue1(value.toString());
@@ -159,6 +162,9 @@ const Verification = ({ route }) => {
           <CircleOTP
             childRef={input_2}
             autoFocus={true}
+            onFocus={() => {
+              handleError(null, "codeError");
+            }}
             onChangeText={(value) => {
               setOtpValue2(value.toString());
               if (value) input_3.current.focus();
@@ -168,6 +174,9 @@ const Verification = ({ route }) => {
           <CircleOTP
             childRef={input_3}
             autoFocus={true}
+            onFocus={() => {
+              handleError(null, "codeError");
+            }}
             onChangeText={(value) => {
               setOtpValue3(value.toString());
               if (value) input_4.current.focus();
@@ -177,12 +186,26 @@ const Verification = ({ route }) => {
           <CircleOTP
             childRef={input_4}
             autoFocus={true}
+            onFocus={() => {
+              handleError(null, "codeError");
+            }}
             onChangeText={(value) => {
               setOtpValue4(value.toString());
               if (!value) input_3.current.focus();
             }}
           />
         </View>
+        {errors.codeError ? (
+          <Text
+            style={{
+              color: "red",
+              fontFamily: "Montserrat-Regular",
+              fontSize: scale(11),
+            }}
+          >
+            {errors.codeError}
+          </Text>
+        ) : null}
         <View>
           <TextBox
             label={"New Password"}
@@ -230,7 +253,8 @@ const Verification = ({ route }) => {
         </View>
         <CustomeButton
           title={"Verify"}
-          disabled={!password && !cPassword}
+          isLoading={loading}
+          disabled={!password || !cPassword || !verificationCode}
           onClick={() => {
             // handleVerify();
             validate();
@@ -241,6 +265,7 @@ const Verification = ({ route }) => {
         </Text>
         <TouchableOpacity
           style={{ alignSelf: "center" }}
+          disabled={getCodeLoading}
           activeOpacity={0.6}
           onPress={() => {
             onClickResendCode();
@@ -248,6 +273,9 @@ const Verification = ({ route }) => {
         >
           <Text style={styles.resendTxt}>Resend code</Text>
         </TouchableOpacity>
+        {
+          getCodeLoading&&<ActivityIndicator color={colors.themeColor}/>
+        }
       </View>
       <CustomeAlertModal
         isVisible={showAlert.show}

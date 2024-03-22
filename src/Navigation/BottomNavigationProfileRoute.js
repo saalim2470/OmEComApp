@@ -12,9 +12,9 @@ const BottomNavigationProfileRoute = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
        <Stack.Screen name={screenName.profile}>
-        {() => (
+        {(props) => (
           <Suspense fallback={<Loading/>}>
-            <ProfileScreen />
+            <ProfileScreen {...props}/>
           </Suspense>
         )}
       </Stack.Screen>

@@ -82,13 +82,14 @@ const OtherUserProfile = ({ navigation, route }) => {
       // dispatch(getOtherUserInfoApi(route?.params?.userId));
       return () => {
         console.log("Screen unfocused other user");
+        dispatch(resetpageAndUserContent())
         setCurrentPost(null);
       };
     }, [])
   );
 
   useEffect(() => {
-  dispatch(getOtherUserInfoApi(userId));
+    dispatch(getOtherUserInfoApi(userId));
   }, [userId]);
   useEffect(() => {
     if (userDetail !== null && userDetail?.Success) {
@@ -185,14 +186,18 @@ const OtherUserProfile = ({ navigation, route }) => {
   );
   return (
     <SafeAreaView style={commonStyle.container}>
-      <HeaderWithMiddleName
-        title={`${userProfileDetail?.firstName} ${userProfileDetail?.lastName}`}
-      />
-      <ProfileScreenTopView
-        isEditBtn={false}
-        profileData={userProfileDetail}
-        totalPost={userTotalContent}
-      />
+      {contentLoading ? null : (
+        <>
+          <HeaderWithMiddleName
+            title={`${userProfileDetail?.firstName} ${userProfileDetail?.lastName}`}
+          />
+          <ProfileScreenTopView
+            isEditBtn={false}
+            profileData={userProfileDetail}
+            totalPost={userTotalContent}
+          />
+        </>
+      )}
       {!refreshing && contentLoading ? (
         <Loading />
       ) : postData != null && postData?.length <= 0 ? (

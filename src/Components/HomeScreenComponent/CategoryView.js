@@ -24,7 +24,9 @@ const CategoryView = ({ data }) => {
       <TouchableOpacity
         onPress={() => {
           dispatch(setCategoryId(allCategorie?.id));
-          navigation.navigate(screenName.mainHome);
+          navigation.navigate(screenName.bottomNavigationHomeRoute, {
+            screen: screenName.mainHome
+          });
         }}
         activeOpacity={0.4}
         style={styles.cardView}
@@ -41,7 +43,9 @@ const CategoryView = ({ data }) => {
           <TouchableOpacity
             onPress={() => {
               dispatch(setCategoryId(item?.id));
-              navigation.navigate(screenName.mainHome);
+              navigation.navigate(screenName.bottomNavigationHomeRoute, {
+                screen: screenName.mainHome
+              });
             }}
             activeOpacity={0.4}
             style={styles.cardView}
