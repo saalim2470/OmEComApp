@@ -17,6 +17,7 @@ import {
   getContentByUserIdApi,
   getOtherUserInfoApi,
   resetContentByUserIdPage,
+  resetpageAndUserContent,
   setUserContentPage,
 } from "../../store/profileSlices/GetContentByUserId";
 import { Divider } from "react-native-paper";
