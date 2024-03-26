@@ -41,6 +41,7 @@ const OtherUserProfile = ({ navigation, route }) => {
   const maxToRenderPerBatch = 100;
   const dispatch = useDispatch();
   const { userId } = route?.params;
+
   const {
     otherUserDetail: userDetail,
     contentData: contentData,
@@ -81,6 +82,8 @@ const OtherUserProfile = ({ navigation, route }) => {
     React.useCallback(() => {
       console.log("Screen focused");
       // dispatch(getOtherUserInfoApi(route?.params?.userId));
+      dispatch(getOtherUserInfoApi(userId));
+      console.log('-=-=-useer id-=',userId);
       return () => {
         console.log("Screen unfocused other user");
         dispatch(resetpageAndUserContent())
@@ -89,9 +92,9 @@ const OtherUserProfile = ({ navigation, route }) => {
     }, [])
   );
 
-  useEffect(() => {
-    dispatch(getOtherUserInfoApi(userId));
-  }, [userId]);
+  // useEffect(() => {
+  //   dispatch(getOtherUserInfoApi(userId));
+  // }, [userId]);
   useEffect(() => {
     if (userDetail !== null && userDetail?.Success) {
       setUserProfileDetail(userDetail?.Data);
