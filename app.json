@@ -3,7 +3,7 @@
     "scheme": "omecomapp",
     "name": "omsarvatra",
     "slug": "omsarvatra",
-    "version": "1.0.011",
+    "version": "1.0.012",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -56,7 +56,7 @@
           ]
         }
       ],
-      "versionCode": 11
+      "versionCode": 12
     },
     "web": {
       "favicon": "./assets/favicon.png"
