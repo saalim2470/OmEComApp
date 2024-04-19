@@ -66,7 +66,18 @@ const MainHome = ({ route }) => {
     statusCode: saveErrorCode,
     saveData: saveDataRes,
   } = useSelector((state) => state.saveContent);
-  const { postData, setPostData } = useLikeHook(likeDataRes, saveDataRes);
+  const {
+    isSuccess: getCommentSuccesss,
+    totalCount: totalComment,
+    contentId: commentId,
+  } = useSelector((state) => state.getCommentByContentId);
+  const { postData, setPostData } = useLikeHook(
+    likeDataRes,
+    saveDataRes,
+    commentId,
+    getCommentSuccesss,
+    totalComment
+  );
   // const [postData, setPostData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [currentPost, setCurrentPost] = useState();
@@ -116,17 +127,20 @@ const MainHome = ({ route }) => {
     dispatch(resetLikeData());
     setApiShowError({ ...apiShowError, show: false });
   };
-  const renderItem = useCallback(({ item, index }) => {
-    return (
-      <FeedCard
-        itemData={item}
-        currentPost={currentPost}
-        onClickMoreBtn={() => {
-          navigation.navigate(screenName.productDetail, { data: item });
-        }}
-      />
-    );
-  }, [navigation, currentPost]);
+  const renderItem = useCallback(
+    ({ item, index }) => {
+      return (
+        <FeedCard
+          itemData={item}
+          currentPost={currentPost}
+          onClickMoreBtn={() => {
+            navigation.navigate(screenName.productDetail, { data: item });
+          }}
+        />
+      );
+    },
+    [navigation, currentPost]
+  );
   const listFooterComponent = () => {
     return (
       contentMoreLoading && (

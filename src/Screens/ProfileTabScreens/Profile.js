@@ -76,7 +76,18 @@ const Profile = ({  route }) => {
     deleteData: deleteDataRes,
     isLoading: deleteLoading,
   } = useSelector((state) => state.deleteAdContent);
-  const { postData, setPostData } = useLikeHook(likeDataRes, saveDataRes);
+  const {
+    isSuccess: getCommentSuccesss,
+    totalCount: totalComment,
+    contentId: commentId,
+  } = useSelector((state) => state.getCommentByContentId);
+  const { postData, setPostData } = useLikeHook(
+    likeDataRes,
+    saveDataRes,
+    commentId,
+    getCommentSuccesss,
+    totalComment
+  );
   const [refreshing, setRefreshing] = useState(false);
   const [currentPost, setCurrentPost] = useState();
   const { apiShowError, setApiShowError } = useErrorHook(

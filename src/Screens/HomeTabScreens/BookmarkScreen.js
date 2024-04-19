@@ -63,6 +63,11 @@ const BookmarkScreen = ({ navigation, route }) => {
     isLoading: deleteLoading,
   } = useSelector((state) => state.deleteAdContent);
   const [postData, setPostData] = useState([]);
+  const {
+    isSuccess: getCommentSuccesss,
+    totalCount: totalComment,
+    contentId: commentId,
+  } = useSelector((state) => state.getCommentByContentId);
   const [refreshing, setRefreshing] = useState(false);
   const [currentPost, setCurrentPost] = useState();
   const { apiShowError, setApiShowError } = useErrorHook(
@@ -77,7 +82,7 @@ const BookmarkScreen = ({ navigation, route }) => {
         console.log("Screen unfocused");
         setCurrentPost(null);
       };
-    }, [refreshing, userContentPage, ])
+    }, [refreshing, userContentPage])
   );
   // useEffect(() => {
   //   getSavedContent();
@@ -90,7 +95,7 @@ const BookmarkScreen = ({ navigation, route }) => {
   }, [userContentRes, userContentSuccess]);
   useEffect(() => {
     if (likeDataRes != null && likeDataRes.Success) {
-      updateData(likeDataRes?.Data);
+      updateData(likeDataRes?.Data, "like");
     }
   }, [likeDataRes]);
   useEffect(() => {
@@ -106,25 +111,77 @@ const BookmarkScreen = ({ navigation, route }) => {
       setRefreshing(false);
     }
   }, [userContentError]);
+  useEffect(() => {
+    if (getCommentSuccesss) {
+      updateData(commentId, "comment");
+    }
+  }, [getCommentSuccesss]);
 
   const getSavedContent = () => {
     dispatch(getSavedContentApi(userContentPage, userContentPageSize));
   };
-  const updateData = (data) => {
-    const updatedData = postData.map((item) => {
-      if (item?.adContent?.id === data.contentId) {
-        return {
-          ...item,
-          adContent: {
-            ...item.adContent,
-            isCurrentUserLiked: data.isLiked,
-            totalLikes: data.totalLikes,
-          },
-        };
-      }
-      return item;
-    });
-    setPostData(updatedData);
+  const updateData = (data, type) => {
+    switch (type) {
+      case "like":
+        like(data);
+        break;
+      case "comment":
+        comment(data);
+        break;
+      default:
+        break;
+    }
+    // const updatedData = postData.map((item) => {
+    //   if (type === "like" && item?.adContent?.id === data.contentId) {
+    //     return {
+    //       ...item,
+    //       adContent: {
+    //         ...item.adContent,
+    //         isCurrentUserLiked: data.isLiked,
+    //         totalLikes: data.totalLikes,
+    //       },
+    //     };
+    //   }
+    //   if (type === "comment" && item?.adContent?.id === data) {
+    //     return {
+    //       ...item,
+    //       totalComments: totalComment,
+    //     };
+    //   }
+    //   return item;
+    // });
+    // setPostData(updatedData);
+  };
+  const like = (data) => {
+    let newArray = [...postData];
+    let currentData = newArray.find(
+      (element, index) => element?.adContent?.id === data.contentId
+    );
+    const index = newArray.findIndex((x) => x?.adContent?.id === currentData?.adContent?.id);
+    const newData = {
+      ...currentData,
+      adContent: {
+        ...currentData.adContent,
+        isCurrentUserLiked: data.isLiked,
+        totalLikes: data.totalLikes,
+      },
+    };
+    newArray[index] = newData;
+    setPostData(newArray);
+  };
+  const comment = (id) => {
+    let newArray = [...postData];
+    let currentData = newArray.find((element, index) => element?.adContent?.id === id);
+    const index = newArray.findIndex((x) => x?.adContent?.id === currentData?.adContent?.id);
+    const newData = {
+      ...currentData,
+      adContent: {
+        ...currentData.adContent,
+        totalComments: totalComment,
+      },
+    };
+    newArray[index] = newData;
+    setPostData(newArray);
   };
   const onClickModalBtn = () => {
     dispatch(resetLikeData());
@@ -170,7 +227,6 @@ const BookmarkScreen = ({ navigation, route }) => {
   };
   const onViewableItemsChanged = useRef(({ viewableItems }) => {
     if (viewableItems && viewableItems.length > 0) {
-      console.log("-=-=-=-=-", viewableItems[0].item?.adContent?.id);
       setCurrentPost(viewableItems[0].item?.adContentID);
     }
   }).current;

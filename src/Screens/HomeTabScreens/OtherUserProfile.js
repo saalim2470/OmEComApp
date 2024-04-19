@@ -69,7 +69,18 @@ const OtherUserProfile = ({ navigation, route }) => {
     followResData: follow_unFollowData,
     isLoading: follow_UnFollowLoading,
   } = useSelector((state) => state.follow_UnFollowSlice);
-  const { postData, setPostData } = useLikeHook(likeDataRes, saveDataRes);
+  const {
+    isSuccess: getCommentSuccesss,
+    totalCount: totalComment,
+    contentId: commentId,
+  } = useSelector((state) => state.getCommentByContentId);
+  const { postData, setPostData } = useLikeHook(
+    likeDataRes,
+    saveDataRes,
+    commentId,
+    getCommentSuccesss,
+    totalComment
+  );
   const [refreshing, setRefreshing] = useState(false);
   const [currentPost, setCurrentPost] = useState();
   const [userProfileDetail, setUserProfileDetail] = useState(null);
@@ -77,7 +88,6 @@ const OtherUserProfile = ({ navigation, route }) => {
     likeError || saveError,
     likeErrorCode || saveErrorCode
   );
-  console.log(useSelector((state) => state.getContentByUserId));
   useFocusEffect(
     React.useCallback(() => {
       console.log("Screen focused");

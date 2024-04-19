@@ -32,8 +32,13 @@ const FeedCardBottomView = ({ itemData }) => {
     error: commentError,
     errorCode: commentErrorCode,
     page: commentPage,
+    isSuccess: getCommentSuccesss,
     pageSize: commentPageSize,
+    totalCount:totalComment,
+    contentId:contentId
   } = useSelector((state) => state.getCommentByContentId);
+  
+  
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,
@@ -64,7 +69,7 @@ const FeedCardBottomView = ({ itemData }) => {
   }, [commentError, commentErrorCode]);
 
   const onClickComment = () => {
-    dispatch(resetCommentPage());
+    dispatch(resetCommentPage(itemData?.id));
     setIsShowBottomSheet(true);
   };
   const onClickModalBtn = () => {
@@ -91,7 +96,7 @@ const FeedCardBottomView = ({ itemData }) => {
       >
         <Text
           style={styles.commentTxt}
-        >{`View all ${itemData?.totalComments} comments`}</Text>
+        >{`View all ${ itemData?.totalComments} comments`}</Text>
       </TouchableOpacity>
       <RbBottomSheet
         isOpen={isShowBottomSheet}

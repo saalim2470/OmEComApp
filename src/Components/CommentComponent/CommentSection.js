@@ -69,7 +69,8 @@ const CommentSection = ({
   });
   useEffect(() => {
     getCommentData();
-  }, [commentPage, postCommentRes?.Success]);
+  }, [commentPage,postCommentRes?.Success]);
+  
   useEffect(() => {
     if (commentDataRes && getCommentSuccesss) {
       setCommentData(commentDataRes);
@@ -98,7 +99,7 @@ const CommentSection = ({
       type: type,
     });
   };
-  const onClickPost = () => {
+  const onClickPost =async () => {
     const data = {
       title: "string",
       description: commentTxt.trim(),
@@ -107,14 +108,16 @@ const CommentSection = ({
     };
 
     dispatch(postCommentApi(data)).then((res) => {
-      dispatch(resetCommentPage());
+      dispatch(resetCommentPage(postDetail?.id));
       setCommentTxt("");
     });
+    // dispatch(postCommentApi(data))
   };
   const renderItem = ({ item, index }) => {
     return <CommentItem item={item} />;
   };
   const getCommentData = () => {
+    dispatch(resetPostCommentData())
     dispatch(
       getCommentByContentIdApi(postDetail?.id, commentPage, commentPageSize)
     );

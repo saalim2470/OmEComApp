@@ -14,6 +14,7 @@ const GetCommentByContentIdSlice = createSlice({
     page: 1,
     pageSize: 10,
     totalCount: null,
+    contentId:null
   },
   reducers: {
     setCommentData: (state, action) => {
@@ -59,6 +60,8 @@ const GetCommentByContentIdSlice = createSlice({
       state.page = 1;
       state.isReachedEnd = false;
       state.totalCount = null;
+      state.contentId=action.payload
+      state.isSuccess=false
     },
   },
 });

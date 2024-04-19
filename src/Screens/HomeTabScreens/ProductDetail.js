@@ -32,6 +32,11 @@ const ProductDetail = ({ route }) => {
   const { contentData, isLoading, error } = useSelector(
     (state) => state.getAdContentById
   );
+  const {
+    isSuccess: getCommentSuccesss,
+    totalCount: totalComment,
+    contentId: commentId,
+  } = useSelector((state) => state.getCommentByContentId);
   const [adContent, setAdContent] = useState(null);
   const { apiShowError, setApiShowError } = useErrorHook(
     likeError || saveError,
@@ -64,6 +69,11 @@ const ProductDetail = ({ route }) => {
       updateData(saveDataRes?.Data, "save");
     }
   }, [saveDataRes]);
+  useEffect(() => {
+    if (getCommentSuccesss) {
+      updateData(commentId, "comment");
+    }
+  }, [getCommentSuccesss]);
 
   const onClickModalBtn = () => {
     dispatch(setError(null));
@@ -81,6 +91,12 @@ const ProductDetail = ({ route }) => {
       setAdContent({
         ...adContent,
         isCurrentUserSaved: data?.isSaved,
+      });
+    }
+    if (actionType === "comment" && adContent?.id === data) {
+      setAdContent({
+        ...adContent,
+        totalComments: totalComment,
       });
     }
   };
