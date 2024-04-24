@@ -41,7 +41,18 @@ const SearchResultScreen = ({ navigation }) => {
     statusCode: saveErrorCode,
     saveData: saveDataRes,
   } = useSelector((state) => state.saveContent);
-  const { postData, setPostData } = useLikeHook(likeDataRes, saveDataRes);
+  const {
+    isSuccess: getCommentSuccesss,
+    totalCount: totalComment,
+    contentId: commentId,
+  } = useSelector((state) => state.getCommentByContentId);
+  const { postData, setPostData } = useLikeHook(
+    likeDataRes,
+    saveDataRes,
+    commentId,
+    getCommentSuccesss,
+    totalComment,
+  );
   const [currentIndex, setCurrentIndex] = useState();
   const [currentPost, setCurrentPost] = useState();
   const [searchKeyWord, setSearchKeyWord] = useState("");

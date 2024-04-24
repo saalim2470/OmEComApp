@@ -8,10 +8,8 @@ import {
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import commonStyle from "../../Constants/commonStyle";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
-import { Divider, Menu } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
-import Loading from "../../Components/Loading";
 import FriendlyMsg from "../../Components/ErrorScreens/FriendlyMsg";
 import CustomeAlertModal from "../../Components/CustomeAlertModal";
 import { resetLikeData } from "../../store/AdContentSlices/LikeSlice";
@@ -31,11 +29,13 @@ import CustomeHeader from "../../Components/CustomeHeader";
 import ShimmerLoading from "../../Components/LoadingComponents/ShimmerLoading";
 import CustomeFlatlist from "../../Components/CustomeFlatlist";
 import useErrorHook from "../../CustomeHooks/useErrorHook";
+import useLikeHook from "../../CustomeHooks/useLikeHook";
 
 const BookmarkScreen = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const maxToRenderPerBatch = 100;
   const isFocused = useIsFocused();
+  const type='saved'
   const {
     savedContent: userContentRes,
     error: userContentError,
@@ -62,12 +62,20 @@ const BookmarkScreen = ({ navigation, route }) => {
     deleteData: deleteDataRes,
     isLoading: deleteLoading,
   } = useSelector((state) => state.deleteAdContent);
-  const [postData, setPostData] = useState([]);
+  // const [postData, setPostData] = useState([]);
   const {
     isSuccess: getCommentSuccesss,
     totalCount: totalComment,
     contentId: commentId,
   } = useSelector((state) => state.getCommentByContentId);
+  const { postData, setPostData } = useLikeHook(
+    likeDataRes,
+    saveDataRes,
+    commentId,
+    getCommentSuccesss,
+    totalComment,
+    type
+  );
   const [refreshing, setRefreshing] = useState(false);
   const [currentPost, setCurrentPost] = useState();
   const { apiShowError, setApiShowError } = useErrorHook(
@@ -94,94 +102,13 @@ const BookmarkScreen = ({ navigation, route }) => {
     }
   }, [userContentRes, userContentSuccess]);
   useEffect(() => {
-    if (likeDataRes != null && likeDataRes.Success) {
-      updateData(likeDataRes?.Data, "like");
-    }
-  }, [likeDataRes]);
-  useEffect(() => {
-    if (saveDataRes != null && saveDataRes.Success) {
-      const updatedData = postData.filter(
-        (item) => item?.adContent?.id !== saveDataRes?.Data?.adContentID
-      );
-      setPostData(updatedData);
-    }
-  }, [saveDataRes]);
-  useEffect(() => {
     if (userContentError != null && !userContentError?.Success) {
       setRefreshing(false);
     }
   }, [userContentError]);
-  useEffect(() => {
-    if (getCommentSuccesss) {
-      updateData(commentId, "comment");
-    }
-  }, [getCommentSuccesss]);
 
   const getSavedContent = () => {
     dispatch(getSavedContentApi(userContentPage, userContentPageSize));
-  };
-  const updateData = (data, type) => {
-    switch (type) {
-      case "like":
-        like(data);
-        break;
-      case "comment":
-        comment(data);
-        break;
-      default:
-        break;
-    }
-    // const updatedData = postData.map((item) => {
-    //   if (type === "like" && item?.adContent?.id === data.contentId) {
-    //     return {
-    //       ...item,
-    //       adContent: {
-    //         ...item.adContent,
-    //         isCurrentUserLiked: data.isLiked,
-    //         totalLikes: data.totalLikes,
-    //       },
-    //     };
-    //   }
-    //   if (type === "comment" && item?.adContent?.id === data) {
-    //     return {
-    //       ...item,
-    //       totalComments: totalComment,
-    //     };
-    //   }
-    //   return item;
-    // });
-    // setPostData(updatedData);
-  };
-  const like = (data) => {
-    let newArray = [...postData];
-    let currentData = newArray.find(
-      (element, index) => element?.adContent?.id === data.contentId
-    );
-    const index = newArray.findIndex((x) => x?.adContent?.id === currentData?.adContent?.id);
-    const newData = {
-      ...currentData,
-      adContent: {
-        ...currentData.adContent,
-        isCurrentUserLiked: data.isLiked,
-        totalLikes: data.totalLikes,
-      },
-    };
-    newArray[index] = newData;
-    setPostData(newArray);
-  };
-  const comment = (id) => {
-    let newArray = [...postData];
-    let currentData = newArray.find((element, index) => element?.adContent?.id === id);
-    const index = newArray.findIndex((x) => x?.adContent?.id === currentData?.adContent?.id);
-    const newData = {
-      ...currentData,
-      adContent: {
-        ...currentData.adContent,
-        totalComments: totalComment,
-      },
-    };
-    newArray[index] = newData;
-    setPostData(newArray);
   };
   const onClickModalBtn = () => {
     dispatch(resetLikeData());

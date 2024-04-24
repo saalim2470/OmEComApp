@@ -47,7 +47,12 @@ const MyAds = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
   let maxToRenderPerBatch = 100;
-  const { postData, setPostData } = useLikeHook(likeDataRes, saveDataRes);
+  const {
+    isSuccess: getCommentSuccesss,
+    totalCount: totalComment,
+    contentId: commentId,
+  } = useSelector((state) => state.getCommentByContentId);
+ 
   const {
     userContentData: userContentRes,
     error: userContentError,
@@ -74,6 +79,13 @@ const MyAds = ({ navigation, route }) => {
     deleteData: deleteDataRes,
     isLoading: deleteLoading,
   } = useSelector((state) => state.deleteAdContent);
+  const { postData, setPostData } = useLikeHook(
+    likeDataRes,
+    saveDataRes,
+    commentId,
+    getCommentSuccesss,
+    totalComment
+  );
   const [refreshing, setRefreshing] = useState(false);
   const [currentPost, setCurrentPost] = useState(null);
   const { apiShowError, setApiShowError } = useErrorHook(
@@ -93,10 +105,9 @@ const MyAds = ({ navigation, route }) => {
       };
     }, [])
   );
-  console.log('-=-=current post myads-=-=-',currentPost);
+  console.log("-=-=current post myads-=-=-", currentPost);
   useEffect(() => {
-    if(userContentPage>0)
-    getUserContent();
+    if (userContentPage > 0) getUserContent();
   }, [userContentPage, refreshing]);
   useEffect(() => {
     if (deleteDataRes !== null && deleteDataRes?.Success)
@@ -126,18 +137,21 @@ const MyAds = ({ navigation, route }) => {
       show: false,
     });
   };
-  const renderItem = useCallback(({ item, index }) => {
-    return (
-      <FeedCard
-        itemData={item}
-        profile={true}
-        currentPost={currentPost}
-        onClickMoreBtn={() => {
-          navigation.navigate(screenName.productDetail, { data: item });
-        }}
-      />
-    );
-  }, [navigation, currentPost]);
+  const renderItem = useCallback(
+    ({ item, index }) => {
+      return (
+        <FeedCard
+          itemData={item}
+          profile={true}
+          currentPost={currentPost}
+          onClickMoreBtn={() => {
+            navigation.navigate(screenName.productDetail, { data: item });
+          }}
+        />
+      );
+    },
+    [navigation, currentPost]
+  );
   const onRefresh = useCallback(() => {
     dispatch(resetUserContentPage());
     setRefreshing(true);
@@ -183,36 +197,36 @@ const MyAds = ({ navigation, route }) => {
         //   onViewableItemsChanged={onViewableItemsChanged}
         // />
         <FlatList
-        data={postData}
-        keyExtractor={(item, index) => {
-          return `data_${item.id}_${index}`;
-        }}
-        showsVerticalScrollIndicator={false}
-        onEndReachedThreshold={1}
-        onEndReached={onReachedEnd}
-        contentContainerStyle={{
-          gap: scale(10),
-          paddingBottom: verticalScale(10),
-        }}
-        ItemSeparatorComponent={
-          <Divider style={{ marginBottom: verticalScale(8) }} />
-        }
-        ListFooterComponent={listFooterComponent}
-        renderItem={renderItem}
-        initialNumToRender={40}
-        maxToRenderPerBatch={maxToRenderPerBatch}
-        windowSize={5}
-        removeClippedSubviews={true}
-        updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
-        refreshing={refreshing}
-        onRefresh={onRefresh}
-        onViewableItemsChanged={onViewableItemsChanged}
-        viewabilityConfig={{
-          itemVisiblePercentThreshold: 50,
-        }}
-        scrollEventThrottle={12}
-        fadeDuration={0}
-      />
+          data={postData}
+          keyExtractor={(item, index) => {
+            return `data_${item.id}_${index}`;
+          }}
+          showsVerticalScrollIndicator={false}
+          onEndReachedThreshold={1}
+          onEndReached={onReachedEnd}
+          contentContainerStyle={{
+            gap: scale(10),
+            paddingBottom: verticalScale(10),
+          }}
+          ItemSeparatorComponent={
+            <Divider style={{ marginBottom: verticalScale(8) }} />
+          }
+          ListFooterComponent={listFooterComponent}
+          renderItem={renderItem}
+          initialNumToRender={40}
+          maxToRenderPerBatch={maxToRenderPerBatch}
+          windowSize={5}
+          removeClippedSubviews={true}
+          updateCellsBatchingPeriod={maxToRenderPerBatch / 2}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          onViewableItemsChanged={onViewableItemsChanged}
+          viewabilityConfig={{
+            itemVisiblePercentThreshold: 50,
+          }}
+          scrollEventThrottle={12}
+          fadeDuration={0}
+        />
       )}
       <CustomeAlertModal
         isVisible={apiShowError.show}

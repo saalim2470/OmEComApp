@@ -5,21 +5,22 @@ const useLikeHook = (
   saveDataRes,
   commentId,
   commentDataResSuccess,
-  totalComment
+  totalComment,
+  type
 ) => {
   const [postData, setPostData] = useState([]);
   useEffect(() => {
-    if (likeDataRes != null && likeDataRes?.Success) {
+    if (postData.length!==0&&likeDataRes != null && likeDataRes?.Success) {
       updateData(likeDataRes?.Data, "like");
     }
   }, [likeDataRes]);
   useEffect(() => {
-    if (saveDataRes != null && saveDataRes.Success) {
+    if (postData.length!==0&&saveDataRes != null && saveDataRes.Success) {
       updateData(saveDataRes?.Data, "save");
     }
   }, [saveDataRes]);
   useEffect(() => {
-    if (commentDataResSuccess) {
+    if (postData.length!==0&&commentDataResSuccess) {
       updateData(commentId, "comment");
     }
   }, [commentDataResSuccess]);
@@ -65,42 +66,86 @@ const useLikeHook = (
     }
   };
   const like = (data) => {
-    let newArray = [...postData];
+    if(type==='saved'){
+      let newArray = [...postData];
+      
     let currentData = newArray.find(
-      (element, index) => element.id === data.contentId
+      (element, index) => element.adContentID === data.contentId
     );
-    const index = newArray.findIndex((x) => x.id === currentData.id);
+    const index = newArray.findIndex((x) => x.adContentID === currentData.adContentID);
     const newData = {
       ...currentData,
-      isCurrentUserLiked: data.isLiked,
-      totalLikes: data.totalLikes,
+      adContent: {
+        ...currentData.adContent,
+        isCurrentUserLiked: data.isLiked,
+        totalLikes: data.totalLikes,
+      },
     };
     newArray[index] = newData;
     setPostData(newArray);
+    }else{
+      let newArray = [...postData];
+      let currentData = newArray.find(
+        (element, index) => element.id === data.contentId
+      );
+      const index = newArray.findIndex((x) => x.id === currentData.id);
+      const newData = {
+        ...currentData,
+        isCurrentUserLiked: data.isLiked,
+        totalLikes: data.totalLikes,
+      };
+      newArray[index] = newData;
+      setPostData(newArray);
+    }
+   
   };
   const save = (data) => {
-    let newArray = [...postData];
-    let currentData = newArray.find(
-      (element, index) => element.id === data.adContentID
-    );
-    const index = newArray.findIndex((x) => x.id === currentData.id);
-    const newData = {
-      ...currentData,
-      isCurrentUserSaved: data.isSaved,
-    };
-    newArray[index] = newData;
-    setPostData(newArray);
+    if(type==='saved'){
+      const updatedData = postData.filter(
+        (item) => item?.adContent?.id !== saveDataRes?.Data?.adContentID
+      );
+      setPostData(updatedData);
+    }else{
+      let newArray = [...postData];
+      let currentData = newArray.find(
+        (element, index) => element.id === data.adContentID
+      );
+      const index = newArray.findIndex((x) => x.id === currentData.id);
+      const newData = {
+        ...currentData,
+        isCurrentUserSaved: data.isSaved,
+      };
+      newArray[index] = newData;
+      setPostData(newArray);
+    }
+  
   };
   const comment = (id) => {
-    let newArray = [...postData];
-    let currentData = newArray.find((element, index) => element.id === id);
-    const index = newArray.findIndex((x) => x.id === currentData.id);
-    const newData = {
-      ...currentData,
-      totalComments: totalComment,
-    };
-    newArray[index] = newData;
-    setPostData(newArray);
+    if(type==='saved'){
+      let newArray = [...postData];
+      let currentData = newArray.find((element, index) => element?.adContent?.id === id);
+      const index = newArray.findIndex((x) => x?.adContent?.id === currentData?.adContent?.id);
+      const newData = {
+        ...currentData,
+        adContent: {
+          ...currentData.adContent,
+          totalComments: totalComment,
+        },
+      };
+      newArray[index] = newData;
+      setPostData(newArray);
+    }else{
+      let newArray = [...postData];
+      let currentData = newArray.find((element, index) => element.id === id);
+      const index = newArray.findIndex((x) => x.id === currentData.id);
+      const newData = {
+        ...currentData,
+        totalComments: totalComment,
+      };
+      newArray[index] = newData;
+      setPostData(newArray);
+    }
+ 
   };
   return { postData, setPostData };
 };
