@@ -208,7 +208,7 @@ const CreateAccount = () => {
     if (!mobileNo.trim()) {
       handleError("Enter Mobile No.", "mobileNo");
       isValid = false;
-    } else if (mobileNo.length != 10) {
+    } else if (mobileNo.length !== 10) {
       handleError("Enter 10 digit Mobile No", "mobileNo");
       isValid = false;
     }
