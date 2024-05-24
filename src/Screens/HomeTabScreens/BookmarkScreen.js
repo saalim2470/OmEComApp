@@ -62,7 +62,6 @@ const BookmarkScreen = ({ navigation, route }) => {
     deleteData: deleteDataRes,
     isLoading: deleteLoading,
   } = useSelector((state) => state.deleteAdContent);
-  // const [postData, setPostData] = useState([]);
   const {
     isSuccess: getCommentSuccesss,
     totalCount: totalComment,
@@ -92,9 +91,6 @@ const BookmarkScreen = ({ navigation, route }) => {
       };
     }, [refreshing, userContentPage])
   );
-  // useEffect(() => {
-  //   getSavedContent();
-  // }, [isFocused]);
   useEffect(() => {
     if (userContentRes != null && userContentSuccess) {
       setPostData(userContentRes);

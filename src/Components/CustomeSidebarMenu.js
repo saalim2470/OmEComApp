@@ -12,7 +12,7 @@ import { Divider, Menu } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { accessToken } from "../Constants/defaults";
 import { useDispatch, useSelector } from "react-redux";
-import { logOut } from "../store/authSlices/LoginSlice";
+import { logOut} from "../store/authSlices/LoginSlice";
 import { useNavigation } from "@react-navigation/native";
 import screenName from "../Constants/screenName";
 import { resetUserAdContent } from "../store/profileSlices/GetUserContentSlice";
@@ -27,6 +27,7 @@ import {
 } from "../Constants/Constant";
 import { resetData } from "../store/addAdContentSlices/AddPostData";
 import * as StoreReview from "expo-store-review";
+import { logout } from "../Constants/functions";
 
 const CustomSidebarMenu = (props) => {
   const navigation = useNavigation();

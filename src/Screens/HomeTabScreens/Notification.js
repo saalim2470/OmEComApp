@@ -79,7 +79,7 @@ const Notification = () => {
     <SafeAreaView style={commonStyle.container}>
       <CustomeHeader isBackBtn={true} title={"Notification"} />
 
-      {notification.length <= 0 ? (
+      {!notificationLoading&&notification.length <= 0 ? (
         <FriendlyMsg msgWithImage={"No Notification"} />
       ) : (
         <View style={{ marginBottom: verticalScale(60) }}>

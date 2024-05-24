@@ -1,8 +1,12 @@
-import { baseURL, serverImagePath } from "./defaults";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { resetData } from "../store/addAdContentSlices/AddPostData";
+import { logOut } from "../store/authSlices/LoginSlice";
+import { resetUserAdContent } from "../store/profileSlices/GetUserContentSlice";
+import { accessToken, baseURL, serverImagePath, userDetail } from "./defaults";
+import * as ImagePicker from "expo-image-picker";
 
 export const emailValidate = (email) => {
   var regExp = /^[A-Za-z][\w$.]+@[\w]+\.\w+$/;
-  console.log(email);
   if (regExp.test(email)) return true;
   else return false;
 };

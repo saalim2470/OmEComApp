@@ -34,10 +34,12 @@ export const { addSaveContent, setLoading, setError, resetSaveData } =
 export const saveContentApi = (data) => async (dispatch) => {
   try {
     dispatch(resetSaveData());
+    dispatch(setLoading(true))
     const responce = await AdContentServices.addContentSave(data);
     dispatch(addSaveContent(responce.data));
-    console.log(responce.data);
+    dispatch(setLoading(false))
   } catch (error) {
+    dispatch(setLoading(false))
     dispatch(setError(error.response));
     console.log("-=-=-=save error-=-=-=", error);
   }

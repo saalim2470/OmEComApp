@@ -40,10 +40,12 @@ export const {
 export const addLikeOnContentApi = (data) => async (dispatch) => {
   try {
     dispatch(resetLikeData());
+    dispatch(setLoading(true))
     const responce = await AdContentServices.addContentLike(data);
     dispatch(addLikeContent(responce.data));
     console.log(responce.data);
   } catch (error) {
+    dispatch(setLoading(false))
     dispatch(setError(error.response));
     console.log("-=-=-=like error-=-=-=", error);
   }

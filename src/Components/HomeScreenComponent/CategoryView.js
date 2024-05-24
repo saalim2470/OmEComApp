@@ -13,6 +13,7 @@ import {
 import { useDispatch } from "react-redux";
 import { setCategoryId } from "../../store/StoreDataSlice";
 import { allCategorie } from "../../Constants/Constant";
+import { resetPage } from "../../store/AdContentSlices/GetAdContentSlice";
 
 const screenWidth = Dimensions.get("window").width;
 const width = screenWidth / 3 - 15;
@@ -43,6 +44,7 @@ const CategoryView = ({ data }) => {
           <TouchableOpacity
             onPress={() => {
               dispatch(setCategoryId(item?.id));
+              dispatch(resetPage());
               navigation.navigate(screenName.bottomNavigationHomeRoute, {
                 screen: screenName.mainHome
               });

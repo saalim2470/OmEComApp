@@ -86,9 +86,6 @@ const EditProfile = () => {
   const [city, setCity] = useState(null);
   const [openCameraMenu, setOpenCameraMenu] = useState(false);
   const [profileImage, setProfileImage] = useState("");
-  const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
-  const [cameraStatus, requestCameraPermission] =
-    ImagePicker.useCameraPermissions();
   useEffect(() => {
     dispatch(getStateData(userDetail?.countryId));
     dispatch(getCityData(userDetail?.stateId));
@@ -106,21 +103,21 @@ const EditProfile = () => {
   useEffect(() => {
     if (countryDataRes != null && countryDataRes?.Success) {
       setCountryData(countryDataRes?.Data);
-      setCountry(userDetail?.countryId)
+      setCountry(userDetail?.countryId);
     }
   }, [countryDataRes]);
 
   useEffect(() => {
     if (stateDataRes != null && stateDataRes?.Success) {
       setStateData(stateDataRes?.Data);
-      setState(userDetail?.stateId)
+      setState(userDetail?.stateId);
     }
   }, [stateDataRes]);
 
   useEffect(() => {
     if (cityDataRes != null && cityDataRes?.Success) {
       setCityData(cityDataRes?.Data);
-      setCity(userDetail?.cityId)
+      setCity(userDetail?.cityId);
     }
   }, [cityDataRes]);
 
@@ -229,13 +226,19 @@ const EditProfile = () => {
   const handleError = (msg, fieldName) => {
     setErrors((prevState) => ({ ...prevState, [fieldName]: msg }));
   };
+
   const checkLibrarayPermission = async () => {
-    const { status: currentStatus } =
+    let { status: currentStatus } =
       await ImagePicker.getMediaLibraryPermissionsAsync();
     if (currentStatus !== "granted") {
-      requestPermission();
-    } else if (currentStatus == "granted") {
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      currentStatus = status;
+    }
+    if (currentStatus === "granted") {
       openImagePicker();
+    } else {
+      console.log("Permission to access media library was denied");
     }
   };
   const openImagePicker = async () => {
@@ -250,13 +253,20 @@ const EditProfile = () => {
       setProfileImage(result.assets[0].uri);
     }
   };
+
   const checkCameraPermission = async () => {
-    const { status: currentStatus } =
+    let { status: currentStatus } =
       await ImagePicker.getCameraPermissionsAsync();
     if (currentStatus !== "granted") {
-      requestCameraPermission();
-    } else if (currentStatus == "granted") {
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+      currentStatus = status;
+    }
+    if (currentStatus === "granted") {
+      // requestCameraPermission();
       openCamera();
+    } else {
+      // openCamera();
+      console.log("Permission to access media library was denied");
     }
   };
   const openCamera = async () => {

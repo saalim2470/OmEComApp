@@ -1,10 +1,4 @@
-import {
-  ActivityIndicator,
-  FlatList,
-  RefreshControl,
-  StyleSheet,
-  View,
-} from "react-native";
+import { ActivityIndicator, Dimensions, StyleSheet, View } from "react-native";
 import React, { useCallback, useMemo, useRef } from "react";
 import MainHeader from "../../Components/MainHeader";
 import commonStyle from "../../Constants/commonStyle";
@@ -15,14 +9,11 @@ import screenName from "../../Constants/screenName";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import Loading from "../../Components/Loading";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CustomeAlertModal from "../../Components/CustomeAlertModal";
 import {
   getAdContentByCategory,
   getAllContentApi,
-  resetAdContent,
-  resetAdContentData,
   resetPage,
   setError,
   setGetAdContentPage,
@@ -35,15 +26,15 @@ import { resetLikeData } from "../../store/AdContentSlices/LikeSlice";
 import RoundCategoryView from "../../Components/HomeScreenComponent/RoundCategoryView";
 import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 import ShimmerLoading from "../../Components/LoadingComponents/ShimmerLoading";
-import useLikeHook from "../../CustomeHooks/useLikeHook";
-import ListingComponent from "../../Components/ListingComponent";
 import CustomeFlatlist from "../../Components/CustomeFlatlist";
 import useErrorHook from "../../CustomeHooks/useErrorHook";
+import useLikeHook from "../../CustomeHooks/useLikeHook";
 
 const MainHome = ({ route }) => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const categoryId = useSelector((state) => state.storeData.categoryId);
+
   const {
     contentData: contentDataRes,
     isLoading: contentDataLoading,

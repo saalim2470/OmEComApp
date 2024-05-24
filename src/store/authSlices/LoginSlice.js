@@ -2,6 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import AuthServices from "../../services/AuthServices";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { accessToken, userDetail } from "../../Constants/defaults";
+import { resetUserAdContent } from "../profileSlices/GetUserContentSlice";
+import { resetData } from "../addAdContentSlices/AddPostData";
 
 const LoginSlice = createSlice({
   name: "login",
@@ -103,4 +105,13 @@ export const getLoggedInUSerInfo = () => async (dispatch) => {
     dispatch(setLoading(false));
     dispatch(setError(error.response.data));
   }
+};
+export const logout = async (dispatch) => {
+  try {
+    dispatch(logOut());
+    dispatch(resetUserAdContent());
+    dispatch(resetData());
+    await AsyncStorage.removeItem(accessToken);
+    await AsyncStorage.removeItem(userDetail);
+  } catch (error) {}
 };

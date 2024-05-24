@@ -25,15 +25,12 @@ import { accessToken, userDetail } from "../Constants/defaults";
 import { getCountryData } from "../store/contrySlices/GetCountrySlice";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  getLoggedInUSerInfo,
   getUserInfo,
   setAccessToken,
   setuserDetail,
 } from "../store/authSlices/LoginSlice";
-import AuthServices from "../services/AuthServices";
-import ContactUs from "../Screens/DrawerScreen/ContactUs";
-import Location from "../Screens/Location";
-import Video1 from "../Screens/Video1";
-import * as Linking from "expo-linking";
+import Loading from "../Components/Loading";
 
 SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
@@ -47,22 +44,26 @@ const Routes = () => {
     async function prepare() {
       try {
         const token = await AsyncStorage.getItem("accessToken");
-        console.log(token);
-        if (!token) {
+        const userData = await AsyncStorage.getItem(userDetail);
+        if (!token || !userData) {
           await AsyncStorage.removeItem("accessToken");
           await AsyncStorage.removeItem(userDetail);
           setIsToken(false);
         } else {
           dispatch(setAccessToken(token));
-          console.log(token);
-          const userResponce = await AuthServices.getUserInfo();
-          dispatch(setuserDetail(userResponce?.data?.Data));
-          setAppIsReady(userResponce?.data?.Success);
+          dispatch(setuserDetail(userData));
+          dispatch(getLoggedInUSerInfo());
           setIsToken(true);
+          setTimeout(() => {
+            setAppIsReady(true);
+          }, 500);
+          // const userResponce = await AuthServices.getUserInfo();
+          // dispatch(setuserDetail(userResponce?.data?.Data));
+          // setAppIsReady(userResponce?.data?.Success);
         }
-        await new Promise((resolve) => setTimeout(resolve, 2000));
       } catch (e) {
         console.warn(e);
+        dispatch(setAccessToken(null));
         await AsyncStorage.removeItem("accessToken");
       } finally {
         setAppIsReady(true);
@@ -76,9 +77,13 @@ const Routes = () => {
       await SplashScreen.hideAsync();
     }
   })();
+  if (!appIsReady) {
+    return <Loading />; // Optionally render a loading indicator here
+  }
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {/* <Stack.Screen name={screenName.splash} component={Splash} /> */}
+      {/* {isToken ? ( */}
       {accessToken == null ? (
         <>
           <Stack.Screen name={screenName.authRoute} component={AuthRoute} />
@@ -86,7 +91,6 @@ const Routes = () => {
       ) : (
         <>
           {/* <Stack.Screen name={"location"} component={Location} /> */}
-          {/* <Stack.Screen name={"Video"} component={Video1} /> */}
           {/* <Stack.Screen name={"Payment"} component={Payment} /> */}
           <Stack.Screen
             name={screenName.drawerNavigation}

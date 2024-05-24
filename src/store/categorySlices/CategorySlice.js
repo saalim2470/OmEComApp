@@ -12,7 +12,7 @@ const CategorySlice = createSlice({
     isReachedEnd: false,
     isMoreLoading: false,
     page: 1,
-    pageSize: 150,
+    pageSize: 200,
     totalCount: null,
   },
   reducers: {

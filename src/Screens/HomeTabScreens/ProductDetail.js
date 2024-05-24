@@ -11,14 +11,19 @@ import { setError } from "../../store/AdContentSlices/GetAdContentSlice";
 import FeedCard from "../../Components/ProductComponent/FeedCard";
 import Loading from "../../Components/Loading";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getAdContentByIdApi, resetAdContentDataById } from "../../store/AdContentSlices/GetAdContentById";
+import {
+  getAdContentByIdApi,
+  resetAdContentDataById,
+} from "../../store/AdContentSlices/GetAdContentById";
 import ErrorMsg from "../../Components/ErrorScreens/ErrorMsg";
 import useErrorHook from "../../CustomeHooks/useErrorHook";
+import FriendlyMsg from "../../Components/ErrorScreens/FriendlyMsg";
 
 const ProductDetail = ({ route }) => {
   const dispatch = useDispatch();
   const { contentId } = route?.params;
   const { data } = route?.params;
+  const [loading, setLoading] = useState(false);
   const {
     error: likeError,
     statusCode: likeErrorCode,
@@ -45,14 +50,18 @@ const ProductDetail = ({ route }) => {
   useEffect(() => {
     if (contentId) dispatch(getAdContentByIdApi(contentId));
     return () => {
-      dispatch(resetAdContentDataById())
+      dispatch(resetAdContentDataById());
     };
   }, [contentId]);
 
   useEffect(() => {
-    if (data) setAdContent(data);
+    setLoading(true);
+    if (data) {
+      setAdContent(data);
+      setLoading(false)
+    }
     return () => {
-      dispatch(resetAdContentDataById())
+      dispatch(resetAdContentDataById());
     };
   }, [data]);
   useEffect(() => {
@@ -103,7 +112,7 @@ const ProductDetail = ({ route }) => {
   // if (!adContent && adContent == null) {
   //   return <Loading />;
   // }
-  if (isLoading) {
+  if ( loading || isLoading) {
     return <Loading />;
   }
   if (error !== null && !error?.Success) {
@@ -117,12 +126,14 @@ const ProductDetail = ({ route }) => {
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={true}
       >
-        {adContent && adContent !== null ? (
+        {adContent && adContent !== null && !adContent?.isDeleted ? (
           <FeedCard
             itemData={adContent}
             disable={true}
             currentPost={adContent?.id}
           />
+        ) : !isLoading||!loading&& adContent === null || adContent?.isDeleted ? (
+          <FriendlyMsg msgWithImage={"Content not availaibale"} />
         ) : null}
         {/* unComment After 1st version */}
         {/* <AdView /> */}

@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useMemo, useRef } from "react";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { Divider } from "react-native-paper";
 
@@ -42,6 +42,7 @@ const CustomeFlatlist = ({
       viewabilityConfig={{
         itemVisiblePercentThreshold: 70,
       }}
+      // viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs}
       scrollEventThrottle={12}
       fadeDuration={0}
     />

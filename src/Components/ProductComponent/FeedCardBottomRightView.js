@@ -12,7 +12,7 @@ import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import CustomeAlertModal from "../CustomeAlertModal";
 
 const FeedCardBottomRightView = ({ itemData }) => {
-  const url = `whatsapp://send?phone=${itemData?.user?.phoneNumber}&text=Hello`;
+  const url = `whatsapp://send?phone=${itemData?.user?.phoneNumber}&text=${itemData?.description}`;
   const [showAlert, setShowAlert] = useState({
     show: false,
     title: null,

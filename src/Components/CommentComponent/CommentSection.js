@@ -1,26 +1,22 @@
 import {
   ActivityIndicator,
-  Dimensions,
   FlatList,
-  Image,
-  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
-import Modal from "react-native-modal";
 import { Avatar, Divider } from "react-native-paper";
 import CommentItem from "./CommentItem";
 import Loading from "../Loading";
 import ServerError from "../ErrorScreens/ServerError";
-import FriendlyMsg from "../ErrorScreens/FriendlyMsg";
 import { useDispatch, useSelector } from "react-redux";
-import { baseURL, serverImagePath } from "../../Constants/defaults";
 import {
   postCommentApi,
   resetPostCommentData,
@@ -30,11 +26,9 @@ import {
   resetCommentPage,
   setCommentPage,
 } from "../../store/commentSlices/GetCommentByContentIdSlice";
-import CustomeAlertModal from "../CustomeAlertModal";
 import colors from "../../Constants/colors";
-import ProfileImage from "../ProfileImage";
+import CommentTextInput from "./CommentTextInput";
 
-const SHEET_HEIGHT = Dimensions.get("screen").height / 2;
 const CommentSection = ({
   isVisible,
   postDetail,
@@ -53,20 +47,10 @@ const CommentSection = ({
     isMoreLoading: getCommentMoreLoading,
     isReachedEnd: getCommentReachedEnd,
   } = useSelector((state) => state.getCommentByContentId);
-  const {
-    postComment: postCommentRes,
-    isLoading: postCommentLoading,
-    error: postCommentError,
-    errorCode: postCommentErrorCode,
-  } = useSelector((state) => state.postComment);
+  const { postComment: postCommentRes, isLoading: postCommentLoading } =
+    useSelector((state) => state.postComment);
   const [commentTxt, setCommentTxt] = useState("");
   const [commentData, setCommentData] = useState([]);
-  const [showAlert, setShowAlert] = useState({
-    show: false,
-    title: null,
-    msg: null,
-    type: null,
-  });
   useEffect(() => {
     getCommentData();
   }, [commentPage,postCommentRes?.Success]);
@@ -76,29 +60,6 @@ const CommentSection = ({
       setCommentData(commentDataRes);
     }
   }, [commentDataRes, getCommentSuccesss]);
-  useEffect(() => {
-    const handleErrorCode = (code) => {
-      if (code === 401) {
-        showModal("UnAuthorized", "Please login to continue", "warning");
-      } else if (code != null && postCommentError != null) {
-        showModal(
-          "Error",
-          postCommentError.ErrorMessage || "Some Error Occurred",
-          "error"
-        );
-      }
-    };
-
-    handleErrorCode(postCommentErrorCode);
-  }, [postCommentError, postCommentErrorCode]);
-  const showModal = (title, msg, type) => {
-    setShowAlert({
-      show: true,
-      title: title,
-      msg: msg,
-      type: type,
-    });
-  };
   const onClickPost =async () => {
     const data = {
       title: "string",
@@ -110,6 +71,7 @@ const CommentSection = ({
     dispatch(postCommentApi(data)).then((res) => {
       dispatch(resetCommentPage(postDetail?.id));
       setCommentTxt("");
+      dispatch(resetPostCommentData());
     });
     // dispatch(postCommentApi(data))
   };
@@ -117,7 +79,6 @@ const CommentSection = ({
     return <CommentItem item={item} />;
   };
   const getCommentData = () => {
-    dispatch(resetPostCommentData())
     dispatch(
       getCommentByContentIdApi(postDetail?.id, commentPage, commentPageSize)
     );
@@ -136,7 +97,6 @@ const CommentSection = ({
   const onReachedEnd = () => {
     if (!getCommentReachedEnd) {
       dispatch(setCommentPage(commentPage + 1));
-      // getCommentData();
     }
   };
   if (commentLoading) {
@@ -151,82 +111,56 @@ const CommentSection = ({
     );
   }
   return (
-    <>
-      <View style={styles.modalView}>
-        <Text style={styles.headingTxt}>Comments</Text>
-        <Divider
-          style={{
-            marginTop: verticalScale(10),
-          }}
-        />
-        {!commentLoading &&
-        commentError === null &&
-        commentData?.length <= 0 ? (
-          <View style={styles.msgView}>
-            <Text style={styles.msgTxt}>No Comment Yet</Text>
-          </View>
-        ) : (
-          <View
-            style={{
-              // height: verticalScale(260),
-              flex: 1,
-              marginBottom: verticalScale(30),
-            }}
-          >
-            <FlatList
-              data={commentData}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={renderItem}
-              showsVerticalScrollIndicator={false}
-              ListFooterComponent={listFooterComponent}
-              onEndReached={onReachedEnd}
-              onEndReachedThreshold={1}
-              nestedScrollEnabled={true}
-              contentContainerStyle={styles.commentContainerStyle}
-            />
-          </View>
-        )}
-        <View style={styles.txtInputView}>
-          <ProfileImage url={userDetail?.profilePicture} size={scale(30)}/>
-          <TextInput
-            style={{ flex: 1, padding: verticalScale(3) }}
-            placeholder="Add comment"
-            value={commentTxt}
-            onChangeText={(value) => {
-              setCommentTxt(value);
-            }}
-          />
-          {commentTxt != "" ? (
-            <TouchableWithoutFeedback
-              style={{ padding: moderateScale(5) }}
-              disabled={postCommentLoading}
-              onPress={() => {
-                onClickPost();
-              }}
-            >
-              {postCommentLoading ? (
-                <ActivityIndicator color={colors.themeColor} />
-              ) : (
-                <Text style={{ color: "blue" }}>Post</Text>
-              )}
-            </TouchableWithoutFeedback>
-          ) : null}
-        </View>
-      </View>
-      <CustomeAlertModal
-        isVisible={showAlert.show}
-        title={showAlert.title}
-        msg={showAlert.msg}
-        type={showAlert.type}
-        onClickBtn={() => {
-          dispatch(resetPostCommentData());
-          setShowAlert({
-            ...showAlert,
-            show: false,
-          });
+    // <ScrollView
+    //     style={{flex:1}}
+    //     showsVerticalScrollIndicator={false}
+    //     keyboardShouldPersistTaps='handled'
+    //   >
+    <View style={styles.modalView}>
+      <Text style={styles.headingTxt}>Comments</Text>
+      <Divider
+        style={{
+          marginTop: verticalScale(10),
         }}
       />
-    </>
+      {!commentLoading && commentError === null && commentData?.length <= 0 ? (
+        <View style={[styles.msgView]}>
+          <Text style={styles.msgTxt}>No Comment Yet</Text>
+        </View>
+      ) : (
+        <View
+          style={{
+            // height: verticalScale(260),
+            flex: 1,
+            marginBottom: verticalScale(30),
+          }}
+        >
+          <FlatList
+            data={commentData}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={renderItem}
+            showsVerticalScrollIndicator={false}
+            ListFooterComponent={listFooterComponent}
+            onEndReached={onReachedEnd}
+            onEndReachedThreshold={1}
+            nestedScrollEnabled={true}
+            contentContainerStyle={styles.commentContainerStyle}
+          />
+        </View>
+      )}
+
+      <CommentTextInput
+        setvalue={setCommentTxt}
+        value={commentTxt}
+        showBtn={commentTxt != ""}
+        disable={postCommentLoading}
+        loading={postCommentLoading}
+        onClickPost={() => {
+          onClickPost();
+        }}
+      />
+    </View>
+    //  </ScrollView>
   );
 };
 
@@ -273,9 +207,9 @@ const styles = StyleSheet.create({
     marginTop: verticalScale(5),
   },
   msgView: {
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    flex: 1,
   },
   msgTxt: {
     fontFamily: "Montserrat-Bold",

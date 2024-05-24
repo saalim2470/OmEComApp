@@ -24,18 +24,13 @@ import RbBottomSheet from "../BottomSheet/RbBottomSheet";
 import CommentSection from "../CommentComponent/CommentSection";
 
 const SHEET_HEIGHT = Dimensions.get("screen").height / 2;
-const FeedCardBottomView = ({ itemData }) => {
+const FeedCardBottomView = ({ itemData,
+  // onClickComment=()=>{} 
+}) => {
   const dispatch = useDispatch();
   const {
-    commentData: commentDataRes,
-    isLoading: commentLoading,
     error: commentError,
     errorCode: commentErrorCode,
-    page: commentPage,
-    isSuccess: getCommentSuccesss,
-    pageSize: commentPageSize,
-    totalCount:totalComment,
-    contentId:contentId
   } = useSelector((state) => state.getCommentByContentId);
   
   

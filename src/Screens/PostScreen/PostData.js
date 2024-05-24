@@ -32,6 +32,7 @@ import { getGpsDataApi } from "../../store/gpsSlice/GetGpsData";
 import {
   bytesToMB,
   bytesToSize,
+  errorCodes,
   subcriptionType,
 } from "../../Constants/Constant";
 import useErrorHook from "../../CustomeHooks/useErrorHook";
@@ -61,9 +62,7 @@ const PostData = ({ navigation, route }) => {
   const [openSheet, setOpenSheet] = useState(false);
   const [location, setLocation] = useState(null);
   const [selectLocation, setSelectLocation] = useState(null);
-  const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
-  const [cameraStatus, requestCameraPermission] =
-    ImagePicker.useCameraPermissions();
+
   useEffect(() => {
     if (route?.params != undefined) {
       setDescription(
@@ -135,7 +134,7 @@ const PostData = ({ navigation, route }) => {
           setShowAlert({
             show: true,
             title: "Error",
-            msg: addPostData?.error?.ErrorMessage,
+            msg: addPostData?.error?.ErrorMessage || errorCodes.default,
             type: "error",
           });
         }
@@ -183,14 +182,14 @@ const PostData = ({ navigation, route }) => {
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
-        // aspect: [4, 3],
         quality: 1,
+        allowsMultipleSelection:false
       });
       if (!result.canceled) {
         imageSetter(result);
       }
     } catch (error) {
-      console.error("Error picking video:", error);
+      console.error("Error picking image:", error);
     }
   };
   const openCamera = async () => {
@@ -211,21 +210,32 @@ const PostData = ({ navigation, route }) => {
     setImage(data);
   };
   const checkLibrarayPermission = async () => {
-    const { status: currentStatus } =
+    let { status: currentStatus } =
       await ImagePicker.getMediaLibraryPermissionsAsync();
     if (currentStatus !== "granted") {
-      requestPermission();
-    } else if (currentStatus == "granted") {
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      currentStatus = status;
+    }
+    if (currentStatus === "granted") {
       openImagePicker();
+    } else {
+      console.log("Permission to access media library was denied");
     }
   };
   const checkCameraPermission = async () => {
-    const { status: currentStatus } =
+    let { status: currentStatus } =
       await ImagePicker.getCameraPermissionsAsync();
     if (currentStatus !== "granted") {
-      requestCameraPermission();
-    } else if (currentStatus == "granted") {
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+      currentStatus = status;
+    }
+    if (currentStatus === "granted") {
+      // requestCameraPermission();
       openCamera();
+    } else {
+      // openCamera();
+      console.log("Permission to access media library was denied");
     }
   };
   const checkLocationPermission = async () => {

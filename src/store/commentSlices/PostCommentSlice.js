@@ -46,7 +46,8 @@ export const postCommentApi = (data) => async (dispatch) => {
     dispatch(setErrorCode(null));
     dispatch(setLoading(true));
     const responce = await CommentServices.postComment(data);
-    dispatch(setPostCommentRes(responce?.data));
+    // dispatch(addCommentCountOnSavedContent(responce.data.Data))
+    dispatch(setPostCommentRes(responce.data));
     dispatch(setLoading(false));
   } catch (error) {
     dispatch(setLoading(false));

@@ -1,14 +1,15 @@
 import {
   Image,
+  Keyboard,
   Platform,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import React, { useRef, useState } from "react";
-import { SafeAreaView } from "react-native";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import { TextInput } from "react-native-paper";
 import TextBox from "../../Components/TextBox";
@@ -35,6 +36,9 @@ import Constants from "expo-constants";
 import { setExpoPushToken } from "../../store/StoreDataSlice";
 import CustomeAlertModal from "../../Components/CustomeAlertModal";
 import useErrorHook from "../../CustomeHooks/useErrorHook";
+import { KeyboardAvoidingScrollView } from "react-native-keyboard-avoiding-scroll-view";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -85,7 +89,7 @@ async function registerForPushNotificationsAsync() {
       finalStatus = status;
     }
     if (finalStatus !== "granted") {
-      alert("Failed to get push token for push notification!");
+      alert("Please allow omsarvatra notification permission!");
       return;
     }
     token = await Notifications.getExpoPushTokenAsync({
@@ -93,7 +97,7 @@ async function registerForPushNotificationsAsync() {
     });
     console.log(token);
   } else {
-    alert("Must use physical device for Push Notifications");
+    // alert("Must use physical device for Push Notifications");
   }
 
   return token.data;
@@ -133,11 +137,12 @@ const Login = ({ navigation }) => {
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
         setNotification(notification);
+        console.log("-=-receive-=-", notification);
       });
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log(response);
+        console.log("-=-responce-=-", response);
       });
 
     return () => {
@@ -156,17 +161,17 @@ const Login = ({ navigation }) => {
       finalStatus = status;
     }
     if (finalStatus !== "granted") {
-      alert("Failed to get push token for push notification!");
+      alert("Please allow omsarvatra notification permission!");
       return;
     }
   };
-  useEffect(() => {
-    if (loginSuccess) {
-      // navigation.dispatch(StackActions.replace(screenName.drawerNavigation));
-      setEmail('')
-      setPassword('')
-    }
-  }, [loginSuccess]);
+  // useEffect(() => {
+  //   if (loginSuccess) {
+  //     // navigation.dispatch(StackActions.replace(screenName.drawerNavigation));
+  //     // setEmail("");
+  //     // setPassword("");
+  //   }
+  // }, [loginSuccess]);
 
   const onClickLogin = () => {
     getNotificationPermission();
@@ -178,11 +183,6 @@ const Login = ({ navigation }) => {
           expoPushToken: expoPushToken,
         })
       );
-      console.log({
-        username: email,
-        password: password,
-        expoPushToken: expoPushToken,
-      });
     } else {
       setShowError({ isError: true, msg: "Enter email or password" });
     }
@@ -208,7 +208,11 @@ const Login = ({ navigation }) => {
   };
   return (
     <SafeAreaView style={commonStyle.container}>
-      <ScrollView>
+      {/* <KeyboardAwareScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ flex: 1 }}
+      > */}
+      <ScrollView keyboardShouldPersistTaps="handled">
         <View style={{ height: verticalScale(300) }}>
           <Image
             source={images.omLogo}
@@ -218,7 +222,7 @@ const Login = ({ navigation }) => {
         </View>
         <View style={commonStyle.innerContainer}>
           <Text style={[styles.txt]}>Login</Text>
-          <KeyboardAvoidingView behavior="padding">
+          <View>
             <TextBox
               // placeholderTextColor={"#cacaca"}
               containerStyle={{
@@ -255,7 +259,7 @@ const Login = ({ navigation }) => {
                 />
               }
             />
-          </KeyboardAvoidingView>
+          </View>
           <View style={commonStyle.row}>
             {/* <TouchableOpacity
               style={{
@@ -347,7 +351,8 @@ const Login = ({ navigation }) => {
                 navigation.navigate(screenName.createAccount);
               }}
             >
-               {" "}Sign Up
+              {" "}
+              Sign Up
             </Text>
           </Text>
         </View>
@@ -358,7 +363,8 @@ const Login = ({ navigation }) => {
             dispatch(setError(null));
           }}
         />
-      </ScrollView>
+        </ScrollView>
+      {/* </KeyboardAwareScrollView> */}
       <CustomeAlertModal
         isVisible={apiShowError.show}
         title={apiShowError.title}

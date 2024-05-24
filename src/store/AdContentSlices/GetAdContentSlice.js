@@ -17,7 +17,6 @@ const GetAdContentSlice = createSlice({
   },
   reducers: {
     setAdContent: (state, action) => {
-      console.log("=-=-=-ad content 3-=-=");
       state.isSuccess = action.payload?.Success;
       state.totalCount = action.payload?.Data?.totalCount;
       if (state.page !== 1) {
@@ -30,7 +29,6 @@ const GetAdContentSlice = createSlice({
       }
 
       if (state.totalCount === state.contentData.length) {
-        console.log("-=-=reached end-=-=2");
         state.isReachedEnd = true;
       }
     },
@@ -86,6 +84,7 @@ export const {
 export const getAdContentByCategory =
   (categoryId, pageNumber, pageSize) => async (dispatch) => {
     try {
+      
       dispatch(resetAdContentData());
       dispatch(setLoading(true));
       const responce = await AdContentServices.getContentByCategory(

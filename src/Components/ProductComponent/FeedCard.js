@@ -7,11 +7,13 @@ import FeedCardBottomView from "./FeedCardBottomView";
 import ProfileFeedCardHeader from "../ProfileScreenComponent/ProfileFeedCardHeader";
 import FeedCardTopView from "./FeedCardTopView";
 import ImageVideoSlider from "../PostScreenComponent/SliderComponent/ImageVideoSlider";
+import ImageSlider from "../PostScreenComponent/ImageSlider";
 
 const FeedCard = memo(
   ({
     itemData,
     onClickMoreBtn = () => {},
+    onClickComment = () => {},
     disable,
     profile,
     isVideoPlay,
@@ -30,17 +32,25 @@ const FeedCard = memo(
           <FeedCardTopView itemData={itemData} disable={disable} />
         ) : null}
         {itemData?.imagesData !== "[]" ? (
-          <ImageVideoSlider
-            sliderData={JSON.parse(itemData?.imagesData)}
-            postDetail={itemData}
-            onClickImage={onClickMoreBtn}
-            disable={disable}
-            shouldVideoPlay={isVideoPlay}
+          // <ImageVideoSlider
+          //   sliderData={JSON.parse(itemData?.imagesData)}
+          //   postDetail={itemData}
+          //   onClickImage={onClickMoreBtn}
+          //   disable={disable}
+          //   shouldVideoPlay={isVideoPlay}
+          //   currentPost={currentPost}
+          // />
+          <ImageSlider
             currentPost={currentPost}
+            disable={disable}
+            postDetail={itemData}
+            shouldVideoPlay={isVideoPlay}
+            sliderData={JSON.parse(itemData?.imagesData)}
+            onClickImage={onClickMoreBtn}
           />
         ) : null}
         <View style={[styles.bottomView]}>
-          <FeedCardBottomView itemData={itemData} />
+          <FeedCardBottomView itemData={itemData} onClickComment={()=>{onClickComment()}}/>
         </View>
       </View>
     );

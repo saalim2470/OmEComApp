@@ -2,15 +2,13 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { scale, verticalScale, moderateScale } from "react-native-size-matters";
 import { Ionicons } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import screenName from "../../Constants/screenName";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { saveContentApi } from "../../store/AdContentSlices/SaveContentSlice";
 import { addLikeOnContentApi } from "../../store/AdContentSlices/LikeSlice";
 
 const FeedCardBottomLeftView = ({ itemData }) => {
-  const navigation = useNavigation();
+  const likeLoading = useSelector((state) => state.like.isLoading);
+  const saveLoading = useSelector((state) => state.saveContent.isLoading);
   const dispatch = useDispatch();
   const onClickBookmarkBtn = () => {
     dispatch(
@@ -31,6 +29,7 @@ const FeedCardBottomLeftView = ({ itemData }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
+        disabled={likeLoading}
         onPress={() => {
           onClickLikeBtn();
         }}
@@ -53,6 +52,7 @@ const FeedCardBottomLeftView = ({ itemData }) => {
         />
       </TouchableOpacity> */}
       <TouchableOpacity
+        disabled={saveLoading}
         onPress={() => {
           onClickBookmarkBtn();
         }}

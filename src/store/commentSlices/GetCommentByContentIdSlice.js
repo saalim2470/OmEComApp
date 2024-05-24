@@ -86,7 +86,7 @@ export const getCommentByContentIdApi =
         pageNumber,
         pageSize
       );
-      dispatch(setCommentData(responce?.data));
+      dispatch(setCommentData(responce.data));
       dispatch(setLoading(false));
     } catch (error) {
       dispatch(setLoading(false));
