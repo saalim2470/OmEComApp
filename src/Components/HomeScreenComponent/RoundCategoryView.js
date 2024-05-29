@@ -40,7 +40,9 @@ const RoundCategoryView = ({ onClickCategory = () => {} }) => {
   }, []);
 
   useEffect(() => {
-    getCategory();
+    if (categoryDataRes?.length<=0) {
+      getCategory();
+    }
   }, [categoryPage]);
 
   useEffect(() => {
