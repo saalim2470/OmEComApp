@@ -74,7 +74,7 @@ const HomeScreenIcons = () => {
         >
           {!categoryLoading && categoryStatusCode != null ? (
             <ServerError statusCode={categoryStatusCode} />
-          ) : category.length <= 0 ? (
+          ) : category?.length <= 0 ? (
             <FriendlyMsg />
           ) : (
             <CategoryView data={category} />

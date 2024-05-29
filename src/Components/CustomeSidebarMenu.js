@@ -10,7 +10,7 @@ import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import images from "../Constants/images";
 import { Divider, Menu } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { accessToken } from "../Constants/defaults";
+import { accessToken, userDetail } from "../Constants/defaults";
 import { useDispatch, useSelector } from "react-redux";
 import { logOut} from "../store/authSlices/LoginSlice";
 import { useNavigation } from "@react-navigation/native";
@@ -31,7 +31,6 @@ import { logout } from "../Constants/functions";
 
 const CustomSidebarMenu = (props) => {
   const navigation = useNavigation();
-  const userDetail = useSelector((state) => state.login?.userDetail);
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
   const openMenu = () => setVisible(true);

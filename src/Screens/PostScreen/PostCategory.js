@@ -17,6 +17,7 @@ import {
   getCategoryData,
   setCategoryPage,
 } from "../../store/categorySlices/CategorySlice";
+import colors from "../../Constants/colors";
 
 const PostCategory = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -94,16 +95,6 @@ const PostCategory = ({ navigation, route }) => {
             <Text style={commonStyle.headingTxt}>Category</Text>
             <Text style={styles.SmallHading}>Select relavant category</Text>
           </View>
-          {/* <CustomeButton
-            title={"Next"}
-            style={{
-              paddingVertical: verticalScale(8),
-              paddingHorizontal: moderateScale(12),
-            }}
-            onClick={() => {
-              onClickNext();
-            }}
-          /> */}
         </View>
         <FlatList
           data={categories}

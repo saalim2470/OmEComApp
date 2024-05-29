@@ -30,6 +30,7 @@ const TextBox = ({
     <View style={containerStyle}>
       <TextInput
         label={label}
+        // mode="flat"
         mode="outlined"
         // outlineColor="#cacaca"
         value={value}

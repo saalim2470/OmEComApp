@@ -320,11 +320,11 @@ const CreateAccount = () => {
   return (
     <SafeAreaView style={commonStyle.container}>
       <Header />
-      <KeyboardAwareScrollView
+      <ScrollView
         style={commonStyle.innerContainer}
-        resetScrollToCoords={{ x: 0, y: 0 }}
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled={true}
+        keyboardShouldPersistTaps='handled'
       >
         <Text style={commonStyle.headingTxt}>Create an Account</Text>
 
@@ -454,8 +454,10 @@ const CreateAccount = () => {
             label: "name",
             value: "id",
           }}
+          // closeAfterSelecting={false}
           scrollViewProps={{
             decelerationRate: "fast",
+            keyboardShouldPersistTaps:'handled',
           }}
           dropDownDirection="TOP"
           searchable={true}
@@ -495,6 +497,7 @@ const CreateAccount = () => {
           loading={stateDataResLoading}
           scrollViewProps={{
             decelerationRate: "fast",
+            keyboardShouldPersistTaps:'handled'
           }}
           dropDownDirection="TOP"
           searchable={true}
@@ -537,6 +540,7 @@ const CreateAccount = () => {
           loading={cityDataResLoading}
           scrollViewProps={{
             decelerationRate: "fast",
+            keyboardShouldPersistTaps:'handled'
           }}
           dropDownDirection="TOP"
           searchable={true}
@@ -630,7 +634,7 @@ const CreateAccount = () => {
             of the OM
           </Text>
         </View> */}
-      </KeyboardAwareScrollView>
+      </ScrollView>
       <CustomeButton
         title={"Sign Up"}
         isLoading={authLoading}

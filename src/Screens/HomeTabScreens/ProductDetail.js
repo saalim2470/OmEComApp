@@ -23,7 +23,7 @@ const ProductDetail = ({ route }) => {
   const dispatch = useDispatch();
   const { contentId } = route?.params;
   const { data } = route?.params;
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const {
     error: likeError,
     statusCode: likeErrorCode,
@@ -48,6 +48,16 @@ const ProductDetail = ({ route }) => {
     likeErrorCode || saveErrorCode
   );
   useEffect(() => {
+    // setLoading(true);
+    if (data) {
+      setAdContent(data);
+      setLoading(false);
+    }
+    return () => {
+      dispatch(resetAdContentDataById());
+    };
+  }, [data]);
+  useEffect(() => {
     if (contentId) dispatch(getAdContentByIdApi(contentId));
     return () => {
       dispatch(resetAdContentDataById());
@@ -55,18 +65,9 @@ const ProductDetail = ({ route }) => {
   }, [contentId]);
 
   useEffect(() => {
-    setLoading(true);
-    if (data) {
-      setAdContent(data);
-      setLoading(false)
-    }
-    return () => {
-      dispatch(resetAdContentDataById());
-    };
-  }, [data]);
-  useEffect(() => {
     if (contentData !== null && contentData?.Success)
       setAdContent(contentData?.Data);
+    setLoading(false);
   }, [contentData]);
   useEffect(() => {
     if (likeDataRes != null && likeDataRes.Success) {
@@ -109,10 +110,7 @@ const ProductDetail = ({ route }) => {
       });
     }
   };
-  // if (!adContent && adContent == null) {
-  //   return <Loading />;
-  // }
-  if ( loading || isLoading) {
+  if (loading || isLoading) {
     return <Loading />;
   }
   if (error !== null && !error?.Success) {

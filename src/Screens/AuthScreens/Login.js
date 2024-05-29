@@ -39,6 +39,7 @@ import useErrorHook from "../../CustomeHooks/useErrorHook";
 import { KeyboardAvoidingScrollView } from "react-native-keyboard-avoiding-scroll-view";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { CommonActions } from "@react-navigation/native";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -231,7 +232,8 @@ const Login = ({ navigation }) => {
               error={emailError}
               errorMsg={"Email address is invalid!"}
               value={email}
-              label={"Email"}
+              // label={"Email"}
+              placeholder={'Email'}
               left={<TextInput.Icon icon={"email-outline"} tintColor="grey" />}
               onchange={(txt) => {
                 setEmail(txt);
@@ -239,7 +241,8 @@ const Login = ({ navigation }) => {
               }}
             />
             <TextBox
-              label={"Password"}
+              // label={"Password"}
+              placeholder={"Password"}
               secureTextEntry={!passwordVisible}
               error={passwordError}
               errorMsg={"password must be at least 8 characters"}
@@ -363,7 +366,7 @@ const Login = ({ navigation }) => {
             dispatch(setError(null));
           }}
         />
-        </ScrollView>
+      </ScrollView>
       {/* </KeyboardAwareScrollView> */}
       <CustomeAlertModal
         isVisible={apiShowError.show}

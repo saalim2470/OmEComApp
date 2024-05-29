@@ -296,9 +296,10 @@ const EditProfile = () => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={commonStyle.innerContainer}
+        keyboardShouldPersistTaps='handled'
       >
         <Text style={commonStyle.headingTxt}>Edit Profile</Text>
-        <KeyboardAvoidingView>
+   
           <View style={styles.profileImgView}>
             <TouchableOpacity
               activeOpacity={0.6}
@@ -392,6 +393,7 @@ const EditProfile = () => {
             }}
             scrollViewProps={{
               decelerationRate: "fast",
+              keyboardShouldPersistTaps:'handled'
             }}
             dropDownDirection="TOP"
             searchable={true}
@@ -435,6 +437,7 @@ const EditProfile = () => {
             }}
             scrollViewProps={{
               decelerationRate: "fast",
+              keyboardShouldPersistTaps:'handled'
             }}
             dropDownDirection="TOP"
             labelStyle={styles.ddTxt}
@@ -472,6 +475,7 @@ const EditProfile = () => {
             loading={cityDataResLoading}
             scrollViewProps={{
               decelerationRate: "fast",
+              keyboardShouldPersistTaps:'handled'
             }}
             searchable={true}
             dropDownDirection="TOP"
@@ -509,7 +513,6 @@ const EditProfile = () => {
               {errors.city}
             </Text>
           ) : null}
-        </KeyboardAvoidingView>
       </ScrollView>
       <CustomeButton
         title={"Edit Profile"}

@@ -42,7 +42,7 @@ httpFile.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       // Unauthorized access - maybe token expired
       await AsyncStorage.removeItem(accessToken);
-      Alert.alert("Session expired", "Please log in again.");
+      // Alert.alert("Session expired", "Please log in again.");
       // Optionally, navigate the user to the login screen
       // navigation.navigate("Login"); // assuming you have navigation setup
     }
@@ -62,7 +62,7 @@ http.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       // Unauthorized access - maybe token expired
       await AsyncStorage.removeItem(accessToken);
-      Alert.alert("Session expired", "Please log in again.");
+      // Alert.alert("Session expired", "Please log in again.");
       // Optionally, navigate the user to the login screen
       // navigation.navigate("Login"); // assuming you have navigation setup
     }
